@@ -896,6 +896,42 @@ input[type="range"] {
   font-size: 10px;
 }
 
+.rank-target-card {
+  border: 1px solid #55574f;
+  margin-top: 34px;
+  padding: 18px;
+}
+
+.rank-target-card > span,
+.rank-target-card > small {
+  color: #92958d;
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+.rank-target-card > strong {
+  color: var(--red);
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: 42px;
+  margin: 12px 0;
+}
+
+.rank-target-card.on-target > strong { color: var(--acid); }
+
+.rank-target-card p {
+  color: white;
+  font-size: 11px;
+  margin: 0 0 14px;
+}
+
+.rank-target-card small {
+  line-height: 1.5;
+  text-transform: none;
+}
+
 .season-chart {
   align-items: end;
   border-bottom: 1px solid #55574f;
@@ -965,6 +1001,14 @@ input[type="range"] {
   z-index: 2;
 }
 
+.target-mark {
+  border-top: 1px dashed var(--red);
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 3;
+}
+
 .season-column > strong {
   font-family: var(--font-mono), monospace;
   font-size: 9px;
@@ -1007,13 +1051,14 @@ input[type="range"] {
 
 .legend-model { background: var(--acid); }
 .legend-base { border-top: 2px solid white; }
+.legend-target { border-top: 1px dashed var(--red); }
 
 .expert-tests {
   border-left: 1px solid #444640;
   border-top: 1px solid #444640;
   display: grid;
   grid-column: 1 / -1;
-  grid-template-columns: 1.15fr repeat(3, 1fr);
+  grid-template-columns: 1.15fr repeat(4, 1fr);
 }
 
 .expert-tests-heading,

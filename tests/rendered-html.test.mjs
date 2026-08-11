@@ -28,7 +28,8 @@ test("server-renders the FPL Lens decision room", async () => {
   assert.match(html, /Optimal XV/i);
   assert.match(html, /Chip desk/i);
   assert.match(html, /144(?:<!-- -->)? chip policies/i);
-  assert.match(html, /Lens 3\.0 \+ chips/i);
+  assert.match(html, /Lens 4\.0[\s\S]{0,24}\+ chips/i);
+  assert.match(html, /Top-500k consistency test/i);
   assert.match(html, /Replay the past/i);
   assert.match(html, /Champion advice, tested/i);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/i);

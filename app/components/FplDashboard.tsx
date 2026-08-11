@@ -20,6 +20,9 @@ type Player = {
   price: number;
   ownership: number;
   projected: number;
+  sixWeekProjected: number;
+  expectedMinutes: number;
+  uncertainty: number;
   captainRating: number;
   score: number;
   opponent: string;
@@ -55,7 +58,7 @@ const weightLabels: Record<WeightKey, { label: string; hint: string }> = {
   performance: { label: "Performance", hint: "Points signal" },
   value: { label: "Value", hint: "Output per £m" },
   age: { label: "Age curve", hint: "Reliability prior" },
-  fixture: { label: "Fixture", hint: "Next 4 opponents" },
+  fixture: { label: "Fixture", hint: "Next 6 opponents" },
   crowd: { label: "Market", hint: "Ownership signal" },
   minutes: { label: "Minutes", hint: "60-minute security" },
   underlying: { label: "Underlying", hint: "ICT involvement" },
@@ -337,7 +340,7 @@ export default function FplDashboard() {
           <div><span>Projected</span><strong>{projected.toFixed(1)}</strong><small>GW points</small></div>
           <div><span>Budget</span><strong>£{spend.toFixed(1)}</strong><small>of £100m</small></div>
           <div><span>Shape</span><strong>{formation}</strong><small>best XI</small></div>
-          <div><span>Chip edge</span><strong>+{results.chipStrategy.walkForwardAverageGain}</strong><small>pts / season</small></div>
+          <div><span>Top-500k tests</span><strong>{results.rankTarget.hits}/{results.rankTarget.seasons}</strong><small>historic pace hits</small></div>
         </div>
       </section>
 
@@ -345,6 +348,7 @@ export default function FplDashboard() {
         <span>MODEL {results.model.version}</span>
         <span>{results.model.recursiveTrials} RECURSIVE FINALISTS</span>
         <span>{results.chipStrategy.policyTrials} CHIP POLICIES</span>
+        <span>{results.rankTarget.averageProbability}% AVG TARGET PROBABILITY</span>
         <span>{results.model.playerWeeks.toLocaleString()} PLAYER-WEEKS</span>
         <span>{results.currentMeta.playersScored} CURRENT PLAYERS SCORED</span>
         <span>LAST REFRESH {new Date(results.generatedAt).toLocaleDateString("en-GB")}</span>
@@ -516,27 +520,35 @@ export default function FplDashboard() {
           <div className="proof-stat"><strong>{results.model.trials.toLocaleString()}</strong><span>candidate weight mixes</span></div>
           <div className="proof-stat"><strong>{results.model.recursiveTrials}</strong><span>full recursive finalists</span></div>
           <div className="proof-stat"><strong>{results.simulationSummary.averageWeeksChanged}</strong><span>average GWs changed / season</span></div>
+          <div className={`rank-target-card ${results.rankTarget.hitRate >= 75 ? "on-target" : "off-target"}`}>
+            <span>TOP-500K CONSISTENCY TEST</span>
+            <strong>{results.rankTarget.hits}/{results.rankTarget.seasons}</strong>
+            <p>{results.rankTarget.hitRate}% of seasons cleared the estimated pace line · {results.rankTarget.averageProbability}% average bootstrap probability.</p>
+            <small>{results.rankTarget.method}</small>
+          </div>
         </div>
         <div className="season-chart" role="img" aria-label="Model and baseline points by season">
           {results.backtest.map((season) => {
-            const modelHeight = Math.max(40, (season.points / 2200) * 100);
-            const baselineHeight = Math.max(40, (season.baseline / 2200) * 100);
+            const modelHeight = Math.max(40, (season.points / 2300) * 100);
+            const baselineHeight = Math.max(40, (season.baseline / 2300) * 100);
+            const targetHeight = Math.max(40, (season.top500Target / 2300) * 100);
             return (
               <div className="season-column" key={season.season}>
                 <div className="bar-area">
                   <div className="baseline-mark" style={{ height: `${baselineHeight}%` }} />
+                  <div className="target-mark" style={{ height: `${targetHeight}%` }} title={`Estimated top-500k pace: ${season.top500Target}`} />
                   <div className="model-bar" style={{ height: `${modelHeight}%` }}>
                     <span>{season.points}</span>
                   </div>
                 </div>
                 <strong>{season.season}</strong>
-                <span className={season.uplift >= 0 ? "positive" : "negative"}>
-                  {season.uplift >= 0 ? "+" : ""}{season.uplift}%
+                <span className={season.targetHit ? "positive" : "negative"} title={season.estimatedBand}>
+                  {season.targetMargin >= 0 ? "+" : ""}{season.targetMargin} to target
                 </span>
               </div>
             );
           })}
-          <div className="chart-legend"><span><i className="legend-model" /> Lens 3.0 + chips</span><span><i className="legend-base" /> Same model, no chips</span></div>
+          <div className="chart-legend"><span><i className="legend-model" /> {results.model.version} + chips</span><span><i className="legend-base" /> Same model, no chips</span><span><i className="legend-target" /> Est. top-500k pace</span></div>
         </div>
         <div className="expert-tests" aria-label="Tests of FPL champion advice">
           <div className="expert-tests-heading">
@@ -560,14 +572,14 @@ export default function FplDashboard() {
           <p>{results.model.method} {results.model.objective}</p>
         </div>
         <div className="method-steps">
-          <article><span>01</span><h3>Observe</h3><p>Points, price, minutes security, ICT involvement, market movement and the next four opponents.</p></article>
+          <article><span>01</span><h3>Observe</h3><p>Component expected points, price, minutes security, underlying involvement, market movement and the next six opponents.</p></article>
           <article><span>02</span><h3>Shift</h3><p>All rolling statistics move back one gameweek. The model never sees the result it is trying to predict.</p></article>
           <article><span>03</span><h3>Recurse</h3><p>{results.model.recursiveTrials} finalists carry a legal squad, bank, prices and chip inventory through every deadline.</p></article>
-          <article><span>04</span><h3>Optimise</h3><p>Weekly transfers and {results.chipStrategy.policyTrials} chip policies compete; your sliders rebuild today’s legal £100m squad live.</p></article>
+          <article><span>04</span><h3>Optimise</h3><p>Six-GW transfers and {results.chipStrategy.policyTrials} chip policies compete; your sliders rebuild today’s legal £100m squad live.</p></article>
         </div>
         <div className="method-footer">
           <div><span>AGE COVERAGE</span><strong>{Math.min(...results.dataSummary.map((item) => item.ageCoverage))}%+</strong></div>
-          <div><span>TRAINING ROWS</span><strong>{results.model.playerWeeks.toLocaleString()}</strong></div>
+          <div><span>CALIBRATION ROWS</span><strong>{results.model.playerWeeks.toLocaleString()}</strong></div>
           <div><span>CURRENT POOL</span><strong>{results.currentMeta.playersScored}</strong></div>
           <div className="source-links">
             {results.sources.map((source) => <a href={source.url} target="_blank" rel="noreferrer" key={source.url}>{source.label} ↗</a>)}

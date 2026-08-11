@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import math
+import sys
 import urllib.request
 from urllib.error import HTTPError
 from dataclasses import dataclass
@@ -22,7 +23,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "work" / "fpl-data"
 OUTPUT = ROOT / "app" / "data" / "model-results.json"
-SEASONS = [
+TRAINING_SEASONS = ["2016-17", "2017-18"]
+EVALUATION_SEASONS = [
     "2018-19",
     "2019-20",
     "2020-21",
@@ -32,6 +34,7 @@ SEASONS = [
     "2024-25",
     "2025-26",
 ]
+SEASONS = TRAINING_SEASONS + EVALUATION_SEASONS
 BASE = "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data"
 REEP_URL = "https://raw.githubusercontent.com/withqwerty/reep/main/data/people.csv"
 CURRENT_BOOTSTRAP = "https://fantasy.premierleague.com/api/bootstrap-static/"
@@ -131,7 +134,7 @@ def load_nationality_register() -> dict[int, str]:
     )
 
 
-def season_files(season: str) -> tuple[Path, Path, Path]:
+def season_files(season: str) -> tuple[Path, Path, Path | None]:
     folder = CACHE / season
     gw = download(f"{BASE}/{season}/gws/merged_gw.csv", folder / "merged_gw.csv")
     players = download(f"{BASE}/{season}/players_raw.csv", folder / "players_raw.csv")
@@ -140,7 +143,12 @@ def season_files(season: str) -> tuple[Path, Path, Path]:
     except HTTPError as error:
         if error.code != 404:
             raise
-        teams = download(f"{BASE}/{season}/raw.json", folder / "raw.json")
+        try:
+            teams = download(f"{BASE}/{season}/raw.json", folder / "raw.json")
+        except HTTPError as raw_error:
+            if raw_error.code != 404:
+                raise
+            teams = None
     return gw, players, teams
 
 
@@ -150,7 +158,17 @@ def build_season(
     gw_path, players_path, teams_path = season_files(season)
     gw = pd.read_csv(gw_path, encoding="latin-1", low_memory=False)
     players = pd.read_csv(players_path, encoding="latin-1", low_memory=False)
-    if teams_path.suffix == ".json":
+    if teams_path is None:
+        teams = pd.DataFrame(
+            {
+                "id": sorted(players["team"].dropna().astype(int).unique()),
+                "name": [
+                    f"Team {team_id}"
+                    for team_id in sorted(players["team"].dropna().astype(int).unique())
+                ],
+            }
+        )
+    elif teams_path.suffix == ".json":
         teams = pd.DataFrame(json.loads(teams_path.read_text(encoding="utf-8"))["teams"])
     else:
         teams = pd.read_csv(teams_path, encoding="latin-1", low_memory=False)
@@ -195,12 +213,26 @@ def build_season(
         "creativity",
         "threat",
         "transfers_balance",
+        "goals_scored",
+        "assists",
+        "clean_sheets",
+        "goals_conceded",
+        "saves",
+        "bonus",
+        "yellow_cards",
+        "red_cards",
+        "expected_goals",
+        "expected_assists",
+        "expected_goals_conceded",
+        "defensive_contribution",
     ]
     raw = gw[[column for column in wanted if column in gw.columns]].copy()
     raw = raw.merge(meta, on="element", how="left")
     raw["team_name"] = raw["team_id"].map(team_names)
     raw["opponent_name"] = raw["opponent_team"].map(team_names)
-    raw["selected"] = pd.to_numeric(raw.get("selected", 0), errors="coerce").fillna(0)
+    if "selected" not in raw:
+        raw["selected"] = 0
+    raw["selected"] = pd.to_numeric(raw["selected"], errors="coerce").fillna(0)
     raw["value"] = pd.to_numeric(raw["value"], errors="coerce").fillna(45)
     for column in [
         "ict_index",
@@ -208,8 +240,22 @@ def build_season(
         "creativity",
         "threat",
         "transfers_balance",
+        "goals_scored",
+        "assists",
+        "clean_sheets",
+        "goals_conceded",
+        "saves",
+        "bonus",
+        "yellow_cards",
+        "red_cards",
+        "expected_goals",
+        "expected_assists",
+        "expected_goals_conceded",
+        "defensive_contribution",
     ]:
-        raw[column] = pd.to_numeric(raw.get(column, 0), errors="coerce").fillna(0)
+        if column not in raw:
+            raw[column] = 0
+        raw[column] = pd.to_numeric(raw[column], errors="coerce").fillna(0)
     raw["GW"] = pd.to_numeric(raw["GW"], errors="coerce")
     raw = raw.dropna(subset=["GW", "element", "position_id"]).copy()
     raw["GW"] = raw["GW"].astype(int)
@@ -237,6 +283,18 @@ def build_season(
             display_name=("display_name", "first"),
             birth_date=("birth_date", "first"),
             nationality=("nationality", "first"),
+            goals=("goals_scored", "sum"),
+            assists=("assists", "sum"),
+            clean_sheets=("clean_sheets", "sum"),
+            goals_conceded=("goals_conceded", "sum"),
+            saves=("saves", "sum"),
+            bonus=("bonus", "sum"),
+            yellow_cards=("yellow_cards", "sum"),
+            red_cards=("red_cards", "sum"),
+            expected_goals=("expected_goals", "sum"),
+            expected_assists=("expected_assists", "sum"),
+            expected_goals_conceded=("expected_goals_conceded", "sum"),
+            defensive_actions=("defensive_contribution", "sum"),
         )
         .sort_values(["element", "GW"])
     )
@@ -310,7 +368,7 @@ def build_season(
         "was_home"
     ].fillna(False).astype(float) * 0.18
 
-    # The next four opponents are known at the deadline. Their strength is always
+    # The next six opponents are known at the deadline. Their strength is always
     # estimated at the current GW, never with results that happened later.
     schedule = raw[["team_id", "GW", "opponent_team", "was_home"]].drop_duplicates()
     schedule_map: dict[tuple[int, int], list[tuple[int, bool]]] = {}
@@ -331,7 +389,7 @@ def build_season(
             "fixture_raw"
         ].median().items()
     }
-    horizon_weights = (1.0, 0.82, 0.67, 0.55)
+    horizon_weights = (1.0, 0.86, 0.74, 0.64, 0.55, 0.47)
 
     def fixture_horizon(row: pd.Series) -> float:
         values: list[tuple[float, float]] = []
@@ -352,6 +410,15 @@ def build_season(
         )
 
     weekly["fixture_horizon_raw"] = weekly.apply(fixture_horizon, axis=1)
+    weekly["horizon_weighted_games"] = weekly.apply(
+        lambda row: sum(
+            horizon_weight * len(
+                schedule_map.get((int(row["team_id"]), int(row["GW"]) + offset), [])
+            )
+            for offset, horizon_weight in enumerate(horizon_weights)
+        ),
+        axis=1,
+    ).clip(lower=1.0)
 
     for raw_name, rank_name in [
         ("long_raw", "long"),
@@ -370,11 +437,7 @@ def build_season(
             percentile
         )
 
-    eligible = weekly[
-        (weekly["observations"] >= 3)
-        & (weekly["past_minutes"].fillna(0) >= 20)
-        & (weekly["price"] >= 35)
-    ].copy()
+    eligible = weekly[weekly["price"] >= 35].copy()
     age_coverage = float(weekly["age"].notna().mean())
     summary = {
         "season": season,
@@ -384,6 +447,180 @@ def build_season(
         "gameweeks": int(eligible["GW"].nunique()),
     }
     return eligible, summary
+
+
+def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
+    """Carry player priors across seasons and build component expected points."""
+    data = pd.concat(frames, ignore_index=True)
+    season_order = {season: index for index, season in enumerate(SEASONS)}
+    data["season_order"] = data["season"].map(season_order).astype(int)
+    fallback_key = data["season"].astype(str) + ":" + data["element"].astype(str)
+    numeric_code = pd.to_numeric(data["player_code"], errors="coerce")
+    data["player_key"] = numeric_code.astype("Int64").astype(str).where(
+        numeric_code.notna(), fallback_key
+    )
+    data.sort_values(
+        ["player_key", "season_order", "GW"], inplace=True, kind="stable"
+    )
+    by_player = data.groupby("player_key", sort=False)
+    data["observations"] = by_player.cumcount()
+
+    points_prior = data["position_id"].map({1: 3.2, 2: 2.6, 3: 2.8, 4: 2.6})
+    minutes_prior = data["position_id"].map({1: 0.66, 2: 0.58, 3: 0.57, 4: 0.55})
+    underlying_prior = data["position_id"].map({1: 2.5, 2: 4.0, 3: 6.0, 4: 6.5})
+
+    data["long_raw"] = by_player["points"].transform(
+        lambda values: values.expanding().mean().shift(1)
+    ).fillna(points_prior)
+    data["recent_raw"] = by_player["points"].transform(
+        lambda values: values.rolling(4, min_periods=1).mean().shift(1)
+    ).fillna(data["long_raw"])
+    data["past_minutes"] = by_player["minutes"].transform(
+        lambda values: values.expanding().mean().shift(1)
+    ).fillna(minutes_prior * 90)
+    per_fixture_minutes = (
+        data["minutes"] / data["fixture_count"].clip(lower=1)
+    ).clip(upper=90)
+    data["per_fixture_minutes"] = per_fixture_minutes
+    data["minutes_security_raw"] = data.groupby("player_key", sort=False)[
+        "per_fixture_minutes"
+    ].transform(
+        lambda values: values.div(90).rolling(6, min_periods=1).mean().shift(1)
+    ).fillna(minutes_prior).clip(0.05, 1.0)
+    data["expected_minutes"] = (data["minutes_security_raw"] * 90).clip(5, 90)
+
+    data["underlying_game"] = (
+        data["ict"] / data["minutes"].clip(lower=45) * 90
+    ).clip(0, 35)
+    data["long_underlying_raw"] = by_player["underlying_game"].transform(
+        lambda values: values.expanding().mean().shift(1)
+    ).fillna(underlying_prior)
+    data["recent_underlying_raw"] = by_player["underlying_game"].transform(
+        lambda values: values.rolling(6, min_periods=1).mean().shift(1)
+    ).fillna(data["long_underlying_raw"])
+
+    minute_denominator = data["minutes"].clip(lower=45)
+    data["goal_signal_game"] = np.where(
+        data["expected_goals"] > 0,
+        0.72 * data["expected_goals"] + 0.28 * data["goals"],
+        data["goals"],
+    ) / minute_denominator * 90
+    data["assist_signal_game"] = np.where(
+        data["expected_assists"] > 0,
+        0.72 * data["expected_assists"] + 0.28 * data["assists"],
+        data["assists"],
+    ) / minute_denominator * 90
+    data["clean_sheet_game"] = (
+        data["clean_sheets"] / data["fixture_count"].clip(lower=1)
+    ).clip(0, 1)
+    for source, target, prior in [
+        ("goal_signal_game", "goal_rate", {1: 0.01, 2: 0.04, 3: 0.20, 4: 0.28}),
+        ("assist_signal_game", "assist_rate", {1: 0.01, 2: 0.08, 3: 0.18, 4: 0.13}),
+        ("clean_sheet_game", "clean_sheet_rate", {1: 0.28, 2: 0.28, 3: 0.22, 4: 0.0}),
+        ("saves", "save_rate", {1: 3.0, 2: 0.0, 3: 0.0, 4: 0.0}),
+        ("bonus", "bonus_rate", {1: 0.18, 2: 0.22, 3: 0.28, 4: 0.28}),
+        ("yellow_cards", "yellow_rate", {1: 0.05, 2: 0.12, 3: 0.10, 4: 0.08}),
+        ("red_cards", "red_rate", {1: 0.005, 2: 0.008, 3: 0.006, 4: 0.005}),
+        ("goals_conceded", "conceded_rate", {1: 1.35, 2: 1.35, 3: 0.0, 4: 0.0}),
+        ("defensive_actions", "defensive_rate", {1: 0.0, 2: 4.5, 3: 4.0, 4: 2.2}),
+    ]:
+        rolling = data.groupby("player_key", sort=False)[source].transform(
+            lambda values: values.rolling(12, min_periods=1).mean().shift(1)
+        )
+        data[target] = rolling.fillna(data["position_id"].map(prior)).clip(lower=0)
+
+    fixture_multiplier = 0.72 + 0.56 * data["fixture_now"].fillna(0.5)
+    minutes_factor = data["expected_minutes"] / 90
+    p_play = (data["expected_minutes"] / 35).clip(0, 1)
+    p_sixty = ((data["expected_minutes"] - 25) / 45).clip(0, 1)
+    goal_points = data["position_id"].map({1: 6, 2: 6, 3: 5, 4: 4})
+    clean_sheet_points = data["position_id"].map({1: 4, 2: 4, 3: 1, 4: 0})
+    appearance_points = p_play + p_sixty
+    attacking_points = (
+        data["goal_rate"] * goal_points + data["assist_rate"] * 3
+    ) * minutes_factor * fixture_multiplier
+    clean_sheet_points_ev = (
+        data["clean_sheet_rate"]
+        * clean_sheet_points
+        * p_sixty
+        * fixture_multiplier
+    )
+    save_points = (
+        data["save_rate"] / 3 * minutes_factor
+        * np.where(data["position_id"] == 1, 1.0, 0.0)
+    )
+    bonus_points = data["bonus_rate"] * minutes_factor * fixture_multiplier
+    discipline_points = -(
+        data["yellow_rate"] + 3 * data["red_rate"]
+    ) * minutes_factor
+    conceded_points = -(
+        data["conceded_rate"] / 2 * minutes_factor
+        * data["position_id"].isin([1, 2]).astype(float)
+    )
+    defensive_threshold = np.where(data["position_id"] == 2, 10.0, 12.0)
+    defensive_points = (
+        2 * (data["defensive_rate"] / defensive_threshold).clip(0, 1)
+        * minutes_factor
+        * data["position_id"].isin([2, 3, 4]).astype(float)
+        * (data["season_order"] >= season_order.get("2025-26", 99)).astype(float)
+    )
+    data["component_xpts"] = (
+        appearance_points
+        + attacking_points
+        + clean_sheet_points_ev
+        + save_points
+        + bonus_points
+        + discipline_points
+        + conceded_points
+        + defensive_points
+    ).clip(0.2, 13.0) * data["fixture_count"].clip(lower=1)
+    horizon_multiplier = 0.74 + 0.52 * data["fixture"].fillna(0.5)
+    single_fixture_base = data["component_xpts"] / data["fixture_count"].clip(lower=1)
+    data["component_horizon"] = (
+        single_fixture_base
+        * data["horizon_weighted_games"].clip(lower=1)
+        * horizon_multiplier
+    ).clip(0.5, 50)
+    data["prediction_uncertainty"] = (
+        1.35
+        + 2.0 * (1 - data["minutes_security_raw"])
+        + 1.8 / np.sqrt(data["observations"] + 1)
+    ).clip(1.2, 5.0)
+
+    lagged_transfer_balance = by_player["transfers_balance"].shift(1).fillna(0)
+    transfer_momentum = np.sign(lagged_transfer_balance) * np.log1p(
+        lagged_transfer_balance.abs()
+    )
+    data["crowd_raw"] = (
+        np.log1p(data["selected"].clip(lower=0)) + 0.08 * transfer_momentum
+    )
+    data["long_value_raw"] = data["long_raw"] / (data["price"] / 10).clip(3.5)
+    data["recent_value_raw"] = data["component_xpts"] / (
+        data["price"] / 10
+    ).clip(3.5)
+    data["age_raw"] = np.exp(-((data["age"].fillna(27.5) - 27.5) / 7.5) ** 2)
+
+    rank_groups = ["season", "GW", "position_id"]
+    for raw_name, rank_name in [
+        ("long_raw", "long"),
+        ("component_xpts", "recent"),
+        ("long_value_raw", "long_value"),
+        ("recent_value_raw", "recent_value"),
+        ("age_raw", "age_score"),
+        ("fixture_horizon_raw", "fixture"),
+        ("fixture_raw", "fixture_now"),
+        ("crowd_raw", "crowd"),
+        ("minutes_security_raw", "minutes_security"),
+        ("long_underlying_raw", "long_underlying"),
+        ("recent_underlying_raw", "recent_underlying"),
+    ]:
+        data[rank_name] = data.groupby(rank_groups)[raw_name].transform(percentile)
+
+    data.sort_values(
+        ["season_order", "GW", "position_id", "element"], inplace=True, kind="stable"
+    )
+    data.reset_index(drop=True, inplace=True)
+    return data
 
 
 @dataclass(frozen=True)
@@ -435,9 +672,9 @@ class Candidate:
 def candidate_pool() -> tuple[list[Candidate], int]:
     rng = np.random.default_rng(20260811)
     raw_weights = rng.dirichlet(
-        [3.5, 1.7, 0.45, 1.6, 1.0, 2.0, 1.8], size=TRIALS - 5
+        [4.2, 1.4, 0.25, 2.1, 0.40, 2.8, 2.2], size=TRIALS - 5
     )
-    recent = rng.beta(4.0, 2.5, size=TRIALS - 5) * 0.75 + 0.15
+    recent = rng.beta(5.0, 1.8, size=TRIALS - 5) * 0.55 + 0.40
     candidates = [
         Candidate(*weights, float(recency))
         for weights, recency in zip(raw_weights, recent)
@@ -446,10 +683,10 @@ def candidate_pool() -> tuple[list[Candidate], int]:
         [
             # Official-winner principles: form + medium-term fixtures, reliable
             # minutes, underlying data, restrained ownership and almost no age prior.
-            Candidate(0.32, 0.10, 0.01, 0.15, 0.08, 0.18, 0.16, 0.65),
-            Candidate(0.48, 0.08, 0.01, 0.20, 0.04, 0.12, 0.07, 0.68),
-            Candidate(0.34, 0.10, 0.00, 0.15, 0.05, 0.20, 0.16, 0.58),
-            Candidate(0.52, 0.09, 0.00, 0.10, 0.03, 0.14, 0.12, 0.52),
+            Candidate(0.34, 0.08, 0.00, 0.18, 0.04, 0.21, 0.15, 0.78),
+            Candidate(0.42, 0.07, 0.00, 0.20, 0.02, 0.19, 0.10, 0.82),
+            Candidate(0.31, 0.09, 0.00, 0.17, 0.03, 0.23, 0.17, 0.72),
+            Candidate(0.46, 0.06, 0.00, 0.14, 0.02, 0.20, 0.12, 0.76),
             # Lens 1.0: retained as a proper recursive baseline.
             Candidate(0.36, 0.09, 0.01, 0.04, 0.50, 0.00, 0.00, 0.59),
         ]
@@ -472,6 +709,16 @@ def feature_matrix(data: pd.DataFrame) -> np.ndarray:
             "long_underlying",
         ]
     ].to_numpy(dtype=float)
+
+
+def candidate_forecasts(
+    data: pd.DataFrame, candidate: Candidate
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    model_score = feature_matrix(data) @ candidate.coefficients
+    calibration = 0.72 + 0.56 * model_score
+    current = data["component_xpts"].to_numpy(float) * calibration
+    horizon = data["component_horizon"].to_numpy(float) * calibration
+    return current, horizon, model_score
 
 
 def snapshot_replay(
@@ -514,13 +761,15 @@ class SimulationStrategy:
     bank_limit: int
     force_weekly_review: bool
     safe_captain: bool
+    max_hits: int = 3
+    hit_immediate_hurdle: float = 2.5
 
 
 EXPERT_STRATEGY = SimulationStrategy(
-    "Patient transfers + safe captain", 0.12, 2, False, True
+    "Patient six-GW transfers + safe captain", 8.00, 5, False, True, 0, 99.0
 )
 WEEKLY_CHASE_STRATEGY = SimulationStrategy(
-    "Forced weekly transfer + model captain", 0.0, 1, True, False
+    "Six-GW planner + adaptive banking", 5.00, 5, False, False, 0, 99.0
 )
 
 
@@ -567,8 +816,8 @@ def chip_policy_pool() -> list[ChipPolicy]:
 
 def chip_windows(season: str, first_gw: int, last_gw: int) -> list[dict]:
     windows = [
-        {"chip": "Wildcard", "start": first_gw, "end": min(19, last_gw)},
-        {"chip": "Wildcard", "start": max(20, first_gw), "end": last_gw},
+        {"chip": "Wildcard", "start": first_gw + 4, "end": min(19, last_gw)},
+        {"chip": "Wildcard", "start": max(23, first_gw), "end": last_gw},
     ]
     if season == "2025-26":
         for chip in ("Free Hit", "Bench Boost", "Triple Captain"):
@@ -804,8 +1053,11 @@ def simulate_candidate(
     strategy: SimulationStrategy,
     chip_policy: ChipPolicy | None = None,
     fresh_squads: dict[tuple[str, int], list[int]] | None = None,
+    plan_scores: np.ndarray | None = None,
 ) -> tuple[np.ndarray, list[dict]]:
     """Carry one legal squad through each season and make deadline-only transfers."""
+    if plan_scores is None:
+        plan_scores = scores
     actual = data["points"].to_numpy(float)
     played_minutes = data["minutes"].to_numpy(float)
     element_values = data["element"].to_numpy(int)
@@ -832,8 +1084,11 @@ def simulate_candidate(
         bank = 0
         free_transfers = 1
         transfers = 0
+        hits = 0
+        hit_cost = 0
         rolled = 0
         weekly_changes: list[int] = []
+        weekly_totals: list[float] = []
         chips = (
             [dict(window, used=False) for window in chip_windows(season, weeks[0], weeks[-1])]
             if chip_policy
@@ -871,11 +1126,11 @@ def simulate_candidate(
                     position_values[frame_indices] == position
                 ]
                 incoming_by_position[position] = position_indices[
-                    np.argsort(scores[position_indices])[::-1]
+                    np.argsort(plan_scores[position_indices])[::-1]
                 ][:40]
             if week_number == 0:
                 initial_indices = initial_squad(
-                    frame, scores, excluded_elements=excluded_elements
+                    frame, plan_scores, excluded_elements=excluded_elements
                 )
                 for index in initial_indices:
                     squad[int(element_values[index])] = {
@@ -894,6 +1149,9 @@ def simulate_candidate(
                 free_transfers_before = free_transfers
                 transfers_before = transfers
             else:
+                bank_limit = 5 if season in {"2024-25", "2025-26"} else 2
+                if season == "2025-26" and gw == 16:
+                    free_transfers = 5
                 for element, state in squad.items():
                     if element in row_by_element:
                         current_index = row_by_element[element]
@@ -922,7 +1180,13 @@ def simulate_candidate(
                 free_transfers_before = free_transfers
                 transfers_before = transfers
                 changes_this_week = 0
-                for _ in range(free_transfers):
+                hits_before = hits
+                hit_cost_before = hit_cost
+                hit_points_this_week = 0
+                for move_number in range(free_transfers + 1):
+                    is_hit = move_number >= free_transfers
+                    if is_hit and hits >= strategy.max_hits:
+                        break
                     team_counts: dict[int, int] = {}
                     for state in squad.values():
                         team_counts[int(state["team"])] = (
@@ -932,7 +1196,7 @@ def simulate_candidate(
                     for outgoing, state in squad.items():
                         out_index = row_by_element.get(outgoing)
                         out_score = (
-                            scores[out_index]
+                            plan_scores[out_index]
                             if out_index is not None and outgoing not in excluded_elements
                             else -0.30
                         )
@@ -960,7 +1224,7 @@ def simulate_candidate(
                                 and team_counts.get(incoming_team, 0) >= 3
                             ):
                                 continue
-                            gain = float(scores[int(incoming_index)] - out_score)
+                            gain = float(plan_scores[int(incoming_index)] - out_score)
                             if best_move is None or gain > best_move[0]:
                                 best_move = (
                                     gain,
@@ -972,9 +1236,19 @@ def simulate_candidate(
                     if best_move is None:
                         break
                     gain, outgoing, incoming, incoming_index, sale = best_move
-                    if gain <= strategy.transfer_hurdle and not (
-                        strategy.force_weekly_review and gain > 0
-                    ):
+                    move_hurdle = strategy.transfer_hurdle + (
+                        4.0 if is_hit else 0.0
+                    )
+                    if gain <= move_hurdle:
+                        break
+                    out_index = row_by_element.get(outgoing)
+                    immediate_out = (
+                        scores[out_index]
+                        if out_index is not None and outgoing not in excluded_elements
+                        else -0.30
+                    )
+                    immediate_gain = float(scores[incoming_index] - immediate_out)
+                    if is_hit and immediate_gain <= strategy.hit_immediate_hurdle:
                         break
                     bank += sale - int(price_values[incoming_index])
                     del squad[outgoing]
@@ -987,11 +1261,15 @@ def simulate_candidate(
                     }
                     changes_this_week += 1
                     transfers += 1
+                    if is_hit:
+                        hits += 1
+                        hit_cost += 4
+                        hit_points_this_week += 4
                 if changes_this_week == 0:
                     rolled += 1
                 weekly_changes.append(changes_this_week)
                 free_transfers = min(
-                    strategy.bank_limit,
+                    bank_limit,
                     max(0, free_transfers - changes_this_week) + 1,
                 )
 
@@ -1017,7 +1295,9 @@ def simulate_candidate(
                 actual,
                 played_minutes,
             )
-            week_points = base_breakdown["normal"]
+            week_points = base_breakdown["normal"] - (
+                hit_points_this_week if week_number > 0 else 0
+            )
 
             if chip_policy:
                 fresh_indices = (
@@ -1165,6 +1445,11 @@ def simulate_candidate(
                     chip_name = str(chosen_window["chip"])
                     no_chip_points = week_points
                     if chip_name == "Wildcard":
+                        if week_number > 0:
+                            hits = hits_before
+                            hit_cost = hit_cost_before
+                            hit_points_this_week = 0
+                            free_transfers = free_transfers_before
                         squad = fresh_state
                         bank = 1000 - sum(
                             int(price_values[index]) for index in fresh_indices
@@ -1198,11 +1483,14 @@ def simulate_candidate(
                         bank = bank_before_transfers
                         transfers = transfers_before
                         if week_number > 0:
+                            hits = hits_before
+                            hit_cost = hit_cost_before
+                            hit_points_this_week = 0
                             if weekly_changes[-1] > 0:
                                 rolled += 1
                             weekly_changes[-1] = 0
                             free_transfers = min(
-                                strategy.bank_limit, free_transfers_before + 1
+                                bank_limit, free_transfers_before + 1
                             )
                     elif chip_name == "Bench Boost":
                         week_points = base_breakdown["bench_boost"]
@@ -1220,14 +1508,18 @@ def simulate_candidate(
                     )
 
             totals[season_id] += week_points
+            weekly_totals.append(float(week_points))
 
         season_stats.append(
             {
                 "season": season,
                 "transfers": transfers,
+                "hits": hits,
+                "hitCost": hit_cost,
                 "rolled": rolled,
                 "weeksChanged": sum(change > 0 for change in weekly_changes[1:]),
                 "gameweeks": len(weeks),
+                "weeklyPoints": [round(value, 1) for value in weekly_totals],
                 "chips": chip_log,
                 "chipPoints": int(sum(item["gain"] for item in chip_log)),
             }
@@ -1243,8 +1535,13 @@ def recursive_replay(
     features = feature_matrix(data)
     results = np.zeros((len(candidates), len(SEASONS)), dtype=float)
     for trial_index, candidate in enumerate(candidates):
-        trial_scores = features @ candidate.coefficients
-        results[trial_index], _ = simulate_candidate(data, trial_scores, strategy)
+        model_score = features @ candidate.coefficients
+        calibration = 0.72 + 0.56 * model_score
+        trial_scores = data["component_xpts"].to_numpy(float) * calibration
+        trial_plan_scores = data["component_horizon"].to_numpy(float) * calibration
+        results[trial_index], _ = simulate_candidate(
+            data, trial_scores, strategy, plan_scores=trial_plan_scores
+        )
         if (trial_index + 1) % 40 == 0 or trial_index + 1 == len(candidates):
             print(
                 f"Recursive replay {trial_index + 1}/{len(candidates)} "
@@ -1256,9 +1553,10 @@ def recursive_replay(
 def replay_chip_policies(
     data: pd.DataFrame,
     scores: np.ndarray,
+    plan_scores: np.ndarray,
     policies: list[ChipPolicy],
 ) -> tuple[np.ndarray, list[list[dict]], dict[tuple[str, int], list[int]]]:
-    fresh_squads = precompute_fresh_squads(data, scores)
+    fresh_squads = precompute_fresh_squads(data, plan_scores)
     results = np.zeros((len(policies), len(SEASONS)), dtype=float)
     stats: list[list[dict]] = []
     for policy_index, policy in enumerate(policies):
@@ -1268,12 +1566,73 @@ def replay_chip_policies(
             WEEKLY_CHASE_STRATEGY,
             chip_policy=policy,
             fresh_squads=fresh_squads,
+            plan_scores=plan_scores,
         )
         results[policy_index] = totals
         stats.append(season_stats)
         if (policy_index + 1) % 24 == 0 or policy_index + 1 == len(policies):
             print(f"Chip-policy replay {policy_index + 1}/{len(policies)}")
     return results, stats, fresh_squads
+
+
+def add_rank_target_estimates(
+    data: pd.DataFrame, backtest: list[dict]
+) -> dict:
+    """Attach a transparent top-500k pace proxy and bootstrap confidence.
+
+    Exact historic rank cut-offs are not exposed by the FPL API. The proxy is
+    anchored to a published 2,150-point top-500k benchmark. The 2019/20 player
+    environment is the normalisation reference for season-to-season scaling.
+    """
+    evaluation = data[data["season"].isin(EVALUATION_SEASONS)]
+    environment: dict[str, float] = {}
+    for season, season_frame in evaluation.groupby("season", sort=False):
+        weekly_elite = season_frame.groupby("GW")["points"].apply(
+            lambda values: float(values.nlargest(min(60, len(values))).mean())
+        )
+        environment[str(season)] = float(weekly_elite.mean())
+    reference = environment.get("2019-20") or float(np.mean(list(environment.values())))
+    rng = np.random.default_rng(20260811)
+    hit_count = 0
+    probabilities: list[float] = []
+    margins: list[int] = []
+    for item in backtest:
+        season_key = str(item["season"]).replace("/", "-")
+        target = int(round(2150 * environment[season_key] / reference / 5) * 5)
+        weekly = np.asarray(item.pop("weeklyPoints"), dtype=float)
+        samples = rng.choice(weekly, size=(4000, len(weekly)), replace=True).sum(axis=1)
+        probability = float(np.mean(samples >= target))
+        margin = int(item["points"] - target)
+        item["top500Target"] = target
+        item["targetMargin"] = margin
+        item["targetHit"] = margin >= 0
+        item["targetProbability"] = round(probability * 100)
+        item["estimatedBand"] = (
+            "Top 100k pace"
+            if margin >= 100
+            else "Top 500k pace"
+            if margin >= 0
+            else "500k-1m pace"
+            if margin >= -90
+            else "Outside 1m pace"
+        )
+        hit_count += int(margin >= 0)
+        probabilities.append(probability)
+        margins.append(margin)
+    return {
+        "target": "Top 500k",
+        "hits": hit_count,
+        "seasons": len(backtest),
+        "hitRate": round(100 * hit_count / max(1, len(backtest))),
+        "averageProbability": round(100 * float(np.mean(probabilities))),
+        "averageMargin": round(float(np.mean(margins))),
+        "worstMargin": min(margins) if margins else 0,
+        "method": (
+            "Estimated pace, not an official rank reconstruction: a published "
+            "2,150-point benchmark, scaled to each season's top-player scoring environment. "
+            "Probability bootstraps that season's weekly scores 4,000 times."
+        ),
+    }
 
 
 def pick_squad(players: pd.DataFrame) -> tuple[list[int], list[int]]:
@@ -1446,6 +1805,9 @@ def current_recommendation(
     current["team_id"] = current["team"].astype(int)
     current["team_name"] = current["team_id"].map(team_name)
     current["display_name"] = current["web_name"].astype(str)
+    current["display_name"] = current["display_name"].str.replace(
+        f"Gu{chr(0xFFFD)}hi", "Guehi", regex=False
+    )
     current["price"] = current["now_cost"].astype(int)
     current["ownership"] = pd.to_numeric(current["selected_by_percent"], errors="coerce").fillna(0)
     current["ep_next_num"] = pd.to_numeric(current["ep_next"], errors="coerce").fillna(0)
@@ -1485,7 +1847,7 @@ def current_recommendation(
     strengths = teams.set_index("id")
     horizon_fixtures = pd.DataFrame(fixtures)
     horizon_fixtures = horizon_fixtures[
-        horizon_fixtures["event"].between(gw_number, gw_number + 3)
+        horizon_fixtures["event"].between(gw_number, gw_number + 5)
     ]
 
     def fixture_strength(row: pd.Series) -> float:
@@ -1503,7 +1865,10 @@ def current_recommendation(
 
     current["fixture_raw"] = current.apply(fixture_strength, axis=1)
     horizon_map: dict[int, list[tuple[float, float]]] = {}
-    horizon_weight = {gw_number + offset: weight for offset, weight in enumerate((1.0, 0.82, 0.67, 0.55))}
+    horizon_weight = {
+        gw_number + offset: weight
+        for offset, weight in enumerate((1.0, 0.86, 0.74, 0.64, 0.55, 0.47))
+    }
     for _, fixture in horizon_fixtures.iterrows():
         event = int(fixture["event"])
         home = int(fixture["team_h"])
@@ -1542,16 +1907,94 @@ def current_recommendation(
         current[rank_name] = current.groupby("position_id")[raw_name].transform(percentile)
     matrix = feature_matrix(current)
     current["model_score"] = matrix @ best.coefficients
-    current["raw_projection"] = (
-        best.recent_share * current["recent_raw"]
-        + (1 - best.recent_share) * current["long_raw"]
-    ) * (0.80 + current["fixture_now"] * 0.30) * (
-        0.72 + current["minutes_security"] * 0.34
-    )
-    current["raw_projection"] = current["raw_projection"].clip(1.0, 10.5)
     current["availability"] = pd.to_numeric(
         current["chance_of_playing_next_round"], errors="coerce"
     ).fillna(100)
+    current_minutes = pd.to_numeric(current["minutes"], errors="coerce").fillna(0)
+    previous_minutes = current_minutes.where(
+        current_minutes > 0, current["previous_minutes"].fillna(0)
+    )
+    nineties = (previous_minutes / 90).clip(lower=0)
+    rate_denominator = nineties + 5.0
+
+    def numeric_current(column: str) -> pd.Series:
+        if column not in current:
+            return pd.Series(0.0, index=current.index)
+        return pd.to_numeric(current[column], errors="coerce").fillna(0.0)
+
+    expected_minutes = (
+        90
+        * (
+            0.72 * current["minutes_security_raw"].clip(0, 1)
+            + 0.28 * (current["ep_next_num"] / 5.0).clip(0.25, 1)
+        )
+        * (current["availability"] / 100).clip(0, 1)
+    ).clip(15, 90)
+    appearance_share = expected_minutes / 90
+    goals = numeric_current("goals_scored")
+    assists = numeric_current("assists")
+    expected_goals = numeric_current("expected_goals")
+    expected_assists = numeric_current("expected_assists")
+    clean_sheets = numeric_current("clean_sheets")
+    saves = numeric_current("saves")
+    bonus = numeric_current("bonus")
+    yellow_cards = numeric_current("yellow_cards")
+    red_cards = numeric_current("red_cards")
+    goals_conceded = numeric_current("goals_conceded")
+    defensive_points = numeric_current("defensive_contribution")
+    defensive_threshold = current["position_id"].map({1: 10, 2: 10, 3: 12, 4: 12}).astype(float)
+    goal_points = current["position_id"].map({1: 6, 2: 6, 3: 5, 4: 4}).astype(float)
+    clean_points = current["position_id"].map({1: 4, 2: 4, 3: 1, 4: 0}).astype(float)
+    component_projection = (
+        1.0
+        + appearance_share
+        + ((goals + expected_goals) / (2 * rate_denominator))
+        * appearance_share
+        * goal_points
+        + ((assists + expected_assists) / (2 * rate_denominator))
+        * appearance_share
+        * 3
+        + ((clean_sheets + 1.5) / rate_denominator).clip(0, 0.75)
+        * clean_points
+        * appearance_share
+        + (saves / rate_denominator / 3) * appearance_share
+        + (bonus / rate_denominator) * appearance_share
+        + 2
+        * (defensive_points / rate_denominator / defensive_threshold).clip(0, 1)
+        * appearance_share
+        - (yellow_cards + 3 * red_cards) / rate_denominator * appearance_share
+        - np.where(
+            current["position_id"].isin([1, 2]),
+            goals_conceded / rate_denominator / 2 * appearance_share,
+            0,
+        )
+    )
+    own_projection = component_projection * (
+        0.82 + current["fixture_now"] * 0.28
+    ) * (0.74 + current["model_score"] * 0.42)
+    current["raw_projection"] = (
+        0.52 * current["ep_next_num"].where(current["ep_next_num"] > 0, own_projection)
+        + 0.48 * own_projection
+    ).clip(0.5, 12.5)
+    weighted_games = current["team_id"].map(
+        lambda team_id: sum(weight for _, weight in horizon_map.get(int(team_id), []))
+    ).clip(lower=1.0)
+    current["horizon_projection"] = (
+        current["raw_projection"]
+        * weighted_games
+        * (0.82 + current["fixture"] * 0.30)
+    )
+    current["expected_minutes"] = expected_minutes
+    current["uncertainty"] = (
+        1.0
+        - (nineties / (nineties + 8)).clip(0, 0.88)
+        + (1.0 - current["availability"] / 100).clip(0, 1)
+    ).clip(0.08, 1.5)
+    current["model_score"] = (
+        0.48 * current["model_score"].rank(pct=True)
+        + 0.34 * current["horizon_projection"].rank(pct=True)
+        + 0.18 * current["raw_projection"].rank(pct=True)
+    )
     pool = current[
         (current["status"].isin(["a", "d"]))
         & (current["availability"] >= 75)
@@ -1590,6 +2033,9 @@ def current_recommendation(
             "price": round(float(row["price"]) / 10, 1),
             "ownership": round(float(row["ownership"]), 1),
             "projected": round(float(row["raw_projection"]), 1),
+            "sixWeekProjected": round(float(row["horizon_projection"]), 1),
+            "expectedMinutes": round(float(row["expected_minutes"])),
+            "uncertainty": round(float(row["uncertainty"]), 2),
             "captainRating": round(float(row["captain_score"]) * 100),
             "score": round(float(row["model_score"]) * 100),
             "features": {
@@ -1680,7 +2126,7 @@ def main() -> None:
         data_summary.append(summary)
         print(f"Prepared {season}: {summary['eligibleRows']:,} eligible player-weeks")
 
-    data = pd.concat(season_frames, ignore_index=True)
+    data = prepare_causal_history(season_frames)
     candidates, baseline_index = candidate_pool()
     snapshot_scores, seasons = snapshot_replay(data, candidates)
     gameweeks = np.array(
@@ -1690,14 +2136,20 @@ def main() -> None:
     snapshot_per_gameweek = snapshot_scores / gameweeks
     snapshot_stability = snapshot_per_gameweek.mean(axis=1) - snapshot_per_gameweek.std(axis=1) * 0.18
 
-    # Recursively replay the most promising and most season-diverse candidates.
+    # Select the recursive search space using training-only seasons. Reported
+    # 2018/19 onward results cannot influence which candidates are evaluated.
     shortlist_indices: list[int] = []
     priority = [baseline_index] + list(range(len(candidates) - 5, len(candidates)))
-    for season_id in range(len(seasons)):
+    training_count = len(TRAINING_SEASONS)
+    for season_id in range(training_count):
         priority.extend(
             np.argsort(snapshot_per_gameweek[:, season_id])[-8:][::-1].astype(int).tolist()
         )
-    priority.extend(np.argsort(snapshot_stability)[::-1].astype(int).tolist())
+    training_snapshot_stability = (
+        snapshot_per_gameweek[:, :training_count].mean(axis=1)
+        - snapshot_per_gameweek[:, :training_count].std(axis=1) * 0.25
+    )
+    priority.extend(np.argsort(training_snapshot_stability)[::-1].astype(int).tolist())
     for index in priority:
         if index not in shortlist_indices:
             shortlist_indices.append(index)
@@ -1715,11 +2167,10 @@ def main() -> None:
     baseline_local_index = shortlist_indices.index(baseline_index)
 
     walk_forward: list[dict] = []
-    all_features = feature_matrix(data)
-    best_vector = all_features @ best.coefficients
+    best_scores, best_plan_scores, _ = candidate_forecasts(data, best)
     chip_policies = chip_policy_pool()
     chip_scores, chip_policy_stats, best_fresh_squads = replay_chip_policies(
-        data, best_vector, chip_policies
+        data, best_scores, best_plan_scores, chip_policies
     )
     no_chip_best = recursive_scores[best_local_index]
     chip_gains = chip_scores - no_chip_best
@@ -1764,10 +2215,10 @@ def main() -> None:
 
     for season_id, season in enumerate(seasons):
         if season_id == 0:
-            trial_candidate = best
-            mode = "calibration seed"
-            trial_policy = best_chip_policy
-            chip_mode = "calibration seed"
+            trial_candidate = candidates[-5]
+            mode = "fixed preseason seed"
+            trial_policy = chip_policies[-4]
+            chip_mode = "fixed preseason seed"
         else:
             prior = per_gameweek[:, :season_id]
             train_score = prior.mean(axis=1) - prior.std(axis=1) * 0.25
@@ -1785,21 +2236,27 @@ def main() -> None:
                 f"12-policy ensemble trained on {season_id} prior "
                 f"season{'s' if season_id != 1 else ''}"
             )
-        trial_vector = all_features @ trial_candidate.coefficients
+        trial_scores, trial_plan_scores, _ = candidate_forecasts(data, trial_candidate)
         no_chip_totals, no_chip_stats = simulate_candidate(
-            data, trial_vector, WEEKLY_CHASE_STRATEGY
+            data,
+            trial_scores,
+            WEEKLY_CHASE_STRATEGY,
+            plan_scores=trial_plan_scores,
         )
-        trial_fresh_squads = precompute_fresh_squads(data, trial_vector)
+        trial_fresh_squads = precompute_fresh_squads(data, trial_plan_scores)
         trial_totals, trial_stats = simulate_candidate(
             data,
-            trial_vector,
+            trial_scores,
             WEEKLY_CHASE_STRATEGY,
             chip_policy=trial_policy,
             fresh_squads=trial_fresh_squads,
+            plan_scores=trial_plan_scores,
         )
         points = round(float(trial_totals[season_id]))
         baseline = round(float(no_chip_totals[season_id]))
         season_transfer_stats = trial_stats[season_id]
+        if season not in EVALUATION_SEASONS:
+            continue
         walk_forward.append(
             {
                 "season": season.replace("-", "/"),
@@ -1812,6 +2269,10 @@ def main() -> None:
                 "transfers": season_transfer_stats["transfers"],
                 "weeksChanged": season_transfer_stats["weeksChanged"],
                 "rolled": season_transfer_stats["rolled"],
+                "hits": season_transfer_stats["hits"],
+                "hitCost": season_transfer_stats["hitCost"],
+                "gameweeks": season_transfer_stats["gameweeks"],
+                "weeklyPoints": season_transfer_stats["weeklyPoints"],
                 "chipPoints": points - baseline,
                 "chips": season_transfer_stats["chips"],
                 "legacyBaseline": round(
@@ -1842,19 +2303,25 @@ def main() -> None:
     ]
 
     best_totals, best_stats = simulate_candidate(
-        data, best_vector, WEEKLY_CHASE_STRATEGY
+        data, best_scores, WEEKLY_CHASE_STRATEGY, plan_scores=best_plan_scores
     )
     weekly_safe_captain = SimulationStrategy(
-        "Forced weekly transfer + safe captain", 0.0, 1, True, True
+        "Six-GW planner + safe captain", 5.00, 5, False, True, 0, 99.0
     )
     patient_model_captain = SimulationStrategy(
-        "Patient transfers + model captain", 0.12, 2, False, False
+        "Patient six-GW transfers + model captain", 8.00, 5, False, False, 0, 99.0
+    )
+    permissive_hit_strategy = SimulationStrategy(
+        "Six-GW planner + three paid hits", 5.00, 5, False, False, 3, 2.5
     )
     safe_captain_totals, _ = simulate_candidate(
-        data, best_vector, weekly_safe_captain
+        data, best_scores, weekly_safe_captain, plan_scores=best_plan_scores
     )
     patient_totals, patient_stats = simulate_candidate(
-        data, best_vector, patient_model_captain
+        data, best_scores, patient_model_captain, plan_scores=best_plan_scores
+    )
+    permissive_hit_totals, _ = simulate_candidate(
+        data, best_scores, permissive_hit_strategy, plan_scores=best_plan_scores
     )
     baseline_totals = recursive_scores[baseline_local_index]
 
@@ -1868,6 +2335,12 @@ def main() -> None:
         }
 
     expert_tests = [
+        advice_test(
+            "Paid-hit restraint",
+            best_totals,
+            permissive_hit_totals,
+            "The calibration allows a paid-hit alternative, but keeps it only if the historical replay beats patient free transfers.",
+        ),
         advice_test(
             "Patience over churn",
             patient_totals,
@@ -1884,7 +2357,7 @@ def main() -> None:
             "Expert data layer",
             best_totals,
             baseline_totals,
-            "Add four-GW fixtures, minutes security and ICT involvement to the original Lens feature set.",
+            "Add component expected points, six-GW fixtures, minutes security and underlying involvement to the original Lens feature set.",
         ),
     ]
 
@@ -1909,19 +2382,21 @@ def main() -> None:
         for chip, gains in chip_gains_by_type.items()
     ]
 
+    rank_target = add_rank_target_estimates(data, walk_forward)
     headline, squad, watchlist, matchups, all_players, current_meta = current_recommendation(data, best)
     result = {
         "product": "FPL Lens",
         "generatedAt": datetime.now().astimezone().isoformat(timespec="minutes"),
         "model": {
-            "version": "Lens 3.0",
+            "version": "Lens 4.0",
             "trials": len(candidates),
             "recursiveTrials": len(recursive_candidates),
-            "seasons": len(seasons),
+            "seasons": len(EVALUATION_SEASONS),
+            "trainingSeasons": len(TRAINING_SEASONS),
             "playerWeeks": int(len(data)),
             "bestTrial": best_index + 1,
             "weights": best.as_dict(),
-            "method": "Stateful walk-forward replay: one legal 15-player squad, transfers and chip inventory are carried into the next deadline using only data available then.",
+            "method": "Leak-free six-GW walk-forward replay: one legal 15-player squad, banked transfers and chip inventory carry into every deadline using only information then available.",
             "objective": "Maximise legal autosubbed XI, captain and chip points while penalising season-to-season volatility.",
             "strategy": WEEKLY_CHASE_STRATEGY.name,
         },
@@ -1932,6 +2407,7 @@ def main() -> None:
         "fixtureMatchups": matchups,
         "currentPlayers": all_players,
         "backtest": walk_forward,
+        "rankTarget": rank_target,
         "chipStrategy": {
             "policyTrials": len(chip_policies),
             "policy": best_chip_policy.as_dict(),
@@ -1952,7 +2428,7 @@ def main() -> None:
                 "chip": "Hold",
                 "gameweek": headline["gameweek"],
                 "reason": "Single-Gameweek slate and a freshly optimised squad. Preserve the first-half chips for a larger fixture or availability edge.",
-                "nextReview": "Re-score after every deadline; AFCON disruption, blank clashes and double fixtures are explicit triggers.",
+                "nextReview": "Re-score after every deadline; blank clashes, double fixtures, injuries and rotation are explicit triggers.",
             },
             "rules": "Two of each chip: one set through GW19 and one from GW20, with one chip permitted per Gameweek.",
         },
@@ -1961,11 +2437,14 @@ def main() -> None:
             "averageTransfers": round(float(np.mean([item["transfers"] for item in best_stats])), 1),
             "averageWeeksChanged": round(float(np.mean([item["weeksChanged"] for item in best_stats])), 1),
             "averageRolled": round(float(np.mean([item["rolled"] for item in best_stats])), 1),
+            "averageHits": round(float(np.mean([item["hits"] for item in best_stats])), 1),
             "patientAverageTransfers": round(float(np.mean([item["transfers"] for item in patient_stats])), 1),
         },
         "leaderboard": leaderboard,
         "calibrationCurve": calibration_curve,
-        "dataSummary": data_summary,
+        "dataSummary": [
+            item for item in data_summary if item["season"] in EVALUATION_SEASONS
+        ],
         "sources": [
             {
                 "label": "Historical FPL dataset",
@@ -1992,6 +2471,18 @@ def main() -> None:
                 "url": "https://www.premierleague.com/en/news/4025381",
             },
             {
+                "label": "Official 2026/27 FPL changes",
+                "url": "https://www.premierleague.com/en/news/4679873/all-you-need-to-know-about-changes-to-fpl-for-202627",
+            },
+            {
+                "label": "FPL Review projection methodology",
+                "url": "https://docs.fplreview.com/getting-started/about-fplreview/",
+            },
+            {
+                "label": "Published top-500k points benchmark",
+                "url": "https://www.fantasyfootballscout.co.uk/2019/11/28/quantifying-the-impact-of-fpl-decisions-with-chip-season-arriving-earlier/",
+            },
+            {
                 "label": "Official FPL chip rules",
                 "url": "https://fantasy.premierleague.com/help/",
             },
@@ -2001,9 +2492,11 @@ def main() -> None:
             },
         ],
         "notes": [
-            "Every historical GW is recursive: the prior squad, bank and up to two free transfers carry forward; transfers use contemporaneous prices and FPL selling-price rules.",
+            "Every historical GW is recursive: the prior squad, bank and season-correct free-transfer cap carry forward; transfers use contemporaneous prices and FPL selling-price rules.",
             "The replay selects a legal formation, orders the bench, applies autosubs and hands the armband to the vice-captain when required.",
             "Chip decisions are causal threshold rules, not hindsight-selected best weeks: AFCON disruption informs Wildcards, blank/double clashes inform Free Hits, and doubles raise Bench Boost and Triple Captain signals.",
+            "The transfer planner looks six Gameweeks ahead and can bank up to the cap that applied in that season; paid-hit variants were tested and rejected when they reduced replay points.",
+            "The top-500k result is an estimated scoring-pace test because official historic rank cut-offs are not exposed by the FPL API.",
             "Age is an availability/consistency prior, not a claim that younger or older players are inherently better.",
             "Current projections are decision support, not guarantees; late team news should override the model.",
         ],
@@ -2016,5 +2509,51 @@ def main() -> None:
     )
 
 
+def refresh_current_artifact() -> None:
+    """Refresh live recommendations without rerunning the expensive calibration."""
+    if not OUTPUT.exists():
+        raise FileNotFoundError("Run the full calibration before --refresh-current")
+    result = json.loads(OUTPUT.read_text(encoding="utf-8"))
+    weights = result["model"]["weights"]
+    best = Candidate(
+        weights["performance"] / 100,
+        weights["value"] / 100,
+        weights["age"] / 100,
+        weights["fixture"] / 100,
+        weights["crowd"] / 100,
+        weights["minutes"] / 100,
+        weights["underlying"] / 100,
+        weights["recent"] / 100,
+    )
+    frame, _ = build_season(
+        "2025-26", load_age_register(), load_nationality_register()
+    )
+    historical = prepare_causal_history([frame])
+    headline, squad, watchlist, matchups, all_players, current_meta = (
+        current_recommendation(historical, best)
+    )
+    result.update(
+        {
+            "generatedAt": datetime.now().astimezone().isoformat(timespec="minutes"),
+            "headline": headline,
+            "squad": squad,
+            "watchlist": watchlist,
+            "fixtureMatchups": matchups,
+            "currentPlayers": all_players,
+            "currentMeta": current_meta,
+        }
+    )
+    result["rankTarget"]["method"] = (
+        "Estimated pace, not an official rank reconstruction: a published "
+        "2,150-point benchmark, scaled to each season's top-player scoring environment. "
+        "Probability bootstraps that season's weekly scores 4,000 times."
+    )
+    OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"Refreshed current recommendations in {OUTPUT.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
-    main()
+    if "--refresh-current" in sys.argv:
+        refresh_current_artifact()
+    else:
+        main()
