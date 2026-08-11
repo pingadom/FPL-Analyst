@@ -23,6 +23,44 @@ type Player = {
   sixWeekProjected: number;
   expectedMinutes: number;
   uncertainty: number;
+  confidence: number;
+  valueProjected: number;
+  verdict: "Priority" | "Strong" | "Watch" | "Fade";
+  setPieces: string[];
+  riskFlags: string[];
+  components: {
+    appearance: number;
+    goals: number;
+    assists: number;
+    cleanSheet: number;
+    defence: number;
+    bonus: number;
+    adjustment: number;
+  };
+  history: {
+    matches: number;
+    average: number;
+    per90: number;
+    returnRate: number;
+    volatility: number;
+  };
+  opponentHistory: {
+    matches: number;
+    average: number;
+    per90: number;
+    returnRate: number;
+  };
+  comparison: {
+    fixtureRank: number;
+    fixturePlayers: number;
+    positionRank: number;
+    positionPlayers: number;
+    projectionRank: number;
+    popularRival: string;
+    popularRivalOwnership: number;
+    popularRivalProjection: number;
+    edgeVsPopular: number;
+  };
   captainRating: number;
   score: number;
   opponent: string;
@@ -71,6 +109,16 @@ const chipDescriptions: Record<string, string> = {
   "Triple Captain": "Eligible only when the chosen captain has two fixtures and clears the score bar.",
 };
 
+const componentLabels: Record<keyof Player["components"], string> = {
+  appearance: "Appearance",
+  goals: "Goal threat",
+  assists: "Assist threat",
+  cleanSheet: "Clean sheet",
+  defence: "Defensive work",
+  bonus: "Bonus",
+  adjustment: "Model adjustment",
+};
+
 function rebalanceWeights(
   current: Record<WeightKey, number>,
   changed: WeightKey,
@@ -109,7 +157,7 @@ function calculateScore(
   const value =
     player.features.recentValue * recent +
     player.features.historyValue * (1 - recent);
-  return (
+  const lensScore = (
     performance * (weights.performance / 100) +
     value * (weights.value / 100) +
     player.features.age * (weights.age / 100) +
@@ -117,6 +165,11 @@ function calculateScore(
     player.features.crowd * (weights.crowd / 100) +
     player.features.minutes * (weights.minutes / 100) +
     player.features.underlying * (weights.underlying / 100)
+  );
+  return (
+    0.72 * lensScore +
+    0.18 * (player.comparison.projectionRank / 100) +
+    0.10 * (player.confidence / 100)
   );
 }
 
@@ -147,7 +200,12 @@ function buildSquad(players: ScoredPlayer[]) {
     if (selected.length !== 15) continue;
     const spend = selected.reduce((sum, player) => sum + player.price, 0);
     if (spend > 100) continue;
-    const score = selected.reduce((sum, player) => sum + player.liveScore, 0);
+    const score = selected.reduce(
+      (sum, player) =>
+        sum + 0.72 * player.liveScore + 0.20 * player.sixWeekProjected / 30 +
+        0.08 * player.confidence / 100,
+      0,
+    );
     if (score > bestScore) {
       bestScore = score;
       best = selected;
@@ -177,7 +235,10 @@ function buildSquad(players: ScoredPlayer[]) {
           .sort((a, b) => b.liveScore - a.liveScore)
           .slice(0, formation[position]),
       );
-      const score = xi.reduce((sum, player) => sum + player.liveScore, 0);
+      const score = xi.reduce(
+        (sum, player) => sum + player.projected - 0.35 * player.uncertainty,
+        0,
+      );
       if (xi.length === 11 && score > bestXiScore) {
         bestXiScore = score;
         bestXi = xi;
@@ -200,13 +261,20 @@ function PlayerRow({
   player,
   captain,
   vice,
+  onAnalyse,
 }: {
   player: ScoredPlayer;
   captain?: boolean;
   vice?: boolean;
+  onAnalyse?: (player: ScoredPlayer) => void;
 }) {
   return (
-    <div className="player-row">
+    <button
+      className="player-row"
+      onClick={() => onAnalyse?.(player)}
+      type="button"
+      aria-label={`Analyse ${player.name}`}
+    >
       <div className={`position-tag position-${player.position.toLowerCase()}`}>
         {player.position}
       </div>
@@ -225,7 +293,7 @@ function PlayerRow({
         <strong>{player.projected.toFixed(1)}</strong>
         <span>xPts</span>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -243,6 +311,9 @@ export default function FplDashboard() {
   const [recentShare, setRecentShare] = useState(calibrated.recent);
   const [now, setNow] = useState(() => Date.now());
   const [showBench, setShowBench] = useState(true);
+  const [analysedId, setAnalysedId] = useState<number>(
+    (results.currentPlayers as Player[])[0]?.id ?? 0,
+  );
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 60_000);
@@ -294,6 +365,12 @@ export default function FplDashboard() {
     () => [...scoredPlayers].sort((a, b) => b.liveScore - a.liveScore).slice(0, 6),
     [scoredPlayers],
   );
+  const analysedPlayer = useMemo(
+    () =>
+      scoredPlayers.find((player) => player.id === analysedId) ??
+      scoredPlayers[0],
+    [analysedId, scoredPlayers],
+  );
   const resetModel = () => {
     setWeights({
       performance: calibrated.performance,
@@ -306,6 +383,15 @@ export default function FplDashboard() {
     });
     setRecentShare(calibrated.recent);
   };
+  const openAnalysis = (player: ScoredPlayer) => {
+    setAnalysedId(player.id);
+    window.requestAnimationFrame(() =>
+      document.getElementById("player-lab")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      }),
+    );
+  };
 
   return (
     <main>
@@ -317,6 +403,7 @@ export default function FplDashboard() {
         </a>
         <nav aria-label="Primary navigation">
           <a href="#squad">Squad</a>
+          <a href="#player-lab">Player Lab</a>
           <a href="#chips">Chips</a>
           <a href="#backtest">Backtest</a>
           <a href="#method">Method</a>
@@ -413,6 +500,7 @@ export default function FplDashboard() {
                 player={player}
                 captain={player.id === captain?.id}
                 vice={player.id === vice?.id}
+                onAnalyse={openAnalysis}
               />
             ))}
           </div>
@@ -422,7 +510,7 @@ export default function FplDashboard() {
           </button>
           {showBench && (
             <div className="bench-list">
-              {bench.map((player) => <PlayerRow key={player.id} player={player} />)}
+              {bench.map((player) => <PlayerRow key={player.id} player={player} onAnalyse={openAnalysis} />)}
             </div>
           )}
         </section>
@@ -432,11 +520,11 @@ export default function FplDashboard() {
           <div className="panel-heading"><div><h2>Model board</h2><p>Who rises under your mix.</p></div></div>
           <div className="rank-list">
             {topRanks.map((player, index) => (
-              <div className="rank-row" key={player.id}>
+              <button className="rank-row" key={player.id} type="button" onClick={() => openAnalysis(player)}>
                 <span className="rank-number">{String(index + 1).padStart(2, "0")}</span>
                 <div><strong>{player.name}</strong><small>{player.team} · {player.opponent} ({player.venue})</small></div>
                 <div className="rank-score"><strong>{Math.round(player.liveScore * 100)}</strong><span>lens</span></div>
-              </div>
+              </button>
             ))}
           </div>
           <div className="fixture-edge-card">
@@ -445,16 +533,138 @@ export default function FplDashboard() {
               <div className="fixture-edge" key={match.fixture}>
                 <span>{match.fixture}</span>
                 <strong>{match.modelPick}</strong>
-                <small>{match.modelPick === match.popularPick ? "Model agrees with market" : `Market: ${match.popularPick}`}</small>
+                <small>
+                  {match.modelPick === match.popularPick
+                    ? `${match.modelProjection} xPts · model agrees with market`
+                    : `${match.modelProjection} xPts vs ${match.popularPick} ${match.popularProjection} · ${match.popularOwnership}% owned`}
+                </small>
               </div>
             ))}
           </div>
         </aside>
       </section>
 
+      {analysedPlayer && (
+        <section className="player-lab" id="player-lab">
+          <div className="player-lab-intro">
+            <div className="section-label"><span>04</span> PLAYER LAB</div>
+            <h2>Read the player.<br />Not just the score.</h2>
+            <p>
+              Open up the forecast: expected minutes, scoring routes, uncertainty,
+              opponent history and the strongest popular alternative in the same fixture.
+            </p>
+            <label className="player-picker">
+              <span>PLAYER TO ANALYSE</span>
+              <select
+                value={analysedPlayer.id}
+                onChange={(event) => setAnalysedId(Number(event.target.value))}
+              >
+                {[...scoredPlayers]
+                  .sort((a, b) => b.sixWeekProjected - a.sixWeekProjected)
+                  .map((player) => (
+                    <option value={player.id} key={player.id}>
+                      {player.name} · {player.team} · £{player.price.toFixed(1)}
+                    </option>
+                  ))}
+              </select>
+            </label>
+            <div className="lab-method-note">
+              <strong>{results.currentMeta.componentModel}</strong>
+              <span>{results.currentMeta.historicalSeasons} historical season{results.currentMeta.historicalSeasons === 1 ? "" : "s"} in this player refresh.</span>
+            </div>
+          </div>
+
+          <div className="player-workbench">
+            <header className="player-lab-header">
+              <div>
+                <span>{analysedPlayer.position} · {analysedPlayer.team} · £{analysedPlayer.price.toFixed(1)}</span>
+                <h3>{analysedPlayer.name}</h3>
+                <p>{analysedPlayer.opponent} ({analysedPlayer.venue}) · {analysedPlayer.ownership}% owned</p>
+              </div>
+              <div className={`verdict verdict-${analysedPlayer.verdict.toLowerCase()}`}>
+                <span>MODEL CALL</span>
+                <strong>{analysedPlayer.verdict}</strong>
+                <small>{analysedPlayer.confidence}% confidence</small>
+              </div>
+            </header>
+
+            <div className="lab-metrics">
+              <div><span>GW xPTS</span><strong>{analysedPlayer.projected.toFixed(1)}</strong><small>risk-aware forecast</small></div>
+              <div><span>SIX-GW xPTS</span><strong>{analysedPlayer.sixWeekProjected.toFixed(1)}</strong><small>weighted horizon</small></div>
+              <div><span>EXPECTED MINS</span><strong>{analysedPlayer.expectedMinutes}</strong><small>availability adjusted</small></div>
+              <div><span>VALUE</span><strong>{analysedPlayer.valueProjected.toFixed(2)}</strong><small>six-GW xPts / £m</small></div>
+            </div>
+
+            <div className="lab-analysis-grid">
+              <article className="component-card">
+                <div className="lab-card-heading"><span>PROJECTION ANATOMY</span><strong>{analysedPlayer.projected.toFixed(1)} total</strong></div>
+                <div className="component-bars">
+                  {(Object.keys(componentLabels) as Array<keyof Player["components"]>).map((key) => {
+                    const value = analysedPlayer.components[key];
+                    const width = Math.min(100, Math.abs(value) / Math.max(analysedPlayer.projected, 0.5) * 100);
+                    return (
+                      <div className={`component-row ${value < 0 ? "component-negative" : ""}`} key={key}>
+                        <span>{componentLabels[key]}</span>
+                        <div><i style={{ width: `${width}%` }} /></div>
+                        <strong>{value >= 0 ? "+" : ""}{value.toFixed(2)}</strong>
+                      </div>
+                    );
+                  })}
+                </div>
+              </article>
+
+              <article className="history-card">
+                <div className="lab-card-heading"><span>PERFORMANCE EVIDENCE</span><strong>{analysedPlayer.history.matches} apps</strong></div>
+                <div className="history-split">
+                  <div>
+                    <span>GENERAL</span>
+                    <strong>{analysedPlayer.history.average.toFixed(2)}</strong>
+                    <small>points / app · {analysedPlayer.history.per90.toFixed(2)} per 90</small>
+                    <em>{analysedPlayer.history.returnRate}% returned 5+ points</em>
+                  </div>
+                  <div>
+                    <span>VS {analysedPlayer.opponent}</span>
+                    <strong>{analysedPlayer.opponentHistory.matches > 0 ? analysedPlayer.opponentHistory.average.toFixed(2) : "—"}</strong>
+                    <small>{analysedPlayer.opponentHistory.matches} prior appearance{analysedPlayer.opponentHistory.matches === 1 ? "" : "s"}</small>
+                    <em>{analysedPlayer.opponentHistory.matches > 0 ? `${analysedPlayer.opponentHistory.returnRate}% returned 5+ points` : "No direct sample"}</em>
+                  </div>
+                </div>
+                <p>Opponent history is descriptive and sample-labelled; it does not override the forward projection.</p>
+              </article>
+
+              <article className="comparison-card">
+                <div className="lab-card-heading"><span>SAME-FIXTURE TEST</span><strong>#{analysedPlayer.comparison.fixtureRank}/{analysedPlayer.comparison.fixturePlayers}</strong></div>
+                <div className="comparison-player">
+                  <div><span>MODEL</span><strong>{analysedPlayer.name}</strong><small>{analysedPlayer.projected.toFixed(1)} xPts</small></div>
+                  <b>VS</b>
+                  <div><span>POPULAR ALTERNATIVE</span><strong>{analysedPlayer.comparison.popularRival}</strong><small>{analysedPlayer.comparison.popularRivalProjection.toFixed(1)} xPts · {analysedPlayer.comparison.popularRivalOwnership}% owned</small></div>
+                </div>
+                <div className={`comparison-edge ${analysedPlayer.comparison.edgeVsPopular >= 0 ? "positive" : "negative"}`}>
+                  {analysedPlayer.comparison.edgeVsPopular >= 0 ? "+" : ""}{analysedPlayer.comparison.edgeVsPopular.toFixed(1)} xPts versus the popular alternative
+                </div>
+                <small>Position rank #{analysedPlayer.comparison.positionRank}/{analysedPlayer.comparison.positionPlayers}</small>
+              </article>
+
+              <article className="signal-card">
+                <div className="lab-card-heading"><span>ROLE & RISK</span><strong>{analysedPlayer.confidence}%</strong></div>
+                <div className="signal-group">
+                  <span>SET PIECES</span>
+                  <div>{analysedPlayer.setPieces.length ? analysedPlayer.setPieces.map((signal) => <i key={signal}>{signal}</i>) : <i>None flagged</i>}</div>
+                </div>
+                <div className="signal-group">
+                  <span>RISK CHECK</span>
+                  <div>{analysedPlayer.riskFlags.map((flag) => <i className={flag === "No major flag" ? "safe-signal" : "risk-signal"} key={flag}>{flag}</i>)}</div>
+                </div>
+                <p>Projection uncertainty: ±{Math.max(0.4, analysedPlayer.uncertainty * 2.4).toFixed(1)} points around the central GW estimate.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="chip-section" id="chips">
         <div className="chip-intro">
-          <div className="section-label"><span>04</span> CHIP DESK</div>
+          <div className="section-label"><span>05</span> CHIP DESK</div>
           <h2>Wait for the<br />fixture to bend.</h2>
           <p>
             Chips are scored inside the recursive replay, not added afterward. The
@@ -509,7 +719,7 @@ export default function FplDashboard() {
 
       <section className="backtest-section" id="backtest">
         <div className="backtest-intro">
-          <div className="section-label light"><span>05</span> PROOF, NOT PROMISES</div>
+          <div className="section-label light"><span>06</span> PROOF, NOT PROMISES</div>
           <h2>Replay the past.<br />Earn the present.</h2>
           <p>
             The same 15-player squad moves from one deadline to the next. The model
@@ -566,7 +776,7 @@ export default function FplDashboard() {
       </section>
 
       <section className="method-section" id="method">
-        <div className="section-label"><span>06</span> HOW THE LENS WORKS</div>
+        <div className="section-label"><span>07</span> HOW THE LENS WORKS</div>
         <div className="method-headline">
           <h2>Transparent inputs.<br />No mystery score.</h2>
           <p>{results.model.method} {results.model.objective}</p>

@@ -1738,6 +1738,7 @@ def current_recommendation(
     gw_number = int(next_event["id"])
     deadline = str(next_event["deadline_time"])
     team_name = dict(zip(teams["id"], teams["short_name"]))
+    team_full_name = dict(zip(teams["id"], teams["name"]))
 
     prior = historical[historical["season"] == "2025-26"].copy()
     raw_prior_path = CACHE / "2025-26" / "merged_gw.csv"
@@ -1774,15 +1775,51 @@ def current_recommendation(
     fixture_map: dict[int, dict] = {}
     for _, fixture in first_fixtures.iterrows():
         fixture_map[int(fixture["team_h"])] = {
+            "fixture_id": int(fixture["id"]),
             "opponent": int(fixture["team_a"]),
             "home": True,
             "kickoff": fixture["kickoff_time"],
         }
         fixture_map[int(fixture["team_a"])] = {
+            "fixture_id": int(fixture["id"]),
             "opponent": int(fixture["team_h"]),
             "home": False,
             "kickoff": fixture["kickoff_time"],
         }
+
+    played_history = historical[
+        (historical["minutes"] > 0) & historical["player_code"].notna()
+    ].copy()
+    general_history = (
+        played_history.groupby("player_code", as_index=False)
+        .agg(
+            history_matches=("points", "size"),
+            history_points=("points", "sum"),
+            history_minutes=("minutes", "sum"),
+            history_average=("points", "mean"),
+            history_volatility=("points", "std"),
+            history_returns=("points", lambda values: float((values >= 5).mean())),
+        )
+    )
+    general_history["history_per90"] = (
+        90 * general_history["history_points"]
+        / general_history["history_minutes"].clip(lower=1)
+    )
+    opponent_history = (
+        played_history.dropna(subset=["opponent_name"])
+        .groupby(["player_code", "opponent_name"], as_index=False)
+        .agg(
+            opponent_matches=("points", "size"),
+            opponent_points=("points", "sum"),
+            opponent_minutes=("minutes", "sum"),
+            opponent_average=("points", "mean"),
+            opponent_returns=("points", lambda values: float((values >= 5).mean())),
+        )
+    )
+    opponent_history["opponent_per90"] = (
+        90 * opponent_history["opponent_points"]
+        / opponent_history["opponent_minutes"].clip(lower=1)
+    )
 
     current = current.merge(
         prior_summary[
@@ -1804,6 +1841,18 @@ def current_recommendation(
     current["position_id"] = current["element_type"].astype(int)
     current["team_id"] = current["team"].astype(int)
     current["team_name"] = current["team_id"].map(team_name)
+    current["opponent_full_name"] = current["team_id"].map(
+        lambda team_id: team_full_name.get(
+            fixture_map.get(int(team_id), {}).get("opponent"), "TBD"
+        )
+    )
+    current = current.merge(general_history, on="player_code", how="left")
+    current = current.merge(
+        opponent_history,
+        left_on=["player_code", "opponent_full_name"],
+        right_on=["player_code", "opponent_name"],
+        how="left",
+    )
     current["display_name"] = current["web_name"].astype(str)
     current["display_name"] = current["display_name"].str.replace(
         f"Gu{chr(0xFFFD)}hi", "Guehi", regex=False
@@ -1915,6 +1964,7 @@ def current_recommendation(
         current_minutes > 0, current["previous_minutes"].fillna(0)
     )
     nineties = (previous_minutes / 90).clip(lower=0)
+    current["sample_nineties"] = nineties
     rate_denominator = nineties + 5.0
 
     def numeric_current(column: str) -> pd.Series:
@@ -1945,29 +1995,50 @@ def current_recommendation(
     defensive_threshold = current["position_id"].map({1: 10, 2: 10, 3: 12, 4: 12}).astype(float)
     goal_points = current["position_id"].map({1: 6, 2: 6, 3: 5, 4: 4}).astype(float)
     clean_points = current["position_id"].map({1: 4, 2: 4, 3: 1, 4: 0}).astype(float)
-    component_projection = (
-        1.0
-        + appearance_share
-        + ((goals + expected_goals) / (2 * rate_denominator))
+    appearance_component = 1.0 + appearance_share
+    goal_component = (
+        ((goals + expected_goals) / (2 * rate_denominator))
         * appearance_share
         * goal_points
-        + ((assists + expected_assists) / (2 * rate_denominator))
+    )
+    assist_component = (
+        ((assists + expected_assists) / (2 * rate_denominator))
         * appearance_share
         * 3
-        + ((clean_sheets + 1.5) / rate_denominator).clip(0, 0.75)
+    )
+    clean_component = (
+        ((clean_sheets + 1.5) / rate_denominator).clip(0, 0.75)
         * clean_points
         * appearance_share
-        + (saves / rate_denominator / 3) * appearance_share
-        + (bonus / rate_denominator) * appearance_share
-        + 2
+    )
+    save_component = (saves / rate_denominator / 3) * appearance_share
+    bonus_component = (bonus / rate_denominator) * appearance_share
+    defensive_component = (
+        2
         * (defensive_points / rate_denominator / defensive_threshold).clip(0, 1)
         * appearance_share
-        - (yellow_cards + 3 * red_cards) / rate_denominator * appearance_share
-        - np.where(
+    )
+    discipline_component = -(
+        (yellow_cards + 3 * red_cards) / rate_denominator * appearance_share
+    )
+    conceded_component = -pd.Series(
+        np.where(
             current["position_id"].isin([1, 2]),
             goals_conceded / rate_denominator / 2 * appearance_share,
             0,
-        )
+        ),
+        index=current.index,
+    )
+    component_projection = (
+        appearance_component
+        + goal_component
+        + assist_component
+        + clean_component
+        + save_component
+        + bonus_component
+        + defensive_component
+        + discipline_component
+        + conceded_component
     )
     own_projection = component_projection * (
         0.82 + current["fixture_now"] * 0.28
@@ -1976,6 +2047,23 @@ def current_recommendation(
         0.52 * current["ep_next_num"].where(current["ep_next_num"] > 0, own_projection)
         + 0.48 * own_projection
     ).clip(0.5, 12.5)
+    component_scale = current["raw_projection"] / component_projection.clip(lower=0.25)
+    current["component_appearance"] = appearance_component * component_scale
+    current["component_goals"] = goal_component * component_scale
+    current["component_assists"] = assist_component * component_scale
+    current["component_clean"] = clean_component * component_scale
+    current["component_defence"] = (
+        save_component + defensive_component
+    ) * component_scale
+    current["component_bonus"] = bonus_component * component_scale
+    current["component_adjustment"] = current["raw_projection"] - (
+        current["component_appearance"]
+        + current["component_goals"]
+        + current["component_assists"]
+        + current["component_clean"]
+        + current["component_defence"]
+        + current["component_bonus"]
+    )
     weighted_games = current["team_id"].map(
         lambda team_id: sum(weight for _, weight in horizon_map.get(int(team_id), []))
     ).clip(lower=1.0)
@@ -1985,15 +2073,30 @@ def current_recommendation(
         * (0.82 + current["fixture"] * 0.30)
     )
     current["expected_minutes"] = expected_minutes
+    official_disagreement = (
+        (own_projection - current["ep_next_num"]).abs()
+        / current["raw_projection"].clip(lower=1)
+    ).clip(0, 1)
     current["uncertainty"] = (
-        1.0
-        - (nineties / (nineties + 8)).clip(0, 0.88)
-        + (1.0 - current["availability"] / 100).clip(0, 1)
-    ).clip(0.08, 1.5)
+        0.45 * (1.0 - (nineties / (nineties + 8)).clip(0, 0.92))
+        + 0.25 * (1.0 - current["minutes_security_raw"].clip(0, 1))
+        + 0.20 * (1.0 - current["availability"] / 100).clip(0, 1)
+        + 0.10 * official_disagreement
+    ).clip(0.05, 1.0)
+    current["confidence"] = (100 * (1 - current["uncertainty"])).clip(0, 95)
+    current["risk_adjusted_projection"] = (
+        current["raw_projection"] - 0.55 * current["uncertainty"]
+    ).clip(lower=0.2)
+    current["risk_adjusted_horizon"] = (
+        current["horizon_projection"] - 1.4 * current["uncertainty"]
+    ).clip(lower=0.2)
+    current["value_projection"] = (
+        current["risk_adjusted_horizon"] / (current["price"] / 10).clip(lower=3.5)
+    )
     current["model_score"] = (
-        0.48 * current["model_score"].rank(pct=True)
-        + 0.34 * current["horizon_projection"].rank(pct=True)
-        + 0.18 * current["raw_projection"].rank(pct=True)
+        0.42 * current["model_score"].rank(pct=True)
+        + 0.38 * current["risk_adjusted_horizon"].rank(pct=True)
+        + 0.20 * current["risk_adjusted_projection"].rank(pct=True)
     )
     pool = current[
         (current["status"].isin(["a", "d"]))
@@ -2006,11 +2109,20 @@ def current_recommendation(
         )
     ].copy()
     pool.reset_index(drop=True, inplace=True)
+    pool["fixture_id"] = pool["team_id"].map(
+        lambda team_id: fixture_map.get(int(team_id), {}).get("fixture_id", -1)
+    )
+    pool["position_rank"] = pool.groupby("position_id")[
+        "risk_adjusted_horizon"
+    ].rank(method="min", ascending=False)
+    pool["position_count"] = pool.groupby("position_id")["id"].transform("size")
+    pool["projection_percentile"] = pool.groupby("position_id")[
+        "risk_adjusted_horizon"
+    ].rank(pct=True)
     chosen, xi = pick_squad(pool)
-    chosen_set = set(chosen)
     xi_set = set(xi)
     pool["captain_score"] = (
-        0.56 * pool["raw_projection"].rank(pct=True)
+        0.56 * pool["risk_adjusted_projection"].rank(pct=True)
         + 0.18 * pool["fixture_now"]
         + 0.20 * pool["minutes_security"]
         + 0.06 * pool["crowd"]
@@ -2025,6 +2137,54 @@ def current_recommendation(
     def player_payload(index: int, row: pd.Series) -> dict:
         fixture = fixture_map.get(int(row["team_id"]), {})
         opponent_id = fixture.get("opponent")
+        fixture_peers = pool[
+            (pool["fixture_id"] == int(row["fixture_id"]))
+            & (pool["id"] != int(row["id"]))
+        ]
+        popular_rival = (
+            fixture_peers.nlargest(1, "ownership").iloc[0]
+            if not fixture_peers.empty
+            else row
+        )
+        fixture_rank = int(
+            1 + (fixture_peers["model_score"] > float(row["model_score"])).sum()
+        )
+
+        def clean_number(name: str, default: float = 0.0) -> float:
+            value = row.get(name, default)
+            return default if pd.isna(value) else float(value)
+
+        set_pieces: list[str] = []
+        for label, column in [
+            ("Penalties", "penalties_order"),
+            ("Direct free-kicks", "direct_freekicks_order"),
+            ("Corners", "corners_and_indirect_freekicks_order"),
+        ]:
+            order = clean_number(column, 0)
+            if 0 < order <= 2:
+                set_pieces.append(f"{label} #{int(order)}")
+        risk_flags: list[str] = []
+        if float(row["expected_minutes"]) < 60:
+            risk_flags.append("Minutes risk")
+        if float(row["availability"]) < 100:
+            risk_flags.append("Fitness flag")
+        if float(row["sample_nineties"]) < 8:
+            risk_flags.append("Small sample")
+        if float(row["uncertainty"]) >= 0.42:
+            risk_flags.append("Wide projection")
+        if not risk_flags:
+            risk_flags.append("No major flag")
+        confidence = round(float(row["confidence"]))
+        projection_percentile = float(row["projection_percentile"])
+        verdict = (
+            "Priority"
+            if projection_percentile >= 0.90 and confidence >= 65
+            else "Strong"
+            if projection_percentile >= 0.75 and confidence >= 55
+            else "Watch"
+            if projection_percentile >= 0.45
+            else "Fade"
+        )
         return {
             "id": int(row["id"]),
             "name": str(row["display_name"]),
@@ -2036,6 +2196,46 @@ def current_recommendation(
             "sixWeekProjected": round(float(row["horizon_projection"]), 1),
             "expectedMinutes": round(float(row["expected_minutes"])),
             "uncertainty": round(float(row["uncertainty"]), 2),
+            "confidence": confidence,
+            "valueProjected": round(float(row["value_projection"]), 2),
+            "verdict": verdict,
+            "setPieces": set_pieces,
+            "riskFlags": risk_flags,
+            "components": {
+                "appearance": round(float(row["component_appearance"]), 2),
+                "goals": round(float(row["component_goals"]), 2),
+                "assists": round(float(row["component_assists"]), 2),
+                "cleanSheet": round(float(row["component_clean"]), 2),
+                "defence": round(float(row["component_defence"]), 2),
+                "bonus": round(float(row["component_bonus"]), 2),
+                "adjustment": round(float(row["component_adjustment"]), 2),
+            },
+            "history": {
+                "matches": round(clean_number("history_matches")),
+                "average": round(clean_number("history_average"), 2),
+                "per90": round(clean_number("history_per90"), 2),
+                "returnRate": round(100 * clean_number("history_returns")),
+                "volatility": round(clean_number("history_volatility"), 2),
+            },
+            "opponentHistory": {
+                "matches": round(clean_number("opponent_matches")),
+                "average": round(clean_number("opponent_average"), 2),
+                "per90": round(clean_number("opponent_per90"), 2),
+                "returnRate": round(100 * clean_number("opponent_returns")),
+            },
+            "comparison": {
+                "fixtureRank": fixture_rank,
+                "fixturePlayers": int(len(fixture_peers) + 1),
+                "positionRank": int(row["position_rank"]),
+                "positionPlayers": int(row["position_count"]),
+                "projectionRank": round(100 * projection_percentile),
+                "popularRival": str(popular_rival["display_name"]),
+                "popularRivalOwnership": round(float(popular_rival["ownership"]), 1),
+                "popularRivalProjection": round(float(popular_rival["raw_projection"]), 1),
+                "edgeVsPopular": round(
+                    float(row["raw_projection"] - popular_rival["raw_projection"]), 1
+                ),
+            },
             "captainRating": round(float(row["captain_score"]) * 100),
             "score": round(float(row["model_score"]) * 100),
             "features": {
@@ -2089,8 +2289,16 @@ def current_recommendation(
                 "fixture": f"{team_name[home]}  v  {team_name[away]}",
                 "modelPick": str(model_pick["display_name"]),
                 "popularPick": str(popular_pick["display_name"]),
+                "modelProjection": round(float(model_pick["raw_projection"]), 1),
+                "popularProjection": round(float(popular_pick["raw_projection"]), 1),
+                "popularOwnership": round(float(popular_pick["ownership"]), 1),
+                "modelConfidence": round(float(model_pick["confidence"])),
                 "edge": round(
-                    float(model_pick["model_score"] - popular_pick["model_score"]) * 100
+                    float(
+                        model_pick["raw_projection"]
+                        - popular_pick["raw_projection"]
+                    ),
+                    1,
                 ),
             }
         )
@@ -2109,6 +2317,8 @@ def current_recommendation(
     current_meta = {
         "playersScored": int(len(pool)),
         "fixturesScored": int(len(first_fixtures)),
+        "historicalSeasons": int(historical["season"].nunique()),
+        "componentModel": "Position scoring + expected minutes + opponent history + uncertainty",
         "sourceUpdated": datetime.now().astimezone().isoformat(timespec="minutes"),
     }
     return headline, squad, watchlist, matchups[:6], all_players, current_meta
@@ -2388,7 +2598,7 @@ def main() -> None:
         "product": "FPL Lens",
         "generatedAt": datetime.now().astimezone().isoformat(timespec="minutes"),
         "model": {
-            "version": "Lens 4.0",
+            "version": "Lens 4.1",
             "trials": len(candidates),
             "recursiveTrials": len(recursive_candidates),
             "seasons": len(EVALUATION_SEASONS),
@@ -2497,6 +2707,7 @@ def main() -> None:
             "Chip decisions are causal threshold rules, not hindsight-selected best weeks: AFCON disruption informs Wildcards, blank/double clashes inform Free Hits, and doubles raise Bench Boost and Triple Captain signals.",
             "The transfer planner looks six Gameweeks ahead and can bank up to the cap that applied in that season; paid-hit variants were tested and rejected when they reduced replay points.",
             "The top-500k result is an estimated scoring-pace test because official historic rank cut-offs are not exposed by the FPL API.",
+            "Player analysis decomposes expected points by scoring route, labels sample size, estimates minutes and uncertainty, and treats opponent history as descriptive rather than predictive on its own.",
             "Age is an availability/consistency prior, not a claim that younger or older players are inherently better.",
             "Current projections are decision support, not guarantees; late team news should override the model.",
         ],
@@ -2525,10 +2736,11 @@ def refresh_current_artifact() -> None:
         weights["underlying"] / 100,
         weights["recent"] / 100,
     )
-    frame, _ = build_season(
-        "2025-26", load_age_register(), load_nationality_register()
+    ages = load_age_register()
+    nationalities = load_nationality_register()
+    historical = prepare_causal_history(
+        [build_season(season, ages, nationalities)[0] for season in SEASONS]
     )
-    historical = prepare_causal_history([frame])
     headline, squad, watchlist, matchups, all_players, current_meta = (
         current_recommendation(historical, best)
     )
