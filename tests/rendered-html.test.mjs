@@ -22,10 +22,12 @@ test("server-renders the FPL Lens decision room", async () => {
   const html = await response.text();
   assert.match(html, /<title>FPL Lens — Data-led squad decisions<\/title>/i);
   assert.match(html, /Build a squad/);
-  assert.match(html, /640(?:<!-- -->)? model replays/i);
+  assert.match(html, /2,400(?:<!-- -->)? candidate mixes/i);
+  assert.match(html, /240(?:<!-- -->)? recursive finalists/i);
   assert.match(html, /Tune the lens/);
   assert.match(html, /Optimal XV/i);
   assert.match(html, /Replay the past/i);
+  assert.match(html, /Champion advice, tested/i);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/i);
 });
 

@@ -811,6 +811,65 @@ input[type="range"] {
 .legend-model { background: var(--acid); }
 .legend-base { border-top: 2px solid white; }
 
+.expert-tests {
+  border-left: 1px solid #444640;
+  border-top: 1px solid #444640;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 1.15fr repeat(3, 1fr);
+}
+
+.expert-tests-heading,
+.expert-test {
+  border-bottom: 1px solid #444640;
+  border-right: 1px solid #444640;
+  min-height: 190px;
+  padding: 22px;
+}
+
+.expert-tests-heading > span,
+.expert-test > div span,
+.expert-test > div small {
+  color: #92958d;
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.expert-tests-heading p,
+.expert-test p {
+  color: #aeb0aa;
+  font-size: 11px;
+  margin: 48px 0 0;
+}
+
+.expert-test > div {
+  align-items: baseline;
+  display: flex;
+  gap: 9px;
+}
+
+.expert-test > div strong {
+  font-family: var(--font-mono), monospace;
+  font-size: 28px;
+}
+
+.expert-test.helped > div strong,
+.expert-test.helped > div span { color: var(--acid); }
+.expert-test.hurt > div strong,
+.expert-test.hurt > div span { color: var(--red); }
+
+.expert-test h3 {
+  font-size: 19px;
+  letter-spacing: -0.035em;
+  margin: 28px 0 0;
+}
+
+.expert-test p {
+  margin-top: 10px;
+}
+
 .method-section {
   padding: 72px 3vw 60px;
 }
@@ -966,6 +1025,9 @@ footer > span {
   .backtest-section {
     grid-template-columns: 1fr;
   }
+  .expert-tests {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 760px) {
@@ -1043,6 +1105,10 @@ footer > span {
   }
   .backtest-section {
     overflow-x: auto;
+  }
+  .expert-tests {
+    display: block;
+    min-width: 0;
   }
   .method-section {
     padding: 54px 20px 40px;

@@ -3,7 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import results from "../data/model-results.json";
 
-type WeightKey = "performance" | "value" | "age" | "fixture" | "crowd";
+type WeightKey =
+  | "performance"
+  | "value"
+  | "age"
+  | "fixture"
+  | "crowd"
+  | "minutes"
+  | "underlying";
 
 type Player = {
   id: number;
@@ -13,6 +20,7 @@ type Player = {
   price: number;
   ownership: number;
   projected: number;
+  captainRating: number;
   score: number;
   opponent: string;
   venue: string;
@@ -28,6 +36,8 @@ type Player = {
     age: number;
     fixture: number;
     crowd: number;
+    minutes: number;
+    underlying: number;
   };
 };
 
@@ -45,8 +55,10 @@ const weightLabels: Record<WeightKey, { label: string; hint: string }> = {
   performance: { label: "Performance", hint: "Points signal" },
   value: { label: "Value", hint: "Output per £m" },
   age: { label: "Age curve", hint: "Reliability prior" },
-  fixture: { label: "Fixture", hint: "Opponent + venue" },
+  fixture: { label: "Fixture", hint: "Next 4 opponents" },
   crowd: { label: "Market", hint: "Ownership signal" },
+  minutes: { label: "Minutes", hint: "60-minute security" },
+  underlying: { label: "Underlying", hint: "ICT involvement" },
 };
 
 function rebalanceWeights(
@@ -92,7 +104,9 @@ function calculateScore(
     value * (weights.value / 100) +
     player.features.age * (weights.age / 100) +
     player.features.fixture * (weights.fixture / 100) +
-    player.features.crowd * (weights.crowd / 100)
+    player.features.crowd * (weights.crowd / 100) +
+    player.features.minutes * (weights.minutes / 100) +
+    player.features.underlying * (weights.underlying / 100)
   );
 }
 
@@ -213,6 +227,8 @@ export default function FplDashboard() {
     age: calibrated.age,
     fixture: calibrated.fixture,
     crowd: calibrated.crowd,
+    minutes: calibrated.minutes,
+    underlying: calibrated.underlying,
   });
   const [recentShare, setRecentShare] = useState(calibrated.recent);
   const [now, setNow] = useState(() => Date.now());
@@ -251,7 +267,7 @@ export default function FplDashboard() {
     [selection.squad, xiIds],
   );
   const captainOrder = useMemo(
-    () => [...starters].sort((a, b) => b.projected - a.projected),
+    () => [...starters].sort((a, b) => b.captainRating - a.captainRating),
     [starters],
   );
   const captain = captainOrder[0];
@@ -279,6 +295,8 @@ export default function FplDashboard() {
       age: calibrated.age,
       fixture: calibrated.fixture,
       crowd: calibrated.crowd,
+      minutes: calibrated.minutes,
+      underlying: calibrated.underlying,
     });
     setRecentShare(calibrated.recent);
   };
@@ -307,8 +325,8 @@ export default function FplDashboard() {
         <div className="hero-copy">
           <h1>Build a squad<br />you can defend.</h1>
           <p>
-            Eight seasons. {results.model.trials} model replays. One legal squad —
-            recalculated every time you move a weight.
+            {results.model.trials.toLocaleString()} candidate mixes. {results.model.recursiveTrials} finalists.
+            One legal squad carried forward and changed at every historical deadline.
           </p>
         </div>
         <div className="hero-metrics">
@@ -321,6 +339,7 @@ export default function FplDashboard() {
 
       <div className="ticker" aria-label="Model status">
         <span>MODEL {results.model.version}</span>
+        <span>{results.model.recursiveTrials} RECURSIVE FINALISTS</span>
         <span>{results.model.playerWeeks.toLocaleString()} PLAYER-WEEKS</span>
         <span>{results.currentMeta.playersScored} CURRENT PLAYERS SCORED</span>
         <span>LAST REFRESH {new Date(results.generatedAt).toLocaleDateString("en-GB")}</span>
@@ -367,7 +386,7 @@ export default function FplDashboard() {
           </div>
           <div className="model-note">
             <span className="pulse-dot" />
-            <p><strong>Calibrated preset</strong> won trial #{results.model.bestTrial} after a volatility penalty. Move any control to stress-test it.</p>
+            <p><strong>Calibrated preset</strong> won trial #{results.model.bestTrial} in the recursive replay. Move any control to stress-test it.</p>
           </div>
         </aside>
 
@@ -429,12 +448,13 @@ export default function FplDashboard() {
           <div className="section-label light"><span>04</span> PROOF, NOT PROMISES</div>
           <h2>Replay the past.<br />Earn the present.</h2>
           <p>
-            Each season is evaluated gameweek by gameweek using only information
-            available before that deadline. The green bar is the model; the line
-            beneath it is the fixed baseline.
+            The same 15-player squad moves from one deadline to the next. The model
+            makes a data-led transfer, selects a legal XI, orders the bench and then
+            scores autosubs plus captaincy. No future result enters the decision.
           </p>
-          <div className="proof-stat"><strong>{results.model.trials}</strong><span>weight combinations</span></div>
-          <div className="proof-stat"><strong>{results.model.seasons}</strong><span>complete seasons</span></div>
+          <div className="proof-stat"><strong>{results.model.trials.toLocaleString()}</strong><span>candidate weight mixes</span></div>
+          <div className="proof-stat"><strong>{results.model.recursiveTrials}</strong><span>full recursive finalists</span></div>
+          <div className="proof-stat"><strong>{results.simulationSummary.averageWeeksChanged}</strong><span>average GWs changed / season</span></div>
         </div>
         <div className="season-chart" role="img" aria-label="Model and baseline points by season">
           {results.backtest.map((season) => {
@@ -455,7 +475,20 @@ export default function FplDashboard() {
               </div>
             );
           })}
-          <div className="chart-legend"><span><i className="legend-model" /> Model XI + captain</span><span><i className="legend-base" /> Baseline</span></div>
+          <div className="chart-legend"><span><i className="legend-model" /> Recursive Lens 2.0</span><span><i className="legend-base" /> Recursive Lens 1.0</span></div>
+        </div>
+        <div className="expert-tests" aria-label="Tests of FPL champion advice">
+          <div className="expert-tests-heading">
+            <span>CHAMPION ADVICE, TESTED</span>
+            <p>Average points per season versus the paired alternative. We keep what survives the replay.</p>
+          </div>
+          {results.expertTests.map((test) => (
+            <article key={test.label} className={`expert-test ${test.result}`}>
+              <div><span>{test.result}</span><strong>{test.delta > 0 ? "+" : ""}{test.delta}</strong><small>pts / season</small></div>
+              <h3>{test.label}</h3>
+              <p>{test.detail}</p>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -466,10 +499,10 @@ export default function FplDashboard() {
           <p>{results.model.method} {results.model.objective}</p>
         </div>
         <div className="method-steps">
-          <article><span>01</span><h3>Observe</h3><p>Every player-gameweek since 2018: points, minutes, price, ownership, venue and opponent.</p></article>
+          <article><span>01</span><h3>Observe</h3><p>Points, price, minutes security, ICT involvement, market movement and the next four opponents.</p></article>
           <article><span>02</span><h3>Shift</h3><p>All rolling statistics move back one gameweek. The model never sees the result it is trying to predict.</p></article>
-          <article><span>03</span><h3>Replay</h3><p>{results.model.trials} weight sets build an XI and captain across eight seasons, with walk-forward checks.</p></article>
-          <article><span>04</span><h3>Optimise</h3><p>Your chosen mix rebuilds a legal £100m squad in the browser, including positional and club limits.</p></article>
+          <article><span>03</span><h3>Recurse</h3><p>{results.model.recursiveTrials} finalists carry a legal squad, bank and prices through every season deadline.</p></article>
+          <article><span>04</span><h3>Optimise</h3><p>The best positive transfer changes the squad each week; your sliders rebuild today’s legal £100m squad live.</p></article>
         </div>
         <div className="method-footer">
           <div><span>AGE COVERAGE</span><strong>{Math.min(...results.dataSummary.map((item) => item.ageCoverage))}%+</strong></div>
