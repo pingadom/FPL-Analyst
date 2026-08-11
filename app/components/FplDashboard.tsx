@@ -61,6 +61,13 @@ const weightLabels: Record<WeightKey, { label: string; hint: string }> = {
   underlying: { label: "Underlying", hint: "ICT involvement" },
 };
 
+const chipDescriptions: Record<string, string> = {
+  Wildcard: "Persistent squad gap, with extra urgency when AFCON removes multiple players.",
+  "Free Hit": "Reserved for major blank clashes or unusually concentrated double fixtures.",
+  "Bench Boost": "Eligible when the bench contains a double-gameweek player and clears the score bar.",
+  "Triple Captain": "Eligible only when the chosen captain has two fixtures and clears the score bar.",
+};
+
 function rebalanceWeights(
   current: Record<WeightKey, number>,
   changed: WeightKey,
@@ -284,10 +291,6 @@ export default function FplDashboard() {
     () => [...scoredPlayers].sort((a, b) => b.liveScore - a.liveScore).slice(0, 6),
     [scoredPlayers],
   );
-  const averageUplift =
-    results.backtest.reduce((sum, season) => sum + season.uplift, 0) /
-    results.backtest.length;
-
   const resetModel = () => {
     setWeights({
       performance: calibrated.performance,
@@ -311,6 +314,7 @@ export default function FplDashboard() {
         </a>
         <nav aria-label="Primary navigation">
           <a href="#squad">Squad</a>
+          <a href="#chips">Chips</a>
           <a href="#backtest">Backtest</a>
           <a href="#method">Method</a>
         </nav>
@@ -333,13 +337,14 @@ export default function FplDashboard() {
           <div><span>Projected</span><strong>{projected.toFixed(1)}</strong><small>GW points</small></div>
           <div><span>Budget</span><strong>£{spend.toFixed(1)}</strong><small>of £100m</small></div>
           <div><span>Shape</span><strong>{formation}</strong><small>best XI</small></div>
-          <div><span>Backtest</span><strong>+{averageUplift.toFixed(1)}%</strong><small>vs baseline</small></div>
+          <div><span>Chip edge</span><strong>+{results.chipStrategy.walkForwardAverageGain}</strong><small>pts / season</small></div>
         </div>
       </section>
 
       <div className="ticker" aria-label="Model status">
         <span>MODEL {results.model.version}</span>
         <span>{results.model.recursiveTrials} RECURSIVE FINALISTS</span>
+        <span>{results.chipStrategy.policyTrials} CHIP POLICIES</span>
         <span>{results.model.playerWeeks.toLocaleString()} PLAYER-WEEKS</span>
         <span>{results.currentMeta.playersScored} CURRENT PLAYERS SCORED</span>
         <span>LAST REFRESH {new Date(results.generatedAt).toLocaleDateString("en-GB")}</span>
@@ -443,14 +448,70 @@ export default function FplDashboard() {
         </aside>
       </section>
 
+      <section className="chip-section" id="chips">
+        <div className="chip-intro">
+          <div className="section-label"><span>04</span> CHIP DESK</div>
+          <h2>Wait for the<br />fixture to bend.</h2>
+          <p>
+            Chips are scored inside the recursive replay, not added afterward. The
+            policy can hold a chip all season when the right setup never arrives.
+          </p>
+          <div className="current-chip-call">
+            <span>GW{results.chipStrategy.current.gameweek} CALL</span>
+            <strong>{results.chipStrategy.current.chip}</strong>
+            <p>{results.chipStrategy.current.reason}</p>
+            <small>{results.chipStrategy.current.nextReview}</small>
+          </div>
+        </div>
+        <div className="chip-workbench">
+          <div className="chip-scoreboard">
+            <div><span>FULL REPLAY</span><strong>+{results.chipStrategy.averageGain}</strong><small>pts / season</small></div>
+            <div><span>WALK-FORWARD</span><strong>+{results.chipStrategy.walkForwardAverageGain}</strong><small>pts / season</small></div>
+            <div><span>POLICIES TESTED</span><strong>{results.chipStrategy.policyTrials}</strong><small>threshold mixes</small></div>
+          </div>
+          <div className="chip-cards">
+            {results.chipStrategy.breakdown.map((chip) => (
+              <article key={chip.chip}>
+                <div className="chip-card-top"><span>{chip.chip}</span><strong>+{chip.averageGain}</strong></div>
+                <p>{chipDescriptions[chip.chip]}</p>
+                <small>{chip.uses} qualified uses · average immediate gain</small>
+              </article>
+            ))}
+          </div>
+          <div className="chip-history">
+            <div className="chip-history-heading">
+              <span>WALK-FORWARD DECISIONS</span>
+              <p>Only information available before that deadline. Green seasons beat the identical no-chip run.</p>
+            </div>
+            {results.backtest.map((season) => (
+              <div className="chip-season-row" key={season.season}>
+                <strong>{season.season}</strong>
+                <div>
+                  {season.chips.length > 0 ? season.chips.map((chip) => (
+                    <span className="history-chip" key={`${chip.chip}-${chip.gw}`}>
+                      {chip.chip.replace("Triple Captain", "TC").replace("Bench Boost", "BB").replace("Free Hit", "FH").replace("Wildcard", "WC")} · GW{chip.gw}
+                    </span>
+                  )) : <span className="history-chip muted-chip">No qualifying play</span>}
+                </div>
+                <span className={season.chipPoints >= 0 ? "positive" : "negative"}>
+                  {season.chipPoints >= 0 ? "+" : ""}{season.chipPoints} pts
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="chip-rules">{results.chipStrategy.rules}</p>
+        </div>
+      </section>
+
       <section className="backtest-section" id="backtest">
         <div className="backtest-intro">
-          <div className="section-label light"><span>04</span> PROOF, NOT PROMISES</div>
+          <div className="section-label light"><span>05</span> PROOF, NOT PROMISES</div>
           <h2>Replay the past.<br />Earn the present.</h2>
           <p>
             The same 15-player squad moves from one deadline to the next. The model
             makes a data-led transfer, selects a legal XI, orders the bench and then
-            scores autosubs plus captaincy. No future result enters the decision.
+            scores autosubs, captaincy and qualified chip decisions. No future result
+            enters the decision.
           </p>
           <div className="proof-stat"><strong>{results.model.trials.toLocaleString()}</strong><span>candidate weight mixes</span></div>
           <div className="proof-stat"><strong>{results.model.recursiveTrials}</strong><span>full recursive finalists</span></div>
@@ -475,7 +536,7 @@ export default function FplDashboard() {
               </div>
             );
           })}
-          <div className="chart-legend"><span><i className="legend-model" /> Recursive Lens 2.0</span><span><i className="legend-base" /> Recursive Lens 1.0</span></div>
+          <div className="chart-legend"><span><i className="legend-model" /> Lens 3.0 + chips</span><span><i className="legend-base" /> Same model, no chips</span></div>
         </div>
         <div className="expert-tests" aria-label="Tests of FPL champion advice">
           <div className="expert-tests-heading">
@@ -493,7 +554,7 @@ export default function FplDashboard() {
       </section>
 
       <section className="method-section" id="method">
-        <div className="section-label"><span>05</span> HOW THE LENS WORKS</div>
+        <div className="section-label"><span>06</span> HOW THE LENS WORKS</div>
         <div className="method-headline">
           <h2>Transparent inputs.<br />No mystery score.</h2>
           <p>{results.model.method} {results.model.objective}</p>
@@ -501,8 +562,8 @@ export default function FplDashboard() {
         <div className="method-steps">
           <article><span>01</span><h3>Observe</h3><p>Points, price, minutes security, ICT involvement, market movement and the next four opponents.</p></article>
           <article><span>02</span><h3>Shift</h3><p>All rolling statistics move back one gameweek. The model never sees the result it is trying to predict.</p></article>
-          <article><span>03</span><h3>Recurse</h3><p>{results.model.recursiveTrials} finalists carry a legal squad, bank and prices through every season deadline.</p></article>
-          <article><span>04</span><h3>Optimise</h3><p>The best positive transfer changes the squad each week; your sliders rebuild today’s legal £100m squad live.</p></article>
+          <article><span>03</span><h3>Recurse</h3><p>{results.model.recursiveTrials} finalists carry a legal squad, bank, prices and chip inventory through every deadline.</p></article>
+          <article><span>04</span><h3>Optimise</h3><p>Weekly transfers and {results.chipStrategy.policyTrials} chip policies compete; your sliders rebuild today’s legal £100m squad live.</p></article>
         </div>
         <div className="method-footer">
           <div><span>AGE COVERAGE</span><strong>{Math.min(...results.dataSummary.map((item) => item.ageCoverage))}%+</strong></div>
