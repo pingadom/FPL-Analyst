@@ -7,6 +7,7 @@ import frontierScores from "../data/frontier-scores.json";
 import performanceProgress from "../data/performance-progress.json";
 import results from "../data/model-results.json";
 import shadowStatus from "../data/shadow-status.json";
+import { buildOptimizedSquad } from "../lib/squad-optimizer.mjs";
 
 type WeightKey =
   | "performance"
@@ -182,13 +183,6 @@ type ImportedTeam = {
 };
 
 const positionOrder = ["GK", "DEF", "MID", "FWD"] as const;
-const positionQuota: Record<Player["position"], number> = {
-  GK: 2,
-  DEF: 5,
-  MID: 5,
-  FWD: 3,
-};
-
 const weightLabels: Record<WeightKey, { label: string; hint: string }> = {
   performance: { label: "Performance", hint: "Points signal" },
   value: { label: "Value", hint: "Output per £m" },
@@ -276,76 +270,17 @@ function calculateScore(
 }
 
 function buildSquad(players: ScoredPlayer[]) {
-  let best: ScoredPlayer[] = [];
-  let bestScore = -Infinity;
+  const optimized = buildOptimizedSquad(players) as
+    | { squad: ScoredPlayer[]; xi: ScoredPlayer[] }
+    | null;
+  if (optimized) return optimized;
 
-  for (let step = 0; step <= 120; step += 1) {
-    const pricePenalty = step * 0.0002;
-    const sorted = [...players].sort(
-      (a, b) =>
-        b.liveScore - b.price * pricePenalty -
-        (a.liveScore - a.price * pricePenalty),
-    );
-    const selected: ScoredPlayer[] = [];
-    const positionCount: Partial<Record<Player["position"], number>> = {};
-    const teamCount: Record<string, number> = {};
-
-    for (const player of sorted) {
-      if ((positionCount[player.position] ?? 0) >= positionQuota[player.position])
-        continue;
-      if ((teamCount[player.team] ?? 0) >= 3) continue;
-      selected.push(player);
-      positionCount[player.position] = (positionCount[player.position] ?? 0) + 1;
-      teamCount[player.team] = (teamCount[player.team] ?? 0) + 1;
-      if (selected.length === 15) break;
-    }
-    if (selected.length !== 15) continue;
-    const spend = selected.reduce((sum, player) => sum + player.price, 0);
-    if (spend > 100) continue;
-    const score = selected.reduce(
-      (sum, player) =>
-        sum + 0.72 * player.liveScore + 0.20 * player.sixWeekProjected / 30 +
-        0.08 * player.confidence / 100,
-      0,
-    );
-    if (score > bestScore) {
-      bestScore = score;
-      best = selected;
-    }
-  }
-
-  if (best.length === 0) {
-    const originalIds = new Set((results.squad as Player[]).map((player) => player.id));
-    best = players.filter((player) => originalIds.has(player.id));
-  }
-
-  let bestXi: ScoredPlayer[] = [];
-  let bestXiScore = -Infinity;
-  for (const defenders of [3, 4, 5]) {
-    for (const forwards of [1, 2, 3]) {
-      const midfielders = 10 - defenders - forwards;
-      if (midfielders < 2 || midfielders > 5) continue;
-      const formation: Record<Player["position"], number> = {
-        GK: 1,
-        DEF: defenders,
-        MID: midfielders,
-        FWD: forwards,
-      };
-      const xi = positionOrder.flatMap((position) =>
-        best
-          .filter((player) => player.position === position)
-          .sort((a, b) => b.liveScore - a.liveScore)
-          .slice(0, formation[position]),
-      );
-      const score = xi.reduce((sum, player) => sum + player.liveScore, 0);
-      if (xi.length === 11 && score > bestXiScore) {
-        bestXiScore = score;
-        bestXi = xi;
-      }
-    }
-  }
-
-  return { squad: best, xi: bestXi };
+  const originalIds = new Set((results.squad as Player[]).map((player) => player.id));
+  const squad = players.filter((player) => originalIds.has(player.id));
+  return {
+    squad,
+    xi: squad.filter((player) => player.starter),
+  };
 }
 
 function formatCountdown(deadline: string, now: number) {
@@ -578,7 +513,7 @@ export default function FplDashboard() {
         </div>
         <div className="hero-metrics">
           <div><span>Projected</span><strong>{projected.toFixed(1)}</strong><small>GW points</small></div>
-          <div><span>Budget</span><strong>£{spend.toFixed(1)}</strong><small>of £100m</small></div>
+          <div><span>Squad spend</span><strong>£{spend.toFixed(1)}</strong><small>£{(100 - spend).toFixed(1)}m bank</small></div>
           <div><span>Shape</span><strong>{formation}</strong><small>best XI</small></div>
           <div><span>P(70+)</span><strong>{results.headline.scenario.probability70}%</strong><small>{results.headline.scenario.p10}–{results.headline.scenario.p90} scenario range</small></div>
         </div>
@@ -675,7 +610,7 @@ export default function FplDashboard() {
         <section className="squad-panel">
           <div className="section-label"><span>02</span> OPTIMAL XV</div>
           <div className="panel-heading squad-heading">
-            <div><h2>Gameweek {results.headline.gameweek} squad</h2><p>Legal budget · max 3 per club · live re-optimisation</p></div>
+            <div><h2>Gameweek {results.headline.gameweek} squad</h2><p>Joint XI + captain optimisation · autosub-weighted bench</p></div>
             <div className="captain-call"><span>Captain</span><strong>{captain?.name ?? "—"}</strong></div>
           </div>
           <div className="squad-column-labels"><span>Player / fixture</span><span>Price</span><span>Forecast</span></div>
@@ -691,7 +626,7 @@ export default function FplDashboard() {
             ))}
           </div>
           <button className="bench-toggle" onClick={() => setShowBench((value) => !value)} aria-expanded={showBench}>
-            <span>BENCH · {bench.map((player) => player.name).join(" / ")}</span>
+            <span>BENCH £{bench.reduce((sum, player) => sum + player.price, 0).toFixed(1)}m · {bench.map((player) => player.name).join(" / ")}</span>
             <span>{showBench ? "−" : "+"}</span>
           </button>
           {showBench && (

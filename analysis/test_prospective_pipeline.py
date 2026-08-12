@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from prospective_common import APP_DATA, ROOT, payload_hash
+from prospective_common import APP_DATA, ROOT, optimise_squad, payload_hash
 
 
 class ProspectivePipelineTests(unittest.TestCase):
@@ -79,6 +79,33 @@ class ProspectivePipelineTests(unittest.TestCase):
         self.assertEqual(self.performance["targetHits"], 0)
         self.assertGreater(self.performance["stackLift"], 0)
         self.assertIn("cannot promote", self.performance["governance"].lower())
+
+    def test_joint_optimizer_does_not_park_a_premium_forward_on_the_bench(self) -> None:
+        players: list[dict] = []
+        identifier = 1
+        for position, prices, scores in (
+            ("GK", [5.0, 5.0], [6.0, 2.0]),
+            ("DEF", [5.0] * 5, [8.0, 7.5, 7.0, 6.5, 6.0]),
+            ("MID", [7.0] * 5, [9.0, 8.5, 8.0, 7.5, 7.0]),
+            ("FWD", [14.0, 11.0, 4.5, 8.0], [10.0, 9.5, 3.0, 4.0]),
+        ):
+            for price, score in zip(prices, scores):
+                players.append(
+                    {
+                        "id": identifier,
+                        "team": f"T{identifier}",
+                        "position": position,
+                        "price": price,
+                        "testScore": score,
+                    }
+                )
+                identifier += 1
+
+        expensive_bench_forward = players[-1]["id"]
+        chosen, xi, _, _ = optimise_squad(players, "testScore")
+        self.assertNotIn(expensive_bench_forward, [players[index]["id"] for index in chosen])
+        self.assertGreaterEqual(sum(players[index]["price"] for index in chosen), 99.5)
+        self.assertEqual(len(xi), 11)
 
 
 if __name__ == "__main__":

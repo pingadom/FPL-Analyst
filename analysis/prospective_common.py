@@ -74,6 +74,9 @@ def optimise_squad(
     *,
     bench_weight: float = 0.08,
     captain_weight: float = 0.70,
+    bench_premium_limit: float = 2.0,
+    bench_premium_penalty: float = 0.22,
+    minimum_spend: float = 99.5,
 ) -> tuple[list[int], list[int], int, int]:
     """Jointly solve the legal squad, XI and captain in one integer program."""
     positions = {"GK": 2, "DEF": 5, "MID": 5, "FWD": 3}
@@ -82,15 +85,30 @@ def optimise_squad(
     # x selects the XV, y the XI, and c the captain. The XI receives the full
     # forecast, the bench a small contingency value, and captaincy an extra
     # planning weight selected by the frozen policy audit.
+    prices = np.asarray([float(row["price"]) for row in players])
+    price_floors = {
+        position: min(float(row["price"]) for row in players if row["position"] == position)
+        for position in positions
+    }
+    bench_premium = np.asarray(
+        [max(0.0, price - price_floors[row["position"]]) for price, row in zip(prices, players)]
+    )
+    # x-y identifies bench players. Charge premium cost only to that difference,
+    # so an expensive starter is judged on points while unused bench money has
+    # to justify itself through genuine contingency value.
     objective = -np.concatenate(
-        [bench_weight * scores, (1 - bench_weight) * scores, captain_weight * scores]
+        [
+            bench_weight * scores - bench_premium_penalty * bench_premium,
+            (1 - bench_weight) * scores + bench_premium_penalty * bench_premium,
+            captain_weight * scores,
+        ]
     )
     rows: list[np.ndarray] = []
     lower: list[float] = []
     upper: list[float] = []
     budget = np.asarray([int(round(float(row["price"]) * 10)) for row in players])
     rows.append(np.concatenate([budget, np.zeros(2 * count)]))
-    lower.append(0)
+    lower.append(int(round(minimum_spend * 10)))
     upper.append(1000)
     for position, quota in positions.items():
         membership = np.asarray([1 if row["position"] == position else 0 for row in players])
@@ -137,6 +155,10 @@ def optimise_squad(
     rows.append(captain_total)
     lower.append(1)
     upper.append(1)
+    premium_total = np.concatenate([bench_premium, -bench_premium, np.zeros(count)])
+    rows.append(premium_total)
+    lower.append(0)
+    upper.append(bench_premium_limit)
     result = milp(
         c=objective,
         integrality=np.ones(3 * count),
