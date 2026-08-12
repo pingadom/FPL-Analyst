@@ -1,0 +1,286 @@
+{
+  "status": "challenger-only",
+  "method": "Causal LambdaMART NDCG@5 trained on each deadline's top-40 armband frontier; evaluated without changing squad or transfer forecasts.",
+  "models": {
+    "structuralCaptain": {
+      "average": 2106.5,
+      "minimum": 1897,
+      "targetHits": 0,
+      "averageMargin": -190.2,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2118,
+          "target": 2151,
+          "margin": -33
+        },
+        {
+          "season": "2019/20",
+          "points": 2157,
+          "target": 2160,
+          "margin": -3
+        },
+        {
+          "season": "2020/21",
+          "points": 2147,
+          "target": 2270,
+          "margin": -123
+        },
+        {
+          "season": "2021/22",
+          "points": 2194,
+          "target": 2340,
+          "margin": -146
+        },
+        {
+          "season": "2022/23",
+          "points": 2088,
+          "target": 2425,
+          "margin": -337
+        },
+        {
+          "season": "2023/24",
+          "points": 2122,
+          "target": 2373,
+          "margin": -251
+        },
+        {
+          "season": "2024/25",
+          "points": 2129,
+          "target": 2411,
+          "margin": -282
+        },
+        {
+          "season": "2025/26",
+          "points": 1897,
+          "target": 2244,
+          "margin": -347
+        }
+      ]
+    },
+    "captainList25": {
+      "average": 2105.2,
+      "minimum": 1901,
+      "targetHits": 1,
+      "averageMargin": -191.5,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2158,
+          "target": 2151,
+          "margin": 7
+        },
+        {
+          "season": "2019/20",
+          "points": 2140,
+          "target": 2160,
+          "margin": -20
+        },
+        {
+          "season": "2020/21",
+          "points": 2100,
+          "target": 2270,
+          "margin": -170
+        },
+        {
+          "season": "2021/22",
+          "points": 2195,
+          "target": 2340,
+          "margin": -145
+        },
+        {
+          "season": "2022/23",
+          "points": 2081,
+          "target": 2425,
+          "margin": -344
+        },
+        {
+          "season": "2023/24",
+          "points": 2133,
+          "target": 2373,
+          "margin": -240
+        },
+        {
+          "season": "2024/25",
+          "points": 2134,
+          "target": 2411,
+          "margin": -277
+        },
+        {
+          "season": "2025/26",
+          "points": 1901,
+          "target": 2244,
+          "margin": -343
+        }
+      ]
+    },
+    "captainList50": {
+      "average": 2114.0,
+      "minimum": 1919,
+      "targetHits": 1,
+      "averageMargin": -182.8,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2196,
+          "target": 2151,
+          "margin": 45
+        },
+        {
+          "season": "2019/20",
+          "points": 2127,
+          "target": 2160,
+          "margin": -33
+        },
+        {
+          "season": "2020/21",
+          "points": 2120,
+          "target": 2270,
+          "margin": -150
+        },
+        {
+          "season": "2021/22",
+          "points": 2196,
+          "target": 2340,
+          "margin": -144
+        },
+        {
+          "season": "2022/23",
+          "points": 2075,
+          "target": 2425,
+          "margin": -350
+        },
+        {
+          "season": "2023/24",
+          "points": 2171,
+          "target": 2373,
+          "margin": -202
+        },
+        {
+          "season": "2024/25",
+          "points": 2108,
+          "target": 2411,
+          "margin": -303
+        },
+        {
+          "season": "2025/26",
+          "points": 1919,
+          "target": 2244,
+          "margin": -325
+        }
+      ]
+    },
+    "captainList75": {
+      "average": 2106.1,
+      "minimum": 1921,
+      "targetHits": 1,
+      "averageMargin": -190.6,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2192,
+          "target": 2151,
+          "margin": 41
+        },
+        {
+          "season": "2019/20",
+          "points": 2102,
+          "target": 2160,
+          "margin": -58
+        },
+        {
+          "season": "2020/21",
+          "points": 2119,
+          "target": 2270,
+          "margin": -151
+        },
+        {
+          "season": "2021/22",
+          "points": 2195,
+          "target": 2340,
+          "margin": -145
+        },
+        {
+          "season": "2022/23",
+          "points": 2068,
+          "target": 2425,
+          "margin": -357
+        },
+        {
+          "season": "2023/24",
+          "points": 2184,
+          "target": 2373,
+          "margin": -189
+        },
+        {
+          "season": "2024/25",
+          "points": 2068,
+          "target": 2411,
+          "margin": -343
+        },
+        {
+          "season": "2025/26",
+          "points": 1921,
+          "target": 2244,
+          "margin": -323
+        }
+      ]
+    },
+    "captainList100": {
+      "average": 2103.6,
+      "minimum": 1920,
+      "targetHits": 1,
+      "averageMargin": -193.1,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2179,
+          "target": 2151,
+          "margin": 28
+        },
+        {
+          "season": "2019/20",
+          "points": 2105,
+          "target": 2160,
+          "margin": -55
+        },
+        {
+          "season": "2020/21",
+          "points": 2108,
+          "target": 2270,
+          "margin": -162
+        },
+        {
+          "season": "2021/22",
+          "points": 2187,
+          "target": 2340,
+          "margin": -153
+        },
+        {
+          "season": "2022/23",
+          "points": 2078,
+          "target": 2425,
+          "margin": -347
+        },
+        {
+          "season": "2023/24",
+          "points": 2190,
+          "target": 2373,
+          "margin": -183
+        },
+        {
+          "season": "2024/25",
+          "points": 2062,
+          "target": 2411,
+          "margin": -349
+        },
+        {
+          "season": "2025/26",
+          "points": 1920,
+          "target": 2244,
+          "margin": -324
+        }
+      ]
+    }
+  }
+}

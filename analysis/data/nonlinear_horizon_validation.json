@@ -1,0 +1,354 @@
+{
+  "method": "Position-specific RF/XGBoost horizon target, prior seasons only",
+  "features": [
+    "component_xpts_structural",
+    "empirical_xpts",
+    "market_role_xpts",
+    "role_ridge_xpts",
+    "expected_minutes",
+    "minutes_std",
+    "play_probability",
+    "start_probability",
+    "sixty_probability",
+    "minutes_model_confidence",
+    "rotation_volatility",
+    "competition_pressure",
+    "team_rest_days",
+    "team_rotation_rate",
+    "recent_raw",
+    "long_raw",
+    "recent_underlying_raw",
+    "long_underlying_raw",
+    "goal_rate",
+    "assist_rate",
+    "bonus_rate",
+    "bps_rate",
+    "save_rate",
+    "defensive_rate",
+    "defensive_return_probability",
+    "fixture_now",
+    "was_home",
+    "team_attack_rating",
+    "team_defence_rating",
+    "team_form_rating",
+    "team_clean_rating",
+    "team_clean_probability",
+    "team_expected_goals_for",
+    "team_expected_goals_against",
+    "opponent_attack_rating",
+    "opponent_defence_rating",
+    "opponent_form_rating",
+    "opponent_clean_rating",
+    "team_rating_confidence",
+    "opponent_rating_confidence",
+    "team_regime_shift",
+    "opponent_regime_shift",
+    "price",
+    "selected",
+    "transfer_pressure_raw",
+    "age",
+    "component_horizon_censored",
+    "causal_horizon_ridge",
+    "fixture_censored",
+    "horizon_weighted_games_censored",
+    "prediction_uncertainty"
+  ],
+  "evaluation": [
+    {
+      "season": "2018-19",
+      "structural": {
+        "mae": 4.0551428599213475,
+        "highReturnMae": 10.662716171492367,
+        "gwSpearman": 0.6887266209685695,
+        "top15Points": 16.718377673785266
+      },
+      "ridge": {
+        "mae": 3.403706270165158,
+        "highReturnMae": 10.922740754951498,
+        "gwSpearman": 0.7460692888372796,
+        "top15Points": 18.57399133640421
+      },
+      "randomForest": {
+        "mae": 3.3999866750319643,
+        "highReturnMae": 10.427555634014482,
+        "gwSpearman": 0.757649551713007,
+        "top15Points": 18.430067733417545
+      },
+      "xgboost": {
+        "mae": 3.394200292019275,
+        "highReturnMae": 10.089832078840184,
+        "gwSpearman": 0.7509056372343058,
+        "top15Points": 18.277372880853335
+      },
+      "causalEnsemble": {
+        "mae": 3.3779837201743397,
+        "highReturnMae": 10.246942515993283,
+        "gwSpearman": 0.7588419876989927,
+        "top15Points": 18.285895051424564
+      }
+    },
+    {
+      "season": "2019-20",
+      "structural": {
+        "mae": 4.021889119106547,
+        "highReturnMae": 10.999774680127416,
+        "gwSpearman": 0.6828718686651937,
+        "top15Points": 16.281355927500353
+      },
+      "ridge": {
+        "mae": 3.4420354090237475,
+        "highReturnMae": 11.06587250018921,
+        "gwSpearman": 0.7360003723979774,
+        "top15Points": 18.79525938439299
+      },
+      "randomForest": {
+        "mae": 3.5089685370906314,
+        "highReturnMae": 10.38133802792633,
+        "gwSpearman": 0.7557881778026723,
+        "top15Points": 18.991909410262455
+      },
+      "xgboost": {
+        "mae": 3.3678359711397876,
+        "highReturnMae": 10.009045113417628,
+        "gwSpearman": 0.7549406405656721,
+        "top15Points": 18.491637789546672
+      },
+      "causalEnsemble": {
+        "mae": 3.421179100976198,
+        "highReturnMae": 10.179766496974127,
+        "gwSpearman": 0.7597596520550953,
+        "top15Points": 18.86220921318175
+      }
+    },
+    {
+      "season": "2020-21",
+      "structural": {
+        "mae": 4.027978182483625,
+        "highReturnMae": 11.451205414319226,
+        "gwSpearman": 0.6933166531869587,
+        "top15Points": 15.738568757827366
+      },
+      "ridge": {
+        "mae": 3.420564534020369,
+        "highReturnMae": 11.20402839669954,
+        "gwSpearman": 0.7517901605473333,
+        "top15Points": 18.14555646545404
+      },
+      "randomForest": {
+        "mae": 3.2554244088492217,
+        "highReturnMae": 10.528383953283731,
+        "gwSpearman": 0.7720839488107467,
+        "top15Points": 18.144855607657547
+      },
+      "xgboost": {
+        "mae": 3.1960587733580756,
+        "highReturnMae": 10.27916844378189,
+        "gwSpearman": 0.7747022151635163,
+        "top15Points": 18.126033640134743
+      },
+      "causalEnsemble": {
+        "mae": 3.2127650063682047,
+        "highReturnMae": 10.389482520821796,
+        "gwSpearman": 0.7766176148658165,
+        "top15Points": 18.115478480533334
+      }
+    },
+    {
+      "season": "2021-22",
+      "structural": {
+        "mae": 3.9384499721221795,
+        "highReturnMae": 11.715971231889766,
+        "gwSpearman": 0.6907796621918021,
+        "top15Points": 15.87520843542456
+      },
+      "ridge": {
+        "mae": 3.3405588902175514,
+        "highReturnMae": 11.350314270631268,
+        "gwSpearman": 0.7532879620801582,
+        "top15Points": 18.24580484198175
+      },
+      "randomForest": {
+        "mae": 3.15384567100583,
+        "highReturnMae": 10.610991851231066,
+        "gwSpearman": 0.7762383240140616,
+        "top15Points": 16.882637768802805
+      },
+      "xgboost": {
+        "mae": 3.109535367708419,
+        "highReturnMae": 10.217451852984098,
+        "gwSpearman": 0.777984588404926,
+        "top15Points": 17.30915353262035
+      },
+      "causalEnsemble": {
+        "mae": 3.1182239691923233,
+        "highReturnMae": 10.398837048672345,
+        "gwSpearman": 0.7803760868517463,
+        "top15Points": 17.39504653171088
+      }
+    },
+    {
+      "season": "2022-23",
+      "structural": {
+        "mae": 3.8119106672331147,
+        "highReturnMae": 11.887676966017484,
+        "gwSpearman": 0.7055176424008618,
+        "top15Points": 16.396761775123604
+      },
+      "ridge": {
+        "mae": 3.2293793189866,
+        "highReturnMae": 11.415240412898946,
+        "gwSpearman": 0.7722073776692165,
+        "top15Points": 19.08681509313153
+      },
+      "randomForest": {
+        "mae": 2.9747916279812974,
+        "highReturnMae": 10.64677105097355,
+        "gwSpearman": 0.7938886206996844,
+        "top15Points": 18.73481371757549
+      },
+      "xgboost": {
+        "mae": 2.9388391474882503,
+        "highReturnMae": 10.394086153213113,
+        "gwSpearman": 0.7944290161954993,
+        "top15Points": 18.49174226633225
+      },
+      "causalEnsemble": {
+        "mae": 2.9451462229354695,
+        "highReturnMae": 10.509761642110554,
+        "gwSpearman": 0.7967352433228188,
+        "top15Points": 18.872488553427022
+      }
+    },
+    {
+      "season": "2023-24",
+      "structural": {
+        "mae": 3.5981361769844584,
+        "highReturnMae": 11.891593273583666,
+        "gwSpearman": 0.7005942714318594,
+        "top15Points": 16.077496540895442
+      },
+      "ridge": {
+        "mae": 3.0484444495135343,
+        "highReturnMae": 11.597601729784966,
+        "gwSpearman": 0.7615619557940821,
+        "top15Points": 18.33368055326877
+      },
+      "randomForest": {
+        "mae": 2.6641396614653448,
+        "highReturnMae": 10.811537057325438,
+        "gwSpearman": 0.7862104640125726,
+        "top15Points": 18.409833044216143
+      },
+      "xgboost": {
+        "mae": 2.6711705105268635,
+        "highReturnMae": 10.504244454818876,
+        "gwSpearman": 0.7862585560382773,
+        "top15Points": 18.36887525940772
+      },
+      "causalEnsemble": {
+        "mae": 2.6581569537106646,
+        "highReturnMae": 10.649913931208582,
+        "gwSpearman": 0.7887258736028041,
+        "top15Points": 18.705484333731924
+      }
+    },
+    {
+      "season": "2024-25",
+      "structural": {
+        "mae": 3.5901497951178745,
+        "highReturnMae": 11.360858533732738,
+        "gwSpearman": 0.7178963330629944,
+        "top15Points": 16.72985701510176
+      },
+      "ridge": {
+        "mae": 2.9707957548460007,
+        "highReturnMae": 11.3900968284215,
+        "gwSpearman": 0.779195079514594,
+        "top15Points": 18.078737265021754
+      },
+      "randomForest": {
+        "mae": 2.6921939381643876,
+        "highReturnMae": 10.546218566748665,
+        "gwSpearman": 0.8019988781531746,
+        "top15Points": 17.760232261821752
+      },
+      "xgboost": {
+        "mae": 2.7004768499095286,
+        "highReturnMae": 10.020177243218576,
+        "gwSpearman": 0.8013711099966057,
+        "top15Points": 18.277743883239303
+      },
+      "causalEnsemble": {
+        "mae": 2.685389959370699,
+        "highReturnMae": 10.266523985010952,
+        "gwSpearman": 0.8045789929621765,
+        "top15Points": 18.296637290672276
+      }
+    },
+    {
+      "season": "2025-26",
+      "structural": {
+        "mae": 3.6959689380587464,
+        "highReturnMae": 11.40341353700907,
+        "gwSpearman": 0.729499419514096,
+        "top15Points": 14.690301867340352
+      },
+      "ridge": {
+        "mae": 3.1179905594537503,
+        "highReturnMae": 11.390599486419958,
+        "gwSpearman": 0.7841225989422114,
+        "top15Points": 16.490507489257542
+      },
+      "randomForest": {
+        "mae": 2.789503896696753,
+        "highReturnMae": 10.683302396449314,
+        "gwSpearman": 0.8047504652951064,
+        "top15Points": 16.771156640825268
+      },
+      "xgboost": {
+        "mae": 2.7591583554592387,
+        "highReturnMae": 10.297579203498676,
+        "gwSpearman": 0.806511501133991,
+        "top15Points": 16.649803314694733
+      },
+      "causalEnsemble": {
+        "mae": 2.7654777047969388,
+        "highReturnMae": 10.483615620527647,
+        "gwSpearman": 0.8082311222114416,
+        "top15Points": 16.704034683385256
+      }
+    }
+  ],
+  "averages": {
+    "structural": {
+      "mae": 3.8425,
+      "highReturnMae": 11.4217,
+      "gwSpearman": 0.7012,
+      "top15Points": 16.0635
+    },
+    "ridge": {
+      "mae": 3.2467,
+      "highReturnMae": 11.2921,
+      "gwSpearman": 0.7605,
+      "top15Points": 18.2188
+    },
+    "randomForest": {
+      "mae": 3.0549,
+      "highReturnMae": 10.5795,
+      "gwSpearman": 0.7811,
+      "top15Points": 18.0157
+    },
+    "xgboost": {
+      "mae": 3.0172,
+      "highReturnMae": 10.2264,
+      "gwSpearman": 0.7809,
+      "top15Points": 17.999
+    },
+    "causalEnsemble": {
+      "mae": 3.023,
+      "highReturnMae": 10.3906,
+      "gwSpearman": 0.7842,
+      "top15Points": 18.1547
+    }
+  }
+}

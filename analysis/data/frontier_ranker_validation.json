@@ -1,0 +1,538 @@
+{
+  "schemaVersion": 1,
+  "status": "challenger-only",
+  "promotionRule": "Promote only after a frozen prospective sample; historical exposure cannot qualify a model.",
+  "method": "Position-specific XGBoost trained causally on the deadline-selectable frontier, with structural quantile mapping before recursive policy evaluation.",
+  "frontierRows": 74520,
+  "metrics": {
+    "stable": {
+      "mae": 2.2566,
+      "spearman": 0.4114,
+      "top15_points": 4.837,
+      "top15_blank_rate": 0.459,
+      "missed_haul_rate": 0.8217
+    },
+    "frontier10": {
+      "mae": 2.2461,
+      "spearman": 0.4197,
+      "top15_points": 4.9078,
+      "top15_blank_rate": 0.4537,
+      "missed_haul_rate": 0.8184
+    },
+    "frontier25": {
+      "mae": 2.2317,
+      "spearman": 0.4281,
+      "top15_points": 4.9776,
+      "top15_blank_rate": 0.4464,
+      "missed_haul_rate": 0.8146
+    },
+    "frontier40": {
+      "mae": 2.219,
+      "spearman": 0.4326,
+      "top15_points": 4.9833,
+      "top15_blank_rate": 0.4471,
+      "missed_haul_rate": 0.8124
+    }
+  },
+  "recursive": {
+    "stable": {
+      "average": 2056.2,
+      "minimum": 1949,
+      "targetHits": 0,
+      "averageMargin": -240.5,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2001,
+          "target": 2151,
+          "margin": -150
+        },
+        {
+          "season": "2019/20",
+          "points": 1949,
+          "target": 2160,
+          "margin": -211
+        },
+        {
+          "season": "2020/21",
+          "points": 2026,
+          "target": 2270,
+          "margin": -244
+        },
+        {
+          "season": "2021/22",
+          "points": 2119,
+          "target": 2340,
+          "margin": -221
+        },
+        {
+          "season": "2022/23",
+          "points": 2122,
+          "target": 2425,
+          "margin": -303
+        },
+        {
+          "season": "2023/24",
+          "points": 2003,
+          "target": 2373,
+          "margin": -370
+        },
+        {
+          "season": "2024/25",
+          "points": 2222,
+          "target": 2411,
+          "margin": -189
+        },
+        {
+          "season": "2025/26",
+          "points": 2008,
+          "target": 2244,
+          "margin": -236
+        }
+      ]
+    },
+    "frontier10": {
+      "average": 2064.5,
+      "minimum": 1874,
+      "targetHits": 0,
+      "averageMargin": -232.2,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2026,
+          "target": 2151,
+          "margin": -125
+        },
+        {
+          "season": "2019/20",
+          "points": 1980,
+          "target": 2160,
+          "margin": -180
+        },
+        {
+          "season": "2020/21",
+          "points": 2109,
+          "target": 2270,
+          "margin": -161
+        },
+        {
+          "season": "2021/22",
+          "points": 2090,
+          "target": 2340,
+          "margin": -250
+        },
+        {
+          "season": "2022/23",
+          "points": 2079,
+          "target": 2425,
+          "margin": -346
+        },
+        {
+          "season": "2023/24",
+          "points": 2013,
+          "target": 2373,
+          "margin": -360
+        },
+        {
+          "season": "2024/25",
+          "points": 2345,
+          "target": 2411,
+          "margin": -66
+        },
+        {
+          "season": "2025/26",
+          "points": 1874,
+          "target": 2244,
+          "margin": -370
+        }
+      ]
+    },
+    "frontier25": {
+      "average": 2103.0,
+      "minimum": 1913,
+      "targetHits": 0,
+      "averageMargin": -193.8,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 1996,
+          "target": 2151,
+          "margin": -155
+        },
+        {
+          "season": "2019/20",
+          "points": 2048,
+          "target": 2160,
+          "margin": -112
+        },
+        {
+          "season": "2020/21",
+          "points": 2215,
+          "target": 2270,
+          "margin": -55
+        },
+        {
+          "season": "2021/22",
+          "points": 2062,
+          "target": 2340,
+          "margin": -278
+        },
+        {
+          "season": "2022/23",
+          "points": 2270,
+          "target": 2425,
+          "margin": -155
+        },
+        {
+          "season": "2023/24",
+          "points": 2095,
+          "target": 2373,
+          "margin": -278
+        },
+        {
+          "season": "2024/25",
+          "points": 2225,
+          "target": 2411,
+          "margin": -186
+        },
+        {
+          "season": "2025/26",
+          "points": 1913,
+          "target": 2244,
+          "margin": -331
+        }
+      ]
+    },
+    "frontier40": {
+      "average": 2074.0,
+      "minimum": 1925,
+      "targetHits": 0,
+      "averageMargin": -222.8,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2051,
+          "target": 2151,
+          "margin": -100
+        },
+        {
+          "season": "2019/20",
+          "points": 1994,
+          "target": 2160,
+          "margin": -166
+        },
+        {
+          "season": "2020/21",
+          "points": 2073,
+          "target": 2270,
+          "margin": -197
+        },
+        {
+          "season": "2021/22",
+          "points": 2043,
+          "target": 2340,
+          "margin": -297
+        },
+        {
+          "season": "2022/23",
+          "points": 2294,
+          "target": 2425,
+          "margin": -131
+        },
+        {
+          "season": "2023/24",
+          "points": 2132,
+          "target": 2373,
+          "margin": -241
+        },
+        {
+          "season": "2024/25",
+          "points": 2080,
+          "target": 2411,
+          "margin": -331
+        },
+        {
+          "season": "2025/26",
+          "points": 1925,
+          "target": 2244,
+          "margin": -319
+        }
+      ]
+    },
+    "frontier25WithFrozenChips": {
+      "average": 2090.6,
+      "minimum": 1892,
+      "targetHits": 0,
+      "averageMargin": -206.1,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 1995,
+          "target": 2151,
+          "margin": -156
+        },
+        {
+          "season": "2019/20",
+          "points": 2052,
+          "target": 2160,
+          "margin": -108
+        },
+        {
+          "season": "2020/21",
+          "points": 2143,
+          "target": 2270,
+          "margin": -127
+        },
+        {
+          "season": "2021/22",
+          "points": 1904,
+          "target": 2340,
+          "margin": -436
+        },
+        {
+          "season": "2022/23",
+          "points": 2339,
+          "target": 2425,
+          "margin": -86
+        },
+        {
+          "season": "2023/24",
+          "points": 1992,
+          "target": 2373,
+          "margin": -381
+        },
+        {
+          "season": "2024/25",
+          "points": 2408,
+          "target": 2411,
+          "margin": -3
+        },
+        {
+          "season": "2025/26",
+          "points": 1892,
+          "target": 2244,
+          "margin": -352
+        }
+      ]
+    }
+  },
+  "historicalBest": "frontier25",
+  "trainingAudit": [
+    {
+      "season": "2017-18",
+      "position": 1,
+      "frontierTrainingRows": 1368,
+      "testRows": 2401
+    },
+    {
+      "season": "2017-18",
+      "position": 2,
+      "frontierTrainingRows": 2212,
+      "testRows": 7435
+    },
+    {
+      "season": "2017-18",
+      "position": 3,
+      "frontierTrainingRows": 2280,
+      "testRows": 9475
+    },
+    {
+      "season": "2017-18",
+      "position": 4,
+      "frontierTrainingRows": 1710,
+      "testRows": 3150
+    },
+    {
+      "season": "2018-19",
+      "position": 1,
+      "frontierTrainingRows": 2727,
+      "testRows": 2290
+    },
+    {
+      "season": "2018-19",
+      "position": 2,
+      "frontierTrainingRows": 4398,
+      "testRows": 7649
+    },
+    {
+      "season": "2018-19",
+      "position": 3,
+      "frontierTrainingRows": 4525,
+      "testRows": 8707
+    },
+    {
+      "season": "2018-19",
+      "position": 4,
+      "frontierTrainingRows": 3511,
+      "testRows": 3142
+    },
+    {
+      "season": "2019-20",
+      "position": 1,
+      "frontierTrainingRows": 4089,
+      "testRows": 2548
+    },
+    {
+      "season": "2019-20",
+      "position": 2,
+      "frontierTrainingRows": 6560,
+      "testRows": 7629
+    },
+    {
+      "season": "2019-20",
+      "position": 3,
+      "frontierTrainingRows": 6792,
+      "testRows": 9260
+    },
+    {
+      "season": "2019-20",
+      "position": 4,
+      "frontierTrainingRows": 5236,
+      "testRows": 3056
+    },
+    {
+      "season": "2020-21",
+      "position": 1,
+      "frontierTrainingRows": 5457,
+      "testRows": 2750
+    },
+    {
+      "season": "2020-21",
+      "position": 2,
+      "frontierTrainingRows": 8749,
+      "testRows": 8569
+    },
+    {
+      "season": "2020-21",
+      "position": 3,
+      "frontierTrainingRows": 9049,
+      "testRows": 9790
+    },
+    {
+      "season": "2020-21",
+      "position": 4,
+      "frontierTrainingRows": 6908,
+      "testRows": 3089
+    },
+    {
+      "season": "2021-22",
+      "position": 1,
+      "frontierTrainingRows": 6821,
+      "testRows": 2896
+    },
+    {
+      "season": "2021-22",
+      "position": 2,
+      "frontierTrainingRows": 10888,
+      "testRows": 8582
+    },
+    {
+      "season": "2021-22",
+      "position": 3,
+      "frontierTrainingRows": 11299,
+      "testRows": 10456
+    },
+    {
+      "season": "2021-22",
+      "position": 4,
+      "frontierTrainingRows": 8474,
+      "testRows": 3387
+    },
+    {
+      "season": "2022-23",
+      "position": 1,
+      "frontierTrainingRows": 8185,
+      "testRows": 2705
+    },
+    {
+      "season": "2022-23",
+      "position": 2,
+      "frontierTrainingRows": 13014,
+      "testRows": 8918
+    },
+    {
+      "season": "2022-23",
+      "position": 3,
+      "frontierTrainingRows": 13544,
+      "testRows": 11078
+    },
+    {
+      "season": "2022-23",
+      "position": 4,
+      "frontierTrainingRows": 9990,
+      "testRows": 3012
+    },
+    {
+      "season": "2023-24",
+      "position": 1,
+      "frontierTrainingRows": 9517,
+      "testRows": 3406
+    },
+    {
+      "season": "2023-24",
+      "position": 2,
+      "frontierTrainingRows": 15145,
+      "testRows": 9597
+    },
+    {
+      "season": "2023-24",
+      "position": 3,
+      "frontierTrainingRows": 15763,
+      "testRows": 12825
+    },
+    {
+      "season": "2023-24",
+      "position": 4,
+      "frontierTrainingRows": 11637,
+      "testRows": 3849
+    },
+    {
+      "season": "2024-25",
+      "position": 1,
+      "frontierTrainingRows": 10885,
+      "testRows": 2869
+    },
+    {
+      "season": "2024-25",
+      "position": 2,
+      "frontierTrainingRows": 17339,
+      "testRows": 9146
+    },
+    {
+      "season": "2024-25",
+      "position": 3,
+      "frontierTrainingRows": 18019,
+      "testRows": 12248
+    },
+    {
+      "season": "2024-25",
+      "position": 4,
+      "frontierTrainingRows": 13245,
+      "testRows": 3016
+    },
+    {
+      "season": "2025-26",
+      "position": 1,
+      "frontierTrainingRows": 12253,
+      "testRows": 3427
+    },
+    {
+      "season": "2025-26",
+      "position": 2,
+      "frontierTrainingRows": 19578,
+      "testRows": 9733
+    },
+    {
+      "season": "2025-26",
+      "position": 3,
+      "frontierTrainingRows": 20293,
+      "testRows": 13309
+    },
+    {
+      "season": "2025-26",
+      "position": 4,
+      "frontierTrainingRows": 14722,
+      "testRows": 3278
+    }
+  ]
+}

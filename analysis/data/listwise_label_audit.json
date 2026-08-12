@@ -1,0 +1,21 @@
+{
+  "decision": "retain-clipped-point-relevance",
+  "status": "post-exposure diagnostic only",
+  "method": "Compared the original clipped point-total relevance against within-query percentile relevance under the identical causal LambdaMART and recursive policy.",
+  "original": {
+    "stableAverage": 2106.5,
+    "bestModel": "listPlan25",
+    "bestAverage": 2141.6,
+    "bestMinimum": 1970,
+    "averageMargin": -155.1
+  },
+  "percentileRelevance": {
+    "stableAverage": 2106.5,
+    "bestModel": "listImmediate40",
+    "bestAverage": 2128.5,
+    "bestMinimum": 1889,
+    "averageMargin": -168.2,
+    "listPlan25Average": 2049.1
+  },
+  "reason": "Percentile labels discarded the magnitude of persistent six-week returns. They modestly helped immediate ordering but destroyed transfer-horizon value, so the variant is rejected."
+}

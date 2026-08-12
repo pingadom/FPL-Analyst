@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "players": [],
+  "instructions": "Add only timestamped, attributable expected-minutes evidence available before the deadline. Each row requires id, expectedMinutes (0-90), startProbability (0-1), confidence (0-1), source, updatedAt and note."
+}

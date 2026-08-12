@@ -1,7 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import chipScenarios from "../data/chip-scenarios.json";
+import deadlineStatus from "../data/deadline-status.json";
+import frontierScores from "../data/frontier-scores.json";
+import performanceProgress from "../data/performance-progress.json";
 import results from "../data/model-results.json";
+import shadowStatus from "../data/shadow-status.json";
 
 type WeightKey =
   | "performance"
@@ -40,6 +45,15 @@ type Player = {
     minutesIfBench: number;
     minutesStd: number;
     rotationVolatility: number;
+    competitionPressure: number;
+    managerRotation: number;
+    minimumFixtureGap: number;
+    scenarios: Array<{ label: string; probability: number; minutes: number }>;
+    availabilityEvidence: {
+      status: string;
+      chance: number;
+      officialNews: string;
+    };
   };
   distribution: {
     p10: number;
@@ -56,13 +70,16 @@ type Player = {
     bpsRate: number;
     goalRoute: number;
     assistRoute: number;
+    exactEventCoverage: number;
   };
   ensemble: {
     structural: number;
     empirical: number;
     marketRole: number;
+    roleChallenger: number;
     official: number;
     disagreement: number;
+    roleProjection: number;
   };
   marketForecast: {
     priceRiseProbability: number;
@@ -138,6 +155,32 @@ type Player = {
 
 type ScoredPlayer = Player & { liveScore: number };
 
+type ImportedTeam = {
+  manager: {
+    id: number;
+    teamName: string;
+    playerName: string;
+    points: number;
+    overallRank: number;
+    totalManagers: number;
+    percentile: number;
+    squadValue: number;
+    bank: number;
+  };
+  picksEvent: number;
+  owned: Array<{ element: number; multiplier: number; selling_price: number; player: Player }>;
+  suggestions: Array<{ sell: Player; buy: Player; horizonGain: number; affordable: boolean }>;
+  forecast: {
+    teamProjection: number;
+    modelProjection: number;
+    edge: number;
+    medianRank: number;
+    optimisticRank: number;
+    cautiousRank: number;
+    method: string;
+  };
+};
+
 const positionOrder = ["GK", "DEF", "MID", "FWD"] as const;
 const positionQuota: Record<Player["position"], number> = {
   GK: 2,
@@ -162,6 +205,7 @@ const chipDescriptions: Record<string, string> = {
   "Free Hit": "Reserved for major blank clashes or unusually concentrated double fixtures.",
   "Bench Boost": "Eligible when the bench contains a double-gameweek player and clears the score bar.",
   "Triple Captain": "Eligible only when the chosen captain has two fixtures and clears the score bar.",
+  "Assistant Manager": "2024/25-only three-Gameweek replay, including budget, club quota, results and table-bonus scoring.",
 };
 
 const componentLabels: Record<keyof Player["components"], string> = {
@@ -368,22 +412,50 @@ export default function FplDashboard() {
   const [riskMode, setRiskMode] = useState<RiskMode>("balanced");
   const [now, setNow] = useState(() => Date.now());
   const [showBench, setShowBench] = useState(true);
+  const [playerPool, setPlayerPool] = useState<Player[]>(() => {
+    const initial = [...(results.squad as Player[]), ...(results.watchlist as Player[])];
+    return [...new Map(initial.map((player) => [player.id, player])).values()];
+  });
   const [analysedId, setAnalysedId] = useState<number>(
-    (results.currentPlayers as Player[])[0]?.id ?? 0,
+    (results.watchlist as Player[])[0]?.id ?? (results.squad as Player[])[0]?.id ?? 0,
   );
+  const [entryId, setEntryId] = useState(() =>
+    typeof window === "undefined"
+      ? ""
+      : window.localStorage.getItem("fpl-lens-entry") ?? "",
+  );
+  const [importedTeam, setImportedTeam] = useState<ImportedTeam | null>(null);
+  const [importState, setImportState] = useState<"idle" | "loading" | "error">("idle");
+  const [importError, setImportError] = useState("");
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 60_000);
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/projections?limit=500", { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Projection API returned ${response.status}`);
+        return response.json() as Promise<{ players: Player[] }>;
+      })
+      .then((payload) => setPlayerPool(payload.players))
+      .catch((error: unknown) => {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          console.warn("Using the server-rendered projection shortlist", error);
+        }
+      });
+    return () => controller.abort();
+  }, []);
+
   const scoredPlayers = useMemo(
     () =>
-      (results.currentPlayers as Player[]).map((player) => ({
+      playerPool.map((player) => ({
         ...player,
         liveScore: calculateScore(player, weights, recentShare, riskMode),
       })),
-    [weights, recentShare, riskMode],
+    [playerPool, weights, recentShare, riskMode],
   );
   const selection = useMemo(() => buildSquad(scoredPlayers), [scoredPlayers]);
   const xiIds = useMemo(
@@ -451,6 +523,27 @@ export default function FplDashboard() {
       }),
     );
   };
+  const importTeam = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!/^\d+$/.test(entryId.trim())) {
+      setImportState("error");
+      setImportError("Enter the numeric ID shown in your FPL team URL.");
+      return;
+    }
+    setImportState("loading");
+    setImportError("");
+    try {
+      const response = await fetch(`/api/team/${entryId.trim()}`);
+      const payload = (await response.json()) as ImportedTeam & { error?: string };
+      if (!response.ok) throw new Error(payload.error ?? "Team import failed.");
+      setImportedTeam(payload);
+      setImportState("idle");
+      window.localStorage.setItem("fpl-lens-entry", entryId.trim());
+    } catch (error) {
+      setImportState("error");
+      setImportError(error instanceof Error ? error.message : "Team import failed.");
+    }
+  };
 
   return (
     <main>
@@ -462,10 +555,11 @@ export default function FplDashboard() {
         </a>
         <nav aria-label="Primary navigation">
           <a href="#squad">Squad</a>
+          <a href="#my-team">My Team</a>
           <a href="#player-lab">Player Lab</a>
           <a href="#chips">Chips</a>
+          <a href="#research">Research</a>
           <a href="#backtest">Backtest</a>
-          <a href="#method">Method</a>
         </nav>
         <div className="deadline-chip">
           <span>GW{results.headline.gameweek} LOCK</span>
@@ -495,11 +589,26 @@ export default function FplDashboard() {
         <span>{results.model.recursiveTrials} RECURSIVE FINALISTS</span>
         <span>{results.chipStrategy.policyTrials} CHIP POLICIES</span>
         <span>{results.rankTarget.averageProbability}% AVG TARGET PROBABILITY</span>
+        <span>{results.rankTarget.averageEstimatedRank === null ? "RANK OUTSIDE LOCAL CALIBRATION" : `EST. AVG RANK ${results.rankTarget.averageEstimatedRank.toLocaleString()}`}</span>
         <span>{results.model.playerWeeks.toLocaleString()} PLAYER-WEEKS</span>
         <span>{results.currentMeta.playersScored} CURRENT PLAYERS SCORED</span>
         <span>{results.headline.scenario.simulations.toLocaleString()} CORRELATED SQUAD SCENARIOS</span>
         <span>LAST REFRESH {new Date(results.generatedAt).toLocaleDateString("en-GB")}</span>
       </div>
+
+      <section className={`governance-banner ${results.championGovernance.decisionPromoted ? "promoted" : "held"}`} aria-label="Model promotion decision">
+        <div>
+          <span>AUDITED PROMOTION GATE</span>
+          <strong>{results.championGovernance.decisionPromoted ? `${results.championGovernance.decisionChampion} cleared the gate` : `${results.championGovernance.decisionChallenger} remains research-only`}</strong>
+          <p>{results.championGovernance.reason}</p>
+        </div>
+        <div className="governance-metrics">
+          <div><strong>{results.championGovernance.incumbentAveragePoints}</strong><span>avg target pts</span></div>
+          <div><strong>{results.championGovernance.challengerAveragePoints}</strong><span>model avg pts</span></div>
+          <div><strong>{results.championGovernance.challengerPlayerMae}</strong><span>new player MAE</span></div>
+        </div>
+        <small>{results.championGovernance.promotionRule}</small>
+      </section>
 
       <section className="decision-grid" id="squad">
         <aside className="control-panel">
@@ -621,10 +730,84 @@ export default function FplDashboard() {
         </aside>
       </section>
 
+      <section className="personal-team-section" id="my-team">
+        <div className="personal-team-intro">
+          <div className="section-label"><span>04</span> PERSONALISED DECISION ROOM</div>
+          <h2>Your team.<br />The model&apos;s next move.</h2>
+          <p>
+            Import your public FPL team to compare its exact current rank, squad and
+            six-week outlook with Lens. Your ID stays on this device; no password or
+            private account access is required.
+          </p>
+          <form className="team-import-form" onSubmit={importTeam}>
+            <label>
+              <span>FPL TEAM ID</span>
+              <input
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={entryId}
+                onChange={(event) => setEntryId(event.target.value)}
+                placeholder="e.g. 123456"
+                aria-label="FPL team ID"
+              />
+            </label>
+            <button type="submit" disabled={importState === "loading"}>
+              {importState === "loading" ? "Loading…" : "Import team"}
+            </button>
+          </form>
+          {importState === "error" && <p className="team-import-error" role="alert">{importError}</p>}
+          <div className="api-callout">
+            <span>OPEN PROJECTIONS</span>
+            <code>/api/projections?position=DEF&amp;limit=25</code>
+            <a href="/api/projections" target="_blank" rel="noreferrer">View JSON ↗</a>
+          </div>
+        </div>
+
+        <div className="personal-team-workspace">
+          {!importedTeam ? (
+            <div className="import-empty-state">
+              <span>OFFICIAL FPL CONNECTION</span>
+              <strong>No team imported yet.</strong>
+              <p>Lens will calculate your exact percentile, modelled rank range and up to three affordable transfer paths.</p>
+            </div>
+          ) : (
+            <>
+              <header className="imported-team-header">
+                <div>
+                  <span>{importedTeam.manager.playerName} · GW{importedTeam.picksEvent} squad</span>
+                  <h3>{importedTeam.manager.teamName}</h3>
+                </div>
+                <div><span>OFFICIAL RANK</span><strong>{importedTeam.manager.overallRank.toLocaleString()}</strong></div>
+              </header>
+              <div className="rank-simulator-grid">
+                <div><span>CURRENT PERCENTILE</span><strong>Top {importedTeam.manager.percentile.toFixed(2)}%</strong><small>{importedTeam.manager.totalManagers.toLocaleString()} managers</small></div>
+                <div><span>YOUR GW FORECAST</span><strong>{importedTeam.forecast.teamProjection.toFixed(1)}</strong><small>{importedTeam.forecast.edge >= 0 ? "+" : ""}{importedTeam.forecast.edge.toFixed(1)} vs optimal XI</small></div>
+                <div><span>CURRENT RANK ANCHOR</span><strong>{importedTeam.forecast.medianRank.toLocaleString()}</strong><small>{importedTeam.forecast.optimisticRank.toLocaleString()}–{importedTeam.forecast.cautiousRank.toLocaleString()} uncertainty band</small></div>
+                <div><span>SQUAD VALUE</span><strong>£{importedTeam.manager.squadValue.toFixed(1)}</strong><small>£{importedTeam.manager.bank.toFixed(1)} in bank</small></div>
+              </div>
+              <p className="rank-method">{importedTeam.forecast.method}</p>
+              <div className="transfer-paths">
+                <div className="lab-card-heading"><span>TRANSFER PATHS</span><strong>{importedTeam.suggestions.length || "HOLD"}</strong></div>
+                {importedTeam.suggestions.length ? importedTeam.suggestions.map((move) => (
+                  <div className="transfer-path" key={`${move.sell.id}-${move.buy.id}`}>
+                    <div><span>SELL</span><strong>{move.sell.name}</strong><small>{move.sell.team} · {move.sell.sixWeekProjected.toFixed(1)} six-GW xPts</small></div>
+                    <i>→</i>
+                    <div><span>BUY</span><strong>{move.buy.name}</strong><small>{move.buy.team} · £{move.buy.price.toFixed(1)}</small></div>
+                    <em>+{move.horizonGain.toFixed(1)}</em>
+                  </div>
+                )) : (
+                  <div className="hold-call"><strong>Bank the transfer</strong><p>No affordable same-position move clears the six-week improvement hurdle.</p></div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
       {analysedPlayer && (
         <section className="player-lab" id="player-lab">
           <div className="player-lab-intro">
-            <div className="section-label"><span>04</span> PLAYER LAB</div>
+            <div className="section-label"><span>05</span> PLAYER LAB</div>
             <h2>Read the player.<br />Not just the score.</h2>
             <p>
               Open the full distribution: start and 60-minute probability, scoring
@@ -751,12 +934,13 @@ export default function FplDashboard() {
 
               <article className="minutes-card">
                 <div className="lab-card-heading"><span>MINUTES TREE</span><strong>{analysedPlayer.minutesModel.startProbability}% START</strong></div>
-                <div className="probability-grid minutes-grid">
-                  <div><strong>{analysedPlayer.minutesModel.playProbability}%</strong><span>plays</span></div>
-                  <div><strong>{analysedPlayer.minutesModel.sixtyProbability}%</strong><span>reaches 60</span></div>
-                  <div><strong>{analysedPlayer.minutesModel.minutesIfStart}</strong><span>mins if start</span></div>
+                <div className="lineup-scenarios">
+                  {analysedPlayer.minutesModel.scenarios.map((scenario) => (
+                    <div key={scenario.label}><span>{scenario.label}</span><strong>{scenario.probability}%</strong><small>{scenario.minutes} mins</small></div>
+                  ))}
                 </div>
-                <p>Bench appearance: {analysedPlayer.minutesModel.minutesIfBench} conditional minutes · rotation volatility {analysedPlayer.minutesModel.rotationVolatility}%.</p>
+                <p>{analysedPlayer.minutesModel.sixtyProbability}% reaches 60 · manager rotation {analysedPlayer.minutesModel.managerRotation}% · competition {analysedPlayer.minutesModel.competitionPressure}% · minimum PL gap {analysedPlayer.minutesModel.minimumFixtureGap} days.</p>
+                <small className="availability-evidence">Official availability: {analysedPlayer.minutesModel.availabilityEvidence.chance}% · {analysedPlayer.minutesModel.availabilityEvidence.officialNews}</small>
               </article>
 
               <article className="defender-card">
@@ -766,17 +950,17 @@ export default function FplDashboard() {
                   <div><strong>{analysedPlayer.defenderModel.actionRate}</strong><span>actions / 90</span></div>
                   <div><strong>{analysedPlayer.defenderModel.bpsRate}</strong><span>BPS / match</span></div>
                 </div>
-                <p>Goal route {analysedPlayer.defenderModel.goalRoute.toFixed(3)} and assist route {analysedPlayer.defenderModel.assistRoute.toFixed(3)} per 90, before opponent and set-piece adjustments.</p>
+                <p>Goal route {analysedPlayer.defenderModel.goalRoute.toFixed(3)} and assist route {analysedPlayer.defenderModel.assistRoute.toFixed(3)} per 90. Exact event evidence coverage: {analysedPlayer.defenderModel.exactEventCoverage}%.</p>
               </article>
 
               <article className="ensemble-card">
                 <div className="lab-card-heading"><span>ENSEMBLE & PRICE</span><strong>{analysedPlayer.ensemble.disagreement.toFixed(1)} disagreement</strong></div>
                 <div className="ensemble-bars">
-                  {(["structural", "empirical", "marketRole", "official"] as const).map((key) => (
-                    <div key={key}><span>{key.replace("marketRole", "market role")}</span><i><b style={{ width: `${analysedPlayer.ensemble[key]}%` }} /></i><strong>{analysedPlayer.ensemble[key]}%</strong></div>
+                  {(["structural", "empirical", "marketRole", "roleChallenger", "official"] as const).map((key) => (
+                    <div key={key}><span>{key.replace("marketRole", "market role").replace("roleChallenger", "role ridge")}</span><i><b style={{ width: `${analysedPlayer.ensemble[key]}%` }} /></i><strong>{analysedPlayer.ensemble[key]}%</strong></div>
                   ))}
                 </div>
-                <p>Price move forecast: {analysedPlayer.marketForecast.priceRiseProbability}% rise · {analysedPlayer.marketForecast.priceFallProbability}% fall.</p>
+                <p>Role challenger: {analysedPlayer.ensemble.roleProjection.toFixed(2)} xPts · price move: {analysedPlayer.marketForecast.priceRiseProbability}% rise / {analysedPlayer.marketForecast.priceFallProbability}% fall.</p>
               </article>
 
               <article className="team-card">
@@ -800,7 +984,7 @@ export default function FplDashboard() {
 
       <section className="chip-section" id="chips">
         <div className="chip-intro">
-          <div className="section-label"><span>05</span> CHIP DESK</div>
+          <div className="section-label"><span>06</span> CHIP DESK</div>
           <h2>Wait for the<br />fixture to bend.</h2>
           <p>
             Chips are scored inside the recursive replay. Each decision compares
@@ -854,9 +1038,117 @@ export default function FplDashboard() {
         </div>
       </section>
 
+      <section className="research-section" id="research">
+        <div className="research-intro">
+          <div className="section-label"><span>07</span> FROZEN RESEARCH SEASON</div>
+          <h2>Decide first.<br />Score later.</h2>
+          <p>
+            Every official fixture, player flag, minutes override and manager decision is
+            captured before the deadline and tied to a content hash. Only a locked snapshot
+            can advance a shadow manager; provisional runs are visible but never scored.
+          </p>
+          <div className={`snapshot-card ${deadlineStatus.status}`}>
+            <div><span>GW{deadlineStatus.gameweek} SNAPSHOT</span><strong>{deadlineStatus.status}</strong></div>
+            <p>{new Date(deadlineStatus.capturedAt).toLocaleString("en-GB")} · {deadlineStatus.playersTracked} official tracked / {deadlineStatus.playersModelled} fully modelled · {deadlineStatus.overrideCount} documented overrides</p>
+            <code>{deadlineStatus.snapshotHash.slice(0, 20)}…</code>
+          </div>
+          <div className="research-rule">
+            <span>PROMOTION RULE</span>
+            <p>{frontierScores.promotionRule}</p>
+          </div>
+        </div>
+
+        <div className="research-workbench">
+          <div className="research-scoreboard">
+            <div><span>DEADLINE REVIEW</span><strong>{deadlineStatus.lateNewsCount}</strong><small>minutes/news flags</small></div>
+            <div><span>SHADOW GWS</span><strong>{shadowStatus.completedGameweeks}</strong><small>officially scored</small></div>
+            <div><span>CHIP CALL</span><strong>{chipScenarios.recommendation}</strong><small>{chipScenarios.simulationCount.toLocaleString()} paired draws</small></div>
+            <div><span>STACK LIFT</span><strong>+{performanceProgress.stackLift.toFixed(1)}</strong><small>{performanceProgress.gapClosedPercent}% of measured gap · unpromoted</small></div>
+          </div>
+
+          <div className="research-heading">
+            <div><span>THREE PRE-REGISTERED MANAGERS</span><p>Same deadline evidence, different decision layer.</p></div>
+            <strong>{shadowStatus.decisionStatus}</strong>
+          </div>
+          <div className="shadow-managers">
+            {shadowStatus.managers.map((manager) => (
+              <article key={manager.id}>
+                <div className="shadow-manager-top"><span>{manager.name}</span><strong>{manager.projectedPoints.toFixed(1)}</strong></div>
+                <p>{manager.description}</p>
+                <div className="shadow-manager-call"><span>CAPTAIN</span><strong>{manager.captain}</strong></div>
+                <div className="shadow-manager-call"><span>CHIP</span><strong>{manager.chip}</strong></div>
+                <small>{manager.transfers.length ? manager.transfers.map((move) => `${move.outName} → ${move.inName}`).join(" · ") : "No transfer clears the recursive hurdle"}</small>
+              </article>
+            ))}
+          </div>
+
+          <div className="research-heading scenario-heading">
+            <div><span>CHIP SCENARIO GATES</span><p>Expected gain alone is not enough; structure and downside must also pass.</p></div>
+            <strong>{chipScenarios.optionValueOfWaiting.toFixed(1)} wait value</strong>
+          </div>
+          <div className="scenario-grid">
+            {chipScenarios.scenarios.filter((scenario) => scenario.chip !== "Hold").map((scenario) => (
+              <article className={scenario.gatePassed ? "gate-pass" : "gate-hold"} key={scenario.chip}>
+                <div><span>{scenario.chip}</span><strong>{scenario.meanGain >= 0 ? "+" : ""}{scenario.meanGain}</strong></div>
+                <p>P10 {scenario.p10Gain >= 0 ? "+" : ""}{scenario.p10Gain} · {scenario.probabilityPositive}% positive</p>
+                <small>{scenario.gatePassed ? "Gate passed" : "Hold: gate failed"}</small>
+              </article>
+            ))}
+          </div>
+
+          <div className="frontier-evidence">
+            <div>
+              <span>CHAMPIONSHIP STACK CHALLENGER</span>
+              <strong>Immediate + horizon + captain</strong>
+              <p>Frontier regression chooses the next-GW order, listwise six-week ranking plans transfers, and a separate armband ranker breaks captaincy ties.</p>
+            </div>
+            <div className="frontier-comparison">
+              <div><span>PAIRED CONTROL</span><strong>{performanceProgress.controlAverage}</strong><small>recursive average</small></div>
+              <div><span>HYBRID</span><strong>{performanceProgress.hybridAverage}</strong><small>+{(performanceProgress.hybridAverage - performanceProgress.controlAverage).toFixed(1)} points</small></div>
+              <div><span>+ CAPTAIN</span><strong>{performanceProgress.captainStackAverage}</strong><small>{performanceProgress.targetHits}/8 cutoff hits</small></div>
+            </div>
+          </div>
+
+          <div className="performance-ladder">
+            <div className="research-heading">
+              <div><span>PERFORMANCE LADDER</span><p>Separating attainable model loss from the legal transfer constraint.</p></div>
+              <strong>{performanceProgress.remainingGap.toFixed(1)} pts still to close</strong>
+            </div>
+            <div className="ladder-track">
+              {[
+                ["Control", performanceProgress.controlAverage],
+                ["Hybrid stack", performanceProgress.captainStackAverage],
+                ["Weekly rebuild ceiling", performanceProgress.weeklyRebuildCeiling],
+                ["Top-500k pace", performanceProgress.top500Pace],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <span>{label}</span>
+                  <i style={{ width: `${Math.max(4, (Number(value) - 1900) / (performanceProgress.top500Pace - 1900) * 100)}%` }} />
+                  <strong>{value}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="research-heading experiment-heading">
+            <div><span>EXPERIMENT LEDGER</span><p>Winning and rejected ideas stay visible.</p></div>
+          </div>
+          <div className="experiment-ledger">
+            {performanceProgress.experiments.map((experiment) => (
+              <article className={experiment.decision} key={experiment.name}>
+                <div><span>{experiment.decision}</span><strong>{experiment.delta > 0 ? `+${experiment.delta}` : "—"}</strong></div>
+                <h3>{experiment.name}</h3>
+                <p>{experiment.detail}</p>
+              </article>
+            ))}
+          </div>
+          <p className="research-caveat">{performanceProgress.bottleneck} {performanceProgress.governance} {shadowStatus.protocol} {chipScenarios.warning}</p>
+        </div>
+      </section>
+
       <section className="backtest-section" id="backtest">
         <div className="backtest-intro">
-          <div className="section-label light"><span>06</span> PROOF, NOT PROMISES</div>
+          <div className="section-label light"><span>08</span> PROOF, NOT PROMISES</div>
           <h2>Replay the past.<br />Earn the present.</h2>
           <p>
             The same 15-player squad moves from one deadline to the next. The model
@@ -871,6 +1163,10 @@ export default function FplDashboard() {
             <span>TOP-500K CONSISTENCY TEST</span>
             <strong>{results.rankTarget.hits}/{results.rankTarget.seasons}</strong>
             <p>{results.rankTarget.hitRate}% of seasons cleared the estimated pace line · {results.rankTarget.averageProbability}% average bootstrap probability.</p>
+            <p>{results.rankTarget.averageEstimatedRank === null ? "Average rank withheld: these totals fall outside the locally calibrated cutoff range." : `Research-search estimated average rank: ${results.rankTarget.averageEstimatedRank.toLocaleString()}.`}</p>
+            {results.frozenAudit && (
+              <p>Frozen pre-2018 audit: {results.frozenAudit.averagePoints} points average, {results.frozenAudit.top500Hits}/8 target hits.</p>
+            )}
             <small>{results.rankTarget.method}</small>
           </div>
         </div>
@@ -946,16 +1242,16 @@ export default function FplDashboard() {
       </section>
 
       <section className="method-section" id="method">
-        <div className="section-label"><span>07</span> HOW THE LENS WORKS</div>
+        <div className="section-label"><span>09</span> HOW THE LENS WORKS</div>
         <div className="method-headline">
           <h2>Transparent inputs.<br />No mystery score.</h2>
           <p>{results.model.method} {results.model.objective}</p>
         </div>
         <div className="method-steps">
-          <article><span>01</span><h3>Distribute</h3><p>Start, bench, 60-minute, return, defender-contribution and clean-sheet probabilities create a full player outcome range.</p></article>
+          <article><span>01</span><h3>Distribute</h3><p>Lineup scenarios combine starts, substitute appearances, manager rotation, competition, congestion and official availability evidence.</p></article>
           <article><span>02</span><h3>Shift</h3><p>All rolling statistics move back one gameweek. The model never sees the result it is trying to predict.</p></article>
-          <article><span>03</span><h3>Ensemble</h3><p>Structural, empirical and market-role forecasts are position-weighted by prior causal error; the live official projection is an independent fourth vote.</p></article>
-          <article><span>04</span><h3>Simulate</h3><p>{results.headline.scenario.simulations.toLocaleString()} correlated squad scenarios and {results.chipStrategy.policyTrials} option-value chip policies compete under legal FPL constraints.</p></article>
+          <article><span>03</span><h3>Challenge</h3><p>A regularised model learns separately for centre-backs, full-backs, creators, holding midfielders and forward roles, earning weight only through prior errors.</p></article>
+          <article><span>04</span><h3>Optimise</h3><p>{results.headline.scenario.simulations.toLocaleString()} correlated scenarios feed a joint transfer-chip tree with an explicit hold option and legal FPL constraints.</p></article>
         </div>
         <div className="method-footer">
           <div><span>AGE COVERAGE</span><strong>{Math.min(...results.dataSummary.map((item) => item.ageCoverage))}%+</strong></div>

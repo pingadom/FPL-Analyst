@@ -1,0 +1,740 @@
+{
+  "selection": "Forecast architecture and policy fixed before recursive evaluation",
+  "strategy": "Audited stable joint planner",
+  "chipPolicy": {
+    "wildcardGap": 60,
+    "freeHitGap": 20,
+    "benchScore": 11,
+    "tripleScore": 15,
+    "afconBonus": 0.55,
+    "firstWildcardMinGw": 10,
+    "secondWildcardMinGw": 28
+  },
+  "models": {
+    "stableLinear": {
+      "average": 2106.5,
+      "minimum": 1897,
+      "targetHits": 0,
+      "averageMargin": -190.2,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2118,
+          "target": 2151,
+          "margin": -33,
+          "transfers": 35,
+          "rolled": 17,
+          "chips": []
+        },
+        {
+          "season": "2019/20",
+          "points": 2157,
+          "target": 2160,
+          "margin": -3,
+          "transfers": 33,
+          "rolled": 18,
+          "chips": []
+        },
+        {
+          "season": "2020/21",
+          "points": 2147,
+          "target": 2270,
+          "margin": -123,
+          "transfers": 34,
+          "rolled": 17,
+          "chips": []
+        },
+        {
+          "season": "2021/22",
+          "points": 2194,
+          "target": 2340,
+          "margin": -146,
+          "transfers": 33,
+          "rolled": 17,
+          "chips": []
+        },
+        {
+          "season": "2022/23",
+          "points": 2088,
+          "target": 2425,
+          "margin": -337,
+          "transfers": 35,
+          "rolled": 17,
+          "chips": []
+        },
+        {
+          "season": "2023/24",
+          "points": 2122,
+          "target": 2373,
+          "margin": -251,
+          "transfers": 37,
+          "rolled": 15,
+          "chips": []
+        },
+        {
+          "season": "2024/25",
+          "points": 2129,
+          "target": 2411,
+          "margin": -282,
+          "transfers": 37,
+          "rolled": 16,
+          "chips": []
+        },
+        {
+          "season": "2025/26",
+          "points": 1897,
+          "target": 2244,
+          "margin": -347,
+          "transfers": 39,
+          "rolled": 15,
+          "chips": []
+        }
+      ]
+    },
+    "randomForest": {
+      "average": 2064.5,
+      "minimum": 1911,
+      "targetHits": 0,
+      "averageMargin": -232.2,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 1911,
+          "target": 2151,
+          "margin": -240,
+          "transfers": 37,
+          "rolled": 16,
+          "chips": []
+        },
+        {
+          "season": "2019/20",
+          "points": 2115,
+          "target": 2160,
+          "margin": -45,
+          "transfers": 34,
+          "rolled": 17,
+          "chips": []
+        },
+        {
+          "season": "2020/21",
+          "points": 2041,
+          "target": 2270,
+          "margin": -229,
+          "transfers": 35,
+          "rolled": 14,
+          "chips": []
+        },
+        {
+          "season": "2021/22",
+          "points": 2151,
+          "target": 2340,
+          "margin": -189,
+          "transfers": 36,
+          "rolled": 10,
+          "chips": []
+        },
+        {
+          "season": "2022/23",
+          "points": 1944,
+          "target": 2425,
+          "margin": -481,
+          "transfers": 35,
+          "rolled": 16,
+          "chips": []
+        },
+        {
+          "season": "2023/24",
+          "points": 2187,
+          "target": 2373,
+          "margin": -186,
+          "transfers": 33,
+          "rolled": 18,
+          "chips": []
+        },
+        {
+          "season": "2024/25",
+          "points": 2093,
+          "target": 2411,
+          "margin": -318,
+          "transfers": 35,
+          "rolled": 18,
+          "chips": []
+        },
+        {
+          "season": "2025/26",
+          "points": 2074,
+          "target": 2244,
+          "margin": -170,
+          "transfers": 38,
+          "rolled": 16,
+          "chips": []
+        }
+      ]
+    },
+    "xgboost": {
+      "average": 2001.8,
+      "minimum": 1945,
+      "targetHits": 0,
+      "averageMargin": -295.0,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 1983,
+          "target": 2151,
+          "margin": -168,
+          "transfers": 36,
+          "rolled": 10,
+          "chips": []
+        },
+        {
+          "season": "2019/20",
+          "points": 1953,
+          "target": 2160,
+          "margin": -207,
+          "transfers": 36,
+          "rolled": 10,
+          "chips": []
+        },
+        {
+          "season": "2020/21",
+          "points": 2032,
+          "target": 2270,
+          "margin": -238,
+          "transfers": 36,
+          "rolled": 11,
+          "chips": []
+        },
+        {
+          "season": "2021/22",
+          "points": 1974,
+          "target": 2340,
+          "margin": -366,
+          "transfers": 36,
+          "rolled": 7,
+          "chips": []
+        },
+        {
+          "season": "2022/23",
+          "points": 1953,
+          "target": 2425,
+          "margin": -472,
+          "transfers": 32,
+          "rolled": 15,
+          "chips": []
+        },
+        {
+          "season": "2023/24",
+          "points": 2081,
+          "target": 2373,
+          "margin": -292,
+          "transfers": 34,
+          "rolled": 16,
+          "chips": []
+        },
+        {
+          "season": "2024/25",
+          "points": 2093,
+          "target": 2411,
+          "margin": -318,
+          "transfers": 36,
+          "rolled": 15,
+          "chips": []
+        },
+        {
+          "season": "2025/26",
+          "points": 1945,
+          "target": 2244,
+          "margin": -299,
+          "transfers": 38,
+          "rolled": 16,
+          "chips": []
+        }
+      ]
+    },
+    "causalTreeEnsemble": {
+      "average": 2093.2,
+      "minimum": 1898,
+      "targetHits": 0,
+      "averageMargin": -203.5,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2135,
+          "target": 2151,
+          "margin": -16,
+          "transfers": 36,
+          "rolled": 13,
+          "chips": []
+        },
+        {
+          "season": "2019/20",
+          "points": 2009,
+          "target": 2160,
+          "margin": -151,
+          "transfers": 33,
+          "rolled": 17,
+          "chips": []
+        },
+        {
+          "season": "2020/21",
+          "points": 2066,
+          "target": 2270,
+          "margin": -204,
+          "transfers": 37,
+          "rolled": 13,
+          "chips": []
+        },
+        {
+          "season": "2021/22",
+          "points": 2012,
+          "target": 2340,
+          "margin": -328,
+          "transfers": 37,
+          "rolled": 10,
+          "chips": []
+        },
+        {
+          "season": "2022/23",
+          "points": 1898,
+          "target": 2425,
+          "margin": -527,
+          "transfers": 33,
+          "rolled": 13,
+          "chips": []
+        },
+        {
+          "season": "2023/24",
+          "points": 2303,
+          "target": 2373,
+          "margin": -70,
+          "transfers": 33,
+          "rolled": 18,
+          "chips": []
+        },
+        {
+          "season": "2024/25",
+          "points": 2145,
+          "target": 2411,
+          "margin": -266,
+          "transfers": 35,
+          "rolled": 17,
+          "chips": []
+        },
+        {
+          "season": "2025/26",
+          "points": 2178,
+          "target": 2244,
+          "margin": -66,
+          "transfers": 38,
+          "rolled": 17,
+          "chips": []
+        }
+      ]
+    },
+    "causalTreeEnsembleWithChips": {
+      "average": 2093.4,
+      "minimum": 2014,
+      "targetHits": 0,
+      "averageMargin": -203.4,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2114,
+          "target": 2151,
+          "margin": -37,
+          "transfers": 35,
+          "rolled": 16,
+          "chips": [
+            {
+              "chip": "Wildcard",
+              "gw": 14,
+              "gain": 8,
+              "signal": 64.459,
+              "threshold": 58.499,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 28,
+              "gain": -17,
+              "signal": 65.4,
+              "threshold": 59.829,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 32,
+              "gain": 12,
+              "signal": 18.427,
+              "threshold": 14.757,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 35,
+              "gain": 27,
+              "signal": 12.29,
+              "threshold": 10.343,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "points": 2026,
+          "target": 2160,
+          "margin": -134,
+          "transfers": 30,
+          "rolled": 18,
+          "chips": [
+            {
+              "chip": "Wildcard",
+              "gw": 18,
+              "gain": 17,
+              "signal": 93.204,
+              "threshold": 51.454,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 29,
+              "gain": 2,
+              "signal": 15.689,
+              "threshold": 14.999,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 39,
+              "gain": 5,
+              "signal": 21.604,
+              "threshold": 10.925,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 40,
+              "gain": 49,
+              "signal": 124.964,
+              "threshold": 59.371,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "points": 2100,
+          "target": 2270,
+          "margin": -170,
+          "transfers": 34,
+          "rolled": 14,
+          "chips": [
+            {
+              "chip": "Wildcard",
+              "gw": 10,
+              "gain": 27,
+              "signal": 89.328,
+              "threshold": 59.736,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Free Hit",
+              "gw": 18,
+              "gain": 23,
+              "signal": 47.674,
+              "threshold": 19.999,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 19,
+              "gain": 4,
+              "signal": 18.929,
+              "threshold": 14.999,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "gain": 3,
+              "signal": 12.635,
+              "threshold": 10.992,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 29,
+              "gain": 45,
+              "signal": 163.317,
+              "threshold": 59.736,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "points": 2014,
+          "target": 2340,
+          "margin": -326,
+          "transfers": 32,
+          "rolled": 13,
+          "chips": [
+            {
+              "chip": "Wildcard",
+              "gw": 13,
+              "gain": -6,
+              "signal": 73.196,
+              "threshold": 59.028,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Free Hit",
+              "gw": 18,
+              "gain": -2,
+              "signal": 26.669,
+              "threshold": 19.999,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 21,
+              "gain": 9,
+              "signal": 97.989,
+              "threshold": 59.992,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 22,
+              "gain": 7,
+              "signal": 12.904,
+              "threshold": 10.998,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 25,
+              "gain": 10,
+              "signal": 15.048,
+              "threshold": 14.988,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "points": 2082,
+          "target": 2425,
+          "margin": -343,
+          "transfers": 31,
+          "rolled": 16,
+          "chips": [
+            {
+              "chip": "Free Hit",
+              "gw": 8,
+              "gain": 40,
+              "signal": 36.278,
+              "threshold": 20.0,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 10,
+              "gain": 10,
+              "signal": 80.495,
+              "threshold": 59.736,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 20,
+              "gain": 5,
+              "signal": 20.276,
+              "threshold": 14.999,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 28,
+              "gain": 49,
+              "signal": 109.945,
+              "threshold": 59.829,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 29,
+              "gain": 20,
+              "signal": 13.217,
+              "threshold": 10.952,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "points": 2195,
+          "target": 2373,
+          "margin": -178,
+          "transfers": 28,
+          "rolled": 22,
+          "chips": [
+            {
+              "chip": "Wildcard",
+              "gw": 17,
+              "gain": 12,
+              "signal": 55.622,
+              "threshold": 54.467,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 25,
+              "gain": 11,
+              "signal": 21.654,
+              "threshold": 14.988,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 26,
+              "gain": -3,
+              "signal": 114.185,
+              "threshold": 59.928,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Free Hit",
+              "gw": 29,
+              "gain": 16,
+              "signal": 47.364,
+              "threshold": 19.912,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "points": 2050,
+          "target": 2411,
+          "margin": -361,
+          "transfers": 34,
+          "rolled": 19,
+          "chips": [
+            {
+              "chip": "Wildcard",
+              "gw": 12,
+              "gain": -34,
+              "signal": 63.041,
+              "threshold": 59.371,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Assistant Manager",
+              "gw": 24,
+              "gain": 40,
+              "signal": 35.376,
+              "threshold": 17.979,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold",
+              "managerTeam": 12,
+              "cost": 15
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 29,
+              "gain": 36,
+              "signal": 116.152,
+              "threshold": 59.736,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Free Hit",
+              "gw": 32,
+              "gain": 2,
+              "signal": 26.657,
+              "threshold": 19.676,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 33,
+              "gain": 7,
+              "signal": 16.169,
+              "threshold": 14.625,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "points": 2166,
+          "target": 2244,
+          "margin": -78,
+          "transfers": 36,
+          "rolled": 18,
+          "chips": [
+            {
+              "chip": "Triple Captain",
+              "gw": 26,
+              "gain": 3,
+              "signal": 15.995,
+              "threshold": 14.982,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Wildcard",
+              "gw": 31,
+              "gain": 1,
+              "signal": 102.885,
+              "threshold": 59.371,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Free Hit",
+              "gw": 33,
+              "gain": 15,
+              "signal": 28.299,
+              "threshold": 19.5,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

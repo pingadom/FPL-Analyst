@@ -1,0 +1,3849 @@
+{
+  "schemaVersion": 1,
+  "status": "shadow challenger",
+  "model": "selectable-frontier XGBoost + structural quantile mapping",
+  "historicalBest": "frontier25",
+  "historicalValidation": {
+    "stable": {
+      "average": 2056.2,
+      "minimum": 1949,
+      "targetHits": 0,
+      "averageMargin": -240.5,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2001,
+          "target": 2151,
+          "margin": -150
+        },
+        {
+          "season": "2019/20",
+          "points": 1949,
+          "target": 2160,
+          "margin": -211
+        },
+        {
+          "season": "2020/21",
+          "points": 2026,
+          "target": 2270,
+          "margin": -244
+        },
+        {
+          "season": "2021/22",
+          "points": 2119,
+          "target": 2340,
+          "margin": -221
+        },
+        {
+          "season": "2022/23",
+          "points": 2122,
+          "target": 2425,
+          "margin": -303
+        },
+        {
+          "season": "2023/24",
+          "points": 2003,
+          "target": 2373,
+          "margin": -370
+        },
+        {
+          "season": "2024/25",
+          "points": 2222,
+          "target": 2411,
+          "margin": -189
+        },
+        {
+          "season": "2025/26",
+          "points": 2008,
+          "target": 2244,
+          "margin": -236
+        }
+      ]
+    },
+    "frontier10": {
+      "average": 2064.5,
+      "minimum": 1874,
+      "targetHits": 0,
+      "averageMargin": -232.2,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2026,
+          "target": 2151,
+          "margin": -125
+        },
+        {
+          "season": "2019/20",
+          "points": 1980,
+          "target": 2160,
+          "margin": -180
+        },
+        {
+          "season": "2020/21",
+          "points": 2109,
+          "target": 2270,
+          "margin": -161
+        },
+        {
+          "season": "2021/22",
+          "points": 2090,
+          "target": 2340,
+          "margin": -250
+        },
+        {
+          "season": "2022/23",
+          "points": 2079,
+          "target": 2425,
+          "margin": -346
+        },
+        {
+          "season": "2023/24",
+          "points": 2013,
+          "target": 2373,
+          "margin": -360
+        },
+        {
+          "season": "2024/25",
+          "points": 2345,
+          "target": 2411,
+          "margin": -66
+        },
+        {
+          "season": "2025/26",
+          "points": 1874,
+          "target": 2244,
+          "margin": -370
+        }
+      ]
+    },
+    "frontier25": {
+      "average": 2103.0,
+      "minimum": 1913,
+      "targetHits": 0,
+      "averageMargin": -193.8,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 1996,
+          "target": 2151,
+          "margin": -155
+        },
+        {
+          "season": "2019/20",
+          "points": 2048,
+          "target": 2160,
+          "margin": -112
+        },
+        {
+          "season": "2020/21",
+          "points": 2215,
+          "target": 2270,
+          "margin": -55
+        },
+        {
+          "season": "2021/22",
+          "points": 2062,
+          "target": 2340,
+          "margin": -278
+        },
+        {
+          "season": "2022/23",
+          "points": 2270,
+          "target": 2425,
+          "margin": -155
+        },
+        {
+          "season": "2023/24",
+          "points": 2095,
+          "target": 2373,
+          "margin": -278
+        },
+        {
+          "season": "2024/25",
+          "points": 2225,
+          "target": 2411,
+          "margin": -186
+        },
+        {
+          "season": "2025/26",
+          "points": 1913,
+          "target": 2244,
+          "margin": -331
+        }
+      ]
+    },
+    "frontier40": {
+      "average": 2074.0,
+      "minimum": 1925,
+      "targetHits": 0,
+      "averageMargin": -222.8,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2051,
+          "target": 2151,
+          "margin": -100
+        },
+        {
+          "season": "2019/20",
+          "points": 1994,
+          "target": 2160,
+          "margin": -166
+        },
+        {
+          "season": "2020/21",
+          "points": 2073,
+          "target": 2270,
+          "margin": -197
+        },
+        {
+          "season": "2021/22",
+          "points": 2043,
+          "target": 2340,
+          "margin": -297
+        },
+        {
+          "season": "2022/23",
+          "points": 2294,
+          "target": 2425,
+          "margin": -131
+        },
+        {
+          "season": "2023/24",
+          "points": 2132,
+          "target": 2373,
+          "margin": -241
+        },
+        {
+          "season": "2024/25",
+          "points": 2080,
+          "target": 2411,
+          "margin": -331
+        },
+        {
+          "season": "2025/26",
+          "points": 1925,
+          "target": 2244,
+          "margin": -319
+        }
+      ]
+    },
+    "frontier25WithFrozenChips": {
+      "average": 2090.6,
+      "minimum": 1892,
+      "targetHits": 0,
+      "averageMargin": -206.1,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 1995,
+          "target": 2151,
+          "margin": -156
+        },
+        {
+          "season": "2019/20",
+          "points": 2052,
+          "target": 2160,
+          "margin": -108
+        },
+        {
+          "season": "2020/21",
+          "points": 2143,
+          "target": 2270,
+          "margin": -127
+        },
+        {
+          "season": "2021/22",
+          "points": 1904,
+          "target": 2340,
+          "margin": -436
+        },
+        {
+          "season": "2022/23",
+          "points": 2339,
+          "target": 2425,
+          "margin": -86
+        },
+        {
+          "season": "2023/24",
+          "points": 1992,
+          "target": 2373,
+          "margin": -381
+        },
+        {
+          "season": "2024/25",
+          "points": 2408,
+          "target": 2411,
+          "margin": -3
+        },
+        {
+          "season": "2025/26",
+          "points": 1892,
+          "target": 2244,
+          "margin": -352
+        }
+      ]
+    }
+  },
+  "frontierMetrics": {
+    "stable": {
+      "mae": 2.2566,
+      "spearman": 0.4114,
+      "top15_points": 4.837,
+      "top15_blank_rate": 0.459,
+      "missed_haul_rate": 0.8217
+    },
+    "frontier10": {
+      "mae": 2.2461,
+      "spearman": 0.4197,
+      "top15_points": 4.9078,
+      "top15_blank_rate": 0.4537,
+      "missed_haul_rate": 0.8184
+    },
+    "frontier25": {
+      "mae": 2.2317,
+      "spearman": 0.4281,
+      "top15_points": 4.9776,
+      "top15_blank_rate": 0.4464,
+      "missed_haul_rate": 0.8146
+    },
+    "frontier40": {
+      "mae": 2.219,
+      "spearman": 0.4326,
+      "top15_points": 4.9833,
+      "top15_blank_rate": 0.4471,
+      "missed_haul_rate": 0.8124
+    }
+  },
+  "promotionRule": "Promote only after a frozen prospective sample; historical exposure cannot qualify a model.",
+  "trainingAudit": [
+    {
+      "position": 1,
+      "trainingRows": 13621
+    },
+    {
+      "position": 2,
+      "trainingRows": 21827
+    },
+    {
+      "position": 3,
+      "trainingRows": 22569
+    },
+    {
+      "position": 4,
+      "trainingRows": 16260
+    }
+  ],
+  "players": [
+    {
+      "id": 411,
+      "name": "Haaland",
+      "position": "FWD",
+      "rawScore": 7.675,
+      "mappedProjection": 6.2,
+      "rankPercentile": 100.0,
+      "blend25": 6.2
+    },
+    {
+      "id": 426,
+      "name": "B.Fernandes",
+      "position": "MID",
+      "rawScore": 6.779,
+      "mappedProjection": 5.0,
+      "rankPercentile": 100.0,
+      "blend25": 5.0
+    },
+    {
+      "id": 4,
+      "name": "Gabriel",
+      "position": "DEF",
+      "rawScore": 5.145,
+      "mappedProjection": 5.2,
+      "rankPercentile": 100.0,
+      "blend25": 5.2
+    },
+    {
+      "id": 388,
+      "name": "Gu\u00e9hi",
+      "position": "DEF",
+      "rawScore": 4.894,
+      "mappedProjection": 4.6,
+      "rankPercentile": 99.2,
+      "blend25": 4.6
+    },
+    {
+      "id": 1,
+      "name": "Raya",
+      "position": "GK",
+      "rawScore": 4.813,
+      "mappedProjection": 4.9,
+      "rankPercentile": 100.0,
+      "blend25": 4.9
+    },
+    {
+      "id": 384,
+      "name": "Donnarumma",
+      "position": "GK",
+      "rawScore": 4.11,
+      "mappedProjection": 4.5,
+      "rankPercentile": 97.6,
+      "blend25": 4.5
+    },
+    {
+      "id": 399,
+      "name": "Cherki",
+      "position": "MID",
+      "rawScore": 3.813,
+      "mappedProjection": 4.2,
+      "rankPercentile": 97.5,
+      "blend25": 4.35
+    },
+    {
+      "id": 400,
+      "name": "Doku",
+      "position": "MID",
+      "rawScore": 3.76,
+      "mappedProjection": 4.0,
+      "rankPercentile": 96.3,
+      "blend25": 4.38
+    },
+    {
+      "id": 397,
+      "name": "Semenyo",
+      "position": "MID",
+      "rawScore": 3.87,
+      "mappedProjection": 4.5,
+      "rankPercentile": 99.4,
+      "blend25": 4.12
+    },
+    {
+      "id": 55,
+      "name": "Watkins",
+      "position": "FWD",
+      "rawScore": 3.209,
+      "mappedProjection": 3.8,
+      "rankPercentile": 96.1,
+      "blend25": 4.02
+    },
+    {
+      "id": 124,
+      "name": "Gro\u00df",
+      "position": "MID",
+      "rawScore": 2.976,
+      "mappedProjection": 3.7,
+      "rankPercentile": 92.0,
+      "blend25": 4.15
+    },
+    {
+      "id": 387,
+      "name": "O'Reilly",
+      "position": "DEF",
+      "rawScore": 4.51,
+      "mappedProjection": 4.1,
+      "rankPercentile": 98.5,
+      "blend25": 4.1
+    },
+    {
+      "id": 481,
+      "name": "Anderson",
+      "position": "MID",
+      "rawScore": 3.162,
+      "mappedProjection": 3.8,
+      "rankPercentile": 93.2,
+      "blend25": 3.95
+    },
+    {
+      "id": 109,
+      "name": "Verbruggen",
+      "position": "GK",
+      "rawScore": 3.812,
+      "mappedProjection": 3.6,
+      "rankPercentile": 92.7,
+      "blend25": 3.75
+    },
+    {
+      "id": 61,
+      "name": "Truffert",
+      "position": "DEF",
+      "rawScore": 2.933,
+      "mappedProjection": 3.2,
+      "rankPercentile": 90.9,
+      "blend25": 3.42
+    },
+    {
+      "id": 67,
+      "name": "Rayan",
+      "position": "MID",
+      "rawScore": 2.841,
+      "mappedProjection": 3.4,
+      "rankPercentile": 89.5,
+      "blend25": 3.4
+    },
+    {
+      "id": 368,
+      "name": "Szoboszlai",
+      "position": "MID",
+      "rawScore": 3.63,
+      "mappedProjection": 3.9,
+      "rankPercentile": 95.1,
+      "blend25": 3.82
+    },
+    {
+      "id": 428,
+      "name": "Cunha",
+      "position": "MID",
+      "rawScore": 3.162,
+      "mappedProjection": 3.9,
+      "rankPercentile": 93.8,
+      "blend25": 3.52
+    },
+    {
+      "id": 12,
+      "name": "Saka",
+      "position": "MID",
+      "rawScore": 3.799,
+      "mappedProjection": 4.1,
+      "rankPercentile": 96.9,
+      "blend25": 4.1
+    },
+    {
+      "id": 13,
+      "name": "Rice",
+      "position": "MID",
+      "rawScore": 3.828,
+      "mappedProjection": 4.4,
+      "rankPercentile": 98.8,
+      "blend25": 4.03
+    },
+    {
+      "id": 412,
+      "name": "Lammens",
+      "position": "GK",
+      "rawScore": 2.859,
+      "mappedProjection": 3.3,
+      "rankPercentile": 87.8,
+      "blend25": 3.3
+    },
+    {
+      "id": 498,
+      "name": "Senesi",
+      "position": "DEF",
+      "rawScore": 3.827,
+      "mappedProjection": 3.7,
+      "rankPercentile": 97.0,
+      "blend25": 3.7
+    },
+    {
+      "id": 480,
+      "name": "Gibbs-White",
+      "position": "MID",
+      "rawScore": 3.334,
+      "mappedProjection": 3.9,
+      "rankPercentile": 94.4,
+      "blend25": 4.12
+    },
+    {
+      "id": 106,
+      "name": "Thiago",
+      "position": "FWD",
+      "rawScore": 2.532,
+      "mappedProjection": 3.5,
+      "rankPercentile": 88.2,
+      "blend25": 3.72
+    },
+    {
+      "id": 356,
+      "name": "Virgil",
+      "position": "DEF",
+      "rawScore": 2.347,
+      "mappedProjection": 2.7,
+      "rankPercentile": 78.0,
+      "blend25": 3.38
+    },
+    {
+      "id": 113,
+      "name": "F.Kad\u0131o\u011flu",
+      "position": "DEF",
+      "rawScore": 3.751,
+      "mappedProjection": 3.6,
+      "rankPercentile": 96.2,
+      "blend25": 3.6
+    },
+    {
+      "id": 40,
+      "name": "Rogers",
+      "position": "MID",
+      "rawScore": 3.648,
+      "mappedProjection": 4.0,
+      "rankPercentile": 95.7,
+      "blend25": 3.7
+    },
+    {
+      "id": 389,
+      "name": "Matheus N.",
+      "position": "DEF",
+      "rawScore": 3.483,
+      "mappedProjection": 3.6,
+      "rankPercentile": 95.5,
+      "blend25": 3.6
+    },
+    {
+      "id": 542,
+      "name": "E.Le F\u00e9e",
+      "position": "MID",
+      "rawScore": 2.839,
+      "mappedProjection": 3.4,
+      "rankPercentile": 88.9,
+      "blend25": 3.48
+    },
+    {
+      "id": 427,
+      "name": "Mbeumo",
+      "position": "MID",
+      "rawScore": 2.805,
+      "mappedProjection": 3.4,
+      "rankPercentile": 88.3,
+      "blend25": 3.25
+    },
+    {
+      "id": 95,
+      "name": "O.Dango",
+      "position": "MID",
+      "rawScore": 2.705,
+      "mappedProjection": 3.3,
+      "rankPercentile": 87.0,
+      "blend25": 3.67
+    },
+    {
+      "id": 14,
+      "name": "Eze",
+      "position": "MID",
+      "rawScore": 2.725,
+      "mappedProjection": 3.3,
+      "rankPercentile": 87.7,
+      "blend25": 3.6
+    },
+    {
+      "id": 69,
+      "name": "Scott",
+      "position": "MID",
+      "rawScore": 2.495,
+      "mappedProjection": 3.2,
+      "rankPercentile": 85.2,
+      "blend25": 3.12
+    },
+    {
+      "id": 491,
+      "name": "Igor Jesus",
+      "position": "FWD",
+      "rawScore": 2.449,
+      "mappedProjection": 3.2,
+      "rankPercentile": 84.3,
+      "blend25": 3.42
+    },
+    {
+      "id": 236,
+      "name": "Dewsbury-Hall",
+      "position": "MID",
+      "rawScore": 2.927,
+      "mappedProjection": 3.5,
+      "rankPercentile": 90.7,
+      "blend25": 3.8
+    },
+    {
+      "id": 25,
+      "name": "Gy\u00f6keres",
+      "position": "FWD",
+      "rawScore": 3.07,
+      "mappedProjection": 3.7,
+      "rankPercentile": 94.1,
+      "blend25": 3.55
+    },
+    {
+      "id": 123,
+      "name": "Hinshelwood",
+      "position": "MID",
+      "rawScore": 2.392,
+      "mappedProjection": 2.9,
+      "rankPercentile": 80.2,
+      "blend25": 3.65
+    },
+    {
+      "id": 68,
+      "name": "Tavernier",
+      "position": "MID",
+      "rawScore": 2.277,
+      "mappedProjection": 2.8,
+      "rankPercentile": 75.9,
+      "blend25": 2.8
+    },
+    {
+      "id": 367,
+      "name": "Gakpo",
+      "position": "MID",
+      "rawScore": 2.355,
+      "mappedProjection": 2.8,
+      "rankPercentile": 78.4,
+      "blend25": 3.1
+    },
+    {
+      "id": 155,
+      "name": "Enzo",
+      "position": "MID",
+      "rawScore": 2.895,
+      "mappedProjection": 3.4,
+      "rankPercentile": 90.1,
+      "blend25": 3.32
+    },
+    {
+      "id": 499,
+      "name": "Pedro Porro",
+      "position": "DEF",
+      "rawScore": 3.086,
+      "mappedProjection": 3.5,
+      "rankPercentile": 93.9,
+      "blend25": 3.05
+    },
+    {
+      "id": 250,
+      "name": "Leno",
+      "position": "GK",
+      "rawScore": 3.831,
+      "mappedProjection": 3.8,
+      "rankPercentile": 95.1,
+      "blend25": 3.65
+    },
+    {
+      "id": 229,
+      "name": "Tarkowski",
+      "position": "DEF",
+      "rawScore": 4.334,
+      "mappedProjection": 3.7,
+      "rankPercentile": 97.7,
+      "blend25": 3.7
+    },
+    {
+      "id": 112,
+      "name": "Van Hecke",
+      "position": "DEF",
+      "rawScore": 2.987,
+      "mappedProjection": 3.3,
+      "rankPercentile": 91.7,
+      "blend25": 3.08
+    },
+    {
+      "id": 423,
+      "name": "Shaw",
+      "position": "DEF",
+      "rawScore": 2.676,
+      "mappedProjection": 3.0,
+      "rankPercentile": 86.4,
+      "blend25": 2.78
+    },
+    {
+      "id": 79,
+      "name": "Evanilson",
+      "position": "FWD",
+      "rawScore": 2.542,
+      "mappedProjection": 3.5,
+      "rankPercentile": 90.2,
+      "blend25": 2.97
+    },
+    {
+      "id": 346,
+      "name": "Calvert-Lewin",
+      "position": "FWD",
+      "rawScore": 3.816,
+      "mappedProjection": 4.1,
+      "rankPercentile": 98.0,
+      "blend25": 3.65
+    },
+    {
+      "id": 122,
+      "name": "Minteh",
+      "position": "MID",
+      "rawScore": 2.362,
+      "mappedProjection": 2.9,
+      "rankPercentile": 79.0,
+      "blend25": 3.2
+    },
+    {
+      "id": 96,
+      "name": "Damsgaard",
+      "position": "MID",
+      "rawScore": 2.35,
+      "mappedProjection": 2.8,
+      "rankPercentile": 77.8,
+      "blend25": 3.25
+    },
+    {
+      "id": 393,
+      "name": "Khusanov",
+      "position": "DEF",
+      "rawScore": 2.702,
+      "mappedProjection": 3.0,
+      "rankPercentile": 87.1,
+      "blend25": 3.3
+    },
+    {
+      "id": 57,
+      "name": "Petrovi\u0107",
+      "position": "GK",
+      "rawScore": 2.795,
+      "mappedProjection": 3.0,
+      "rankPercentile": 82.9,
+      "blend25": 2.78
+    },
+    {
+      "id": 467,
+      "name": "Sels",
+      "position": "GK",
+      "rawScore": 2.822,
+      "mappedProjection": 3.2,
+      "rankPercentile": 85.4,
+      "blend25": 3.5
+    },
+    {
+      "id": 527,
+      "name": "Richarlison",
+      "position": "FWD",
+      "rawScore": 2.264,
+      "mappedProjection": 2.5,
+      "rankPercentile": 74.5,
+      "blend25": 2.8
+    },
+    {
+      "id": 200,
+      "name": "Lacroix",
+      "position": "DEF",
+      "rawScore": 2.739,
+      "mappedProjection": 3.1,
+      "rankPercentile": 88.6,
+      "blend25": 3.18
+    },
+    {
+      "id": 97,
+      "name": "Jensen",
+      "position": "MID",
+      "rawScore": 2.447,
+      "mappedProjection": 3.0,
+      "rankPercentile": 82.1,
+      "blend25": 3.3
+    },
+    {
+      "id": 465,
+      "name": "Osula",
+      "position": "FWD",
+      "rawScore": 2.282,
+      "mappedProjection": 2.6,
+      "rankPercentile": 76.5,
+      "blend25": 3.43
+    },
+    {
+      "id": 525,
+      "name": "Fernandes",
+      "position": "MID",
+      "rawScore": 2.619,
+      "mappedProjection": 3.3,
+      "rankPercentile": 86.4,
+      "blend25": 2.92
+    },
+    {
+      "id": 529,
+      "name": "Roefs",
+      "position": "GK",
+      "rawScore": 2.517,
+      "mappedProjection": 2.9,
+      "rankPercentile": 80.5,
+      "blend25": 2.9
+    },
+    {
+      "id": 533,
+      "name": "Mukiele",
+      "position": "DEF",
+      "rawScore": 2.717,
+      "mappedProjection": 3.0,
+      "rankPercentile": 87.9,
+      "blend25": 2.92
+    },
+    {
+      "id": 60,
+      "name": "Hill",
+      "position": "DEF",
+      "rawScore": 2.44,
+      "mappedProjection": 2.9,
+      "rankPercentile": 81.1,
+      "blend25": 2.82
+    },
+    {
+      "id": 248,
+      "name": "Beto",
+      "position": "FWD",
+      "rawScore": 2.497,
+      "mappedProjection": 3.4,
+      "rankPercentile": 86.3,
+      "blend25": 3.4
+    },
+    {
+      "id": 26,
+      "name": "Havertz",
+      "position": "FWD",
+      "rawScore": 2.383,
+      "mappedProjection": 2.9,
+      "rankPercentile": 82.4,
+      "blend25": 3.13
+    },
+    {
+      "id": 82,
+      "name": "Kelleher",
+      "position": "GK",
+      "rawScore": 2.51,
+      "mappedProjection": 2.7,
+      "rankPercentile": 78.0,
+      "blend25": 3.08
+    },
+    {
+      "id": 94,
+      "name": "Schade",
+      "position": "MID",
+      "rawScore": 2.469,
+      "mappedProjection": 3.1,
+      "rankPercentile": 84.0,
+      "blend25": 3.25
+    },
+    {
+      "id": 208,
+      "name": "Sarr",
+      "position": "MID",
+      "rawScore": 2.213,
+      "mappedProjection": 2.7,
+      "rankPercentile": 74.1,
+      "blend25": 2.92
+    },
+    {
+      "id": 84,
+      "name": "Collins",
+      "position": "DEF",
+      "rawScore": 3.161,
+      "mappedProjection": 3.6,
+      "rankPercentile": 94.7,
+      "blend25": 3.37
+    },
+    {
+      "id": 544,
+      "name": "Xhaka",
+      "position": "MID",
+      "rawScore": 2.45,
+      "mappedProjection": 3.0,
+      "rankPercentile": 82.7,
+      "blend25": 2.85
+    },
+    {
+      "id": 28,
+      "name": "Martinez",
+      "position": "GK",
+      "rawScore": 2.455,
+      "mappedProjection": 2.7,
+      "rankPercentile": 75.6,
+      "blend25": 2.62
+    },
+    {
+      "id": 445,
+      "name": "Thiaw",
+      "position": "DEF",
+      "rawScore": 3.028,
+      "mappedProjection": 3.3,
+      "rankPercentile": 92.4,
+      "blend25": 3.3
+    },
+    {
+      "id": 201,
+      "name": "Mu\u00f1oz",
+      "position": "DEF",
+      "rawScore": 1.856,
+      "mappedProjection": 2.4,
+      "rankPercentile": 66.7,
+      "blend25": 2.63
+    },
+    {
+      "id": 88,
+      "name": "Kayode",
+      "position": "DEF",
+      "rawScore": 2.836,
+      "mappedProjection": 3.1,
+      "rankPercentile": 90.2,
+      "blend25": 2.95
+    },
+    {
+      "id": 418,
+      "name": "Maguire",
+      "position": "DEF",
+      "rawScore": 2.584,
+      "mappedProjection": 2.9,
+      "rankPercentile": 84.1,
+      "blend25": 2.68
+    },
+    {
+      "id": 452,
+      "name": "Bruno G.",
+      "position": "MID",
+      "rawScore": 2.933,
+      "mappedProjection": 3.6,
+      "rankPercentile": 91.4,
+      "blend25": 3.07
+    },
+    {
+      "id": 453,
+      "name": "Barnes",
+      "position": "MID",
+      "rawScore": 2.485,
+      "mappedProjection": 3.1,
+      "rankPercentile": 84.6,
+      "blend25": 3.02
+    },
+    {
+      "id": 86,
+      "name": "Lewis-Potter",
+      "position": "MID",
+      "rawScore": 2.436,
+      "mappedProjection": 3.0,
+      "rankPercentile": 81.5,
+      "blend25": 3.08
+    },
+    {
+      "id": 398,
+      "name": "Foden",
+      "position": "MID",
+      "rawScore": 2.402,
+      "mappedProjection": 3.0,
+      "rankPercentile": 80.9,
+      "blend25": 2.78
+    },
+    {
+      "id": 366,
+      "name": "Wirtz",
+      "position": "MID",
+      "rawScore": 2.458,
+      "mappedProjection": 3.1,
+      "rankPercentile": 83.3,
+      "blend25": 2.73
+    },
+    {
+      "id": 327,
+      "name": "Bijol",
+      "position": "DEF",
+      "rawScore": 2.341,
+      "mappedProjection": 2.7,
+      "rankPercentile": 77.3,
+      "blend25": 2.92
+    },
+    {
+      "id": 130,
+      "name": "Wieffer",
+      "position": "DEF",
+      "rawScore": 2.422,
+      "mappedProjection": 2.8,
+      "rankPercentile": 80.3,
+      "blend25": 3.03
+    },
+    {
+      "id": 432,
+      "name": "Mainoo",
+      "position": "MID",
+      "rawScore": 2.346,
+      "mappedProjection": 2.8,
+      "rankPercentile": 77.2,
+      "blend25": 2.73
+    },
+    {
+      "id": 136,
+      "name": "Welbeck",
+      "position": "FWD",
+      "rawScore": 2.353,
+      "mappedProjection": 2.9,
+      "rankPercentile": 80.4,
+      "blend25": 2.9
+    },
+    {
+      "id": 45,
+      "name": "McGinn",
+      "position": "MID",
+      "rawScore": 1.942,
+      "mappedProjection": 2.4,
+      "rankPercentile": 66.0,
+      "blend25": 2.4
+    },
+    {
+      "id": 332,
+      "name": "Justin",
+      "position": "DEF",
+      "rawScore": 2.471,
+      "mappedProjection": 2.9,
+      "rankPercentile": 83.3,
+      "blend25": 2.9
+    },
+    {
+      "id": 372,
+      "name": "Mac Allister",
+      "position": "MID",
+      "rawScore": 2.183,
+      "mappedProjection": 2.7,
+      "rankPercentile": 73.5,
+      "blend25": 2.62
+    },
+    {
+      "id": 237,
+      "name": "Ndiaye",
+      "position": "MID",
+      "rawScore": 3.15,
+      "mappedProjection": 3.8,
+      "rankPercentile": 92.6,
+      "blend25": 3.28
+    },
+    {
+      "id": 54,
+      "name": "Gomes",
+      "position": "MID",
+      "rawScore": 2.123,
+      "mappedProjection": 2.6,
+      "rankPercentile": 72.8,
+      "blend25": 2.68
+    },
+    {
+      "id": 154,
+      "name": "Palmer",
+      "position": "MID",
+      "rawScore": 3.816,
+      "mappedProjection": 4.3,
+      "rankPercentile": 98.1,
+      "blend25": 3.33
+    },
+    {
+      "id": 447,
+      "name": "Botman",
+      "position": "DEF",
+      "rawScore": 2.462,
+      "mappedProjection": 2.9,
+      "rankPercentile": 82.6,
+      "blend25": 3.05
+    },
+    {
+      "id": 115,
+      "name": "De Cuyper",
+      "position": "DEF",
+      "rawScore": 2.073,
+      "mappedProjection": 2.6,
+      "rankPercentile": 74.2,
+      "blend25": 2.6
+    },
+    {
+      "id": 328,
+      "name": "Struijk",
+      "position": "DEF",
+      "rawScore": 2.373,
+      "mappedProjection": 2.7,
+      "rankPercentile": 78.8,
+      "blend25": 2.85
+    },
+    {
+      "id": 226,
+      "name": "Pickford",
+      "position": "GK",
+      "rawScore": 3.311,
+      "mappedProjection": 3.6,
+      "rankPercentile": 90.2,
+      "blend25": 3.15
+    },
+    {
+      "id": 535,
+      "name": "Alderete",
+      "position": "DEF",
+      "rawScore": 2.401,
+      "mappedProjection": 2.8,
+      "rankPercentile": 79.5,
+      "blend25": 2.65
+    },
+    {
+      "id": 19,
+      "name": "Zubimendi",
+      "position": "MID",
+      "rawScore": 2.004,
+      "mappedProjection": 2.5,
+      "rankPercentile": 69.8,
+      "blend25": 2.65
+    },
+    {
+      "id": 102,
+      "name": "Yarmoliuk",
+      "position": "MID",
+      "rawScore": 2.263,
+      "mappedProjection": 2.7,
+      "rankPercentile": 75.3,
+      "blend25": 2.77
+    },
+    {
+      "id": 338,
+      "name": "Ampadu",
+      "position": "MID",
+      "rawScore": 2.524,
+      "mappedProjection": 3.2,
+      "rankPercentile": 85.8,
+      "blend25": 3.05
+    },
+    {
+      "id": 105,
+      "name": "Anthony",
+      "position": "MID",
+      "rawScore": 2.282,
+      "mappedProjection": 2.8,
+      "rankPercentile": 76.5,
+      "blend25": 2.88
+    },
+    {
+      "id": 257,
+      "name": "Bassey",
+      "position": "DEF",
+      "rawScore": 2.458,
+      "mappedProjection": 2.9,
+      "rankPercentile": 81.8,
+      "blend25": 2.9
+    },
+    {
+      "id": 514,
+      "name": "Tel",
+      "position": "MID",
+      "rawScore": 1.788,
+      "mappedProjection": 2.2,
+      "rankPercentile": 61.1,
+      "blend25": 2.42
+    },
+    {
+      "id": 336,
+      "name": "Okafor",
+      "position": "MID",
+      "rawScore": 1.963,
+      "mappedProjection": 2.4,
+      "rankPercentile": 67.3,
+      "blend25": 2.77
+    },
+    {
+      "id": 439,
+      "name": "\u0160e\u0161ko",
+      "position": "FWD",
+      "rawScore": 1.541,
+      "mappedProjection": 2.4,
+      "rankPercentile": 64.7,
+      "blend25": 2.4
+    },
+    {
+      "id": 471,
+      "name": "Milenkovi\u0107",
+      "position": "DEF",
+      "rawScore": 2.798,
+      "mappedProjection": 3.1,
+      "rankPercentile": 89.4,
+      "blend25": 3.1
+    },
+    {
+      "id": 9,
+      "name": "Hincapie",
+      "position": "DEF",
+      "rawScore": 3.079,
+      "mappedProjection": 3.4,
+      "rankPercentile": 93.2,
+      "blend25": 3.1
+    },
+    {
+      "id": 552,
+      "name": "Brobbey",
+      "position": "FWD",
+      "rawScore": 2.35,
+      "mappedProjection": 2.8,
+      "rankPercentile": 78.4,
+      "blend25": 2.58
+    },
+    {
+      "id": 469,
+      "name": "N.Williams",
+      "position": "DEF",
+      "rawScore": 2.627,
+      "mappedProjection": 2.9,
+      "rankPercentile": 84.8,
+      "blend25": 2.82
+    },
+    {
+      "id": 203,
+      "name": "Canvot",
+      "position": "DEF",
+      "rawScore": 1.948,
+      "mappedProjection": 2.5,
+      "rankPercentile": 70.5,
+      "blend25": 2.65
+    },
+    {
+      "id": 85,
+      "name": "Van den Berg",
+      "position": "DEF",
+      "rawScore": 2.642,
+      "mappedProjection": 3.0,
+      "rankPercentile": 85.6,
+      "blend25": 3.0
+    },
+    {
+      "id": 325,
+      "name": "Darlow",
+      "position": "GK",
+      "rawScore": 0.518,
+      "mappedProjection": 0.9,
+      "rankPercentile": 19.5,
+      "blend25": 2.18
+    },
+    {
+      "id": 204,
+      "name": "Mitchell",
+      "position": "DEF",
+      "rawScore": 1.947,
+      "mappedProjection": 2.5,
+      "rankPercentile": 69.7,
+      "blend25": 2.35
+    },
+    {
+      "id": 165,
+      "name": "Jo\u00e3o Pedro",
+      "position": "FWD",
+      "rawScore": 2.96,
+      "mappedProjection": 3.5,
+      "rankPercentile": 92.2,
+      "blend25": 2.83
+    },
+    {
+      "id": 371,
+      "name": "Gravenberch",
+      "position": "MID",
+      "rawScore": 2.0,
+      "mappedProjection": 2.4,
+      "rankPercentile": 69.1,
+      "blend25": 2.4
+    },
+    {
+      "id": 448,
+      "name": "Burn",
+      "position": "DEF",
+      "rawScore": 1.987,
+      "mappedProjection": 2.6,
+      "rankPercentile": 71.2,
+      "blend25": 2.6
+    },
+    {
+      "id": 392,
+      "name": "A\u00eft-Nouri",
+      "position": "DEF",
+      "rawScore": 1.85,
+      "mappedProjection": 2.4,
+      "rankPercentile": 65.9,
+      "blend25": 2.55
+    },
+    {
+      "id": 8,
+      "name": "Calafiori",
+      "position": "DEF",
+      "rawScore": 1.914,
+      "mappedProjection": 2.5,
+      "rankPercentile": 68.9,
+      "blend25": 2.5
+    },
+    {
+      "id": 254,
+      "name": "Robinson",
+      "position": "DEF",
+      "rawScore": 2.002,
+      "mappedProjection": 2.6,
+      "rankPercentile": 72.0,
+      "blend25": 2.6
+    },
+    {
+      "id": 545,
+      "name": "Sadiki",
+      "position": "MID",
+      "rawScore": 2.033,
+      "mappedProjection": 2.5,
+      "rankPercentile": 71.0,
+      "blend25": 2.35
+    },
+    {
+      "id": 15,
+      "name": "\u00d8degaard",
+      "position": "MID",
+      "rawScore": 2.388,
+      "mappedProjection": 2.9,
+      "rankPercentile": 79.6,
+      "blend25": 2.68
+    },
+    {
+      "id": 519,
+      "name": "Gallagher",
+      "position": "MID",
+      "rawScore": 1.97,
+      "mappedProjection": 2.4,
+      "rankPercentile": 67.9,
+      "blend25": 2.32
+    },
+    {
+      "id": 534,
+      "name": "Hume",
+      "position": "DEF",
+      "rawScore": 1.897,
+      "mappedProjection": 2.5,
+      "rankPercentile": 68.2,
+      "blend25": 2.28
+    },
+    {
+      "id": 198,
+      "name": "Henderson",
+      "position": "GK",
+      "rawScore": 2.353,
+      "mappedProjection": 2.6,
+      "rankPercentile": 70.7,
+      "blend25": 2.45
+    },
+    {
+      "id": 223,
+      "name": "Mateta",
+      "position": "FWD",
+      "rawScore": 1.67,
+      "mappedProjection": 2.5,
+      "rankPercentile": 68.6,
+      "blend25": 2.5
+    },
+    {
+      "id": 337,
+      "name": "Aaronson",
+      "position": "MID",
+      "rawScore": 1.911,
+      "mappedProjection": 2.3,
+      "rankPercentile": 65.4,
+      "blend25": 2.45
+    },
+    {
+      "id": 116,
+      "name": "Dunk",
+      "position": "DEF",
+      "rawScore": 1.654,
+      "mappedProjection": 2.1,
+      "rankPercentile": 59.8,
+      "blend25": 2.32
+    },
+    {
+      "id": 401,
+      "name": "Marmoush",
+      "position": "FWD",
+      "rawScore": 1.022,
+      "mappedProjection": 1.6,
+      "rankPercentile": 33.3,
+      "blend25": 2.27
+    },
+    {
+      "id": 369,
+      "name": "Ngumoha",
+      "position": "MID",
+      "rawScore": 1.88,
+      "mappedProjection": 2.3,
+      "rankPercentile": 63.6,
+      "blend25": 2.3
+    },
+    {
+      "id": 557,
+      "name": "Tzolis",
+      "position": "MID",
+      "rawScore": 2.082,
+      "mappedProjection": 2.6,
+      "rankPercentile": 71.6,
+      "blend25": 2.75
+    },
+    {
+      "id": 43,
+      "name": "Tielemans",
+      "position": "MID",
+      "rawScore": 1.887,
+      "mappedProjection": 2.3,
+      "rankPercentile": 64.2,
+      "blend25": 2.23
+    },
+    {
+      "id": 335,
+      "name": "Stach",
+      "position": "MID",
+      "rawScore": 1.976,
+      "mappedProjection": 2.4,
+      "rankPercentile": 68.5,
+      "blend25": 2.48
+    },
+    {
+      "id": 41,
+      "name": "Buend\u00eda",
+      "position": "MID",
+      "rawScore": 1.348,
+      "mappedProjection": 1.5,
+      "rankPercentile": 29.6,
+      "blend25": 1.88
+    },
+    {
+      "id": 159,
+      "name": "Caicedo",
+      "position": "MID",
+      "rawScore": 2.224,
+      "mappedProjection": 2.7,
+      "rankPercentile": 74.7,
+      "blend25": 2.4
+    },
+    {
+      "id": 10,
+      "name": "White",
+      "position": "DEF",
+      "rawScore": 1.616,
+      "mappedProjection": 2.1,
+      "rankPercentile": 59.1,
+      "blend25": 2.4
+    },
+    {
+      "id": 567,
+      "name": "Horn\u00ed\u010dek",
+      "position": "GK",
+      "rawScore": 1.049,
+      "mappedProjection": 1.6,
+      "rankPercentile": 39.0,
+      "blend25": 2.43
+    },
+    {
+      "id": 210,
+      "name": "Wharton",
+      "position": "MID",
+      "rawScore": 1.898,
+      "mappedProjection": 2.3,
+      "rankPercentile": 64.8,
+      "blend25": 2.3
+    },
+    {
+      "id": 46,
+      "name": "Barkley",
+      "position": "MID",
+      "rawScore": 1.443,
+      "mappedProjection": 1.8,
+      "rankPercentile": 40.1,
+      "blend25": 1.95
+    },
+    {
+      "id": 497,
+      "name": "Dubravka",
+      "position": "GK",
+      "rawScore": 2.05,
+      "mappedProjection": 2.3,
+      "rankPercentile": 63.4,
+      "blend25": 2.15
+    },
+    {
+      "id": 258,
+      "name": "Castagne",
+      "position": "DEF",
+      "rawScore": 1.561,
+      "mappedProjection": 2.1,
+      "rankPercentile": 57.6,
+      "blend25": 2.48
+    },
+    {
+      "id": 153,
+      "name": "Disasi",
+      "position": "DEF",
+      "rawScore": 1.704,
+      "mappedProjection": 2.2,
+      "rankPercentile": 62.9,
+      "blend25": 2.42
+    },
+    {
+      "id": 417,
+      "name": "Dalot",
+      "position": "DEF",
+      "rawScore": 1.593,
+      "mappedProjection": 2.1,
+      "rankPercentile": 58.3,
+      "blend25": 2.1
+    },
+    {
+      "id": 32,
+      "name": "Cash",
+      "position": "DEF",
+      "rawScore": 1.444,
+      "mappedProjection": 2.0,
+      "rankPercentile": 55.3,
+      "blend25": 1.92
+    },
+    {
+      "id": 463,
+      "name": "Woltemade",
+      "position": "FWD",
+      "rawScore": 1.516,
+      "mappedProjection": 2.3,
+      "rankPercentile": 60.8,
+      "blend25": 2.45
+    },
+    {
+      "id": 232,
+      "name": "O'Brien",
+      "position": "DEF",
+      "rawScore": 2.173,
+      "mappedProjection": 2.6,
+      "rankPercentile": 75.8,
+      "blend25": 2.52
+    },
+    {
+      "id": 456,
+      "name": "J.Ramsey",
+      "position": "MID",
+      "rawScore": 1.827,
+      "mappedProjection": 2.3,
+      "rankPercentile": 62.3,
+      "blend25": 2.38
+    },
+    {
+      "id": 373,
+      "name": "C.Jones",
+      "position": "MID",
+      "rawScore": 1.432,
+      "mappedProjection": 1.8,
+      "rankPercentile": 37.7,
+      "blend25": 2.1
+    },
+    {
+      "id": 140,
+      "name": "S\u00e1nchez",
+      "position": "GK",
+      "rawScore": 2.184,
+      "mappedProjection": 2.4,
+      "rankPercentile": 65.9,
+      "blend25": 2.32
+    },
+    {
+      "id": 403,
+      "name": "Savinho",
+      "position": "MID",
+      "rawScore": 0.947,
+      "mappedProjection": 1.1,
+      "rankPercentile": 8.6,
+      "blend25": 2.0
+    },
+    {
+      "id": 202,
+      "name": "Richards",
+      "position": "DEF",
+      "rawScore": 1.67,
+      "mappedProjection": 2.2,
+      "rankPercentile": 62.1,
+      "blend25": 2.12
+    },
+    {
+      "id": 442,
+      "name": "Pope",
+      "position": "GK",
+      "rawScore": 1.713,
+      "mappedProjection": 2.3,
+      "rankPercentile": 61.0,
+      "blend25": 2.3
+    },
+    {
+      "id": 492,
+      "name": "Awoniyi",
+      "position": "FWD",
+      "rawScore": 1.301,
+      "mappedProjection": 2.0,
+      "rankPercentile": 51.0,
+      "blend25": 2.3
+    },
+    {
+      "id": 233,
+      "name": "Mykolenko",
+      "position": "DEF",
+      "rawScore": 2.272,
+      "mappedProjection": 2.6,
+      "rankPercentile": 76.5,
+      "blend25": 2.45
+    },
+    {
+      "id": 431,
+      "name": "Amad",
+      "position": "MID",
+      "rawScore": 1.496,
+      "mappedProjection": 1.9,
+      "rankPercentile": 45.1,
+      "blend25": 1.98
+    },
+    {
+      "id": 490,
+      "name": "Wood",
+      "position": "FWD",
+      "rawScore": 1.476,
+      "mappedProjection": 2.2,
+      "rankPercentile": 58.8,
+      "blend25": 2.27
+    },
+    {
+      "id": 231,
+      "name": "Keane",
+      "position": "DEF",
+      "rawScore": 2.102,
+      "mappedProjection": 2.6,
+      "rankPercentile": 75.0,
+      "blend25": 2.6
+    },
+    {
+      "id": 379,
+      "name": "Isak",
+      "position": "FWD",
+      "rawScore": 2.008,
+      "mappedProjection": 2.5,
+      "rankPercentile": 72.5,
+      "blend25": 2.2
+    },
+    {
+      "id": 501,
+      "name": "Danso",
+      "position": "DEF",
+      "rawScore": 1.381,
+      "mappedProjection": 2.0,
+      "rankPercentile": 52.3,
+      "blend25": 2.08
+    },
+    {
+      "id": 53,
+      "name": "Manzambi",
+      "position": "MID",
+      "rawScore": 1.671,
+      "mappedProjection": 2.2,
+      "rankPercentile": 56.2,
+      "blend25": 2.12
+    },
+    {
+      "id": 260,
+      "name": "Wilson",
+      "position": "MID",
+      "rawScore": 2.098,
+      "mappedProjection": 2.6,
+      "rankPercentile": 72.2,
+      "blend25": 2.3
+    },
+    {
+      "id": 543,
+      "name": "Diarra",
+      "position": "MID",
+      "rawScore": 1.539,
+      "mappedProjection": 1.9,
+      "rankPercentile": 45.7,
+      "blend25": 2.12
+    },
+    {
+      "id": 330,
+      "name": "Bogle",
+      "position": "DEF",
+      "rawScore": 1.442,
+      "mappedProjection": 2.0,
+      "rankPercentile": 54.5,
+      "blend25": 2.08
+    },
+    {
+      "id": 249,
+      "name": "Barry",
+      "position": "FWD",
+      "rawScore": 1.721,
+      "mappedProjection": 2.5,
+      "rankPercentile": 70.6,
+      "blend25": 2.42
+    },
+    {
+      "id": 209,
+      "name": "Johnson",
+      "position": "MID",
+      "rawScore": 1.664,
+      "mappedProjection": 2.1,
+      "rankPercentile": 54.9,
+      "blend25": 2.32
+    },
+    {
+      "id": 457,
+      "name": "J.Murphy",
+      "position": "MID",
+      "rawScore": 1.656,
+      "mappedProjection": 2.1,
+      "rankPercentile": 53.7,
+      "blend25": 2.25
+    },
+    {
+      "id": 502,
+      "name": "Robertson",
+      "position": "DEF",
+      "rawScore": 1.506,
+      "mappedProjection": 2.1,
+      "rankPercentile": 56.8,
+      "blend25": 2.02
+    },
+    {
+      "id": 156,
+      "name": "Neto",
+      "position": "MID",
+      "rawScore": 2.01,
+      "mappedProjection": 2.5,
+      "rankPercentile": 70.4,
+      "blend25": 2.28
+    },
+    {
+      "id": 565,
+      "name": "Sangar\u00e9",
+      "position": "MID",
+      "rawScore": 1.95,
+      "mappedProjection": 2.4,
+      "rankPercentile": 66.7,
+      "blend25": 2.4
+    },
+    {
+      "id": 503,
+      "name": "Van de Ven",
+      "position": "DEF",
+      "rawScore": 1.826,
+      "mappedProjection": 2.3,
+      "rankPercentile": 64.4,
+      "blend25": 2.08
+    },
+    {
+      "id": 377,
+      "name": "Munoz",
+      "position": "MID",
+      "rawScore": 1.325,
+      "mappedProjection": 1.5,
+      "rankPercentile": 29.0,
+      "blend25": 2.03
+    },
+    {
+      "id": 125,
+      "name": "Georginio",
+      "position": "FWD",
+      "rawScore": 1.372,
+      "mappedProjection": 2.1,
+      "rankPercentile": 54.9,
+      "blend25": 2.18
+    },
+    {
+      "id": 269,
+      "name": "Sessegnon",
+      "position": "DEF",
+      "rawScore": 2.016,
+      "mappedProjection": 2.6,
+      "rankPercentile": 73.5,
+      "blend25": 2.52
+    },
+    {
+      "id": 222,
+      "name": "Strand Larsen",
+      "position": "FWD",
+      "rawScore": 1.569,
+      "mappedProjection": 2.4,
+      "rankPercentile": 66.7,
+      "blend25": 2.18
+    },
+    {
+      "id": 114,
+      "name": "Boscagli",
+      "position": "DEF",
+      "rawScore": 1.219,
+      "mappedProjection": 1.7,
+      "rankPercentile": 42.4,
+      "blend25": 2.0
+    },
+    {
+      "id": 357,
+      "name": "Frimpong",
+      "position": "DEF",
+      "rawScore": 0.941,
+      "mappedProjection": 1.5,
+      "rankPercentile": 28.8,
+      "blend25": 1.73
+    },
+    {
+      "id": 300,
+      "name": "Walton",
+      "position": "GK",
+      "rawScore": 0.955,
+      "mappedProjection": 1.3,
+      "rankPercentile": 34.1,
+      "blend25": 2.2
+    },
+    {
+      "id": 536,
+      "name": "Reinildo",
+      "position": "DEF",
+      "rawScore": 1.292,
+      "mappedProjection": 1.9,
+      "rankPercentile": 48.5,
+      "blend25": 1.98
+    },
+    {
+      "id": 455,
+      "name": "Tonali",
+      "position": "MID",
+      "rawScore": 1.841,
+      "mappedProjection": 2.3,
+      "rankPercentile": 63.0,
+      "blend25": 2.0
+    },
+    {
+      "id": 562,
+      "name": "Maeda",
+      "position": "MID",
+      "rawScore": 1.742,
+      "mappedProjection": 2.2,
+      "rankPercentile": 59.3,
+      "blend25": 2.35
+    },
+    {
+      "id": 267,
+      "name": "Luki\u0107",
+      "position": "MID",
+      "rawScore": 1.774,
+      "mappedProjection": 2.2,
+      "rankPercentile": 60.5,
+      "blend25": 2.2
+    },
+    {
+      "id": 73,
+      "name": "Adams",
+      "position": "MID",
+      "rawScore": 1.717,
+      "mappedProjection": 2.2,
+      "rankPercentile": 58.6,
+      "blend25": 1.82
+    },
+    {
+      "id": 569,
+      "name": "Garc\u00eda",
+      "position": "FWD",
+      "rawScore": 1.367,
+      "mappedProjection": 2.1,
+      "rankPercentile": 52.9,
+      "blend25": 2.18
+    },
+    {
+      "id": 571,
+      "name": "Florentino",
+      "position": "MID",
+      "rawScore": 0.847,
+      "mappedProjection": 1.0,
+      "rankPercentile": 7.4,
+      "blend25": 1.9
+    },
+    {
+      "id": 190,
+      "name": "Tchaouna",
+      "position": "MID",
+      "rawScore": 1.191,
+      "mappedProjection": 1.3,
+      "rankPercentile": 18.5,
+      "blend25": 1.68
+    },
+    {
+      "id": 484,
+      "name": "Hutchinson",
+      "position": "MID",
+      "rawScore": 1.594,
+      "mappedProjection": 2.0,
+      "rankPercentile": 51.2,
+      "blend25": 2.15
+    },
+    {
+      "id": 262,
+      "name": "Smith Rowe",
+      "position": "MID",
+      "rawScore": 1.379,
+      "mappedProjection": 1.6,
+      "rankPercentile": 30.9,
+      "blend25": 1.98
+    },
+    {
+      "id": 422,
+      "name": "Mazraoui",
+      "position": "DEF",
+      "rawScore": 1.367,
+      "mappedProjection": 1.9,
+      "rankPercentile": 50.8,
+      "blend25": 1.9
+    },
+    {
+      "id": 449,
+      "name": "Hall",
+      "position": "DEF",
+      "rawScore": 1.874,
+      "mappedProjection": 2.5,
+      "rankPercentile": 67.4,
+      "blend25": 2.2
+    },
+    {
+      "id": 162,
+      "name": "Andrey Santos",
+      "position": "MID",
+      "rawScore": 1.411,
+      "mappedProjection": 1.6,
+      "rankPercentile": 32.1,
+      "blend25": 1.82
+    },
+    {
+      "id": 345,
+      "name": "Tanaka",
+      "position": "MID",
+      "rawScore": 1.432,
+      "mappedProjection": 1.8,
+      "rankPercentile": 38.3,
+      "blend25": 2.03
+    },
+    {
+      "id": 152,
+      "name": "Palestra",
+      "position": "DEF",
+      "rawScore": 1.001,
+      "mappedProjection": 1.5,
+      "rankPercentile": 33.3,
+      "blend25": 2.03
+    },
+    {
+      "id": 496,
+      "name": "Kinsky",
+      "position": "GK",
+      "rawScore": 2.391,
+      "mappedProjection": 2.6,
+      "rankPercentile": 73.2,
+      "blend25": 2.0
+    },
+    {
+      "id": 160,
+      "name": "Garnacho",
+      "position": "MID",
+      "rawScore": 1.311,
+      "mappedProjection": 1.4,
+      "rankPercentile": 25.3,
+      "blend25": 1.7
+    },
+    {
+      "id": 516,
+      "name": "Bentancur",
+      "position": "MID",
+      "rawScore": 1.446,
+      "mappedProjection": 1.8,
+      "rankPercentile": 40.7,
+      "blend25": 1.87
+    },
+    {
+      "id": 129,
+      "name": "Ayari",
+      "position": "MID",
+      "rawScore": 1.431,
+      "mappedProjection": 1.7,
+      "rankPercentile": 37.0,
+      "blend25": 2.0
+    },
+    {
+      "id": 351,
+      "name": "Mamardashvili",
+      "position": "GK",
+      "rawScore": 1.324,
+      "mappedProjection": 1.8,
+      "rankPercentile": 48.8,
+      "blend25": 1.8
+    },
+    {
+      "id": 172,
+      "name": "Wilson",
+      "position": "GK",
+      "rawScore": 0.263,
+      "mappedProjection": 0.9,
+      "rankPercentile": 14.6,
+      "blend25": 1.65
+    },
+    {
+      "id": 11,
+      "name": "Mosquera",
+      "position": "DEF",
+      "rawScore": 1.834,
+      "mappedProjection": 2.3,
+      "rankPercentile": 65.2,
+      "blend25": 2.08
+    },
+    {
+      "id": 31,
+      "name": "Konsa",
+      "position": "DEF",
+      "rawScore": 1.45,
+      "mappedProjection": 2.1,
+      "rankPercentile": 56.1,
+      "blend25": 1.8
+    },
+    {
+      "id": 362,
+      "name": "Jacquet",
+      "position": "DEF",
+      "rawScore": 0.817,
+      "mappedProjection": 1.3,
+      "rankPercentile": 17.4,
+      "blend25": 1.75
+    },
+    {
+      "id": 579,
+      "name": "Araujo",
+      "position": "DEF",
+      "rawScore": 0.682,
+      "mappedProjection": 0.8,
+      "rankPercentile": 2.3,
+      "blend25": 1.7
+    },
+    {
+      "id": 214,
+      "name": "Kamada",
+      "position": "MID",
+      "rawScore": 1.605,
+      "mappedProjection": 2.0,
+      "rankPercentile": 51.9,
+      "blend25": 1.92
+    },
+    {
+      "id": 526,
+      "name": "Solanke",
+      "position": "FWD",
+      "rawScore": 1.435,
+      "mappedProjection": 2.2,
+      "rankPercentile": 56.9,
+      "blend25": 1.9
+    },
+    {
+      "id": 127,
+      "name": "Gomez",
+      "position": "MID",
+      "rawScore": 1.587,
+      "mappedProjection": 2.0,
+      "rankPercentile": 50.6,
+      "blend25": 2.0
+    },
+    {
+      "id": 193,
+      "name": "Wright",
+      "position": "FWD",
+      "rawScore": 1.197,
+      "mappedProjection": 1.9,
+      "rankPercentile": 45.1,
+      "blend25": 1.83
+    },
+    {
+      "id": 271,
+      "name": "Muniz",
+      "position": "FWD",
+      "rawScore": 1.539,
+      "mappedProjection": 2.4,
+      "rankPercentile": 62.7,
+      "blend25": 2.02
+    },
+    {
+      "id": 16,
+      "name": "Madueke",
+      "position": "MID",
+      "rawScore": 1.035,
+      "mappedProjection": 1.1,
+      "rankPercentile": 10.5,
+      "blend25": 1.77
+    },
+    {
+      "id": 64,
+      "name": "Smith",
+      "position": "DEF",
+      "rawScore": 0.812,
+      "mappedProjection": 1.3,
+      "rankPercentile": 15.9,
+      "blend25": 1.6
+    },
+    {
+      "id": 473,
+      "name": "Aina",
+      "position": "DEF",
+      "rawScore": 1.376,
+      "mappedProjection": 2.0,
+      "rankPercentile": 51.5,
+      "blend25": 2.08
+    },
+    {
+      "id": 358,
+      "name": "Kerkez",
+      "position": "DEF",
+      "rawScore": 1.191,
+      "mappedProjection": 1.7,
+      "rankPercentile": 40.9,
+      "blend25": 1.63
+    },
+    {
+      "id": 261,
+      "name": "Iwobi",
+      "position": "MID",
+      "rawScore": 1.646,
+      "mappedProjection": 2.0,
+      "rankPercentile": 53.1,
+      "blend25": 1.92
+    },
+    {
+      "id": 87,
+      "name": "Ajer",
+      "position": "DEF",
+      "rawScore": 2.006,
+      "mappedProjection": 2.6,
+      "rankPercentile": 72.7,
+      "blend25": 2.15
+    },
+    {
+      "id": 18,
+      "name": "Martinelli",
+      "position": "MID",
+      "rawScore": 0.832,
+      "mappedProjection": 1.0,
+      "rankPercentile": 6.8,
+      "blend25": 1.75
+    },
+    {
+      "id": 144,
+      "name": "Gusto",
+      "position": "DEF",
+      "rawScore": 1.254,
+      "mappedProjection": 1.8,
+      "rankPercentile": 46.2,
+      "blend25": 1.87
+    },
+    {
+      "id": 329,
+      "name": "Rodon",
+      "position": "DEF",
+      "rawScore": 1.667,
+      "mappedProjection": 2.1,
+      "rankPercentile": 61.4,
+      "blend25": 1.8
+    },
+    {
+      "id": 241,
+      "name": "McNeil",
+      "position": "MID",
+      "rawScore": 1.478,
+      "mappedProjection": 1.9,
+      "rankPercentile": 44.4,
+      "blend25": 1.9
+    },
+    {
+      "id": 334,
+      "name": "Muharemovi\u0107",
+      "position": "DEF",
+      "rawScore": 0.928,
+      "mappedProjection": 1.4,
+      "rankPercentile": 26.5,
+      "blend25": 1.77
+    },
+    {
+      "id": 74,
+      "name": "Brooks",
+      "position": "MID",
+      "rawScore": 1.052,
+      "mappedProjection": 1.1,
+      "rankPercentile": 11.1,
+      "blend25": 1.4
+    },
+    {
+      "id": 553,
+      "name": "Isidor",
+      "position": "FWD",
+      "rawScore": 1.067,
+      "mappedProjection": 1.8,
+      "rankPercentile": 37.3,
+      "blend25": 1.72
+    },
+    {
+      "id": 7,
+      "name": "Lewis-Skelly",
+      "position": "MID",
+      "rawScore": 1.415,
+      "mappedProjection": 1.7,
+      "rankPercentile": 33.3,
+      "blend25": 1.93
+    },
+    {
+      "id": 108,
+      "name": "Wilson",
+      "position": "FWD",
+      "rawScore": 1.087,
+      "mappedProjection": 1.8,
+      "rankPercentile": 39.2,
+      "blend25": 1.87
+    },
+    {
+      "id": 488,
+      "name": "Sangar\u00e9",
+      "position": "MID",
+      "rawScore": 1.707,
+      "mappedProjection": 2.2,
+      "rankPercentile": 58.0,
+      "blend25": 2.05
+    },
+    {
+      "id": 470,
+      "name": "Morato",
+      "position": "DEF",
+      "rawScore": 1.754,
+      "mappedProjection": 2.2,
+      "rankPercentile": 63.6,
+      "blend25": 2.2
+    },
+    {
+      "id": 301,
+      "name": "Palmer",
+      "position": "GK",
+      "rawScore": 0.16,
+      "mappedProjection": 0.8,
+      "rankPercentile": 12.2,
+      "blend25": 1.78
+    },
+    {
+      "id": 532,
+      "name": "Ballard",
+      "position": "DEF",
+      "rawScore": 1.39,
+      "mappedProjection": 2.0,
+      "rankPercentile": 53.8,
+      "blend25": 1.92
+    },
+    {
+      "id": 295,
+      "name": "McBurnie",
+      "position": "FWD",
+      "rawScore": 1.197,
+      "mappedProjection": 1.9,
+      "rankPercentile": 47.1,
+      "blend25": 1.98
+    },
+    {
+      "id": 581,
+      "name": "Diomande",
+      "position": "DEF",
+      "rawScore": 0.813,
+      "mappedProjection": 1.3,
+      "rankPercentile": 16.7,
+      "blend25": 2.05
+    },
+    {
+      "id": 549,
+      "name": "Talbi",
+      "position": "MID",
+      "rawScore": 1.375,
+      "mappedProjection": 1.6,
+      "rankPercentile": 30.2,
+      "blend25": 1.75
+    },
+    {
+      "id": 265,
+      "name": "Berge",
+      "position": "MID",
+      "rawScore": 1.749,
+      "mappedProjection": 2.2,
+      "rankPercentile": 59.9,
+      "blend25": 1.9
+    },
+    {
+      "id": 264,
+      "name": "Bobb",
+      "position": "MID",
+      "rawScore": 1.294,
+      "mappedProjection": 1.4,
+      "rankPercentile": 22.2,
+      "blend25": 1.62
+    },
+    {
+      "id": 548,
+      "name": "Rigg",
+      "position": "MID",
+      "rawScore": 1.301,
+      "mappedProjection": 1.4,
+      "rankPercentile": 23.5,
+      "blend25": 1.62
+    },
+    {
+      "id": 211,
+      "name": "Yeremy",
+      "position": "MID",
+      "rawScore": 1.311,
+      "mappedProjection": 1.4,
+      "rankPercentile": 25.9,
+      "blend25": 1.62
+    },
+    {
+      "id": 36,
+      "name": "Maatsen",
+      "position": "DEF",
+      "rawScore": 1.11,
+      "mappedProjection": 1.6,
+      "rankPercentile": 37.9,
+      "blend25": 1.45
+    },
+    {
+      "id": 320,
+      "name": "Akpom",
+      "position": "FWD",
+      "rawScore": 1.101,
+      "mappedProjection": 1.8,
+      "rankPercentile": 41.2,
+      "blend25": 1.95
+    },
+    {
+      "id": 273,
+      "name": "Phillips",
+      "position": "GK",
+      "rawScore": 0.0,
+      "mappedProjection": 0.7,
+      "rankPercentile": 0.0,
+      "blend25": 1.53
+    },
+    {
+      "id": 464,
+      "name": "Wissa",
+      "position": "FWD",
+      "rawScore": 1.22,
+      "mappedProjection": 2.0,
+      "rankPercentile": 49.0,
+      "blend25": 1.85
+    },
+    {
+      "id": 286,
+      "name": "Belloumi",
+      "position": "MID",
+      "rawScore": 1.564,
+      "mappedProjection": 1.9,
+      "rankPercentile": 47.5,
+      "blend25": 1.98
+    },
+    {
+      "id": 350,
+      "name": "A.Becker",
+      "position": "GK",
+      "rawScore": 2.279,
+      "mappedProjection": 2.5,
+      "rankPercentile": 68.3,
+      "blend25": 1.83
+    },
+    {
+      "id": 458,
+      "name": "Joelinton",
+      "position": "MID",
+      "rawScore": 1.801,
+      "mappedProjection": 2.3,
+      "rankPercentile": 61.7,
+      "blend25": 2.0
+    },
+    {
+      "id": 487,
+      "name": "Dominguez",
+      "position": "MID",
+      "rawScore": 1.119,
+      "mappedProjection": 1.2,
+      "rankPercentile": 16.0,
+      "blend25": 1.65
+    },
+    {
+      "id": 302,
+      "name": "Button",
+      "position": "GK",
+      "rawScore": 0.001,
+      "mappedProjection": 0.7,
+      "rankPercentile": 4.9,
+      "blend25": 1.68
+    },
+    {
+      "id": 541,
+      "name": "Meunier",
+      "position": "DEF",
+      "rawScore": 0.846,
+      "mappedProjection": 1.3,
+      "rankPercentile": 18.9,
+      "blend25": 1.68
+    },
+    {
+      "id": 213,
+      "name": "Lerma",
+      "position": "MID",
+      "rawScore": 1.569,
+      "mappedProjection": 2.0,
+      "rankPercentile": 48.8,
+      "blend25": 1.77
+    },
+    {
+      "id": 56,
+      "name": "Abraham",
+      "position": "FWD",
+      "rawScore": 0.907,
+      "mappedProjection": 1.6,
+      "rankPercentile": 29.4,
+      "blend25": 1.52
+    },
+    {
+      "id": 194,
+      "name": "Thomas-Asante",
+      "position": "FWD",
+      "rawScore": 0.854,
+      "mappedProjection": 1.5,
+      "rankPercentile": 25.5,
+      "blend25": 1.58
+    },
+    {
+      "id": 34,
+      "name": "Pau",
+      "position": "DEF",
+      "rawScore": 0.769,
+      "mappedProjection": 1.1,
+      "rankPercentile": 11.4,
+      "blend25": 1.32
+    },
+    {
+      "id": 472,
+      "name": "Murillo",
+      "position": "DEF",
+      "rawScore": 1.662,
+      "mappedProjection": 2.1,
+      "rankPercentile": 60.6,
+      "blend25": 2.1
+    },
+    {
+      "id": 391,
+      "name": "Gvardiol",
+      "position": "DEF",
+      "rawScore": 1.332,
+      "mappedProjection": 1.9,
+      "rankPercentile": 50.0,
+      "blend25": 1.68
+    },
+    {
+      "id": 454,
+      "name": "Elanga",
+      "position": "MID",
+      "rawScore": 1.185,
+      "mappedProjection": 1.3,
+      "rankPercentile": 17.9,
+      "blend25": 1.6
+    },
+    {
+      "id": 171,
+      "name": "Dovin",
+      "position": "GK",
+      "rawScore": 0.0,
+      "mappedProjection": 0.7,
+      "rankPercentile": 2.4,
+      "blend25": 1.38
+    },
+    {
+      "id": 518,
+      "name": "P.M.Sarr",
+      "position": "MID",
+      "rawScore": 1.43,
+      "mappedProjection": 1.7,
+      "rankPercentile": 36.4,
+      "blend25": 1.55
+    },
+    {
+      "id": 339,
+      "name": "Longstaff",
+      "position": "MID",
+      "rawScore": 1.466,
+      "mappedProjection": 1.8,
+      "rankPercentile": 42.6,
+      "blend25": 1.65
+    },
+    {
+      "id": 195,
+      "name": "Simms",
+      "position": "FWD",
+      "rawScore": 0.822,
+      "mappedProjection": 1.5,
+      "rankPercentile": 23.5,
+      "blend25": 1.58
+    },
+    {
+      "id": 420,
+      "name": "Yoro",
+      "position": "DEF",
+      "rawScore": 1.195,
+      "mappedProjection": 1.7,
+      "rankPercentile": 41.7,
+      "blend25": 1.55
+    },
+    {
+      "id": 505,
+      "name": "Spence",
+      "position": "DEF",
+      "rawScore": 1.388,
+      "mappedProjection": 2.0,
+      "rankPercentile": 53.0,
+      "blend25": 1.55
+    },
+    {
+      "id": 148,
+      "name": "Hato",
+      "position": "DEF",
+      "rawScore": 1.3,
+      "mappedProjection": 1.9,
+      "rankPercentile": 49.2,
+      "blend25": 1.68
+    },
+    {
+      "id": 321,
+      "name": "Walle Egeli",
+      "position": "FWD",
+      "rawScore": 0.962,
+      "mappedProjection": 1.6,
+      "rankPercentile": 31.4,
+      "blend25": 1.75
+    },
+    {
+      "id": 421,
+      "name": "Heaven",
+      "position": "DEF",
+      "rawScore": 1.139,
+      "mappedProjection": 1.7,
+      "rankPercentile": 40.2,
+      "blend25": 1.55
+    },
+    {
+      "id": 482,
+      "name": "Hudson-Odoi",
+      "position": "MID",
+      "rawScore": 0.929,
+      "mappedProjection": 1.1,
+      "rankPercentile": 8.0,
+      "blend25": 1.7
+    },
+    {
+      "id": 246,
+      "name": "R\u00f6hl",
+      "position": "MID",
+      "rawScore": 1.242,
+      "mappedProjection": 1.3,
+      "rankPercentile": 19.8,
+      "blend25": 1.68
+    },
+    {
+      "id": 500,
+      "name": "Romero",
+      "position": "DEF",
+      "rawScore": 1.13,
+      "mappedProjection": 1.7,
+      "rankPercentile": 38.6,
+      "blend25": 1.63
+    },
+    {
+      "id": 489,
+      "name": "Yates",
+      "position": "MID",
+      "rawScore": 1.569,
+      "mappedProjection": 2.0,
+      "rankPercentile": 48.1,
+      "blend25": 1.62
+    },
+    {
+      "id": 230,
+      "name": "Branthwaite",
+      "position": "DEF",
+      "rawScore": 1.267,
+      "mappedProjection": 1.9,
+      "rankPercentile": 47.0,
+      "blend25": 1.83
+    },
+    {
+      "id": 323,
+      "name": "McAteer",
+      "position": "MID",
+      "rawScore": 1.585,
+      "mappedProjection": 2.0,
+      "rankPercentile": 50.0,
+      "blend25": 1.85
+    },
+    {
+      "id": 460,
+      "name": "Willock",
+      "position": "MID",
+      "rawScore": 1.281,
+      "mappedProjection": 1.3,
+      "rankPercentile": 21.0,
+      "blend25": 1.53
+    },
+    {
+      "id": 520,
+      "name": "Bergvall",
+      "position": "MID",
+      "rawScore": 1.287,
+      "mappedProjection": 1.3,
+      "rankPercentile": 21.6,
+      "blend25": 1.37
+    },
+    {
+      "id": 430,
+      "name": "Mount",
+      "position": "MID",
+      "rawScore": 1.311,
+      "mappedProjection": 1.5,
+      "rankPercentile": 26.5,
+      "blend25": 1.5
+    },
+    {
+      "id": 506,
+      "name": "Udogie",
+      "position": "DEF",
+      "rawScore": 0.946,
+      "mappedProjection": 1.5,
+      "rankPercentile": 29.5,
+      "blend25": 1.42
+    },
+    {
+      "id": 305,
+      "name": "Davis",
+      "position": "DEF",
+      "rawScore": 0.867,
+      "mappedProjection": 1.3,
+      "rankPercentile": 22.0,
+      "blend25": 1.68
+    },
+    {
+      "id": 167,
+      "name": "Delap",
+      "position": "FWD",
+      "rawScore": 1.152,
+      "mappedProjection": 1.8,
+      "rankPercentile": 43.1,
+      "blend25": 1.57
+    },
+    {
+      "id": 405,
+      "name": "N.Gonzalez",
+      "position": "MID",
+      "rawScore": 1.439,
+      "mappedProjection": 1.8,
+      "rankPercentile": 39.5,
+      "blend25": 1.65
+    },
+    {
+      "id": 539,
+      "name": "O'Nien",
+      "position": "DEF",
+      "rawScore": 1.244,
+      "mappedProjection": 1.8,
+      "rankPercentile": 45.5,
+      "blend25": 1.43
+    },
+    {
+      "id": 77,
+      "name": "Adli",
+      "position": "MID",
+      "rawScore": 1.317,
+      "mappedProjection": 1.5,
+      "rankPercentile": 28.4,
+      "blend25": 1.35
+    },
+    {
+      "id": 290,
+      "name": "Slater",
+      "position": "MID",
+      "rawScore": 1.623,
+      "mappedProjection": 2.0,
+      "rankPercentile": 52.5,
+      "blend25": 1.85
+    },
+    {
+      "id": 304,
+      "name": "O'Shea",
+      "position": "DEF",
+      "rawScore": 0.918,
+      "mappedProjection": 1.4,
+      "rankPercentile": 25.8,
+      "blend25": 1.7
+    },
+    {
+      "id": 44,
+      "name": "Bailey",
+      "position": "MID",
+      "rawScore": 1.114,
+      "mappedProjection": 1.2,
+      "rankPercentile": 14.8,
+      "blend25": 1.28
+    },
+    {
+      "id": 485,
+      "name": "Bakwa",
+      "position": "MID",
+      "rawScore": 0.265,
+      "mappedProjection": 0.7,
+      "rankPercentile": 0.0,
+      "blend25": 1.45
+    },
+    {
+      "id": 404,
+      "name": "Reijnders",
+      "position": "MID",
+      "rawScore": 1.311,
+      "mappedProjection": 1.5,
+      "rankPercentile": 27.2,
+      "blend25": 1.5
+    },
+    {
+      "id": 268,
+      "name": "King",
+      "position": "MID",
+      "rawScore": 1.1,
+      "mappedProjection": 1.2,
+      "rankPercentile": 13.6,
+      "blend25": 1.43
+    },
+    {
+      "id": 347,
+      "name": "Nmecha",
+      "position": "FWD",
+      "rawScore": 1.034,
+      "mappedProjection": 1.7,
+      "rankPercentile": 35.3,
+      "blend25": 1.55
+    },
+    {
+      "id": 390,
+      "name": "R\u00faben",
+      "position": "DEF",
+      "rawScore": 1.273,
+      "mappedProjection": 1.9,
+      "rankPercentile": 47.7,
+      "blend25": 1.68
+    },
+    {
+      "id": 142,
+      "name": "James",
+      "position": "DEF",
+      "rawScore": 1.233,
+      "mappedProjection": 1.8,
+      "rankPercentile": 43.9,
+      "blend25": 1.57
+    },
+    {
+      "id": 289,
+      "name": "Crooks",
+      "position": "MID",
+      "rawScore": 1.462,
+      "mappedProjection": 1.8,
+      "rankPercentile": 42.0,
+      "blend25": 1.8
+    },
+    {
+      "id": 515,
+      "name": "Maddison",
+      "position": "MID",
+      "rawScore": 1.542,
+      "mappedProjection": 1.9,
+      "rankPercentile": 46.3,
+      "blend25": 1.45
+    },
+    {
+      "id": 27,
+      "name": "G.Jesus",
+      "position": "FWD",
+      "rawScore": 0.906,
+      "mappedProjection": 1.6,
+      "rankPercentile": 27.5,
+      "blend25": 1.6
+    },
+    {
+      "id": 494,
+      "name": "Vicario",
+      "position": "GK",
+      "rawScore": 1.157,
+      "mappedProjection": 1.6,
+      "rankPercentile": 41.5,
+      "blend25": 1.38
+    },
+    {
+      "id": 440,
+      "name": "Zirkzee",
+      "position": "FWD",
+      "rawScore": 0.622,
+      "mappedProjection": 1.3,
+      "rankPercentile": 19.6,
+      "blend25": 1.3
+    },
+    {
+      "id": 33,
+      "name": "Mings",
+      "position": "DEF",
+      "rawScore": 0.891,
+      "mappedProjection": 1.4,
+      "rankPercentile": 23.5,
+      "blend25": 1.25
+    },
+    {
+      "id": 259,
+      "name": "Diop",
+      "position": "DEF",
+      "rawScore": 1.225,
+      "mappedProjection": 1.8,
+      "rankPercentile": 43.2,
+      "blend25": 1.43
+    },
+    {
+      "id": 288,
+      "name": "Dowell",
+      "position": "MID",
+      "rawScore": 1.425,
+      "mappedProjection": 1.7,
+      "rankPercentile": 35.2,
+      "blend25": 1.7
+    },
+    {
+      "id": 522,
+      "name": "Gray",
+      "position": "MID",
+      "rawScore": 1.674,
+      "mappedProjection": 2.2,
+      "rankPercentile": 57.4,
+      "blend25": 1.6
+    },
+    {
+      "id": 306,
+      "name": "Greaves",
+      "position": "DEF",
+      "rawScore": 0.706,
+      "mappedProjection": 0.9,
+      "rankPercentile": 3.8,
+      "blend25": 1.5
+    },
+    {
+      "id": 192,
+      "name": "Andrews",
+      "position": "MID",
+      "rawScore": 1.436,
+      "mappedProjection": 1.8,
+      "rankPercentile": 38.9,
+      "blend25": 1.5
+    },
+    {
+      "id": 415,
+      "name": "Dorgu",
+      "position": "MID",
+      "rawScore": 1.552,
+      "mappedProjection": 1.9,
+      "rankPercentile": 46.9,
+      "blend25": 1.38
+    },
+    {
+      "id": 419,
+      "name": "Martinez",
+      "position": "DEF",
+      "rawScore": 0.963,
+      "mappedProjection": 1.5,
+      "rankPercentile": 30.3,
+      "blend25": 1.2
+    },
+    {
+      "id": 240,
+      "name": "Iroegbunam",
+      "position": "MID",
+      "rawScore": 1.309,
+      "mappedProjection": 1.4,
+      "rankPercentile": 24.1,
+      "blend25": 1.55
+    },
+    {
+      "id": 277,
+      "name": "Egan",
+      "position": "DEF",
+      "rawScore": 0.792,
+      "mappedProjection": 1.2,
+      "rankPercentile": 13.6,
+      "blend25": 1.43
+    },
+    {
+      "id": 175,
+      "name": "van Ewijk",
+      "position": "DEF",
+      "rawScore": 0.834,
+      "mappedProjection": 1.3,
+      "rankPercentile": 18.2,
+      "blend25": 1.3
+    },
+    {
+      "id": 303,
+      "name": "Kipr\u00e9",
+      "position": "DEF",
+      "rawScore": 0.734,
+      "mappedProjection": 1.0,
+      "rankPercentile": 6.8,
+      "blend25": 1.52
+    },
+    {
+      "id": 37,
+      "name": "Lindel\u00f6f",
+      "position": "DEF",
+      "rawScore": 0.749,
+      "mappedProjection": 1.1,
+      "rankPercentile": 9.1,
+      "blend25": 1.17
+    },
+    {
+      "id": 308,
+      "name": "Furlong",
+      "position": "DEF",
+      "rawScore": 0.734,
+      "mappedProjection": 1.0,
+      "rankPercentile": 7.6,
+      "blend25": 1.52
+    },
+    {
+      "id": 341,
+      "name": "Gnonto",
+      "position": "MID",
+      "rawScore": 1.008,
+      "mappedProjection": 1.1,
+      "rankPercentile": 9.9,
+      "blend25": 1.25
+    },
+    {
+      "id": 212,
+      "name": "Hughes",
+      "position": "MID",
+      "rawScore": 1.674,
+      "mappedProjection": 2.2,
+      "rankPercentile": 56.8,
+      "blend25": 1.45
+    },
+    {
+      "id": 298,
+      "name": "Destan",
+      "position": "FWD",
+      "rawScore": 0.733,
+      "mappedProjection": 1.5,
+      "rankPercentile": 21.6,
+      "blend25": 1.58
+    },
+    {
+      "id": 282,
+      "name": "Giles",
+      "position": "DEF",
+      "rawScore": 0.748,
+      "mappedProjection": 1.1,
+      "rankPercentile": 8.3,
+      "blend25": 1.48
+    },
+    {
+      "id": 80,
+      "name": "Enes \u00dcnal",
+      "position": "FWD",
+      "rawScore": 0.576,
+      "mappedProjection": 1.3,
+      "rankPercentile": 17.6,
+      "blend25": 1.22
+    },
+    {
+      "id": 173,
+      "name": "Thomas",
+      "position": "DEF",
+      "rawScore": 0.73,
+      "mappedProjection": 0.9,
+      "rankPercentile": 6.1,
+      "blend25": 1.2
+    },
+    {
+      "id": 39,
+      "name": "Nedeljkovic",
+      "position": "DEF",
+      "rawScore": 0.64,
+      "mappedProjection": 0.7,
+      "rankPercentile": 0.0,
+      "blend25": 1.22
+    },
+    {
+      "id": 149,
+      "name": "Colwill",
+      "position": "DEF",
+      "rawScore": 1.023,
+      "mappedProjection": 1.6,
+      "rankPercentile": 34.1,
+      "blend25": 1.38
+    },
+    {
+      "id": 279,
+      "name": "Ajayi",
+      "position": "DEF",
+      "rawScore": 0.785,
+      "mappedProjection": 1.2,
+      "rankPercentile": 12.1,
+      "blend25": 1.43
+    },
+    {
+      "id": 157,
+      "name": "Est\u00eav\u00e3o",
+      "position": "MID",
+      "rawScore": 1.584,
+      "mappedProjection": 2.0,
+      "rankPercentile": 49.4,
+      "blend25": 1.48
+    },
+    {
+      "id": 266,
+      "name": "Cairney",
+      "position": "MID",
+      "rawScore": 0.382,
+      "mappedProjection": 0.9,
+      "rankPercentile": 3.1,
+      "blend25": 1.27
+    },
+    {
+      "id": 98,
+      "name": "Janelt",
+      "position": "MID",
+      "rawScore": 1.478,
+      "mappedProjection": 1.9,
+      "rankPercentile": 43.8,
+      "blend25": 1.52
+    },
+    {
+      "id": 429,
+      "name": "Rashford",
+      "position": "MID",
+      "rawScore": 1.661,
+      "mappedProjection": 2.1,
+      "rankPercentile": 54.3,
+      "blend25": 1.5
+    },
+    {
+      "id": 280,
+      "name": "Coyle",
+      "position": "DEF",
+      "rawScore": 0.718,
+      "mappedProjection": 0.9,
+      "rankPercentile": 5.3,
+      "blend25": 1.35
+    },
+    {
+      "id": 474,
+      "name": "Jair Cunha",
+      "position": "DEF",
+      "rawScore": 1.24,
+      "mappedProjection": 1.8,
+      "rankPercentile": 44.7,
+      "blend25": 1.43
+    },
+    {
+      "id": 3,
+      "name": "Meslier",
+      "position": "GK",
+      "rawScore": 1.525,
+      "mappedProjection": 2.1,
+      "rankPercentile": 56.1,
+      "blend25": 1.65
+    },
+    {
+      "id": 70,
+      "name": "Kluivert",
+      "position": "MID",
+      "rawScore": 1.43,
+      "mappedProjection": 1.7,
+      "rankPercentile": 35.8,
+      "blend25": 1.25
+    },
+    {
+      "id": 352,
+      "name": "Woodman",
+      "position": "GK",
+      "rawScore": 0.719,
+      "mappedProjection": 1.1,
+      "rankPercentile": 26.8,
+      "blend25": 0.95
+    },
+    {
+      "id": 242,
+      "name": "George",
+      "position": "MID",
+      "rawScore": 0.97,
+      "mappedProjection": 1.1,
+      "rankPercentile": 9.3,
+      "blend25": 1.32
+    },
+    {
+      "id": 450,
+      "name": "Livramento",
+      "position": "DEF",
+      "rawScore": 0.854,
+      "mappedProjection": 1.3,
+      "rankPercentile": 20.5,
+      "blend25": 1.22
+    },
+    {
+      "id": 2,
+      "name": "Arrizabalaga",
+      "position": "GK",
+      "rawScore": 1.541,
+      "mappedProjection": 2.1,
+      "rankPercentile": 58.5,
+      "blend25": 1.5
+    },
+    {
+      "id": 182,
+      "name": "Amenda",
+      "position": "DEF",
+      "rawScore": 0.687,
+      "mappedProjection": 0.8,
+      "rankPercentile": 3.0,
+      "blend25": 1.18
+    },
+    {
+      "id": 478,
+      "name": "Netz",
+      "position": "DEF",
+      "rawScore": 0.793,
+      "mappedProjection": 1.2,
+      "rankPercentile": 14.4,
+      "blend25": 1.35
+    },
+    {
+      "id": 29,
+      "name": "M.Bizot",
+      "position": "GK",
+      "rawScore": 0.697,
+      "mappedProjection": 1.0,
+      "rankPercentile": 24.4,
+      "blend25": 1.0
+    },
+    {
+      "id": 174,
+      "name": "Kitching",
+      "position": "DEF",
+      "rawScore": 0.656,
+      "mappedProjection": 0.7,
+      "rankPercentile": 0.8,
+      "blend25": 1.15
+    },
+    {
+      "id": 138,
+      "name": "Kostoulas",
+      "position": "FWD",
+      "rawScore": 0.444,
+      "mappedProjection": 0.8,
+      "rankPercentile": 11.8,
+      "blend25": 1.18
+    },
+    {
+      "id": 176,
+      "name": "Dasilva",
+      "position": "DEF",
+      "rawScore": 0.656,
+      "mappedProjection": 0.8,
+      "rankPercentile": 1.5,
+      "blend25": 1.18
+    },
+    {
+      "id": 17,
+      "name": "Merino",
+      "position": "MID",
+      "rawScore": 1.419,
+      "mappedProjection": 1.7,
+      "rankPercentile": 34.0,
+      "blend25": 1.4
+    },
+    {
+      "id": 161,
+      "name": "Lavia",
+      "position": "MID",
+      "rawScore": 1.297,
+      "mappedProjection": 1.4,
+      "rankPercentile": 22.8,
+      "blend25": 1.25
+    },
+    {
+      "id": 343,
+      "name": "James",
+      "position": "MID",
+      "rawScore": 1.412,
+      "mappedProjection": 1.7,
+      "rankPercentile": 32.7,
+      "blend25": 1.32
+    },
+    {
+      "id": 147,
+      "name": "Tosin",
+      "position": "DEF",
+      "rawScore": 0.936,
+      "mappedProjection": 1.4,
+      "rankPercentile": 28.0,
+      "blend25": 1.4
+    },
+    {
+      "id": 238,
+      "name": "Grealish",
+      "position": "MID",
+      "rawScore": 0.581,
+      "mappedProjection": 1.0,
+      "rankPercentile": 4.3,
+      "blend25": 1.23
+    },
+    {
+      "id": 486,
+      "name": "McAtee",
+      "position": "MID",
+      "rawScore": 0.347,
+      "mappedProjection": 0.9,
+      "rankPercentile": 2.5,
+      "blend25": 1.27
+    },
+    {
+      "id": 370,
+      "name": "Chiesa",
+      "position": "MID",
+      "rawScore": 1.163,
+      "mappedProjection": 1.2,
+      "rankPercentile": 16.7,
+      "blend25": 1.12
+    },
+    {
+      "id": 483,
+      "name": "Ndoye",
+      "position": "MID",
+      "rawScore": 1.309,
+      "mappedProjection": 1.4,
+      "rankPercentile": 24.7,
+      "blend25": 1.25
+    },
+    {
+      "id": 531,
+      "name": "Ellborg",
+      "position": "GK",
+      "rawScore": 1.177,
+      "mappedProjection": 1.8,
+      "rankPercentile": 43.9,
+      "blend25": 1.28
+    },
+    {
+      "id": 263,
+      "name": "Kevin",
+      "position": "MID",
+      "rawScore": 1.178,
+      "mappedProjection": 1.3,
+      "rankPercentile": 17.3,
+      "blend25": 1.22
+    },
+    {
+      "id": 42,
+      "name": "Guessand",
+      "position": "MID",
+      "rawScore": 0.331,
+      "mappedProjection": 0.9,
+      "rankPercentile": 1.9,
+      "blend25": 1.05
+    },
+    {
+      "id": 551,
+      "name": "Angulo",
+      "position": "MID",
+      "rawScore": 1.42,
+      "mappedProjection": 1.7,
+      "rankPercentile": 34.6,
+      "blend25": 1.25
+    },
+    {
+      "id": 270,
+      "name": "Reed",
+      "position": "MID",
+      "rawScore": 1.45,
+      "mappedProjection": 1.8,
+      "rankPercentile": 41.4,
+      "blend25": 1.2
+    },
+    {
+      "id": 126,
+      "name": "O'Riley",
+      "position": "MID",
+      "rawScore": 1.11,
+      "mappedProjection": 1.2,
+      "rankPercentile": 14.2,
+      "blend25": 1.12
+    },
+    {
+      "id": 101,
+      "name": "Henderson",
+      "position": "MID",
+      "rawScore": 0.593,
+      "mappedProjection": 1.0,
+      "rankPercentile": 4.9,
+      "blend25": 1.15
+    },
+    {
+      "id": 151,
+      "name": "Acheampong",
+      "position": "DEF",
+      "rawScore": 1.043,
+      "mappedProjection": 1.6,
+      "rankPercentile": 36.4,
+      "blend25": 1.23
+    },
+    {
+      "id": 35,
+      "name": "Bogarde",
+      "position": "MID",
+      "rawScore": 1.313,
+      "mappedProjection": 1.5,
+      "rankPercentile": 27.8,
+      "blend25": 1.12
+    },
+    {
+      "id": 71,
+      "name": "Cook",
+      "position": "MID",
+      "rawScore": 1.407,
+      "mappedProjection": 1.6,
+      "rankPercentile": 31.5,
+      "blend25": 1.15
+    },
+    {
+      "id": 333,
+      "name": "Bornauw",
+      "position": "DEF",
+      "rawScore": 0.765,
+      "mappedProjection": 1.1,
+      "rankPercentile": 10.6,
+      "blend25": 1.02
+    },
+    {
+      "id": 272,
+      "name": "Kusi-Asare",
+      "position": "FWD",
+      "rawScore": 0.545,
+      "mappedProjection": 1.2,
+      "rankPercentile": 15.7,
+      "blend25": 0.9
+    },
+    {
+      "id": 385,
+      "name": "Trafford",
+      "position": "GK",
+      "rawScore": 1.363,
+      "mappedProjection": 1.9,
+      "rankPercentile": 51.2,
+      "blend25": 1.23
+    },
+    {
+      "id": 256,
+      "name": "Tete",
+      "position": "DEF",
+      "rawScore": 0.791,
+      "mappedProjection": 1.2,
+      "rankPercentile": 12.9,
+      "blend25": 1.28
+    },
+    {
+      "id": 446,
+      "name": "Sch\u00e4r",
+      "position": "DEF",
+      "rawScore": 0.866,
+      "mappedProjection": 1.3,
+      "rankPercentile": 21.2,
+      "blend25": 1.22
+    },
+    {
+      "id": 90,
+      "name": "Hickey",
+      "position": "DEF",
+      "rawScore": 0.905,
+      "mappedProjection": 1.4,
+      "rankPercentile": 25.0,
+      "blend25": 1.18
+    },
+    {
+      "id": 89,
+      "name": "Henry",
+      "position": "DEF",
+      "rawScore": 0.973,
+      "mappedProjection": 1.5,
+      "rankPercentile": 31.8,
+      "blend25": 1.2
+    },
+    {
+      "id": 111,
+      "name": "Steele",
+      "position": "GK",
+      "rawScore": 1.422,
+      "mappedProjection": 2.0,
+      "rankPercentile": 53.7,
+      "blend25": 1.1
+    },
+    {
+      "id": 395,
+      "name": "Lewis",
+      "position": "DEF",
+      "rawScore": 0.986,
+      "mappedProjection": 1.5,
+      "rankPercentile": 32.6,
+      "blend25": 1.27
+    },
+    {
+      "id": 512,
+      "name": "Kudus",
+      "position": "MID",
+      "rawScore": 0.706,
+      "mappedProjection": 1.0,
+      "rankPercentile": 5.6,
+      "blend25": 1.0
+    },
+    {
+      "id": 255,
+      "name": "J.Cuenca",
+      "position": "DEF",
+      "rawScore": 0.897,
+      "mappedProjection": 1.4,
+      "rankPercentile": 24.2,
+      "blend25": 1.48
+    },
+    {
+      "id": 504,
+      "name": "Vuskovic",
+      "position": "DEF",
+      "rawScore": 1.031,
+      "mappedProjection": 1.6,
+      "rankPercentile": 34.8,
+      "blend25": 1.15
+    },
+    {
+      "id": 58,
+      "name": "Forster",
+      "position": "GK",
+      "rawScore": 1.25,
+      "mappedProjection": 1.8,
+      "rankPercentile": 46.3,
+      "blend25": 0.97
+    },
+    {
+      "id": 47,
+      "name": "Kamara",
+      "position": "MID",
+      "rawScore": 1.473,
+      "mappedProjection": 1.9,
+      "rankPercentile": 43.2,
+      "blend25": 1.23
+    },
+    {
+      "id": 344,
+      "name": "Gruev",
+      "position": "MID",
+      "rawScore": 0.558,
+      "mappedProjection": 1.0,
+      "rankPercentile": 3.7,
+      "blend25": 1.0
+    },
+    {
+      "id": 38,
+      "name": "A.Garc\u00eda",
+      "position": "DEF",
+      "rawScore": 0.804,
+      "mappedProjection": 1.2,
+      "rankPercentile": 15.2,
+      "blend25": 0.82
+    },
+    {
+      "id": 21,
+      "name": "N\u00f8rgaard",
+      "position": "MID",
+      "rawScore": 1.669,
+      "mappedProjection": 2.1,
+      "rankPercentile": 55.6,
+      "blend25": 1.35
+    },
+    {
+      "id": 215,
+      "name": "Devenny",
+      "position": "MID",
+      "rawScore": 0.331,
+      "mappedProjection": 0.8,
+      "rankPercentile": 1.2,
+      "blend25": 1.03
+    },
+    {
+      "id": 243,
+      "name": "Alcaraz",
+      "position": "MID",
+      "rawScore": 1.072,
+      "mappedProjection": 1.2,
+      "rankPercentile": 13.0,
+      "blend25": 1.12
+    },
+    {
+      "id": 62,
+      "name": "Diakit\u00e9",
+      "position": "DEF",
+      "rawScore": 0.849,
+      "mappedProjection": 1.3,
+      "rankPercentile": 19.7,
+      "blend25": 1.0
+    },
+    {
+      "id": 206,
+      "name": "Chadi Riad",
+      "position": "DEF",
+      "rawScore": 0.707,
+      "mappedProjection": 0.9,
+      "rankPercentile": 4.5,
+      "blend25": 0.9
+    },
+    {
+      "id": 326,
+      "name": "Perri",
+      "position": "GK",
+      "rawScore": 1.044,
+      "mappedProjection": 1.5,
+      "rankPercentile": 36.6,
+      "blend25": 1.05
+    },
+    {
+      "id": 91,
+      "name": "Pinnock",
+      "position": "DEF",
+      "rawScore": 0.965,
+      "mappedProjection": 1.5,
+      "rankPercentile": 31.1,
+      "blend25": 1.2
+    },
+    {
+      "id": 546,
+      "name": "Adingra",
+      "position": "MID",
+      "rawScore": 1.273,
+      "mappedProjection": 1.3,
+      "rankPercentile": 20.4,
+      "blend25": 1.0
+    },
+    {
+      "id": 110,
+      "name": "Rushworth",
+      "position": "GK",
+      "rawScore": 0.086,
+      "mappedProjection": 0.8,
+      "rankPercentile": 9.8,
+      "blend25": 0.8
+    },
+    {
+      "id": 227,
+      "name": "Travers",
+      "position": "GK",
+      "rawScore": 0.838,
+      "mappedProjection": 1.3,
+      "rankPercentile": 31.7,
+      "blend25": 1.15
+    },
+    {
+      "id": 168,
+      "name": "Marc Guiu",
+      "position": "FWD",
+      "rawScore": 0.405,
+      "mappedProjection": 0.8,
+      "rankPercentile": 7.8,
+      "blend25": 0.8
+    },
+    {
+      "id": 556,
+      "name": "Targett",
+      "position": "DEF",
+      "rawScore": 1.043,
+      "mappedProjection": 1.6,
+      "rankPercentile": 35.6,
+      "blend25": 1.0
+    },
+    {
+      "id": 117,
+      "name": "Coppola",
+      "position": "DEF",
+      "rawScore": 1.137,
+      "mappedProjection": 1.7,
+      "rankPercentile": 39.4,
+      "blend25": 1.1
+    },
+    {
+      "id": 50,
+      "name": "Burrowes",
+      "position": "MID",
+      "rawScore": 1.114,
+      "mappedProjection": 1.2,
+      "rankPercentile": 15.4,
+      "blend25": 0.82
+    },
+    {
+      "id": 245,
+      "name": "Dibling",
+      "position": "MID",
+      "rawScore": 1.205,
+      "mappedProjection": 1.3,
+      "rankPercentile": 19.1,
+      "blend25": 1.07
+    },
+    {
+      "id": 348,
+      "name": "Piroe",
+      "position": "FWD",
+      "rawScore": 0.341,
+      "mappedProjection": 0.8,
+      "rankPercentile": 5.9,
+      "blend25": 0.8
+    },
+    {
+      "id": 508,
+      "name": "Davies",
+      "position": "DEF",
+      "rawScore": 1.098,
+      "mappedProjection": 1.6,
+      "rankPercentile": 37.1,
+      "blend25": 1.0
+    },
+    {
+      "id": 158,
+      "name": "Gittens",
+      "position": "MID",
+      "rawScore": 0.795,
+      "mappedProjection": 1.0,
+      "rankPercentile": 6.2,
+      "blend25": 0.93
+    },
+    {
+      "id": 251,
+      "name": "Lecomte",
+      "position": "GK",
+      "rawScore": 0.012,
+      "mappedProjection": 0.8,
+      "rankPercentile": 7.3,
+      "blend25": 0.8
+    },
+    {
+      "id": 107,
+      "name": "Furo",
+      "position": "FWD",
+      "rawScore": 0.137,
+      "mappedProjection": 0.7,
+      "rankPercentile": 2.0,
+      "blend25": 0.78
+    },
+    {
+      "id": 224,
+      "name": "Nketiah",
+      "position": "FWD",
+      "rawScore": 0.544,
+      "mappedProjection": 0.8,
+      "rankPercentile": 13.7,
+      "blend25": 0.8
+    },
+    {
+      "id": 244,
+      "name": "Armstrong",
+      "position": "MID",
+      "rawScore": 1.052,
+      "mappedProjection": 1.1,
+      "rankPercentile": 12.3,
+      "blend25": 0.95
+    },
+    {
+      "id": 524,
+      "name": "Olusesi",
+      "position": "MID",
+      "rawScore": 1.052,
+      "mappedProjection": 1.1,
+      "rankPercentile": 11.7,
+      "blend25": 0.8
+    },
+    {
+      "id": 441,
+      "name": "Obi",
+      "position": "FWD",
+      "rawScore": 0.428,
+      "mappedProjection": 0.8,
+      "rankPercentile": 9.8,
+      "blend25": 0.72
+    },
+    {
+      "id": 66,
+      "name": "Soler",
+      "position": "DEF",
+      "rawScore": 0.752,
+      "mappedProjection": 1.1,
+      "rankPercentile": 9.8,
+      "blend25": 0.8
+    },
+    {
+      "id": 234,
+      "name": "Patterson",
+      "position": "DEF",
+      "rawScore": 0.931,
+      "mappedProjection": 1.4,
+      "rankPercentile": 27.3,
+      "blend25": 1.02
+    },
+    {
+      "id": 468,
+      "name": "John",
+      "position": "GK",
+      "rawScore": 0.726,
+      "mappedProjection": 1.1,
+      "rankPercentile": 29.3,
+      "blend25": 0.95
+    },
+    {
+      "id": 555,
+      "name": "Matthews",
+      "position": "GK",
+      "rawScore": 0.55,
+      "mappedProjection": 1.0,
+      "rankPercentile": 22.0,
+      "blend25": 0.77
+    },
+    {
+      "id": 547,
+      "name": "Mundle",
+      "position": "MID",
+      "rawScore": 0.291,
+      "mappedProjection": 0.7,
+      "rankPercentile": 0.6,
+      "blend25": 0.78
+    },
+    {
+      "id": 495,
+      "name": "Austin",
+      "position": "GK",
+      "rawScore": 0.446,
+      "mappedProjection": 0.9,
+      "rankPercentile": 17.1,
+      "blend25": 0.75
+    },
+    {
+      "id": 528,
+      "name": "Scarlett",
+      "position": "FWD",
+      "rawScore": 0.302,
+      "mappedProjection": 0.7,
+      "rankPercentile": 3.9,
+      "blend25": 0.7
+    },
+    {
+      "id": 466,
+      "name": "Neave",
+      "position": "FWD",
+      "rawScore": 0.031,
+      "mappedProjection": 0.7,
+      "rankPercentile": 0.0,
+      "blend25": 0.7
+    },
+    {
+      "id": 146,
+      "name": "B.Badiashile",
+      "position": "DEF",
+      "rawScore": 0.888,
+      "mappedProjection": 1.3,
+      "rankPercentile": 22.7,
+      "blend25": 0.93
+    }
+  ]
+}

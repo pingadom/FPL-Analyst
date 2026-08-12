@@ -1,0 +1,573 @@
+{
+  "experiments": 15,
+  "horizonDiagnostics": [
+    {
+      "season": "2016/17",
+      "baselineMae": 6.168,
+      "ridgeMae": 4.637,
+      "baselineCorrelation": 0.471,
+      "ridgeCorrelation": 0.477
+    },
+    {
+      "season": "2017/18",
+      "baselineMae": 6.261,
+      "ridgeMae": 3.56,
+      "baselineCorrelation": 0.492,
+      "ridgeCorrelation": 0.687
+    },
+    {
+      "season": "2018/19",
+      "baselineMae": 4.329,
+      "ridgeMae": 3.537,
+      "baselineCorrelation": 0.608,
+      "ridgeCorrelation": 0.696
+    },
+    {
+      "season": "2019/20",
+      "baselineMae": 4.533,
+      "ridgeMae": 3.523,
+      "baselineCorrelation": 0.557,
+      "ridgeCorrelation": 0.682
+    },
+    {
+      "season": "2020/21",
+      "baselineMae": 4.543,
+      "ridgeMae": 3.558,
+      "baselineCorrelation": 0.57,
+      "ridgeCorrelation": 0.691
+    },
+    {
+      "season": "2021/22",
+      "baselineMae": 4.841,
+      "ridgeMae": 3.55,
+      "baselineCorrelation": 0.497,
+      "ridgeCorrelation": 0.692
+    },
+    {
+      "season": "2022/23",
+      "baselineMae": 4.729,
+      "ridgeMae": 3.296,
+      "baselineCorrelation": 0.573,
+      "ridgeCorrelation": 0.714
+    },
+    {
+      "season": "2023/24",
+      "baselineMae": 4.161,
+      "ridgeMae": 3.108,
+      "baselineCorrelation": 0.58,
+      "ridgeCorrelation": 0.706
+    },
+    {
+      "season": "2024/25",
+      "baselineMae": 4.631,
+      "ridgeMae": 3.062,
+      "baselineCorrelation": 0.56,
+      "ridgeCorrelation": 0.718
+    },
+    {
+      "season": "2025/26",
+      "baselineMae": 4.832,
+      "ridgeMae": 3.184,
+      "baselineCorrelation": 0.565,
+      "ridgeCorrelation": 0.709
+    }
+  ],
+  "nestedSeasons": [
+    {
+      "season": "2018/19",
+      "points": 2008,
+      "candidate": "lens6_calibrated",
+      "plan": "old-now75",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2150,
+      "margin": -142,
+      "transfers": 37,
+      "rolled": 14
+    },
+    {
+      "season": "2019/20",
+      "points": 1910,
+      "candidate": "lens7_calibrated",
+      "plan": "ridge-now50",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "target": 2158,
+      "margin": -248,
+      "transfers": 31,
+      "rolled": 21
+    },
+    {
+      "season": "2020/21",
+      "points": 2112,
+      "candidate": "lens7_calibrated",
+      "plan": "ridge-now50",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "target": 2269,
+      "margin": -157,
+      "transfers": 33,
+      "rolled": 17
+    },
+    {
+      "season": "2021/22",
+      "points": 2103,
+      "candidate": "lens6_calibrated",
+      "plan": "ridge-now50",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2339,
+      "margin": -236,
+      "transfers": 32,
+      "rolled": 19
+    },
+    {
+      "season": "2022/23",
+      "points": 2076,
+      "candidate": "lens6_calibrated",
+      "plan": "ridge-now50",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2424,
+      "margin": -348,
+      "transfers": 28,
+      "rolled": 20
+    },
+    {
+      "season": "2023/24",
+      "points": 2132,
+      "candidate": "lens7_calibrated",
+      "plan": "ridge-now50",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "target": 2373,
+      "margin": -241,
+      "transfers": 29,
+      "rolled": 22
+    },
+    {
+      "season": "2024/25",
+      "points": 2315,
+      "candidate": "lens6_calibrated",
+      "plan": "old-now75",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2411,
+      "margin": -96,
+      "transfers": 37,
+      "rolled": 16
+    },
+    {
+      "season": "2025/26",
+      "points": 1932,
+      "candidate": "lens6_calibrated",
+      "plan": "old-now75",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2244,
+      "margin": -312,
+      "transfers": 40,
+      "rolled": 16
+    }
+  ],
+  "nestedAverage": 2073.5,
+  "nestedTargetHits": 0,
+  "nestedAverageMargin": -222.5,
+  "experimentAverages": [
+    {
+      "candidate": "winner_principles",
+      "plan": "old-now75",
+      "weights": {
+        "performance": 30,
+        "value": 6,
+        "age": 0,
+        "fixture": 13,
+        "team": 17,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 13,
+        "recent": 78,
+        "history": 22
+      },
+      "trainingAverage": 1861.5,
+      "evaluationAverage": 2143.2,
+      "evaluationMinimum": 1961,
+      "evaluationTargetHits": 1,
+      "averageTransfers": 36.4
+    },
+    {
+      "candidate": "winner_principles",
+      "plan": "ridge-now75",
+      "weights": {
+        "performance": 30,
+        "value": 6,
+        "age": 0,
+        "fixture": 13,
+        "team": 17,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 13,
+        "recent": 78,
+        "history": 22
+      },
+      "trainingAverage": 1955.0,
+      "evaluationAverage": 2092.5,
+      "evaluationMinimum": 1867,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 35.2
+    },
+    {
+      "candidate": "winner_principles",
+      "plan": "ridge-now50",
+      "weights": {
+        "performance": 30,
+        "value": 6,
+        "age": 0,
+        "fixture": 13,
+        "team": 17,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 13,
+        "recent": 78,
+        "history": 22
+      },
+      "trainingAverage": 1966.5,
+      "evaluationAverage": 2087.8,
+      "evaluationMinimum": 1928,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 31.8
+    },
+    {
+      "candidate": "winner_principles",
+      "plan": "ridge-now25",
+      "weights": {
+        "performance": 30,
+        "value": 6,
+        "age": 0,
+        "fixture": 13,
+        "team": 17,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 13,
+        "recent": 78,
+        "history": 22
+      },
+      "trainingAverage": 1908.5,
+      "evaluationAverage": 2061.9,
+      "evaluationMinimum": 1916,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 28.2
+    },
+    {
+      "candidate": "winner_principles",
+      "plan": "dual-now50",
+      "weights": {
+        "performance": 30,
+        "value": 6,
+        "age": 0,
+        "fixture": 13,
+        "team": 17,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 13,
+        "recent": 78,
+        "history": 22
+      },
+      "trainingAverage": 1932.0,
+      "evaluationAverage": 2098.9,
+      "evaluationMinimum": 1939,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 35.0
+    },
+    {
+      "candidate": "lens6_calibrated",
+      "plan": "old-now75",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "trainingAverage": 2004.0,
+      "evaluationAverage": 2127.9,
+      "evaluationMinimum": 1932,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 36.4
+    },
+    {
+      "candidate": "lens6_calibrated",
+      "plan": "ridge-now75",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "trainingAverage": 1971.5,
+      "evaluationAverage": 2083.1,
+      "evaluationMinimum": 1825,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 34.0
+    },
+    {
+      "candidate": "lens6_calibrated",
+      "plan": "ridge-now50",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "trainingAverage": 1918.0,
+      "evaluationAverage": 2096.5,
+      "evaluationMinimum": 1961,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 31.6
+    },
+    {
+      "candidate": "lens6_calibrated",
+      "plan": "ridge-now25",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "trainingAverage": 1931.0,
+      "evaluationAverage": 2038.0,
+      "evaluationMinimum": 1859,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 27.1
+    },
+    {
+      "candidate": "lens6_calibrated",
+      "plan": "dual-now50",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "trainingAverage": 1897.5,
+      "evaluationAverage": 2115.6,
+      "evaluationMinimum": 2016,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 35.0
+    },
+    {
+      "candidate": "lens7_calibrated",
+      "plan": "old-now75",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "trainingAverage": 1951.0,
+      "evaluationAverage": 2119.0,
+      "evaluationMinimum": 1945,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 35.8
+    },
+    {
+      "candidate": "lens7_calibrated",
+      "plan": "ridge-now75",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "trainingAverage": 1881.5,
+      "evaluationAverage": 2139.2,
+      "evaluationMinimum": 2021,
+      "evaluationTargetHits": 1,
+      "averageTransfers": 35.2
+    },
+    {
+      "candidate": "lens7_calibrated",
+      "plan": "ridge-now50",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "trainingAverage": 1990.0,
+      "evaluationAverage": 2122.1,
+      "evaluationMinimum": 1910,
+      "evaluationTargetHits": 1,
+      "averageTransfers": 31.8
+    },
+    {
+      "candidate": "lens7_calibrated",
+      "plan": "ridge-now25",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "trainingAverage": 1862.5,
+      "evaluationAverage": 2047.5,
+      "evaluationMinimum": 1901,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 26.4
+    },
+    {
+      "candidate": "lens7_calibrated",
+      "plan": "dual-now50",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "trainingAverage": 1908.0,
+      "evaluationAverage": 2101.2,
+      "evaluationMinimum": 1928,
+      "evaluationTargetHits": 0,
+      "averageTransfers": 34.8
+    }
+  ]
+}

@@ -1,0 +1,654 @@
+{
+  "method": "Tree ranks quantile-mapped to the stable model inside each deadline and position",
+  "selection": "Blend grid specified before recursive policy evaluation",
+  "models": {
+    "stable": {
+      "average": 2106.5,
+      "minimum": 1897,
+      "targetHits": 0,
+      "averageMargin": -190.2,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2118,
+          "target": 2151,
+          "margin": -33,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2019/20",
+          "points": 2157,
+          "target": 2160,
+          "margin": -3,
+          "transfers": 33,
+          "rolled": 18
+        },
+        {
+          "season": "2020/21",
+          "points": 2147,
+          "target": 2270,
+          "margin": -123,
+          "transfers": 34,
+          "rolled": 17
+        },
+        {
+          "season": "2021/22",
+          "points": 2194,
+          "target": 2340,
+          "margin": -146,
+          "transfers": 33,
+          "rolled": 17
+        },
+        {
+          "season": "2022/23",
+          "points": 2088,
+          "target": 2425,
+          "margin": -337,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2023/24",
+          "points": 2122,
+          "target": 2373,
+          "margin": -251,
+          "transfers": 37,
+          "rolled": 15
+        },
+        {
+          "season": "2024/25",
+          "points": 2129,
+          "target": 2411,
+          "margin": -282,
+          "transfers": 37,
+          "rolled": 16
+        },
+        {
+          "season": "2025/26",
+          "points": 1897,
+          "target": 2244,
+          "margin": -347,
+          "transfers": 39,
+          "rolled": 15
+        }
+      ]
+    },
+    "treeImmediate25": {
+      "average": 2120.1,
+      "minimum": 1934,
+      "targetHits": 2,
+      "averageMargin": -176.6,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2152,
+          "target": 2151,
+          "margin": 1,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2019/20",
+          "points": 2168,
+          "target": 2160,
+          "margin": 8,
+          "transfers": 33,
+          "rolled": 18
+        },
+        {
+          "season": "2020/21",
+          "points": 2160,
+          "target": 2270,
+          "margin": -110,
+          "transfers": 34,
+          "rolled": 17
+        },
+        {
+          "season": "2021/22",
+          "points": 2187,
+          "target": 2340,
+          "margin": -153,
+          "transfers": 33,
+          "rolled": 17
+        },
+        {
+          "season": "2022/23",
+          "points": 2095,
+          "target": 2425,
+          "margin": -330,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2023/24",
+          "points": 2138,
+          "target": 2373,
+          "margin": -235,
+          "transfers": 37,
+          "rolled": 15
+        },
+        {
+          "season": "2024/25",
+          "points": 2127,
+          "target": 2411,
+          "margin": -284,
+          "transfers": 37,
+          "rolled": 16
+        },
+        {
+          "season": "2025/26",
+          "points": 1934,
+          "target": 2244,
+          "margin": -310,
+          "transfers": 39,
+          "rolled": 15
+        }
+      ]
+    },
+    "treePlan25": {
+      "average": 2037.9,
+      "minimum": 1976,
+      "targetHits": 0,
+      "averageMargin": -258.9,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2035,
+          "target": 2151,
+          "margin": -116,
+          "transfers": 31,
+          "rolled": 20
+        },
+        {
+          "season": "2019/20",
+          "points": 2050,
+          "target": 2160,
+          "margin": -110,
+          "transfers": 31,
+          "rolled": 21
+        },
+        {
+          "season": "2020/21",
+          "points": 2008,
+          "target": 2270,
+          "margin": -262,
+          "transfers": 33,
+          "rolled": 17
+        },
+        {
+          "season": "2021/22",
+          "points": 2002,
+          "target": 2340,
+          "margin": -338,
+          "transfers": 34,
+          "rolled": 19
+        },
+        {
+          "season": "2022/23",
+          "points": 2189,
+          "target": 2425,
+          "margin": -236,
+          "transfers": 30,
+          "rolled": 19
+        },
+        {
+          "season": "2023/24",
+          "points": 2057,
+          "target": 2373,
+          "margin": -316,
+          "transfers": 32,
+          "rolled": 18
+        },
+        {
+          "season": "2024/25",
+          "points": 1986,
+          "target": 2411,
+          "margin": -425,
+          "transfers": 37,
+          "rolled": 18
+        },
+        {
+          "season": "2025/26",
+          "points": 1976,
+          "target": 2244,
+          "margin": -268,
+          "transfers": 39,
+          "rolled": 20
+        }
+      ]
+    },
+    "treeImmediate50": {
+      "average": 2119.9,
+      "minimum": 1926,
+      "targetHits": 2,
+      "averageMargin": -176.9,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2167,
+          "target": 2151,
+          "margin": 16,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2019/20",
+          "points": 2166,
+          "target": 2160,
+          "margin": 6,
+          "transfers": 33,
+          "rolled": 18
+        },
+        {
+          "season": "2020/21",
+          "points": 2139,
+          "target": 2270,
+          "margin": -131,
+          "transfers": 34,
+          "rolled": 17
+        },
+        {
+          "season": "2021/22",
+          "points": 2208,
+          "target": 2340,
+          "margin": -132,
+          "transfers": 33,
+          "rolled": 17
+        },
+        {
+          "season": "2022/23",
+          "points": 2099,
+          "target": 2425,
+          "margin": -326,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2023/24",
+          "points": 2147,
+          "target": 2373,
+          "margin": -226,
+          "transfers": 37,
+          "rolled": 15
+        },
+        {
+          "season": "2024/25",
+          "points": 2107,
+          "target": 2411,
+          "margin": -304,
+          "transfers": 37,
+          "rolled": 16
+        },
+        {
+          "season": "2025/26",
+          "points": 1926,
+          "target": 2244,
+          "margin": -318,
+          "transfers": 39,
+          "rolled": 15
+        }
+      ]
+    },
+    "treePlan50": {
+      "average": 2092.6,
+      "minimum": 1936,
+      "targetHits": 0,
+      "averageMargin": -204.1,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2066,
+          "target": 2151,
+          "margin": -85,
+          "transfers": 24,
+          "rolled": 25
+        },
+        {
+          "season": "2019/20",
+          "points": 2106,
+          "target": 2160,
+          "margin": -54,
+          "transfers": 18,
+          "rolled": 28
+        },
+        {
+          "season": "2020/21",
+          "points": 2160,
+          "target": 2270,
+          "margin": -110,
+          "transfers": 27,
+          "rolled": 23
+        },
+        {
+          "season": "2021/22",
+          "points": 2006,
+          "target": 2340,
+          "margin": -334,
+          "transfers": 31,
+          "rolled": 20
+        },
+        {
+          "season": "2022/23",
+          "points": 2219,
+          "target": 2425,
+          "margin": -206,
+          "transfers": 17,
+          "rolled": 26
+        },
+        {
+          "season": "2023/24",
+          "points": 2211,
+          "target": 2373,
+          "margin": -162,
+          "transfers": 30,
+          "rolled": 21
+        },
+        {
+          "season": "2024/25",
+          "points": 1936,
+          "target": 2411,
+          "margin": -475,
+          "transfers": 35,
+          "rolled": 23
+        },
+        {
+          "season": "2025/26",
+          "points": 2037,
+          "target": 2244,
+          "margin": -207,
+          "transfers": 41,
+          "rolled": 21
+        }
+      ]
+    },
+    "treeImmediate75": {
+      "average": 2118.6,
+      "minimum": 1905,
+      "targetHits": 1,
+      "averageMargin": -178.1,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2131,
+          "target": 2151,
+          "margin": -20,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2019/20",
+          "points": 2173,
+          "target": 2160,
+          "margin": 13,
+          "transfers": 33,
+          "rolled": 18
+        },
+        {
+          "season": "2020/21",
+          "points": 2093,
+          "target": 2270,
+          "margin": -177,
+          "transfers": 34,
+          "rolled": 17
+        },
+        {
+          "season": "2021/22",
+          "points": 2218,
+          "target": 2340,
+          "margin": -122,
+          "transfers": 33,
+          "rolled": 17
+        },
+        {
+          "season": "2022/23",
+          "points": 2142,
+          "target": 2425,
+          "margin": -283,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2023/24",
+          "points": 2171,
+          "target": 2373,
+          "margin": -202,
+          "transfers": 37,
+          "rolled": 15
+        },
+        {
+          "season": "2024/25",
+          "points": 2116,
+          "target": 2411,
+          "margin": -295,
+          "transfers": 37,
+          "rolled": 16
+        },
+        {
+          "season": "2025/26",
+          "points": 1905,
+          "target": 2244,
+          "margin": -339,
+          "transfers": 39,
+          "rolled": 15
+        }
+      ]
+    },
+    "treePlan75": {
+      "average": 2094.5,
+      "minimum": 1871,
+      "targetHits": 2,
+      "averageMargin": -202.2,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2227,
+          "target": 2151,
+          "margin": 76,
+          "transfers": 20,
+          "rolled": 27
+        },
+        {
+          "season": "2019/20",
+          "points": 1997,
+          "target": 2160,
+          "margin": -163,
+          "transfers": 22,
+          "rolled": 25
+        },
+        {
+          "season": "2020/21",
+          "points": 2099,
+          "target": 2270,
+          "margin": -171,
+          "transfers": 31,
+          "rolled": 20
+        },
+        {
+          "season": "2021/22",
+          "points": 1947,
+          "target": 2340,
+          "margin": -393,
+          "transfers": 33,
+          "rolled": 20
+        },
+        {
+          "season": "2022/23",
+          "points": 2232,
+          "target": 2425,
+          "margin": -193,
+          "transfers": 22,
+          "rolled": 24
+        },
+        {
+          "season": "2023/24",
+          "points": 2373,
+          "target": 2373,
+          "margin": 0,
+          "transfers": 25,
+          "rolled": 24
+        },
+        {
+          "season": "2024/25",
+          "points": 2010,
+          "target": 2411,
+          "margin": -401,
+          "transfers": 36,
+          "rolled": 21
+        },
+        {
+          "season": "2025/26",
+          "points": 1871,
+          "target": 2244,
+          "margin": -373,
+          "transfers": 39,
+          "rolled": 22
+        }
+      ]
+    },
+    "treeImmediate100": {
+      "average": 2111.1,
+      "minimum": 1906,
+      "targetHits": 1,
+      "averageMargin": -185.6,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2104,
+          "target": 2151,
+          "margin": -47,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2019/20",
+          "points": 2182,
+          "target": 2160,
+          "margin": 22,
+          "transfers": 33,
+          "rolled": 18
+        },
+        {
+          "season": "2020/21",
+          "points": 2046,
+          "target": 2270,
+          "margin": -224,
+          "transfers": 34,
+          "rolled": 17
+        },
+        {
+          "season": "2021/22",
+          "points": 2240,
+          "target": 2340,
+          "margin": -100,
+          "transfers": 33,
+          "rolled": 17
+        },
+        {
+          "season": "2022/23",
+          "points": 2145,
+          "target": 2425,
+          "margin": -280,
+          "transfers": 35,
+          "rolled": 17
+        },
+        {
+          "season": "2023/24",
+          "points": 2182,
+          "target": 2373,
+          "margin": -191,
+          "transfers": 37,
+          "rolled": 15
+        },
+        {
+          "season": "2024/25",
+          "points": 2084,
+          "target": 2411,
+          "margin": -327,
+          "transfers": 37,
+          "rolled": 16
+        },
+        {
+          "season": "2025/26",
+          "points": 1906,
+          "target": 2244,
+          "margin": -338,
+          "transfers": 39,
+          "rolled": 15
+        }
+      ]
+    },
+    "treePlan100": {
+      "average": 2010.8,
+      "minimum": 1811,
+      "targetHits": 0,
+      "averageMargin": -286.0,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 1988,
+          "target": 2151,
+          "margin": -163,
+          "transfers": 27,
+          "rolled": 23
+        },
+        {
+          "season": "2019/20",
+          "points": 1940,
+          "target": 2160,
+          "margin": -220,
+          "transfers": 18,
+          "rolled": 28
+        },
+        {
+          "season": "2020/21",
+          "points": 2085,
+          "target": 2270,
+          "margin": -185,
+          "transfers": 34,
+          "rolled": 18
+        },
+        {
+          "season": "2021/22",
+          "points": 1989,
+          "target": 2340,
+          "margin": -351,
+          "transfers": 31,
+          "rolled": 20
+        },
+        {
+          "season": "2022/23",
+          "points": 2110,
+          "target": 2425,
+          "margin": -315,
+          "transfers": 22,
+          "rolled": 25
+        },
+        {
+          "season": "2023/24",
+          "points": 2106,
+          "target": 2373,
+          "margin": -267,
+          "transfers": 28,
+          "rolled": 23
+        },
+        {
+          "season": "2024/25",
+          "points": 2057,
+          "target": 2411,
+          "margin": -354,
+          "transfers": 35,
+          "rolled": 22
+        },
+        {
+          "season": "2025/26",
+          "points": 1811,
+          "target": 2244,
+          "margin": -433,
+          "transfers": 37,
+          "rolled": 24
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "season": "2026-27",
+  "gameweek": 1,
+  "snapshotHash": "5278ff3730a7d4ab223782296fc3bca737b6dea761439c706b2fad448767605f",
+  "snapshotStatus": "provisional",
+  "simulationCount": 5000,
+  "recommendation": "Hold",
+  "managerPlans": {},
+  "optionValueOfWaiting": 0.0,
+  "currentStructure": {
+    "blankPlayers": 0,
+    "doublePlayers": 0,
+    "benchDoublePlayers": 0,
+    "captainHasDouble": false
+  },
+  "scenarios": [
+    {
+      "chip": "Hold",
+      "meanGain": 0.0,
+      "p10Gain": 0.0,
+      "medianGain": 0.0,
+      "p90Gain": 0.0,
+      "probabilityPositive": 0.0,
+      "gatePassed": true,
+      "netOfWaitValue": 0.0
+    },
+    {
+      "chip": "Free Hit",
+      "meanGain": 5.0,
+      "p10Gain": -2.6,
+      "medianGain": 5.0,
+      "p90Gain": 12.8,
+      "probabilityPositive": 80.7,
+      "gatePassed": false,
+      "netOfWaitValue": 5.0
+    },
+    {
+      "chip": "Bench Boost",
+      "meanGain": 14.8,
+      "p10Gain": 11.6,
+      "medianGain": 14.8,
+      "p90Gain": 18.1,
+      "probabilityPositive": 100.0,
+      "gatePassed": false,
+      "netOfWaitValue": 14.8
+    },
+    {
+      "chip": "Triple Captain",
+      "meanGain": 5.2,
+      "p10Gain": 3.4,
+      "medianGain": 5.2,
+      "p90Gain": 7.1,
+      "probabilityPositive": 100.0,
+      "gatePassed": false,
+      "netOfWaitValue": 5.2
+    },
+    {
+      "chip": "Wildcard",
+      "meanGain": 19.0,
+      "p10Gain": 4.2,
+      "medianGain": 18.9,
+      "p90Gain": 33.9,
+      "probabilityPositive": 95.2,
+      "gatePassed": false,
+      "netOfWaitValue": 19.0
+    }
+  ],
+  "futureScheduleSignals": [
+    {
+      "gameweek": 2,
+      "blankTeams": [],
+      "doubleTeams": []
+    },
+    {
+      "gameweek": 3,
+      "blankTeams": [],
+      "doubleTeams": []
+    },
+    {
+      "gameweek": 4,
+      "blankTeams": [],
+      "doubleTeams": []
+    },
+    {
+      "gameweek": 5,
+      "blankTeams": [],
+      "doubleTeams": []
+    },
+    {
+      "gameweek": 6,
+      "blankTeams": [],
+      "doubleTeams": []
+    },
+    {
+      "gameweek": 7,
+      "blankTeams": [],
+      "doubleTeams": []
+    },
+    {
+      "gameweek": 8,
+      "blankTeams": [],
+      "doubleTeams": []
+    }
+  ],
+  "squads": {
+    "current": [
+      1,
+      4,
+      388,
+      61,
+      498,
+      399,
+      124,
+      67,
+      368,
+      428,
+      55,
+      384,
+      113,
+      106,
+      491
+    ],
+    "freeHit": [
+      411,
+      426,
+      4,
+      388,
+      1,
+      400,
+      124,
+      113,
+      236,
+      123,
+      465,
+      497,
+      321,
+      305,
+      304
+    ],
+    "wildcard": [
+      411,
+      4,
+      388,
+      1,
+      400,
+      55,
+      124,
+      109,
+      61,
+      67,
+      368,
+      356,
+      113,
+      321,
+      192
+    ]
+  },
+  "captains": {
+    "current": "Gabriel",
+    "freeHit": "Haaland",
+    "wildcard": "Haaland"
+  },
+  "method": "Paired 5,000-draw Monte Carlo with common player outcomes, correlated team shocks, explicit downside gates, schedule structure, and the estimated option value of saving each chip.",
+  "warning": "This is a frozen policy diagnostic, not a promise of rank. A chip is recommended only when both structural and downside gates pass."
+}

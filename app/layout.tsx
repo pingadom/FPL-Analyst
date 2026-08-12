@@ -29,13 +29,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: `${origin}/og.png`, width: 1711, height: 919, alt: "FPL Lens 6.0 — probabilistic squad analysis" }],
+      images: [{ url: `${origin}/og-lens7.png`, width: 1711, height: 919, alt: "FPL Lens 7.0 — role, rank and recursive squad analysis" }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [`${origin}/og.png`],
+      images: [`${origin}/og-lens7.png`],
     },
   };
 }

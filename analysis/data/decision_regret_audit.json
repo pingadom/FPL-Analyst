@@ -1,0 +1,201 @@
+{
+  "method": "No chips. Unlimited weekly rebuild isolates the player-ranking ceiling; oracle XI/captain retains the model-selected 15; full hindsight is an intentionally unattainable upper bound.",
+  "variants": {
+    "lens7_role": [
+      {
+        "season": "2018/19",
+        "target": 2151,
+        "setAndForget": 1941,
+        "unlimitedWeeklyRebuild": 2080,
+        "lineupCaptainOracleOnModel15": 2713,
+        "captainOracleOnModelXI": 2331,
+        "fullHindsightUpperBound": 5865,
+        "forecastCeilingMargin": -71,
+        "lineupRegret": 633,
+        "captainRegret": 251
+      },
+      {
+        "season": "2019/20",
+        "target": 2160,
+        "setAndForget": 1929,
+        "unlimitedWeeklyRebuild": 2224,
+        "lineupCaptainOracleOnModel15": 2674,
+        "captainOracleOnModelXI": 2431,
+        "fullHindsightUpperBound": 5743,
+        "forecastCeilingMargin": 64,
+        "lineupRegret": 450,
+        "captainRegret": 207
+      },
+      {
+        "season": "2020/21",
+        "target": 2270,
+        "setAndForget": 1685,
+        "unlimitedWeeklyRebuild": 2275,
+        "lineupCaptainOracleOnModel15": 2726,
+        "captainOracleOnModelXI": 2485,
+        "fullHindsightUpperBound": 5951,
+        "forecastCeilingMargin": 5,
+        "lineupRegret": 451,
+        "captainRegret": 210
+      },
+      {
+        "season": "2021/22",
+        "target": 2340,
+        "setAndForget": 1452,
+        "unlimitedWeeklyRebuild": 2295,
+        "lineupCaptainOracleOnModel15": 2791,
+        "captainOracleOnModelXI": 2519,
+        "fullHindsightUpperBound": 6123,
+        "forecastCeilingMargin": -45,
+        "lineupRegret": 496,
+        "captainRegret": 224
+      },
+      {
+        "season": "2022/23",
+        "target": 2425,
+        "setAndForget": 1974,
+        "unlimitedWeeklyRebuild": 2257,
+        "lineupCaptainOracleOnModel15": 2805,
+        "captainOracleOnModelXI": 2479,
+        "fullHindsightUpperBound": 5701,
+        "forecastCeilingMargin": -168,
+        "lineupRegret": 548,
+        "captainRegret": 222
+      },
+      {
+        "season": "2023/24",
+        "target": 2373,
+        "setAndForget": 1515,
+        "unlimitedWeeklyRebuild": 2313,
+        "lineupCaptainOracleOnModel15": 2922,
+        "captainOracleOnModelXI": 2660,
+        "fullHindsightUpperBound": 6028,
+        "forecastCeilingMargin": -60,
+        "lineupRegret": 609,
+        "captainRegret": 347
+      },
+      {
+        "season": "2024/25",
+        "target": 2411,
+        "setAndForget": 1895,
+        "unlimitedWeeklyRebuild": 2328,
+        "lineupCaptainOracleOnModel15": 2895,
+        "captainOracleOnModelXI": 2510,
+        "fullHindsightUpperBound": 5749,
+        "forecastCeilingMargin": -83,
+        "lineupRegret": 567,
+        "captainRegret": 182
+      },
+      {
+        "season": "2025/26",
+        "target": 2244,
+        "setAndForget": 1784,
+        "unlimitedWeeklyRebuild": 2171,
+        "lineupCaptainOracleOnModel15": 2757,
+        "captainOracleOnModelXI": 2457,
+        "fullHindsightUpperBound": 5890,
+        "forecastCeilingMargin": -73,
+        "lineupRegret": 586,
+        "captainRegret": 286
+      }
+    ],
+    "lens7_no_role": [
+      {
+        "season": "2018/19",
+        "target": 2151,
+        "setAndForget": 1909,
+        "unlimitedWeeklyRebuild": 2109,
+        "lineupCaptainOracleOnModel15": 2711,
+        "captainOracleOnModelXI": 2380,
+        "fullHindsightUpperBound": 5865,
+        "forecastCeilingMargin": -42,
+        "lineupRegret": 602,
+        "captainRegret": 271
+      },
+      {
+        "season": "2019/20",
+        "target": 2160,
+        "setAndForget": 1819,
+        "unlimitedWeeklyRebuild": 2152,
+        "lineupCaptainOracleOnModel15": 2633,
+        "captainOracleOnModelXI": 2351,
+        "fullHindsightUpperBound": 5743,
+        "forecastCeilingMargin": -8,
+        "lineupRegret": 481,
+        "captainRegret": 199
+      },
+      {
+        "season": "2020/21",
+        "target": 2270,
+        "setAndForget": 1681,
+        "unlimitedWeeklyRebuild": 2313,
+        "lineupCaptainOracleOnModel15": 2794,
+        "captainOracleOnModelXI": 2549,
+        "fullHindsightUpperBound": 5951,
+        "forecastCeilingMargin": 43,
+        "lineupRegret": 481,
+        "captainRegret": 236
+      },
+      {
+        "season": "2021/22",
+        "target": 2340,
+        "setAndForget": 1517,
+        "unlimitedWeeklyRebuild": 2289,
+        "lineupCaptainOracleOnModel15": 2776,
+        "captainOracleOnModelXI": 2497,
+        "fullHindsightUpperBound": 6123,
+        "forecastCeilingMargin": -51,
+        "lineupRegret": 487,
+        "captainRegret": 208
+      },
+      {
+        "season": "2022/23",
+        "target": 2425,
+        "setAndForget": 1921,
+        "unlimitedWeeklyRebuild": 2235,
+        "lineupCaptainOracleOnModel15": 2702,
+        "captainOracleOnModelXI": 2426,
+        "fullHindsightUpperBound": 5701,
+        "forecastCeilingMargin": -190,
+        "lineupRegret": 467,
+        "captainRegret": 191
+      },
+      {
+        "season": "2023/24",
+        "target": 2373,
+        "setAndForget": 1510,
+        "unlimitedWeeklyRebuild": 2338,
+        "lineupCaptainOracleOnModel15": 2875,
+        "captainOracleOnModelXI": 2630,
+        "fullHindsightUpperBound": 6028,
+        "forecastCeilingMargin": -35,
+        "lineupRegret": 537,
+        "captainRegret": 292
+      },
+      {
+        "season": "2024/25",
+        "target": 2411,
+        "setAndForget": 1920,
+        "unlimitedWeeklyRebuild": 2339,
+        "lineupCaptainOracleOnModel15": 2921,
+        "captainOracleOnModelXI": 2525,
+        "fullHindsightUpperBound": 5749,
+        "forecastCeilingMargin": -72,
+        "lineupRegret": 582,
+        "captainRegret": 186
+      },
+      {
+        "season": "2025/26",
+        "target": 2244,
+        "setAndForget": 1793,
+        "unlimitedWeeklyRebuild": 2183,
+        "lineupCaptainOracleOnModel15": 2822,
+        "captainOracleOnModelXI": 2454,
+        "fullHindsightUpperBound": 5890,
+        "forecastCeilingMargin": -61,
+        "lineupRegret": 639,
+        "captainRegret": 271
+      }
+    ]
+  }
+}

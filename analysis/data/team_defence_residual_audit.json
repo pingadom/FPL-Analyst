@@ -1,0 +1,101 @@
+{
+  "decision": "reject-extra-team-strength-overlay",
+  "method": "Forecast residuals for GKs/defenders with at least 45 expected minutes, split by causal team clean-sheet probability quintile.",
+  "reason": "The highest clean-sheet quintile is already calibrated within roughly two-tenths of a point and is slightly overpredicted, so another big-team bonus would double-count defence strength.",
+  "positions": [
+    {
+      "position": "GK",
+      "bins": [
+        {
+          "quintile": 1,
+          "cleanProbability": 0.1256,
+          "forecast": 2.43,
+          "actual": 2.433,
+          "residual": 0.003,
+          "rows": 1560
+        },
+        {
+          "quintile": 2,
+          "cleanProbability": 0.2145,
+          "forecast": 2.738,
+          "actual": 2.836,
+          "residual": 0.098,
+          "rows": 1559
+        },
+        {
+          "quintile": 3,
+          "cleanProbability": 0.2875,
+          "forecast": 2.993,
+          "actual": 2.924,
+          "residual": -0.069,
+          "rows": 1559
+        },
+        {
+          "quintile": 4,
+          "cleanProbability": 0.3738,
+          "forecast": 3.255,
+          "actual": 3.241,
+          "residual": -0.013,
+          "rows": 1559
+        },
+        {
+          "quintile": 5,
+          "cleanProbability": 0.5325,
+          "forecast": 3.677,
+          "actual": 3.494,
+          "residual": -0.182,
+          "rows": 1560
+        }
+      ],
+      "strongestTeamResidual": -0.182,
+      "weakestTeamResidual": 0.003
+    },
+    {
+      "position": "DEF",
+      "bins": [
+        {
+          "quintile": 1,
+          "cleanProbability": 0.1252,
+          "forecast": 1.764,
+          "actual": 1.696,
+          "residual": -0.068,
+          "rows": 5773
+        },
+        {
+          "quintile": 2,
+          "cleanProbability": 0.2132,
+          "forecast": 2.11,
+          "actual": 2.193,
+          "residual": 0.083,
+          "rows": 5771
+        },
+        {
+          "quintile": 3,
+          "cleanProbability": 0.2859,
+          "forecast": 2.353,
+          "actual": 2.407,
+          "residual": 0.054,
+          "rows": 5771
+        },
+        {
+          "quintile": 4,
+          "cleanProbability": 0.3722,
+          "forecast": 2.65,
+          "actual": 2.698,
+          "residual": 0.048,
+          "rows": 5767
+        },
+        {
+          "quintile": 5,
+          "cleanProbability": 0.5315,
+          "forecast": 3.124,
+          "actual": 3.089,
+          "residual": -0.036,
+          "rows": 5770
+        }
+      ],
+      "strongestTeamResidual": -0.036,
+      "weakestTeamResidual": -0.068
+    }
+  ]
+}

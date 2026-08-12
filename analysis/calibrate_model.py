@@ -22,7 +22,9 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "work" / "fpl-data"
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens7-audit-v5.pkl"
 OUTPUT = ROOT / "app" / "data" / "model-results.json"
+PLAYERS_OUTPUT = ROOT / "app" / "data" / "current-players.json"
 TRAINING_SEASONS = ["2016-17", "2017-18"]
 EVALUATION_SEASONS = [
     "2018-19",
@@ -40,8 +42,12 @@ REEP_URL = "https://raw.githubusercontent.com/withqwerty/reep/main/data/people.c
 CURRENT_BOOTSTRAP = "https://fantasy.premierleague.com/api/bootstrap-static/"
 CURRENT_FIXTURES = "https://fantasy.premierleague.com/api/fixtures/"
 TRIALS = 2400
-RECURSIVE_FINALISTS = 240
-CHIP_POLICY_TRIALS = 144
+# The cheap snapshot stage covers 2,400 mixtures. Eighty diverse candidates
+# then receive a stateful screen before the 20 exact-policy finalists. Profiling
+# showed that 240 stateful screen candidates repeated expensive squad work while
+# adding no new family beyond those already preserved by the priority rules.
+SCREENING_FINALISTS = 80
+CHIP_POLICY_TRIALS = 48
 POSITION_LABELS = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}
 XI_QUOTAS = {1: 1, 2: 3, 3: 5, 4: 2}
 SQUAD_QUOTAS = {1: 2, 2: 5, 3: 5, 4: 3}
@@ -49,6 +55,36 @@ AFCON_WINDOWS = {
     "2021-22": (20, 24),
     "2023-24": (20, 24),
     "2025-26": (16, 22),
+}
+UNLIMITED_TRANSFER_GWS = {
+    # Project Restart and the Qatar World Cup both supplied a free full rebuild.
+    "2019-20": {39},
+    "2022-23": {17},
+}
+ASSISTANT_MANAGER_COST_2024 = {
+    "arsenal": 15,
+    "chelsea": 15,
+    "liverpool": 15,
+    "mancity": 15,
+    "newcastle": 15,
+    "bournemouth": 11,
+    "brighton": 11,
+    "fulham": 11,
+    "nottmforest": 11,
+    "nottinghamforest": 11,
+    "spurs": 11,
+    "tottenham": 11,
+    "astonvilla": 8,
+    "brentford": 8,
+    "crystalpalace": 8,
+    "manutd": 8,
+    "manchesterunited": 8,
+    "wolves": 8,
+    "everton": 5,
+    "ipswich": 5,
+    "leicester": 5,
+    "southampton": 5,
+    "westham": 5,
 }
 AFCON_NATIONS = {
     "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso", "Burundi",
@@ -61,6 +97,8 @@ AFCON_NATIONS = {
     "South Africa", "South Sudan", "Sudan", "Tanzania", "Togo", "Tunisia",
     "Uganda", "Zambia", "Zimbabwe",
 }
+
+_SIMULATION_CONTEXT_CACHE: dict[tuple[int, int], dict] = {}
 
 
 def sigmoid(values: pd.Series | np.ndarray | float) -> pd.Series | np.ndarray | float:
@@ -144,6 +182,11 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
             indices = np.asarray(
                 group_positions[group_positions == position].index, dtype=int
             )
+            indices = indices[
+                data.loc[indices, "fixture_count"].to_numpy(int) > 0
+            ]
+            if not len(indices):
+                continue
             position_state = state.setdefault(
                 position,
                 {
@@ -228,6 +271,12 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
     data["prediction_p90"] = (
         data["component_xpts"] + data["prediction_half_width_80"]
     ).clip(upper=25)
+    structural_blank = data["fixture_count"].eq(0)
+    data.loc[structural_blank, "blank_probability"] = 1.0
+    data.loc[structural_blank, "return5_probability"] = 0.0
+    data.loc[structural_blank, "haul8_probability"] = 0.0
+    data.loc[structural_blank, "prediction_p10"] = 0.0
+    data.loc[structural_blank, "prediction_p90"] = 0.0
     return data
 
 
@@ -242,7 +291,10 @@ def calibrate_live_distributions(
     }
     for position in sorted(current["position_id"].astype(int).unique()):
         current_mask = current["position_id"].astype(int) == position
-        history_mask = historical["position_id"].astype(int) == position
+        history_mask = (
+            (historical["position_id"].astype(int) == position)
+            & historical["fixture_count"].gt(0)
+        )
         for output, (raw_column, target, prior_rate) in event_specs.items():
             raw_history = historical.loc[history_mask, raw_column].to_numpy(float)
             bins = np.minimum((raw_history * 10).astype(int), 9)
@@ -275,6 +327,230 @@ def calibrate_live_distributions(
         current["raw_projection"] + current["prediction_half_width_80"]
     ).clip(upper=25)
     return current
+
+
+def assign_player_role(frame: pd.DataFrame) -> pd.Series:
+    """Assign a causal scoring archetype from rates already known at deadline."""
+    position = frame["position_id"].astype(int)
+    goal = frame["goal_rate"].fillna(0)
+    assist = frame["assist_rate"].fillna(0)
+    defence = frame["defensive_rate"].fillna(0)
+    saves = frame["save_rate"].fillna(0)
+    role = pd.Series("balanced", index=frame.index, dtype="object")
+    role.loc[(position == 1) & (saves >= 3.2)] = "shot_stopper"
+    role.loc[(position == 1) & (saves < 3.2)] = "clean_sheet_keeper"
+    role.loc[(position == 2) & (defence >= 7.8)] = "centre_back"
+    role.loc[(position == 2) & (assist >= 0.13)] = "attacking_full_back"
+    role.loc[(position == 2) & (defence >= 7.8) & (goal >= 0.09)] = "set_piece_centre_back"
+    role.loc[(position == 2) & (role == "balanced")] = "balanced_defender"
+    role.loc[(position == 3) & (defence >= 7.2) & ((goal + assist) < 0.30)] = "holding_midfielder"
+    role.loc[(position == 3) & (assist > goal * 1.20) & (assist >= 0.16)] = "creator"
+    role.loc[(position == 3) & (goal >= 0.25)] = "goal_threat_midfielder"
+    role.loc[(position == 3) & (role == "balanced")] = "box_to_box_midfielder"
+    role.loc[(position == 4) & (assist >= 0.16)] = "link_forward"
+    role.loc[(position == 4) & (goal >= 0.34)] = "penalty_box_forward"
+    role.loc[(position == 4) & (role == "balanced")] = "mobile_forward"
+    return role
+
+
+ROLE_FEATURE_COLUMNS = [
+    "expected_minutes",
+    "fixture_now",
+    "team_context_raw",
+    "recent_raw",
+    "long_raw",
+    "goal_rate",
+    "assist_rate",
+    "defensive_return_probability",
+    "team_clean_probability",
+    "bonus_rate",
+]
+
+
+def role_feature_matrix(frame: pd.DataFrame) -> np.ndarray:
+    """Small, interpretable feature matrix for the role-specific challenger."""
+    values = frame[ROLE_FEATURE_COLUMNS].fillna(0).to_numpy(float)
+    scales = np.array([90, 1, 1.4, 5, 5, 0.5, 0.4, 1, 0.5, 1.5])
+    return np.column_stack([np.ones(len(frame)), values / scales])
+
+
+def causal_role_ridge_predictions(data: pd.DataFrame) -> pd.Series:
+    """Online ridge predictions; a GW is scored before its outcomes update the fit."""
+    work = data.reset_index(drop=True)
+    features = role_feature_matrix(work)
+    outcomes = work["points"].clip(-2, 20).to_numpy(float)
+    predictions = work["component_xpts_structural"].to_numpy(float).copy()
+    roles = work["player_role"].astype(str).to_numpy()
+    observed = work["fixture_count"].to_numpy(int) > 0
+    states: dict[str, dict[str, object]] = {}
+    feature_count = features.shape[1]
+    ridge = np.diag([0.20] + [8.0] * (feature_count - 1))
+    for _, group_index in work.groupby(["season_order", "GW"], sort=True).groups.items():
+        indices = np.asarray(group_index, dtype=int)
+        for role_name in np.unique(roles[indices]):
+            local = indices[(roles[indices] == role_name) & observed[indices]]
+            if not len(local):
+                continue
+            state = states.setdefault(
+                role_name,
+                {
+                    "xtx": np.zeros((feature_count, feature_count)),
+                    "xty": np.zeros(feature_count),
+                    "rows": 0,
+                },
+            )
+            if int(state["rows"]) >= 120:
+                beta = np.linalg.solve(
+                    np.asarray(state["xtx"]) + ridge,
+                    np.asarray(state["xty"]),
+                )
+                predictions[local] = np.clip(features[local] @ beta, 0.15, 14.0)
+        for role_name in np.unique(roles[indices]):
+            local = indices[roles[indices] == role_name]
+            state = states[role_name]
+            local_features = features[local]
+            state["xtx"] = np.asarray(state["xtx"]) + local_features.T @ local_features
+            state["xty"] = np.asarray(state["xty"]) + local_features.T @ outcomes[local]
+            state["rows"] = int(state["rows"]) + len(local)
+    return pd.Series(predictions, index=data.index)
+
+
+def live_role_ridge_predictions(
+    historical: pd.DataFrame, current: pd.DataFrame
+) -> pd.Series:
+    """Fit terminal role challengers with recency weighting for the live deadline."""
+    historical = historical[historical["fixture_count"] > 0].copy()
+    historical_features = role_feature_matrix(historical)
+    live_features = role_feature_matrix(current)
+    outcomes = historical["points"].clip(-2, 20).to_numpy(float)
+    max_order = int(historical["season_order"].max())
+    recency_weight = np.power(
+        0.72, max_order - historical["season_order"].to_numpy(int)
+    )
+    predictions = current["component_projection_unscaled"].to_numpy(float).copy()
+    ridge = np.diag([0.20] + [8.0] * (historical_features.shape[1] - 1))
+    for role_name in current["player_role"].astype(str).unique():
+        history_mask = historical["player_role"].astype(str).to_numpy() == role_name
+        live_mask = current["player_role"].astype(str).to_numpy() == role_name
+        if history_mask.sum() < 120:
+            continue
+        x = historical_features[history_mask]
+        y = outcomes[history_mask]
+        weight = recency_weight[history_mask]
+        xtx = x.T @ (x * weight[:, None])
+        xty = x.T @ (y * weight)
+        beta = np.linalg.solve(xtx + ridge, xty)
+        predictions[live_mask] = np.clip(live_features[live_mask] @ beta, 0.15, 14.0)
+    return pd.Series(predictions, index=current.index)
+
+
+def horizon_feature_matrix(data: pd.DataFrame) -> np.ndarray:
+    """Deadline-known inputs for a directly supervised six-GW points model."""
+    return np.column_stack(
+        [
+            np.ones(len(data)),
+            data["component_xpts"].to_numpy(float) / 6.0,
+            data["component_horizon_censored"].to_numpy(float) / 28.0,
+            data["recent"].to_numpy(float),
+            data["long"].to_numpy(float),
+            data["fixture_censored"].to_numpy(float),
+            data["team_context"].to_numpy(float),
+            data["team_attack"].to_numpy(float),
+            data["team_defence"].to_numpy(float),
+            data["crowd"].to_numpy(float),
+            data["minutes_security"].to_numpy(float),
+            data["recent_underlying"].to_numpy(float),
+            data["long_underlying"].to_numpy(float),
+            data["recent_value"].to_numpy(float),
+            data["prediction_uncertainty"].to_numpy(float) / 5.5,
+            data["horizon_weighted_games"].to_numpy(float) / 6.0,
+            data["price"].to_numpy(float) / 150.0,
+        ]
+    )
+
+
+def causal_horizon_ridge_predictions(data: pd.DataFrame) -> pd.Series:
+    """Predict discounted six-GW points without making future labels available early.
+
+    A row from GW n enters the expanding fit only after the final GW used by its
+    label has completed. At a new season, every label from older seasons is known.
+    Position fits are partially pooled with a global fit to reduce early-sample
+    variance while retaining the very different FPL scoring economics by role.
+    """
+    work = data.reset_index(drop=True)
+    features = horizon_feature_matrix(work)
+    outcomes = work["horizon_target"].clip(-3, 55).to_numpy(float)
+    season_orders = work["season_order"].to_numpy(int)
+    gameweeks = work["GW"].to_numpy(int)
+    target_end = work["horizon_target_end_gw"].to_numpy(int)
+    positions = work["position_id"].to_numpy(int)
+    baseline = work["component_horizon_censored"].to_numpy(float)
+    predictions = baseline.copy()
+    added = np.zeros(len(work), dtype=bool)
+    feature_count = features.shape[1]
+    ridge = np.diag([0.25] + [12.0] * (feature_count - 1))
+
+    def empty_state() -> dict[str, object]:
+        return {
+            "xtx": np.zeros((feature_count, feature_count)),
+            "xty": np.zeros(feature_count),
+            "rows": 0,
+        }
+
+    global_state = empty_state()
+    position_states = {position: empty_state() for position in SQUAD_QUOTAS}
+    groups = work.groupby(["season_order", "GW"], sort=True).groups
+    for (season_order_value, gw_value), group_index in groups.items():
+        known = (~added) & (
+            (season_orders < int(season_order_value))
+            | (
+                (season_orders == int(season_order_value))
+                & (target_end < int(gw_value))
+            )
+        )
+        newly_known = np.flatnonzero(known)
+        if len(newly_known):
+            x_known = features[newly_known]
+            y_known = outcomes[newly_known]
+            global_state["xtx"] = np.asarray(global_state["xtx"]) + x_known.T @ x_known
+            global_state["xty"] = np.asarray(global_state["xty"]) + x_known.T @ y_known
+            global_state["rows"] = int(global_state["rows"]) + len(newly_known)
+            for position in SQUAD_QUOTAS:
+                local = newly_known[positions[newly_known] == position]
+                if not len(local):
+                    continue
+                state = position_states[position]
+                local_features = features[local]
+                state["xtx"] = np.asarray(state["xtx"]) + local_features.T @ local_features
+                state["xty"] = np.asarray(state["xty"]) + local_features.T @ outcomes[local]
+                state["rows"] = int(state["rows"]) + len(local)
+            added[newly_known] = True
+
+        indices = np.asarray(group_index, dtype=int)
+        if int(global_state["rows"]) < 1000:
+            continue
+        global_beta = np.linalg.solve(
+            np.asarray(global_state["xtx"]) + ridge,
+            np.asarray(global_state["xty"]),
+        )
+        global_prediction = features[indices] @ global_beta
+        predictions[indices] = global_prediction
+        for position in SQUAD_QUOTAS:
+            local = indices[positions[indices] == position]
+            state = position_states[position]
+            if not len(local) or int(state["rows"]) < 350:
+                continue
+            position_beta = np.linalg.solve(
+                np.asarray(state["xtx"]) + ridge,
+                np.asarray(state["xty"]),
+            )
+            # Partial pooling is deliberately conservative: policy outcomes, not
+            # in-sample regression error, decide whether this challenger survives.
+            predictions[local] = (
+                0.65 * (features[local] @ position_beta)
+                + 0.35 * global_prediction[positions[indices] == position]
+            )
+    return pd.Series(np.clip(predictions, 0.25, 52.0), index=data.index)
 
 
 def download(url: str, target: Path) -> Path:
@@ -496,6 +772,35 @@ def build_season(
     raw["GW"] = pd.to_numeric(raw["GW"], errors="coerce")
     raw = raw.dropna(subset=["GW", "element", "position_id"]).copy()
     raw["GW"] = raw["GW"].astype(int)
+    # players_raw is an end-of-season snapshot: its `team` field moves every
+    # transferred player to their final club in all earlier rows. Recover the
+    # actual club from the two opponent IDs present in each fixture instead.
+    fixture_sides = {
+        (int(gw_number), int(fixture)): sorted(
+            set(group["opponent_team"].dropna().astype(int).tolist())
+        )
+        for (gw_number, fixture), group in raw.dropna(
+            subset=["fixture", "opponent_team"]
+        ).groupby(["GW", "fixture"], sort=False)
+    }
+
+    def actual_fixture_team(row: pd.Series) -> int:
+        if pd.isna(row.get("fixture")) or pd.isna(row.get("opponent_team")):
+            return int(row["team_id"])
+        sides = fixture_sides.get((int(row["GW"]), int(row["fixture"])), [])
+        opponent_id = int(row["opponent_team"])
+        alternatives = [team_id for team_id in sides if team_id != opponent_id]
+        return alternatives[0] if len(alternatives) == 1 else int(row["team_id"])
+
+    raw["snapshot_team_id"] = raw["team_id"].astype(int)
+    raw["team_id"] = raw.apply(actual_fixture_team, axis=1).astype(int)
+    raw["team_name"] = raw["team_id"].map(team_names)
+    recovered_team_rows = int(
+        (raw["team_id"] != raw["snapshot_team_id"]).sum()
+    )
+    unresolved_fixture_rows = int(
+        sum(len(sides) != 2 for sides in fixture_sides.values())
+    )
 
     starts_available = "starts" in gw.columns
     defensive_exact_available = (
@@ -619,6 +924,111 @@ def build_season(
             team_rest_days=("team_rest_days", "min"),
         )
     )
+    # Reconstruct the table at each deadline so the one-season 2024/25
+    # Assistant Manager chip can be scored under its actual rules. Positions
+    # use only completed earlier events; current-GW results are not visible.
+    observed_team_weeks = sorted(raw["GW"].astype(int).unique().tolist())
+    registered_teams = sorted(meta["team_id"].dropna().astype(int).unique())
+    team_week_panel = pd.MultiIndex.from_product(
+        [registered_teams, observed_team_weeks], names=["team_id", "GW"]
+    ).to_frame(index=False)
+    team_week_panel = team_week_panel.merge(
+        team_weeks, on=["team_id", "GW"], how="left"
+    )
+    for column in [
+        "team_games",
+        "team_goals",
+        "team_xg",
+        "team_goals_against",
+        "team_xga",
+        "team_clean_sheets",
+        "team_result_points",
+    ]:
+        team_week_panel[column] = pd.to_numeric(
+            team_week_panel[column], errors="coerce"
+        ).fillna(0)
+    team_week_panel["team_rest_days"] = pd.to_numeric(
+        team_week_panel["team_rest_days"], errors="coerce"
+    ).fillna(7)
+    team_week_panel.sort_values(["team_id", "GW"], inplace=True)
+    by_team_week = team_week_panel.groupby("team_id", sort=False)
+    team_week_panel["table_points_before"] = by_team_week[
+        "team_result_points"
+    ].transform(lambda values: values.cumsum().shift(1)).fillna(0)
+    team_week_panel["table_goals_before"] = by_team_week["team_goals"].transform(
+        lambda values: values.cumsum().shift(1)
+    ).fillna(0)
+    goals_against_before = by_team_week["team_goals_against"].transform(
+        lambda values: values.cumsum().shift(1)
+    ).fillna(0)
+    team_week_panel["table_goal_difference_before"] = (
+        team_week_panel["table_goals_before"] - goals_against_before
+    )
+    team_week_panel.sort_values(
+        [
+            "GW",
+            "table_points_before",
+            "table_goal_difference_before",
+            "table_goals_before",
+            "team_id",
+        ],
+        ascending=[True, False, False, False, True],
+        inplace=True,
+        kind="stable",
+    )
+    team_week_panel["table_position_before"] = (
+        team_week_panel.groupby("GW", sort=False).cumcount() + 1
+    )
+    positions = team_week_panel[
+        ["team_id", "GW", "table_position_before"]
+    ]
+    manager_fixtures = team_fixtures.merge(
+        positions, on=["team_id", "GW"], how="left"
+    ).merge(
+        positions.rename(
+            columns={
+                "team_id": "opponent_team",
+                "table_position_before": "opponent_table_position_before",
+            }
+        ),
+        on=["opponent_team", "GW"],
+        how="left",
+    )
+    manager_fixtures["assistant_manager_points"] = (
+        np.where(manager_fixtures["team_result_points"] == 3, 6, 0)
+        + np.where(manager_fixtures["team_result_points"] == 1, 3, 0)
+        + manager_fixtures["team_goals"]
+        + 2 * manager_fixtures["team_clean_sheet"]
+        + np.where(
+            (
+                manager_fixtures["table_position_before"]
+                - manager_fixtures["opponent_table_position_before"]
+                >= 5
+            )
+            & (manager_fixtures["team_result_points"] == 3),
+            10,
+            0,
+        )
+        + np.where(
+            (
+                manager_fixtures["table_position_before"]
+                - manager_fixtures["opponent_table_position_before"]
+                >= 5
+            )
+            & (manager_fixtures["team_result_points"] == 1),
+            5,
+            0,
+        )
+    )
+    manager_week_points = manager_fixtures.groupby(
+        ["team_id", "GW"], as_index=False
+    )["assistant_manager_points"].sum()
+    team_weeks = team_week_panel.merge(
+        manager_week_points, on=["team_id", "GW"], how="left"
+    )
+    team_weeks["assistant_manager_points"] = team_weeks[
+        "assistant_manager_points"
+    ].fillna(0)
 
     weekly = (
         raw.groupby(["element", "GW"], as_index=False)
@@ -676,6 +1086,86 @@ def build_season(
         )
         .sort_values(["element", "GW"])
     )
+    # merged_gw contains fixture histories, so a player disappears when their
+    # club blanks. Rebuild the deadline player panel across every observed FPL
+    # event while the player was registered. This keeps blanking players in the
+    # transfer/Wildcard universe with zero immediate points.
+    observed_weeks = sorted(raw["GW"].astype(int).unique().tolist())
+    availability = weekly.groupby("element", as_index=False)["GW"].agg(
+        first_gw="min", last_gw="max"
+    )
+    panel = pd.DataFrame(
+        [
+            (int(row.element), int(gw_number))
+            for row in availability.itertuples(index=False)
+            for gw_number in observed_weeks
+            if int(row.first_gw) <= int(gw_number) <= int(row.last_gw)
+        ],
+        columns=["element", "GW"],
+    )
+    weekly = panel.merge(weekly, on=["element", "GW"], how="left")
+    static_columns = [
+        "player_code",
+        "position_id",
+        "team_id",
+        "team_name",
+        "display_name",
+        "birth_date",
+        "nationality",
+    ]
+    deadline_columns = ["price", "selected", "transfers_balance"]
+    for column in static_columns + deadline_columns:
+        weekly[column] = weekly.groupby("element", sort=False)[column].transform(
+            lambda values: values.ffill().bfill()
+        )
+    weekly["team_name"] = weekly["team_id"].map(team_names).fillna(
+        weekly["team_name"]
+    )
+    zero_columns = [
+        "points",
+        "points_current_rules",
+        "minutes",
+        "fixture_count",
+        "ict",
+        "influence",
+        "creativity",
+        "threat",
+        "goals",
+        "assists",
+        "clean_sheets",
+        "goals_conceded",
+        "saves",
+        "bonus",
+        "bps",
+        "starts_observed",
+        "appearances_observed",
+        "sixty_observed",
+        "bench_appearances_observed",
+        "start_minutes_total",
+        "bench_minutes_total",
+        "defensive_actions_observed",
+        "defensive_actions_counterfactual",
+        "current_rule_dc_points",
+        "key_passes",
+        "big_chances_created",
+        "open_play_crosses",
+        "penalties_missed",
+        "penalties_saved",
+        "own_goals",
+        "yellow_cards",
+        "red_cards",
+        "expected_goals",
+        "expected_assists",
+        "expected_goals_conceded",
+        "defensive_actions",
+    ]
+    for column in zero_columns:
+        weekly[column] = pd.to_numeric(weekly[column], errors="coerce").fillna(0)
+    weekly["defensive_exact"] = weekly["defensive_exact"].fillna(
+        float(defensive_exact_available)
+    )
+    weekly["was_home"] = weekly["was_home"].fillna(False).astype(bool)
+    weekly.sort_values(["element", "GW"], inplace=True, kind="stable")
     weekly = weekly.merge(team_weeks, on=["team_id", "GW"], how="left")
     for column in [
         "team_games",
@@ -686,6 +1176,8 @@ def build_season(
         "team_clean_sheets",
         "team_result_points",
         "team_rest_days",
+        "assistant_manager_points",
+        "table_position_before",
     ]:
         weekly[column] = pd.to_numeric(weekly[column], errors="coerce").fillna(0)
     weekly["season"] = season
@@ -803,8 +1295,11 @@ def build_season(
             weekly.groupby(["GW", "position_id"])[column].transform("median")
         ).fillna(fallback)
 
-    # The next six opponents are known at the deadline. Their strength is always
-    # estimated at the current GW, never with results that happened later.
+    # Historical feeds retain the final event assigned to each fixture, not the
+    # date on which a postponement or Double Gameweek was announced. Keep the
+    # exact archive for sensitivity analysis, and also build a schedule-censored
+    # horizon: the current slate is known, while later slots are neutral. The
+    # censored version is the defensible primary backtest input.
     schedule = raw[["team_id", "GW", "opponent_team", "was_home"]].drop_duplicates()
     schedule_map: dict[tuple[int, int], list[tuple[int, bool]]] = {}
     for row in schedule.itertuples(index=False):
@@ -825,6 +1320,13 @@ def build_season(
         ].median().items()
     }
     horizon_weights = (1.0, 0.86, 0.74, 0.64, 0.55, 0.47)
+    observed_week_position = {
+        int(gw_number): index for index, gw_number in enumerate(observed_weeks)
+    }
+
+    def horizon_events(base_gw: int) -> list[int]:
+        start = observed_week_position.get(base_gw, 0)
+        return observed_weeks[start : start + len(horizon_weights)]
 
     def fixture_horizon(row: pd.Series) -> float:
         values: list[tuple[float, float]] = []
@@ -832,8 +1334,10 @@ def build_season(
         position = int(row["position_id"])
         team = int(row["team_id"])
         fallback = fixture_median.get((base_gw, position), 2.5)
-        for offset, horizon_weight in enumerate(horizon_weights):
-            for opponent, home in schedule_map.get((team, base_gw + offset), []):
+        for horizon_weight, target_gw in zip(
+            horizon_weights, horizon_events(base_gw)
+        ):
+            for opponent, home in schedule_map.get((team, target_gw), []):
                 strength = fixture_lookup.get(
                     (base_gw, position, opponent), fallback
                 ) + (0.18 if home else 0.0)
@@ -848,12 +1352,51 @@ def build_season(
     weekly["horizon_weighted_games"] = weekly.apply(
         lambda row: sum(
             horizon_weight * len(
-                schedule_map.get((int(row["team_id"]), int(row["GW"]) + offset), [])
+                schedule_map.get((int(row["team_id"]), target_gw), [])
             )
-            for offset, horizon_weight in enumerate(horizon_weights)
+            for horizon_weight, target_gw in zip(
+                horizon_weights, horizon_events(int(row["GW"]))
+            )
         ),
         axis=1,
     ).clip(lower=1.0)
+
+    def censored_fixture_horizon(row: pd.Series) -> float:
+        base_gw = int(row["GW"])
+        position = int(row["position_id"])
+        team = int(row["team_id"])
+        fallback = fixture_median.get((base_gw, position), 2.5)
+        event_gws = horizon_events(base_gw)
+        values: list[tuple[float, float]] = []
+        if event_gws:
+            for opponent, home in schedule_map.get((team, event_gws[0]), []):
+                strength = fixture_lookup.get(
+                    (base_gw, position, opponent), fallback
+                ) + (0.18 if home else 0.0)
+                values.append((strength, horizon_weights[0]))
+            for horizon_weight in horizon_weights[1 : len(event_gws)]:
+                values.append((fallback, horizon_weight))
+        if not values:
+            return fallback
+        return sum(value * weight for value, weight in values) / sum(
+            weight for _, weight in values
+        )
+
+    weekly["fixture_horizon_censored_raw"] = weekly.apply(
+        censored_fixture_horizon, axis=1
+    )
+    weekly["horizon_weighted_games_censored"] = weekly.apply(
+        lambda row: (
+            len(schedule_map.get((int(row["team_id"]), int(row["GW"])), []))
+            + sum(
+                horizon_weights[offset]
+                for offset in range(
+                    1, len(horizon_events(int(row["GW"])))
+                )
+            )
+        ),
+        axis=1,
+    ).clip(lower=0.0)
 
     for raw_name, rank_name in [
         ("long_raw", "long"),
@@ -862,6 +1405,7 @@ def build_season(
         ("recent_value_raw", "recent_value"),
         ("age_raw", "age_score"),
         ("fixture_horizon_raw", "fixture"),
+        ("fixture_horizon_censored_raw", "fixture_censored"),
         ("fixture_raw", "fixture_now"),
         ("crowd_raw", "crowd"),
         ("minutes_security_raw", "minutes_security"),
@@ -880,6 +1424,8 @@ def build_season(
         "eligibleRows": int(len(eligible)),
         "ageCoverage": round(age_coverage * 100, 1),
         "gameweeks": int(eligible["GW"].nunique()),
+        "recoveredTransferRows": recovered_team_rows,
+        "unresolvedFixtureGroups": unresolved_fixture_rows,
     }
     return eligible, summary
 
@@ -1083,6 +1629,37 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     season_order = {season: index for index, season in enumerate(SEASONS)}
     data["season_order"] = data["season"].map(season_order).astype(int)
     data = add_causal_team_strength(data)
+    lineup_rows = data[data["starts_observed"] > 0].groupby(
+        ["season", "season_order", "team_id", "GW"], sort=True
+    )["element"].agg(lambda values: frozenset(values.astype(int)))
+    rotation_records: list[dict] = []
+    for (season, season_id, team_id), series in lineup_rows.groupby(level=[0, 1, 2]):
+        previous: frozenset[int] | None = None
+        history: list[float] = []
+        for (_, _, _, gw), starters in series.items():
+            prior_rotation = float(np.mean(history[-6:])) if history else 0.22
+            rotation_records.append(
+                {
+                    "season": season,
+                    "season_order": season_id,
+                    "team_id": team_id,
+                    "GW": gw,
+                    "team_rotation_rate": prior_rotation,
+                }
+            )
+            if previous is not None:
+                denominator = max(1, min(len(previous), len(starters), 11))
+                history.append(1 - len(previous.intersection(starters)) / denominator)
+            previous = starters
+    rotation_table = pd.DataFrame(rotation_records)
+    if not rotation_table.empty:
+        data = data.merge(
+            rotation_table,
+            on=["season", "season_order", "team_id", "GW"],
+            how="left",
+        )
+    data["team_rotation_rate"] = data.get("team_rotation_rate", 0.22)
+    data["team_rotation_rate"] = data["team_rotation_rate"].fillna(0.22).clip(0, 0.75)
     fallback_key = data["season"].astype(str) + ":" + data["element"].astype(str)
     numeric_code = pd.to_numeric(data["player_code"], errors="coerce")
     data["player_key"] = numeric_code.astype("Int64").astype(str).where(
@@ -1092,19 +1669,28 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ["player_key", "season_order", "GW"], inplace=True, kind="stable"
     )
     by_player = data.groupby("player_key", sort=False)
-    data["observations"] = by_player.cumcount()
+    data["observations"] = by_player["fixture_count"].transform(
+        lambda values: values.cumsum().shift(1)
+    ).fillna(0)
 
     points_prior = data["position_id"].map({1: 3.2, 2: 2.6, 3: 2.8, 4: 2.6})
     minutes_prior = data["position_id"].map({1: 0.66, 2: 0.58, 3: 0.57, 4: 0.55})
     underlying_prior = data["position_id"].map({1: 2.5, 2: 4.0, 3: 6.0, 4: 6.5})
 
-    data["long_raw"] = by_player["points"].transform(
+    data["performance_points"] = data["points"].where(
+        data["fixture_count"] > 0
+    )
+    data["performance_minutes"] = data["minutes"].where(
+        data["fixture_count"] > 0
+    )
+    by_player = data.groupby("player_key", sort=False)
+    data["long_raw"] = by_player["performance_points"].transform(
         lambda values: values.expanding().mean().shift(1)
     ).fillna(points_prior)
-    data["recent_raw"] = by_player["points"].transform(
-        lambda values: values.rolling(4, min_periods=1).mean().shift(1)
+    data["recent_raw"] = by_player["performance_points"].transform(
+        lambda values: values.rolling(6, min_periods=1).mean().shift(1)
     ).fillna(data["long_raw"])
-    data["past_minutes"] = by_player["minutes"].transform(
+    data["past_minutes"] = by_player["performance_minutes"].transform(
         lambda values: values.expanding().mean().shift(1)
     ).fillna(minutes_prior * 90)
     per_fixture_minutes = (
@@ -1131,6 +1717,14 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         (prior_starts + prior_strength * prior_start)
         / (prior_games + prior_strength)
     ).clip(0.03, 0.98)
+    viable_starter = (data["start_probability"] >= 0.28).astype(float)
+    competition_count = viable_starter.groupby(
+        [data["season"], data["GW"], data["team_id"], data["position_id"]]
+    ).transform("sum")
+    role_slots = data["position_id"].map({1: 1.0, 2: 4.0, 3: 4.0, 4: 2.0})
+    data["competition_pressure"] = (
+        (competition_count - role_slots).clip(lower=0) / role_slots
+    ).clip(0, 1.5)
     data["sub_probability_given_bench"] = (
         (prior_bench_appearances + 3.0 * prior_sub)
         / (prior_nonstarts + 3.0)
@@ -1150,8 +1744,11 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         bench_minutes_sum + 3.0 * bench_minutes_prior
     ) / (prior_bench_appearances + 3.0)
     start_rate_observed = data["starts_observed"] / data["fixture_count"].clip(lower=1)
+    data["starts_for_rotation"] = data["starts_observed"].where(
+        data["fixture_count"] > 0
+    )
     data["rotation_volatility"] = data.groupby("player_key", sort=False)[
-        "starts_observed"
+        "starts_for_rotation"
     ].transform(
         lambda values: values.rolling(8, min_periods=2).std().shift(1)
     ).fillna(0.35).clip(0, 1)
@@ -1159,7 +1756,16 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         (4.5 - data["team_rest_days"].fillna(7)).clip(lower=0) / 5.0
         * (0.30 + 0.70 * data["rotation_volatility"])
     ).clip(0, 0.28)
-    data["start_probability"] *= 1 - rest_penalty
+    rotation_penalty = (
+        (data["team_rotation_rate"] - 0.18).clip(lower=0)
+        * data["rotation_volatility"]
+        * 0.35
+    ).clip(0, 0.15)
+    competition_penalty = (
+        0.045 * data["competition_pressure"] * (0.35 + data["rotation_volatility"])
+    ).clip(0, 0.10)
+    data["start_probability"] *= 1 - rest_penalty - rotation_penalty - competition_penalty
+    data["start_probability"] = data["start_probability"].clip(0.02, 0.98)
     data["play_probability"] = (
         data["start_probability"]
         + (1 - data["start_probability"]) * data["sub_probability_given_bench"]
@@ -1196,7 +1802,7 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
 
     data["underlying_game"] = (
         data["ict"] / data["minutes"].clip(lower=45) * 90
-    ).clip(0, 35)
+    ).clip(0, 35).where(data["fixture_count"] > 0)
     data["long_underlying_raw"] = by_player["underlying_game"].transform(
         lambda values: values.expanding().mean().shift(1)
     ).fillna(underlying_prior)
@@ -1243,6 +1849,38 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
             lambda values: values.rolling(12, min_periods=1).mean().shift(1)
         )
         data[target] = rolling.fillna(data["position_id"].map(prior)).clip(lower=0)
+
+    data["player_role"] = assign_player_role(data)
+    data["defensive_exact_games"] = data["fixture_count"] * data["defensive_exact"]
+    data["defensive_exact_actions"] = (
+        data["defensive_actions_game"] * data["defensive_exact_games"]
+    )
+    exact_games_prior = rolling_total("defensive_exact_games", 18).fillna(0)
+    exact_actions_prior = rolling_total("defensive_exact_actions", 18).fillna(0)
+    role_defensive_prior = data["player_role"].map(
+        {
+            "shot_stopper": 0.0,
+            "clean_sheet_keeper": 0.0,
+            "centre_back": 8.2,
+            "set_piece_centre_back": 8.8,
+            "attacking_full_back": 6.2,
+            "balanced_defender": 6.8,
+            "holding_midfielder": 8.0,
+            "creator": 5.4,
+            "goal_threat_midfielder": 4.8,
+            "box_to_box_midfielder": 6.3,
+            "link_forward": 3.3,
+            "penalty_box_forward": 2.4,
+            "mobile_forward": 3.0,
+        }
+    ).fillna(4.0)
+    data["defensive_event_coverage"] = (
+        exact_games_prior / prior_games.clip(lower=1)
+    ).clip(0, 1)
+    data["defensive_rate"] = (
+        exact_actions_prior + 5.0 * role_defensive_prior
+    ) / (exact_games_prior + 5.0)
+    data["player_role"] = assign_player_role(data)
 
     fixture_multiplier = 0.72 + 0.56 * data["fixture_now"].fillna(0.5)
     minutes_factor = data["expected_minutes"] / 90
@@ -1355,17 +1993,19 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
             .transform(percentile)
         )
     ).clip(0.2, 13.5)
+    data["role_ridge_xpts"] = causal_role_ridge_predictions(data).clip(0.2, 13.5)
     ensemble_models = [
         "component_xpts_structural",
         "empirical_xpts",
         "market_role_xpts",
+        "role_ridge_xpts",
     ]
     error_keys = ["season_order", "GW", "position_id"]
     error_table = data[error_keys].drop_duplicates().sort_values(error_keys).copy()
     for model_name in ensemble_models:
         data[f"{model_name}_absolute_error"] = (
             data[model_name] - data["points"]
-        ).abs()
+        ).abs().where(data["fixture_count"] > 0)
         weekly_error = (
             data.groupby(error_keys, as_index=False)[f"{model_name}_absolute_error"]
             .mean()
@@ -1387,6 +2027,7 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         "component_xpts_structural_mae": 2.85,
         "empirical_xpts_mae": 3.05,
         "market_role_xpts_mae": 3.25,
+        "role_ridge_xpts_mae": 3.10,
     }
     inverse_errors = []
     for column, fallback in default_mae.items():
@@ -1396,34 +2037,55 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     data["ensemble_structural_weight"] = inverse_errors[0] / inverse_total
     data["ensemble_empirical_weight"] = inverse_errors[1] / inverse_total
     data["ensemble_market_weight"] = inverse_errors[2] / inverse_total
-    data["component_xpts"] = (
+    data["ensemble_role_weight"] = inverse_errors[3] / inverse_total
+    data["component_xpts_base"] = (
         data["ensemble_structural_weight"] * data["component_xpts_structural"]
         + data["ensemble_empirical_weight"] * data["empirical_xpts"]
         + data["ensemble_market_weight"] * data["market_role_xpts"]
+        + data["ensemble_role_weight"] * data["role_ridge_xpts"]
     ).clip(0.2, 13.5)
+    data["component_xpts"] = data["component_xpts_base"] * (
+        data["fixture_count"] > 0
+    ).astype(float)
     current_rule_uplift = (
         data["component_xpts_current_rules"] - data["component_xpts_structural"]
     )
-    data["ensemble_xpts_current_rules"] = (
-        data["component_xpts"] + current_rule_uplift
+    data["ensemble_xpts_current_rules_base"] = (
+        data["component_xpts_base"] + current_rule_uplift
     ).clip(0.2, 14.0)
+    data["ensemble_xpts_current_rules"] = data[
+        "ensemble_xpts_current_rules_base"
+    ] * (data["fixture_count"] > 0).astype(float)
     model_stack = data[ensemble_models].to_numpy(float)
     data["ensemble_disagreement"] = np.std(model_stack, axis=1)
     horizon_multiplier = 0.74 + 0.52 * data["fixture"].fillna(0.5)
-    single_fixture_base = data["component_xpts"] / data["fixture_count"].clip(lower=1)
+    single_fixture_base = data["component_xpts_base"] / data["fixture_count"].clip(lower=1)
     data["component_horizon"] = (
         single_fixture_base
         * data["horizon_weighted_games"].clip(lower=1)
         * horizon_multiplier
     ).clip(0.5, 50)
-    current_rule_single_fixture = (
-        data["ensemble_xpts_current_rules"] / data["fixture_count"].clip(lower=1)
-    )
+    censored_horizon_multiplier = 0.74 + 0.52 * data[
+        "fixture_censored"
+    ].fillna(0.5)
+    data["component_horizon_censored"] = (
+        single_fixture_base
+        * data["horizon_weighted_games_censored"].clip(lower=0)
+        * censored_horizon_multiplier
+    ).clip(0.0, 50)
+    current_rule_single_fixture = data["ensemble_xpts_current_rules_base"] / data[
+        "fixture_count"
+    ].clip(lower=1)
     data["component_horizon_current_rules"] = (
         current_rule_single_fixture
         * data["horizon_weighted_games"].clip(lower=1)
         * horizon_multiplier
     ).clip(0.5, 52)
+    data["component_horizon_current_rules_censored"] = (
+        current_rule_single_fixture
+        * data["horizon_weighted_games_censored"].clip(lower=0)
+        * censored_horizon_multiplier
+    ).clip(0.0, 52)
     data["prediction_uncertainty"] = np.sqrt(
         1.1**2
         + 0.020 * data["minutes_std"].pow(2)
@@ -1465,6 +2127,7 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ("recent_value_raw", "recent_value"),
         ("age_raw", "age_score"),
         ("fixture_horizon_raw", "fixture"),
+        ("fixture_horizon_censored_raw", "fixture_censored"),
         ("fixture_raw", "fixture_now"),
         ("team_context_raw", "team_context"),
         ("team_defence_raw", "team_defence"),
@@ -1476,11 +2139,54 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     ]:
         data[rank_name] = data.groupby(rank_groups)[raw_name].transform(percentile)
 
+    horizon_groups = data.groupby(["season", "player_key"], sort=False)["points"]
+    horizon_target = pd.Series(0.0, index=data.index)
+    horizon_target_end = data["GW"].astype(int).copy()
+    for offset in range(6):
+        horizon_target += (0.86**offset) * horizon_groups.shift(-offset).fillna(0)
+        shifted_gw = data.groupby(["season", "player_key"], sort=False)["GW"].shift(
+            -offset
+        )
+        horizon_target_end = np.maximum(
+            horizon_target_end,
+            shifted_gw.fillna(horizon_target_end).astype(int),
+        )
+    data["horizon_target"] = horizon_target
+    data["horizon_target_end_gw"] = horizon_target_end.astype(int)
+    data["causal_horizon_ridge"] = causal_horizon_ridge_predictions(data)
+
     data.sort_values(
         ["season_order", "GW", "position_id", "element"], inplace=True, kind="stable"
     )
     data.reset_index(drop=True, inplace=True)
     return data
+
+
+def load_or_build_prepared_history(
+    force: bool = False,
+) -> tuple[pd.DataFrame, list[dict]]:
+    """Reuse the deterministic historical feature table across experiment runs."""
+    CACHE.mkdir(parents=True, exist_ok=True)
+    if PREPARED_HISTORY_CACHE.exists() and not force:
+        payload = pd.read_pickle(PREPARED_HISTORY_CACHE)
+        data = payload["data"]
+        summaries = payload["summaries"]
+        if list(dict.fromkeys(data["season"].tolist())) == SEASONS:
+            return data, summaries
+    ages = load_age_register()
+    nationalities = load_nationality_register()
+    frames: list[pd.DataFrame] = []
+    summaries: list[dict] = []
+    for season in SEASONS:
+        frame, summary = build_season(season, ages, nationalities)
+        frames.append(frame)
+        summaries.append(summary)
+        print(f"Prepared {season}: {summary['eligibleRows']:,} eligible player-weeks")
+    data = prepare_causal_history(frames)
+    temporary = PREPARED_HISTORY_CACHE.with_suffix(".tmp")
+    pd.to_pickle({"data": data, "summaries": summaries}, temporary)
+    temporary.replace(PREPARED_HISTORY_CACHE)
+    return data, summaries
 
 
 @dataclass(frozen=True)
@@ -1565,7 +2271,7 @@ def feature_matrix(data: pd.DataFrame) -> np.ndarray:
             "recent_value",
             "long_value",
             "age_score",
-            "fixture",
+            "fixture_censored",
             "team_context",
             "crowd",
             "minutes_security",
@@ -1580,18 +2286,31 @@ def candidate_forecasts(
     candidate: Candidate,
     current_rules: bool = False,
     robust_planning: bool = True,
+    schedule_censored: bool = True,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     model_score = feature_matrix(data) @ candidate.coefficients
     calibration = 0.72 + 0.56 * model_score
     current_column = "ensemble_xpts_current_rules" if current_rules else "component_xpts"
     horizon_column = (
-        "component_horizon_current_rules" if current_rules else "component_horizon"
+        "component_horizon_current_rules_censored"
+        if current_rules and schedule_censored
+        else "component_horizon_current_rules"
+        if current_rules
+        else "component_horizon_censored"
+        if schedule_censored
+        else "component_horizon"
     )
     current = data[current_column].to_numpy(float) * calibration
     horizon = data[horizon_column].to_numpy(float) * calibration
     horizon_risk = (
         data["prediction_uncertainty"].to_numpy(float)
-        * np.sqrt(data["horizon_weighted_games"].to_numpy(float).clip(1, None))
+        * np.sqrt(
+            data[
+                "horizon_weighted_games_censored"
+                if schedule_censored
+                else "horizon_weighted_games"
+            ].to_numpy(float).clip(1, None)
+        )
     )
     price_option = (
         data["price_rise_probability"].to_numpy(float)
@@ -1612,7 +2331,10 @@ def snapshot_replay(
     coefficients = np.vstack([candidate.coefficients for candidate in candidates])
     results = np.zeros((len(candidates), len(seasons)), dtype=float)
     for season_id, season in enumerate(seasons):
-        mask = data["season"].to_numpy() == season
+        mask = (
+            (data["season"].to_numpy() == season)
+            & (data["fixture_count"].to_numpy(int) > 0)
+        )
         season_features = features[mask]
         season_actual = actual[mask]
         centered_features = season_features - season_features.mean(axis=0)
@@ -1644,6 +2366,14 @@ class SimulationStrategy:
     safe_captain: bool
     max_hits: int = 3
     hit_immediate_hurdle: float = 2.5
+    joint_chip_preflight: bool = False
+    hold_option_value: float = 0.0
+    captain_mode: str = "expected"
+    phase_banking: bool = False
+    early_price_weight: float = 0.0
+    joint_squad_optimiser: bool = False
+    squad_captain_weight: float = 0.70
+    squad_bench_weight: float = 0.05
 
 
 EXPERT_STRATEGY = SimulationStrategy(
@@ -1651,6 +2381,36 @@ EXPERT_STRATEGY = SimulationStrategy(
 )
 WEEKLY_CHASE_STRATEGY = SimulationStrategy(
     "Six-GW planner + adaptive banking", 5.00, 5, False, False, 0, 99.0
+)
+JOINT_OPTION_STRATEGY = SimulationStrategy(
+    "Joint transfer-chip tree + hold value",
+    5.35,
+    5,
+    False,
+    False,
+    0,
+    99.0,
+    True,
+    0.85,
+    "expected",
+    False,
+    0.0,
+    True,
+)
+ELITE_TARGET_STRATEGY = SimulationStrategy(
+    name="Elite target: batched patience + attacker captain",
+    transfer_hurdle=5.15,
+    bank_limit=5,
+    force_weekly_review=False,
+    safe_captain=False,
+    max_hits=0,
+    hit_immediate_hurdle=99.0,
+    joint_chip_preflight=True,
+    hold_option_value=0.35,
+    captain_mode="attacking_tail",
+    phase_banking=True,
+    early_price_weight=1.10,
+    joint_squad_optimiser=True,
 )
 
 
@@ -1661,6 +2421,8 @@ class ChipPolicy:
     bench_score: float
     triple_score: float
     afcon_bonus: float
+    first_wildcard_min_gw: int = 5
+    second_wildcard_min_gw: int = 24
 
     def as_dict(self) -> dict:
         return {
@@ -1669,6 +2431,8 @@ class ChipPolicy:
             "benchScore": round(self.bench_score, 3),
             "tripleScore": round(self.triple_score, 3),
             "afconBonus": round(self.afcon_bonus, 3),
+            "firstWildcardMinGw": int(self.first_wildcard_min_gw),
+            "secondWildcardMinGw": int(self.second_wildcard_min_gw),
         }
 
 
@@ -1676,29 +2440,44 @@ def chip_policy_pool() -> list[ChipPolicy]:
     rng = np.random.default_rng(20260812)
     policies = [
         ChipPolicy(
-            wildcard_gap=float(rng.uniform(2.0, 7.0)),
-            free_hit_gap=float(rng.uniform(0.80, 2.80)),
-            bench_score=float(rng.uniform(3.45, 4.35)),
-            triple_score=float(rng.uniform(1.55, 2.05)),
+            wildcard_gap=float(rng.uniform(30.0, 85.0)),
+            free_hit_gap=float(rng.uniform(7.0, 30.0)),
+            bench_score=float(rng.uniform(9.0, 18.0)),
+            triple_score=float(rng.uniform(12.0, 24.0)),
             afcon_bonus=float(rng.uniform(0.20, 0.80)),
+            first_wildcard_min_gw=int(rng.choice([4, 6, 8, 10])),
+            second_wildcard_min_gw=int(rng.choice([20, 24, 28])),
         )
         for _ in range(CHIP_POLICY_TRIALS - 4)
     ]
     policies.extend(
         [
-            ChipPolicy(3.0, 1.10, 3.70, 1.70, 0.40),
-            ChipPolicy(4.5, 1.60, 3.95, 1.82, 0.55),
-            ChipPolicy(2.2, 0.90, 3.55, 1.60, 0.30),
-            ChipPolicy(6.0, 2.20, 4.20, 1.95, 0.70),
+            ChipPolicy(52.0, 14.0, 12.0, 16.0, 0.55, 10, 20),
+            ChipPolicy(64.0, 20.0, 15.0, 19.0, 0.55, 8, 24),
+            ChipPolicy(42.0, 10.0, 10.0, 14.0, 0.30, 6, 20),
+            ChipPolicy(76.0, 26.0, 17.0, 22.0, 0.70, 10, 28),
         ]
     )
     return policies
 
 
-def chip_windows(season: str, first_gw: int, last_gw: int) -> list[dict]:
+def chip_windows(
+    season: str,
+    first_gw: int,
+    last_gw: int,
+    first_wildcard_min_gw: int = 5,
+    second_wildcard_min_gw: int = 24,
+) -> list[dict]:
+    first_wildcard_start = max(first_gw, first_wildcard_min_gw)
+    second_wildcard_start = max(20, first_gw, second_wildcard_min_gw)
+    afcon_window = AFCON_WINDOWS.get(season)
+    if afcon_window and 20 <= afcon_window[0] <= 24:
+        # A mass mid-season absence can justify opening the second-WC decision
+        # earlier, but the signal threshold still has to be cleared.
+        second_wildcard_start = max(20, first_gw, afcon_window[0])
     windows = [
-        {"chip": "Wildcard", "start": first_gw + 4, "end": min(19, last_gw)},
-        {"chip": "Wildcard", "start": max(23, first_gw), "end": last_gw},
+        {"chip": "Wildcard", "start": first_wildcard_start, "end": min(19, last_gw)},
+        {"chip": "Wildcard", "start": second_wildcard_start, "end": last_gw},
     ]
     if season == "2025-26":
         for chip in ("Free Hit", "Bench Boost", "Triple Captain"):
@@ -1709,8 +2488,23 @@ def chip_windows(season: str, first_gw: int, last_gw: int) -> list[dict]:
                 ]
             )
     else:
-        for chip in ("Free Hit", "Bench Boost", "Triple Captain"):
+        # Free Hit replaced All Out Attack in 2017/18. We omit the obsolete AOA
+        # chip from 2016/17 rather than granting an anachronistic Free Hit.
+        single_use_chips = (
+            ("Bench Boost", "Triple Captain")
+            if season == "2016-17"
+            else ("Free Hit", "Bench Boost", "Triple Captain")
+        )
+        for chip in single_use_chips:
             windows.append({"chip": chip, "start": first_gw, "end": last_gw})
+        if season == "2024-25" and last_gw >= 24:
+            windows.append(
+                {
+                    "chip": "Assistant Manager",
+                    "start": max(24, first_gw),
+                    "end": max(24, last_gw - 2),
+                }
+            )
     return [window for window in windows if window["start"] <= window["end"]]
 
 
@@ -1719,6 +2513,8 @@ def initial_squad(
     scores: np.ndarray,
     budget_limit: int = 1000,
     excluded_elements: set[int] | None = None,
+    captain_weight: float = 0.70,
+    bench_weight: float = 0.05,
 ) -> list[int]:
     """Fast legal £100m squad build used at the start of each recursive season."""
     if excluded_elements:
@@ -1753,14 +2549,30 @@ def initial_squad(
         cost = int(data_price_sum(frame, chosen))
         if cost > budget_limit:
             continue
-        score = float(scores[chosen].sum())
+        candidate_state = {
+            int(frame.loc[index, "element"]): {
+                "position": int(frame.loc[index, "position_id"]),
+                "team": int(frame.loc[index, "team_id"]),
+            }
+            for index in chosen
+        }
+        candidate_rows = {
+            int(frame.loc[index, "element"]): int(index) for index in chosen
+        }
+        score = squad_decision_utility(
+            candidate_state,
+            candidate_rows,
+            scores,
+            captain_weight=captain_weight,
+            bench_weight=bench_weight,
+        )
         if score > best_score:
             best = chosen
             best_score = score
     if len(best) != 15:
         fallback = frame.copy()
         fallback["model_score"] = scores[fallback.index.to_numpy(int)]
-        best, _ = pick_squad(fallback)
+        best, _ = pick_squad(fallback, budget_limit=budget_limit)
     return best
 
 
@@ -1801,7 +2613,20 @@ def choose_xi(
             return -1.5
         return scores[row_by_element[element]] if element in row_by_element else -1.0
 
-    best_xi: list[int] = []
+    # Sort each positional pool once. The prior implementation repeated these
+    # same sorts for every formation and dominated the recursive search runtime.
+    # Prefix sums then score every legal formation in constant time.
+    pools: dict[int, list[int]] = {position: [] for position in SQUAD_QUOTAS}
+    for element, state in squad.items():
+        pools[int(state["position"])].append(element)
+    prefix: dict[int, np.ndarray] = {}
+    for position, pool in pools.items():
+        pool.sort(key=selection_score, reverse=True)
+        prefix[position] = np.concatenate(
+            ([0.0], np.cumsum([selection_score(element) for element in pool]))
+        )
+
+    best_formation: dict[int, int] | None = None
     best_score = -math.inf
     for defenders in (3, 4, 5):
         for forwards in (1, 2, 3):
@@ -1809,30 +2634,23 @@ def choose_xi(
             if not 2 <= midfielders <= 5:
                 continue
             formation = {1: 1, 2: defenders, 3: midfielders, 4: forwards}
-            chosen: list[int] = []
-            for position, count in formation.items():
-                position_pool = [
-                    element
-                    for element, state in squad.items()
-                    if int(state["position"]) == position
-                ]
-                position_pool.sort(key=selection_score, reverse=True)
-                chosen.extend(position_pool[:count])
-            total = sum(
-                selection_score(element)
-                for element in chosen
-            )
-            if len(chosen) == 11 and total > best_score:
-                best_xi = chosen
+            if any(len(pools[position]) < count for position, count in formation.items()):
+                continue
+            total = sum(prefix[position][count] for position, count in formation.items())
+            if total > best_score:
+                best_formation = formation
                 best_score = total
-    bench = [element for element in squad if element not in set(best_xi)]
-    bench.sort(
-        key=lambda element: (
-            int(squad[element]["position"]) != 1,
-            selection_score(element),
-        ),
-        reverse=True,
+    best_xi = (
+        [
+            element
+            for position, count in best_formation.items()
+            for element in pools[position][:count]
+        ]
+        if best_formation is not None
+        else []
     )
+    xi_set = set(best_xi)
+    bench = [element for element in squad if element not in xi_set]
     # FPL puts the reserve goalkeeper in a separate slot; outfield order is by score.
     bench_gk = [element for element in bench if int(squad[element]["position"]) == 1]
     bench_outfield = [
@@ -1843,6 +2661,36 @@ def choose_xi(
         reverse=True,
     )
     return best_xi, bench_gk + bench_outfield
+
+
+def squad_decision_utility(
+    squad: dict[int, dict],
+    row_by_element: dict[int, int],
+    scores: np.ndarray,
+    excluded_elements: set[int] | None = None,
+    captain_weight: float = 0.70,
+    bench_weight: float = 0.05,
+) -> float:
+    """Value the legal XI, captain route and bench insurance—not 15 equal slots."""
+    xi, bench = choose_xi(
+        squad, row_by_element, scores, excluded_elements=excluded_elements
+    )
+    if len(xi) != 11:
+        return -math.inf
+    excluded = excluded_elements or set()
+
+    def value(element: int) -> float:
+        if element in excluded or element not in row_by_element:
+            return -1.0
+        return float(scores[row_by_element[element]])
+
+    xi_values = [value(element) for element in xi]
+    bench_values = [max(0.0, value(element)) for element in bench]
+    return float(
+        sum(xi_values)
+        + captain_weight * max(xi_values, default=0.0)
+        + bench_weight * sum(bench_values)
+    )
 
 
 def legal_xi(elements: list[int], squad: dict[int, dict]) -> bool:
@@ -1928,14 +2776,268 @@ def selling_price(purchase_price: int, current_price: int) -> int:
     return purchase_price + (current_price - purchase_price) // 2
 
 
+def assert_legal_squad(
+    squad: dict[int, dict], bank: int, season: str, gw: int, stage: str
+) -> None:
+    """Fail fast when a replay transition creates an impossible FPL state."""
+    if len(squad) != 15:
+        raise AssertionError(
+            f"{season} GW{gw} {stage}: expected 15 players, found {len(squad)}"
+        )
+    position_counts = {
+        position: sum(
+            int(state["position"]) == position for state in squad.values()
+        )
+        for position in SQUAD_QUOTAS
+    }
+    if position_counts != SQUAD_QUOTAS:
+        raise AssertionError(
+            f"{season} GW{gw} {stage}: illegal position quotas {position_counts}"
+        )
+    club_counts: dict[int, int] = {}
+    for state in squad.values():
+        club = int(state["team"])
+        club_counts[club] = club_counts.get(club, 0) + 1
+    if max(club_counts.values(), default=0) > 3:
+        raise AssertionError(
+            f"{season} GW{gw} {stage}: more than three players from one club"
+        )
+    if bank < 0:
+        raise AssertionError(f"{season} GW{gw} {stage}: negative bank {bank}")
+
+
+def simulation_context(data: pd.DataFrame) -> dict:
+    """Cache immutable week indices and schedules shared by hundreds of replays."""
+    # Object ids can be reused after a short-lived season slice is collected,
+    # which can silently return another frame's indices. A content fingerprint
+    # is stable across equivalent slices and safe across object lifetimes.
+    # DataFrame attrs propagate to slices, so an attrs-based token is unsafe.
+    # Computing this small three-column fingerprint prevents parent/slice cache
+    # collisions and costs far less than rebuilding the schedule context.
+    fingerprint = int(
+        pd.util.hash_pandas_object(
+            data[["season", "GW", "element"]], index=True
+        ).sum()
+    )
+    cache_key = (len(data), fingerprint)
+    cached = _SIMULATION_CONTEXT_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
+    seasons = []
+    for season, season_frame in data.groupby("season", sort=False):
+        week_indices = {
+            int(gw): np.asarray(indices, dtype=int)
+            for gw, indices in season_frame.groupby("GW", sort=True).groups.items()
+        }
+        season_teams = set(season_frame["team_id"].astype(int).unique())
+        schedule_counts = {}
+        for gw, indices in week_indices.items():
+            schedule_frame = data.loc[indices]
+            observed = (
+                schedule_frame.groupby("team_id")["fixture_count"]
+                .max()
+                .astype(int)
+                .to_dict()
+            )
+            schedule_counts[gw] = {
+                team_id: int(observed.get(team_id, 0)) for team_id in season_teams
+            }
+        seasons.append(
+            {
+                "season": str(season),
+                "weeks": sorted(week_indices),
+                "weekIndices": week_indices,
+                "teams": season_teams,
+                "scheduleCounts": schedule_counts,
+            }
+        )
+    cached = {"rows": len(data), "seasons": seasons}
+    _SIMULATION_CONTEXT_CACHE[cache_key] = cached
+    return cached
+
+
+def joint_transfer_plan(
+    squad: dict[int, dict],
+    bank: int,
+    free_transfers: int,
+    row_by_element: dict[int, int],
+    incoming_by_position: dict[int, np.ndarray],
+    element_values: np.ndarray,
+    position_values: np.ndarray,
+    team_values: np.ndarray,
+    price_values: np.ndarray,
+    plan_scores: np.ndarray,
+    price_rise_values: np.ndarray,
+    price_fall_values: np.ndarray,
+    uncertainty_values: np.ndarray,
+    excluded_elements: set[int],
+    team_option_score: dict[int, float],
+    strategy: SimulationStrategy,
+    gw: int,
+    club_limits: dict[int, int] | None = None,
+) -> tuple[dict[int, dict], int, int, float]:
+    """Beam-search a legal multi-transfer bundle, including funding moves.
+
+    Unlike greedy same-position swaps, an intermediate downgrade may survive
+    the beam and fund an upgrade elsewhere. Only the final bundle is judged
+    against the value of banking the free transfers.
+    """
+    max_moves = max(0, min(int(free_transfers), 5))
+    if max_moves == 0:
+        return squad, bank, 0, 0.0
+
+    def option_utility(element: int, state: dict) -> float:
+        index = row_by_element.get(element)
+        value = 0.0
+        if strategy.joint_chip_preflight:
+            value += 0.18 * team_option_score.get(int(state["team"]), 0.0)
+        if strategy.early_price_weight > 0 and gw <= 19 and index is not None:
+            value += strategy.early_price_weight * (
+                float(price_rise_values[index]) - float(price_fall_values[index])
+            )
+        return value
+
+    utility_cache: dict[tuple[int, ...], float] = {}
+
+    def squad_utility(active_squad: dict[int, dict]) -> float:
+        signature = tuple(sorted(active_squad))
+        cached_utility = utility_cache.get(signature)
+        if cached_utility is not None:
+            return cached_utility
+        decision_value = squad_decision_utility(
+            active_squad,
+            row_by_element,
+            plan_scores,
+            excluded_elements=excluded_elements,
+            captain_weight=strategy.squad_captain_weight,
+            bench_weight=strategy.squad_bench_weight,
+        )
+        value = decision_value + sum(
+            option_utility(element, state)
+            for element, state in active_squad.items()
+        )
+        utility_cache[signature] = value
+        return value
+
+    base_utility = squad_utility(squad)
+    initial_team_counts: dict[int, int] = {}
+    for player_state in squad.values():
+        team_id = int(player_state["team"])
+        initial_team_counts[team_id] = initial_team_counts.get(team_id, 0) + 1
+    forced_clubs = {
+        team_id for team_id, count in initial_team_counts.items() if count > 3
+    }
+    # (utility, bank, squad, moves, incoming uncertainty)
+    beam: list[tuple[float, int, dict[int, dict], int, float]] = [
+        (base_utility, bank, {key: value.copy() for key, value in squad.items()}, 0, 0.0)
+    ]
+    best = beam[0]
+    best_surplus = 0.0
+    for depth in range(1, max_moves + 1):
+        expanded: dict[tuple[int, ...], tuple[float, int, dict[int, dict], int, float]] = {}
+        for utility, state_bank, state_squad, _, incoming_uncertainty in beam:
+            team_counts: dict[int, int] = {}
+            for player_state in state_squad.values():
+                team_id = int(player_state["team"])
+                team_counts[team_id] = team_counts.get(team_id, 0) + 1
+            for outgoing, outgoing_state in state_squad.items():
+                if forced_clubs and int(outgoing_state["team"]) not in forced_clubs:
+                    continue
+                outgoing_index = row_by_element.get(outgoing)
+                current_price = (
+                    int(price_values[outgoing_index])
+                    if outgoing_index is not None
+                    else int(outgoing_state["last_price"])
+                )
+                sale = selling_price(int(outgoing_state["purchase"]), current_price)
+                position = int(outgoing_state["position"])
+                for incoming_index_raw in incoming_by_position[position][:10]:
+                    incoming_index = int(incoming_index_raw)
+                    incoming = int(element_values[incoming_index])
+                    if incoming in state_squad or incoming in excluded_elements:
+                        continue
+                    incoming_price = int(price_values[incoming_index])
+                    if incoming_price > state_bank + sale:
+                        continue
+                    incoming_team = int(team_values[incoming_index])
+                    outgoing_team = int(outgoing_state["team"])
+                    incoming_limit = (club_limits or {}).get(incoming_team, 3)
+                    if (
+                        incoming_team != outgoing_team
+                        and team_counts.get(incoming_team, 0) >= incoming_limit
+                    ):
+                        continue
+                    incoming_state = {
+                        "position": int(position_values[incoming_index]),
+                        "team": incoming_team,
+                        "purchase": incoming_price,
+                        "last_price": incoming_price,
+                        "nationality": "",
+                    }
+                    new_squad = {
+                        key: value.copy() for key, value in state_squad.items()
+                    }
+                    del new_squad[outgoing]
+                    new_squad[incoming] = incoming_state
+                    new_bank = state_bank + sale - incoming_price
+                    new_utility = squad_utility(new_squad)
+                    new_uncertainty = incoming_uncertainty + float(
+                        uncertainty_values[incoming_index]
+                    )
+                    signature = tuple(sorted(new_squad))
+                    prior = expanded.get(signature)
+                    candidate = (
+                        new_utility,
+                        new_bank,
+                        new_squad,
+                        depth,
+                        new_uncertainty,
+                    )
+                    if prior is None or new_utility > prior[0]:
+                        expanded[signature] = candidate
+        beam = sorted(
+            expanded.values(), key=lambda item: (item[0], item[1]), reverse=True
+        )[:10]
+        if not beam:
+            break
+        for candidate in beam:
+            candidate_counts: dict[int, int] = {}
+            for player_state in candidate[2].values():
+                team_id = int(player_state["team"])
+                candidate_counts[team_id] = candidate_counts.get(team_id, 0) + 1
+            if max(candidate_counts.values(), default=0) > 3:
+                continue
+            gain = candidate[0] - base_utility
+            hurdle = strategy.transfer_hurdle + 1.15 * (depth - 1)
+            if forced_clubs:
+                hurdle = -math.inf
+            if strategy.phase_banking:
+                hurdle += (2.0 if gw <= 19 else 2.8) if free_transfers <= 1 else -0.8
+            if strategy.hold_option_value > 0:
+                hurdle += (
+                    strategy.hold_option_value
+                    * min(1.5, candidate[4] / max(1, depth) / 3.0)
+                    + (strategy.hold_option_value if free_transfers <= 1 else -0.35 * strategy.hold_option_value)
+                )
+            surplus = gain - hurdle
+            if surplus > best_surplus:
+                best_surplus = surplus
+                best = candidate
+    if best[3] == 0:
+        return squad, bank, 0, 0.0
+    return best[2], best[1], best[3], float(best[0] - base_utility)
+
+
 def simulate_candidate(
     data: pd.DataFrame,
     scores: np.ndarray,
     strategy: SimulationStrategy,
     chip_policy: ChipPolicy | None = None,
     fresh_squads: dict[tuple[str, int], list[int]] | None = None,
+    free_hit_squads: dict[tuple[str, int], list[int]] | None = None,
     plan_scores: np.ndarray | None = None,
     actual_column: str = "points",
+    captain_scores: np.ndarray | None = None,
 ) -> tuple[np.ndarray, list[dict]]:
     """Carry one legal squad through each season and make deadline-only transfers."""
     if plan_scores is None:
@@ -1947,7 +3049,24 @@ def simulate_candidate(
     team_values = data["team_id"].to_numpy(int)
     price_values = data["price"].to_numpy(int)
     fixture_counts = data["fixture_count"].to_numpy(int)
+    uncertainty_values = data["prediction_uncertainty"].to_numpy(float)
+    price_rise_values = data["price_rise_probability"].to_numpy(float)
+    price_fall_values = data["price_fall_probability"].to_numpy(float)
+    return_values = data["return5_probability"].to_numpy(float)
+    haul_values = data["haul8_probability"].to_numpy(float)
+    goal_values = data["goal_rate"].to_numpy(float)
+    assist_values = data["assist_rate"].to_numpy(float)
     nationality_values = data["nationality"].fillna("").to_numpy(str)
+    team_name_values = data["team_name"].fillna("").to_numpy(str)
+    assistant_manager_actual_values = data["assistant_manager_points"].to_numpy(
+        float
+    )
+    team_attack_values = data["team_attack_rating"].to_numpy(float)
+    team_defence_values = data["team_defence_rating"].to_numpy(float)
+    team_form_values = data["team_form_rating"].to_numpy(float)
+    team_clean_values = data["team_clean_rating"].to_numpy(float)
+    table_position_values = data["table_position_before"].to_numpy(float)
+    opponent_team_values = data["opponent_team"].fillna(0).to_numpy(int)
     safe_captain_score = (
         0.42 * data["recent"].to_numpy(float)
         + 0.18 * data["long"].to_numpy(float)
@@ -1955,22 +3074,23 @@ def simulate_candidate(
         + 0.20 * data["minutes_security"].to_numpy(float)
         + 0.06 * data["crowd"].to_numpy(float)
     )
-    seasons = list(dict.fromkeys(data["season"].tolist()))
-    totals = np.zeros(len(seasons), dtype=float)
+    context = simulation_context(data)
+    totals = np.zeros(len(context["seasons"]), dtype=float)
     season_stats: list[dict] = []
+    attacking_captain_score = (
+        scores
+        + 1.10 * haul_values
+        + 0.35 * return_values
+        + 0.45 * goal_values
+        + 0.18 * assist_values
+        + 0.10 * data["minutes_security"].to_numpy(float)
+    )
 
-    for season_id, season in enumerate(seasons):
-        season_data = data[data["season"] == season]
-        weeks = sorted(int(value) for value in season_data["GW"].unique())
-        season_teams = set(season_data["team_id"].astype(int).unique())
-        schedule_counts: dict[int, dict[int, int]] = {}
-        for schedule_gw, schedule_frame in season_data.groupby("GW", sort=False):
-            observed = (
-                schedule_frame.groupby("team_id")["fixture_count"].max().astype(int).to_dict()
-            )
-            schedule_counts[int(schedule_gw)] = {
-                team_id: int(observed.get(team_id, 0)) for team_id in season_teams
-            }
+    for season_id, season_context in enumerate(context["seasons"]):
+        season = str(season_context["season"])
+        weeks = season_context["weeks"]
+        season_teams = season_context["teams"]
+        schedule_counts = season_context["scheduleCounts"]
         squad: dict[int, dict] = {}
         bank = 0
         free_transfers = 1
@@ -1981,15 +3101,31 @@ def simulate_candidate(
         weekly_changes: list[int] = []
         weekly_totals: list[float] = []
         chips = (
-            [dict(window, used=False) for window in chip_windows(season, weeks[0], weeks[-1])]
+            [
+                dict(window, used=False)
+                for window in chip_windows(
+                    season,
+                    weeks[0],
+                    weeks[-1],
+                    chip_policy.first_wildcard_min_gw,
+                    chip_policy.second_wildcard_min_gw,
+                )
+            ]
             if chip_policy
             else []
         )
         chip_log: list[dict] = []
+        joint_preflight_holds = 0
+        unlimited_rebuilds = 0
+        assistant_manager_team: int | None = None
+        assistant_manager_cost = 0
+        assistant_manager_remaining = 0
+        assistant_manager_log: dict | None = None
+        previous_gw: int | None = None
 
         for week_number, gw in enumerate(weeks):
-            frame = season_data[season_data["GW"] == gw]
-            frame_indices = frame.index.to_numpy(int)
+            frame_indices = season_context["weekIndices"][gw]
+            frame = data.loc[frame_indices]
             row_by_element = dict(
                 zip(element_values[frame_indices].tolist(), frame_indices.tolist())
             )
@@ -2021,7 +3157,11 @@ def simulate_candidate(
                 ][:40]
             if week_number == 0:
                 initial_indices = initial_squad(
-                    frame, plan_scores, excluded_elements=excluded_elements
+                    frame,
+                    plan_scores,
+                    excluded_elements=excluded_elements,
+                    captain_weight=strategy.squad_captain_weight,
+                    bench_weight=strategy.squad_bench_weight,
                 )
                 for index in initial_indices:
                     squad[int(element_values[index])] = {
@@ -2032,6 +3172,7 @@ def simulate_candidate(
                         "nationality": str(nationality_values[index]),
                     }
                 bank = 1000 - sum(state["purchase"] for state in squad.values())
+                assert_legal_squad(squad, bank, season, gw, "initial squad")
                 weekly_changes.append(15)
                 squad_before_transfers = {
                     element: state.copy() for element, state in squad.items()
@@ -2040,7 +3181,16 @@ def simulate_candidate(
                 free_transfers_before = free_transfers
                 transfers_before = transfers
             else:
-                bank_limit = 5 if season in {"2024-25", "2025-26"} else 2
+                official_bank_limit = (
+                    5 if season in {"2024-25", "2025-26"} else 2
+                )
+                bank_limit = min(strategy.bank_limit, official_bank_limit)
+                # Some official events have no fixture rows. Managers could still
+                # bank transfers, so advance the FT state across those deadlines.
+                if previous_gw is not None and gw > previous_gw + 1:
+                    free_transfers = min(
+                        bank_limit, free_transfers + (gw - previous_gw - 1)
+                    )
                 if season == "2025-26" and gw == 16:
                     free_transfers = 5
                 for element, state in squad.items():
@@ -2064,6 +3214,46 @@ def simulate_candidate(
                         if str(state.get("nationality", "")) in AFCON_NATIONS
                     )
 
+                unlimited_rebuild = gw in UNLIMITED_TRANSFER_GWS.get(season, set())
+                if unlimited_rebuild:
+                    available_budget = bank + sum(
+                        selling_price(
+                            int(state["purchase"]),
+                            int(state["last_price"]),
+                        )
+                        for state in squad.values()
+                    )
+                    reset_indices = initial_squad(
+                        frame,
+                        plan_scores,
+                        budget_limit=available_budget,
+                        excluded_elements=excluded_elements,
+                        captain_weight=strategy.squad_captain_weight,
+                        bench_weight=strategy.squad_bench_weight,
+                    )
+                    squad = {
+                        int(element_values[index]): {
+                            "position": int(position_values[index]),
+                            "team": int(team_values[index]),
+                            "purchase": int(price_values[index]),
+                            "last_price": int(price_values[index]),
+                            "nationality": str(nationality_values[index]),
+                        }
+                        for index in reset_indices
+                    }
+                    bank = available_budget - sum(
+                        int(price_values[index]) for index in reset_indices
+                    )
+                    # Project Restart reverted to the normal one-FT cadence after
+                    # the free rebuild. The World Cup window allowed the GW17 FT
+                    # to roll, so its state is preserved through the update below.
+                    if season == "2019-20":
+                        free_transfers = 0
+                    unlimited_rebuilds += 1
+                    assert_legal_squad(
+                        squad, bank, season, gw, "unlimited-transfer rebuild"
+                    )
+
                 squad_before_transfers = {
                     element: state.copy() for element, state in squad.items()
                 }
@@ -2074,7 +3264,69 @@ def simulate_candidate(
                 hits_before = hits
                 hit_cost_before = hit_cost
                 hit_points_this_week = 0
-                for move_number in range(free_transfers + 1):
+                current_schedule = schedule_counts.get(gw, {})
+                blank_squad = sum(
+                    current_schedule.get(int(state["team"]), 0) == 0
+                    for state in squad.values()
+                )
+                free_hit_available = any(
+                    window["chip"] == "Free Hit"
+                    and not window["used"]
+                    and int(window["start"]) <= gw <= int(window["end"])
+                    for window in chips
+                )
+                preflight_free_hit = bool(
+                    strategy.joint_chip_preflight
+                    and free_hit_available
+                    and blank_squad >= 4
+                )
+                if preflight_free_hit:
+                    joint_preflight_holds += 1
+                # Future rescheduling announcement timestamps are absent from the
+                # archive. The horizon score already values persistent player/team
+                # quality; do not leak final future blank/double assignments into
+                # transfer option value.
+                team_option_score: dict[int, float] = {
+                    int(team_id): 0.0 for team_id in season_teams
+                }
+                if (
+                    strategy.joint_squad_optimiser
+                    and not preflight_free_hit
+                    and not unlimited_rebuild
+                ):
+                    squad, bank, changes_this_week, _ = joint_transfer_plan(
+                        squad=squad,
+                        bank=bank,
+                        free_transfers=free_transfers,
+                        row_by_element=row_by_element,
+                        incoming_by_position=incoming_by_position,
+                        element_values=element_values,
+                        position_values=position_values,
+                        team_values=team_values,
+                        price_values=price_values,
+                        plan_scores=plan_scores,
+                        price_rise_values=price_rise_values,
+                        price_fall_values=price_fall_values,
+                        uncertainty_values=uncertainty_values,
+                        excluded_elements=excluded_elements,
+                        team_option_score=team_option_score,
+                        strategy=strategy,
+                        gw=gw,
+                        club_limits=(
+                            {assistant_manager_team: 2}
+                            if assistant_manager_team is not None
+                            else None
+                        ),
+                    )
+                    transfers += changes_this_week
+                    move_range = range(0)
+                else:
+                    move_range = range(
+                        0
+                        if preflight_free_hit or unlimited_rebuild
+                        else free_transfers + 1
+                    )
+                for move_number in move_range:
                     is_hit = move_number >= free_transfers
                     if is_hit and hits >= strategy.max_hits:
                         break
@@ -2084,7 +3336,17 @@ def simulate_candidate(
                             team_counts.get(int(state["team"]), 0) + 1
                         )
                     best_move: tuple[float, int, int, int, int] | None = None
+                    overloaded_clubs = {
+                        team_id
+                        for team_id, count in team_counts.items()
+                        if count > 3
+                    }
                     for outgoing, state in squad.items():
+                        if (
+                            overloaded_clubs
+                            and int(state["team"]) not in overloaded_clubs
+                        ):
+                            continue
                         out_index = row_by_element.get(outgoing)
                         out_score = (
                             plan_scores[out_index]
@@ -2110,12 +3372,38 @@ def simulate_candidate(
                             incoming_price = int(price_values[incoming_index])
                             if incoming_price > bank + sale:
                                 continue
+                            incoming_limit = (
+                                2
+                                if assistant_manager_team is not None
+                                and incoming_team == assistant_manager_team
+                                else 3
+                            )
                             if (
                                 incoming_team != int(state["team"])
-                                and team_counts.get(incoming_team, 0) >= 3
+                                and team_counts.get(incoming_team, 0)
+                                >= incoming_limit
                             ):
                                 continue
                             gain = float(plan_scores[int(incoming_index)] - out_score)
+                            if strategy.early_price_weight > 0 and gw <= 19:
+                                outgoing_price_option = (
+                                    price_rise_values[out_index]
+                                    - price_fall_values[out_index]
+                                    if out_index is not None
+                                    else -0.15
+                                )
+                                incoming_price_option = (
+                                    price_rise_values[incoming_index]
+                                    - price_fall_values[incoming_index]
+                                )
+                                gain += strategy.early_price_weight * (
+                                    incoming_price_option - outgoing_price_option
+                                )
+                            if strategy.joint_chip_preflight:
+                                gain += 0.45 * (
+                                    team_option_score.get(incoming_team, 0.0)
+                                    - team_option_score.get(int(state["team"]), 0.0)
+                                )
                             if best_move is None or gain > best_move[0]:
                                 best_move = (
                                     gain,
@@ -2130,6 +3418,24 @@ def simulate_candidate(
                     move_hurdle = strategy.transfer_hurdle + (
                         4.0 if is_hit else 0.0
                     )
+                    if overloaded_clubs:
+                        move_hurdle = -math.inf
+                    if strategy.phase_banking:
+                        if free_transfers_before <= 1:
+                            move_hurdle += 2.0 if gw <= 19 else 2.8
+                        else:
+                            move_hurdle -= 1.15 if gw <= 19 else 0.55
+                    if strategy.hold_option_value > 0:
+                        uncertainty_penalty = strategy.hold_option_value * min(
+                            1.5,
+                            float(uncertainty_values[incoming_index]) / 3.0,
+                        )
+                        bank_adjustment = (
+                            strategy.hold_option_value
+                            if free_transfers_before <= 1
+                            else -0.35 * strategy.hold_option_value
+                        )
+                        move_hurdle += uncertainty_penalty + bank_adjustment
                     if gain <= move_hurdle:
                         break
                     out_index = row_by_element.get(outgoing)
@@ -2163,11 +3469,19 @@ def simulate_candidate(
                     bank_limit,
                     max(0, free_transfers - changes_this_week) + 1,
                 )
+                assert_legal_squad(squad, bank, season, gw, "post-transfer")
 
             xi, bench = choose_xi(
                 squad, row_by_element, scores, excluded_elements
             )
-            captain_metric = safe_captain_score if strategy.safe_captain else scores
+            if captain_scores is not None:
+                captain_metric = captain_scores
+            elif strategy.captain_mode == "attacking_tail":
+                captain_metric = attacking_captain_score
+            elif strategy.safe_captain:
+                captain_metric = safe_captain_score
+            else:
+                captain_metric = scores
             captain_order = sorted(
                 xi,
                 key=lambda element: captain_metric[row_by_element[element]]
@@ -2189,36 +3503,85 @@ def simulate_candidate(
             week_points = base_breakdown["normal"] - (
                 hit_points_this_week if week_number > 0 else 0
             )
+            assistant_manager_block_this_week = assistant_manager_team is not None
+            if assistant_manager_team is not None:
+                manager_index = next(
+                    (
+                        int(index)
+                        for index in frame_indices
+                        if int(team_values[index]) == assistant_manager_team
+                    ),
+                    None,
+                )
+                manager_points = (
+                    float(assistant_manager_actual_values[manager_index])
+                    if manager_index is not None
+                    else 0.0
+                )
+                week_points += manager_points
+                if assistant_manager_log is not None:
+                    assistant_manager_log["gain"] = round(
+                        float(assistant_manager_log["gain"]) + manager_points
+                    )
+                assistant_manager_remaining -= 1
+                if assistant_manager_remaining == 0:
+                    bank += assistant_manager_cost
+                    assistant_manager_team = None
+                    assistant_manager_cost = 0
+                    assistant_manager_log = None
 
             if chip_policy:
-                fresh_indices = (
+                wildcard_indices = (
                     fresh_squads.get((season, gw), [])
                     if fresh_squads is not None
+                    else initial_squad(
+                        frame, plan_scores, excluded_elements=excluded_elements
+                    )
+                )
+                free_hit_indices = (
+                    free_hit_squads.get((season, gw), [])
+                    if free_hit_squads is not None
                     else initial_squad(
                         frame, scores, excluded_elements=excluded_elements
                     )
                 )
-                fresh_state = {
-                    int(element_values[index]): {
-                        "position": int(position_values[index]),
-                        "team": int(team_values[index]),
-                        "purchase": int(price_values[index]),
-                        "last_price": int(price_values[index]),
-                        "nationality": str(nationality_values[index]),
+
+                def squad_state(indices: list[int]) -> dict[int, dict]:
+                    return {
+                        int(element_values[index]): {
+                            "position": int(position_values[index]),
+                            "team": int(team_values[index]),
+                            "purchase": int(price_values[index]),
+                            "last_price": int(price_values[index]),
+                            "nationality": str(nationality_values[index]),
+                        }
+                        for index in indices
                     }
-                    for index in fresh_indices
-                }
-                fresh_xi, fresh_bench = choose_xi(
-                    fresh_state, row_by_element, scores, excluded_elements
+
+                wildcard_state = squad_state(wildcard_indices)
+                wildcard_xi, wildcard_bench = choose_xi(
+                    wildcard_state, row_by_element, scores, excluded_elements
                 )
-                fresh_captain_order = sorted(
-                    fresh_xi,
+                wildcard_captain_order = sorted(
+                    wildcard_xi,
                     key=lambda element: captain_metric[row_by_element[element]]
                     if element in row_by_element and element not in excluded_elements
                     else -1.0,
                     reverse=True,
                 )
-                fresh_captain, fresh_vice = fresh_captain_order[:2]
+                wildcard_captain, wildcard_vice = wildcard_captain_order[:2]
+                free_hit_state = squad_state(free_hit_indices)
+                free_hit_xi, free_hit_bench = choose_xi(
+                    free_hit_state, row_by_element, scores, excluded_elements
+                )
+                free_hit_captain_order = sorted(
+                    free_hit_xi,
+                    key=lambda element: captain_metric[row_by_element[element]]
+                    if element in row_by_element and element not in excluded_elements
+                    else -1.0,
+                    reverse=True,
+                )
+                free_hit_captain, free_hit_vice = free_hit_captain_order[:2]
 
                 def predicted_lineup_value(
                     active_xi: list[int], active_captain: int
@@ -2239,29 +3602,35 @@ def simulate_candidate(
                     )
 
                 current_lineup_value = predicted_lineup_value(xi, captain)
-                fresh_lineup_value = predicted_lineup_value(
-                    fresh_xi, fresh_captain
+                free_hit_lineup_value = predicted_lineup_value(
+                    free_hit_xi, free_hit_captain
                 )
-                current_squad_value = sum(
-                    scores[row_by_element[element]]
-                    for element in squad
-                    if element in row_by_element
-                    and element not in excluded_elements
+                current_squad_value = squad_decision_utility(
+                    squad,
+                    row_by_element,
+                    plan_scores,
+                    excluded_elements=excluded_elements,
+                    captain_weight=strategy.squad_captain_weight,
+                    bench_weight=strategy.squad_bench_weight,
                 )
-                fresh_squad_value = sum(
-                    scores[row_by_element[element]]
-                    for element in fresh_state
-                    if element in row_by_element
-                    and element not in excluded_elements
+                wildcard_squad_value = squad_decision_utility(
+                    wildcard_state,
+                    row_by_element,
+                    plan_scores,
+                    excluded_elements=excluded_elements,
+                    captain_weight=strategy.squad_captain_weight,
+                    bench_weight=strategy.squad_bench_weight,
                 )
                 afcon_count = sum(element in afcon_risk_elements for element in squad)
                 blank_count = sum(
-                    element not in row_by_element or element in excluded_elements
+                    element not in row_by_element
+                    or element in excluded_elements
+                    or fixture_counts[row_by_element[element]] == 0
                     for element in squad
                 )
                 double_count = sum(
                     fixture_counts[row_by_element[element]] > 1
-                    for element in fresh_xi
+                    for element in free_hit_xi
                     if element in row_by_element
                 )
                 bench_double_count = sum(
@@ -2284,27 +3653,102 @@ def simulate_candidate(
                     if captain_index is not None and captain not in excluded_elements
                     else 0.0
                 )
+                team_position = {
+                    int(team_values[index]): float(table_position_values[index])
+                    for index in frame_indices
+                }
+                squad_club_counts: dict[int, int] = {}
+                for state in squad.values():
+                    club = int(state["team"])
+                    squad_club_counts[club] = squad_club_counts.get(club, 0) + 1
+                assistant_manager_option: tuple[int, int, float, int] | None = None
+                if season == "2024-25" and assistant_manager_team is None:
+                    for manager_index in frame.drop_duplicates("team_id").index:
+                        manager_index = int(manager_index)
+                        team_id = int(team_values[manager_index])
+                        if squad_club_counts.get(team_id, 0) >= 3:
+                            continue
+                        normalized_name = "".join(
+                            character
+                            for character in team_name_values[manager_index].lower()
+                            if character.isalnum()
+                        )
+                        cost = ASSISTANT_MANAGER_COST_2024.get(
+                            normalized_name, 8
+                        )
+                        if cost > bank:
+                            continue
+                        win_probability = float(
+                            np.clip(
+                                0.12
+                                + 0.21 * team_form_values[manager_index]
+                                + 0.10
+                                * (
+                                    team_attack_values[manager_index]
+                                    - team_defence_values[manager_index]
+                                ),
+                                0.08,
+                                0.78,
+                            )
+                        )
+                        draw_probability = float(
+                            np.clip(0.31 - 0.16 * win_probability, 0.16, 0.30)
+                        )
+                        expected_match_points = (
+                            6 * win_probability
+                            + 3 * draw_probability
+                            + team_attack_values[manager_index]
+                            + 2 * team_clean_values[manager_index]
+                        )
+                        current_games = max(
+                            0, int(fixture_counts[manager_index])
+                        )
+                        projected = expected_match_points * (2 + current_games)
+                        opponent_id = int(opponent_team_values[manager_index])
+                        if (
+                            opponent_id in team_position
+                            and team_position.get(team_id, 10)
+                            - team_position[opponent_id]
+                            >= 5
+                        ):
+                            projected += (
+                                10 * win_probability + 5 * draw_probability
+                            )
+                        option = (team_id, cost, float(projected), manager_index)
+                        if (
+                            assistant_manager_option is None
+                            or option[2] > assistant_manager_option[2]
+                        ):
+                            assistant_manager_option = option
                 metrics = {
-                    "Wildcard": fresh_squad_value
+                    "Wildcard": wildcard_squad_value
                     - current_squad_value
                     + chip_policy.afcon_bonus * afcon_count,
-                    "Free Hit": fresh_lineup_value
+                    "Free Hit": free_hit_lineup_value
                     - current_lineup_value
                     + 0.22 * max(0, blank_count - 1)
                     + 0.12 * double_count,
                     "Bench Boost": bench_metric,
                     "Triple Captain": triple_metric,
+                    "Assistant Manager": (
+                        assistant_manager_option[2]
+                        if assistant_manager_option is not None
+                        else -math.inf
+                    ),
                 }
                 thresholds = {
                     "Wildcard": chip_policy.wildcard_gap,
                     "Free Hit": chip_policy.free_hit_gap,
                     "Bench Boost": chip_policy.bench_score,
                     "Triple Captain": chip_policy.triple_score,
+                    "Assistant Manager": 18.0,
                 }
                 available = [
                     window
                     for window in chips
-                    if not window["used"]
+                    if not assistant_manager_block_this_week
+                    and assistant_manager_team is None
+                    and not window["used"]
                     and int(window["start"]) <= gw <= int(window["end"])
                 ]
                 def has_structural_signal(chip_name: str) -> bool:
@@ -2317,6 +3761,8 @@ def simulate_candidate(
                             captain_index is not None
                             and fixture_counts[captain_index] > 1
                         )
+                    if chip_name == "Assistant Manager":
+                        return assistant_manager_option is not None
                     return True
 
                 def schedule_opportunity(chip_name: str, target_gw: int) -> float:
@@ -2339,13 +3785,7 @@ def simulate_candidate(
                     base_threshold = thresholds[chip_name]
                     remaining = max(0, int(window["end"]) - gw)
                     current_schedule_signal = schedule_opportunity(chip_name, gw)
-                    future_signals = [
-                        schedule_opportunity(chip_name, future_gw)
-                        * (0.96 ** max(0, future_gw - gw))
-                        for future_gw in weeks
-                        if gw < future_gw <= int(window["end"])
-                    ]
-                    continuation_value = max(future_signals, default=0.0)
+                    continuation_value = 0.0
                     option_cost = 0.30 * max(
                         0.0, continuation_value - current_schedule_signal
                     )
@@ -2378,13 +3818,45 @@ def simulate_candidate(
                             hits = hits_before
                             hit_cost = hit_cost_before
                             hit_points_this_week = 0
-                            free_transfers = free_transfers_before
-                        squad = fresh_state
-                        bank = 1000 - sum(
-                            int(price_values[index]) for index in fresh_indices
+                            transfers = transfers_before
+                            weekly_changes[-1] = 0
+                            free_transfers = (
+                                free_transfers_before
+                                if season in {"2024-25", "2025-26"}
+                                else 1
+                            )
+                        available_budget = bank_before_transfers + sum(
+                            selling_price(
+                                int(state["purchase"]),
+                                int(state["last_price"]),
+                            )
+                            for state in squad_before_transfers.values()
                         )
-                        xi, bench = fresh_xi, fresh_bench
-                        captain, vice = fresh_captain, fresh_vice
+                        action_indices = initial_squad(
+                            frame,
+                            plan_scores,
+                            budget_limit=available_budget,
+                            excluded_elements=excluded_elements,
+                            captain_weight=strategy.squad_captain_weight,
+                            bench_weight=strategy.squad_bench_weight,
+                        )
+                        squad = squad_state(action_indices)
+                        bank = available_budget - sum(
+                            int(price_values[index]) for index in action_indices
+                        )
+                        assert_legal_squad(squad, bank, season, gw, "Wildcard")
+                        xi, bench = choose_xi(
+                            squad, row_by_element, scores, excluded_elements
+                        )
+                        captain_order = sorted(
+                            xi,
+                            key=lambda element: captain_metric[row_by_element[element]]
+                            if element in row_by_element
+                            and element not in excluded_elements
+                            else -1.0,
+                            reverse=True,
+                        )
+                        captain, vice = captain_order[:2]
                         base_breakdown = realised_week_breakdown(
                             xi,
                             bench,
@@ -2397,12 +3869,46 @@ def simulate_candidate(
                         )
                         week_points = base_breakdown["normal"]
                     elif chip_name == "Free Hit":
+                        available_budget = bank_before_transfers + sum(
+                            selling_price(
+                                int(state["purchase"]),
+                                int(state["last_price"]),
+                            )
+                            for state in squad_before_transfers.values()
+                        )
+                        action_indices = initial_squad(
+                            frame,
+                            scores,
+                            budget_limit=available_budget,
+                            excluded_elements=excluded_elements,
+                            captain_weight=1.0,
+                            bench_weight=0.0,
+                        )
+                        action_state = squad_state(action_indices)
+                        action_bank = available_budget - sum(
+                            int(price_values[index]) for index in action_indices
+                        )
+                        assert_legal_squad(
+                            action_state, action_bank, season, gw, "Free Hit"
+                        )
+                        action_xi, action_bench = choose_xi(
+                            action_state, row_by_element, scores, excluded_elements
+                        )
+                        action_captain_order = sorted(
+                            action_xi,
+                            key=lambda element: captain_metric[row_by_element[element]]
+                            if element in row_by_element
+                            and element not in excluded_elements
+                            else -1.0,
+                            reverse=True,
+                        )
+                        action_captain, action_vice = action_captain_order[:2]
                         fresh_breakdown = realised_week_breakdown(
-                            fresh_xi,
-                            fresh_bench,
-                            fresh_captain,
-                            fresh_vice,
-                            fresh_state,
+                            action_xi,
+                            action_bench,
+                            action_captain,
+                            action_vice,
+                            action_state,
                             row_by_element,
                             actual,
                             played_minutes,
@@ -2418,16 +3924,34 @@ def simulate_candidate(
                             if weekly_changes[-1] > 0:
                                 rolled += 1
                             weekly_changes[-1] = 0
-                            free_transfers = min(
-                                bank_limit, free_transfers_before + 1
+                            free_transfers = (
+                                free_transfers_before
+                                if season in {"2024-25", "2025-26"}
+                                else 1
                             )
                     elif chip_name == "Bench Boost":
                         week_points = base_breakdown["bench_boost"]
                     elif chip_name == "Triple Captain":
                         week_points = base_breakdown["triple_captain"]
+                    elif chip_name == "Assistant Manager":
+                        if assistant_manager_option is None:
+                            raise AssertionError(
+                                f"{season} GW{gw}: Assistant Manager selected without a legal option"
+                            )
+                        (
+                            assistant_manager_team,
+                            assistant_manager_cost,
+                            _,
+                            manager_index,
+                        ) = assistant_manager_option
+                        bank -= assistant_manager_cost
+                        manager_points = float(
+                            assistant_manager_actual_values[manager_index]
+                        )
+                        week_points += manager_points
+                        assistant_manager_remaining = 2
                     chosen_window["used"] = True
-                    chip_log.append(
-                        {
+                    log_entry = {
                             "chip": chip_name,
                             "gw": gw,
                             "gain": round(float(week_points - no_chip_points)),
@@ -2436,10 +3960,15 @@ def simulate_candidate(
                             "continuationValue": round(float(option_values[id(chosen_window)]), 3),
                             "reason": "signal beat option-value adjusted threshold",
                         }
-                    )
+                    if chip_name == "Assistant Manager":
+                        log_entry["managerTeam"] = int(assistant_manager_team)
+                        log_entry["cost"] = int(assistant_manager_cost)
+                        assistant_manager_log = log_entry
+                    chip_log.append(log_entry)
 
             totals[season_id] += week_points
             weekly_totals.append(float(week_points))
+            previous_gw = gw
 
         season_stats.append(
             {
@@ -2452,7 +3981,12 @@ def simulate_candidate(
                 "gameweeks": len(weeks),
                 "weeklyPoints": [round(value, 1) for value in weekly_totals],
                 "chips": chip_log,
-                "chipPoints": int(sum(item["gain"] for item in chip_log)),
+                # This is deliberately local to the chip GW. Wildcards also alter
+                # later transfers, so full chip value must be measured by a paired
+                # season replay (as walk_forward does), not by summing this field.
+                "immediateChipGain": int(sum(item["gain"] for item in chip_log)),
+                "jointPreflightHolds": joint_preflight_holds,
+                "unlimitedRebuilds": unlimited_rebuilds,
             }
         )
     return totals, season_stats
@@ -2462,14 +3996,16 @@ def recursive_replay(
     data: pd.DataFrame,
     candidates: list[Candidate],
     strategy: SimulationStrategy,
+    robust_planning: bool = False,
 ) -> np.ndarray:
-    features = feature_matrix(data)
     results = np.zeros((len(candidates), len(SEASONS)), dtype=float)
     for trial_index, candidate in enumerate(candidates):
-        model_score = features @ candidate.coefficients
-        calibration = 0.72 + 0.56 * model_score
-        trial_scores = data["component_xpts"].to_numpy(float) * calibration
-        trial_plan_scores = data["component_horizon"].to_numpy(float) * calibration
+        trial_scores, trial_plan_scores, _ = candidate_forecasts(
+            data,
+            candidate,
+            robust_planning=robust_planning,
+            schedule_censored=True,
+        )
         results[trial_index], _ = simulate_candidate(
             data, trial_scores, strategy, plan_scores=trial_plan_scores
         )
@@ -2486,17 +4022,20 @@ def replay_chip_policies(
     scores: np.ndarray,
     plan_scores: np.ndarray,
     policies: list[ChipPolicy],
+    strategy: SimulationStrategy = WEEKLY_CHASE_STRATEGY,
 ) -> tuple[np.ndarray, list[list[dict]], dict[tuple[str, int], list[int]]]:
     fresh_squads = precompute_fresh_squads(data, plan_scores)
+    free_hit_squads = precompute_fresh_squads(data, scores)
     results = np.zeros((len(policies), len(SEASONS)), dtype=float)
     stats: list[list[dict]] = []
     for policy_index, policy in enumerate(policies):
         totals, season_stats = simulate_candidate(
             data,
             scores,
-            WEEKLY_CHASE_STRATEGY,
+            strategy,
             chip_policy=policy,
             fresh_squads=fresh_squads,
+            free_hit_squads=free_hit_squads,
             plan_scores=plan_scores,
         )
         results[policy_index] = totals
@@ -2509,47 +4048,96 @@ def replay_chip_policies(
 def add_rank_target_estimates(
     data: pd.DataFrame, backtest: list[dict]
 ) -> dict:
-    """Attach a transparent top-500k pace proxy and bootstrap confidence.
-
-    Exact historic rank cut-offs are not exposed by the FPL API. The proxy is
-    anchored to a published 2,150-point top-500k benchmark. The 2019/20 player
-    environment is the normalisation reference for season-to-season scaling.
-    """
-    evaluation = data[data["season"].isin(EVALUATION_SEASONS)]
-    environment: dict[str, float] = {}
-    for season, season_frame in evaluation.groupby("season", sort=False):
-        weekly_elite = season_frame.groupby("GW")["points"].apply(
-            lambda values: float(values.nlargest(min(60, len(values))).mean())
-        )
-        environment[str(season)] = float(weekly_elite.mean())
-    reference = environment.get("2019-20") or float(np.mean(list(environment.values())))
+    """Attach empirically reconstructed top-500k cutoffs and uncertainty."""
+    benchmark_path = ROOT / "analysis" / "data" / "historical_rank_benchmarks.json"
+    benchmark_payload = json.loads(benchmark_path.read_text(encoding="utf-8"))
+    benchmarks = {
+        str(item["season"]): item for item in benchmark_payload["seasons"]
+    }
     rng = np.random.default_rng(20260811)
     hit_count = 0
     probabilities: list[float] = []
     margins: list[int] = []
+    estimated_ranks: list[int] = []
+    rank_estimates_censored = 0
     for item in backtest:
-        season_key = str(item["season"]).replace("/", "-")
-        target = int(round(2150 * environment[season_key] / reference / 5) * 5)
+        benchmark = benchmarks[str(item["season"])]
+        target = int(benchmark["points"])
         weekly = np.asarray(item.pop("weeklyPoints"), dtype=float)
-        samples = rng.choice(weekly, size=(4000, len(weekly)), replace=True).sum(axis=1)
-        probability = float(np.mean(samples >= target))
+        # A moving-block bootstrap preserves short runs of fixture difficulty,
+        # injuries and chip effects better than independently shuffling GWs.
+        block_length = min(4, max(1, len(weekly)))
+        samples = np.empty(4000, dtype=float)
+        max_start = max(1, len(weekly) - block_length + 1)
+        blocks_needed = math.ceil(len(weekly) / block_length)
+        for sample_index in range(len(samples)):
+            starts = rng.integers(0, max_start, size=blocks_needed)
+            replay = np.concatenate(
+                [weekly[start : start + block_length] for start in starts]
+            )[: len(weekly)]
+            samples[sample_index] = replay.sum()
+        cutoff_samples = rng.integers(
+            int(benchmark["p05"]), int(benchmark["p95"]) + 1, size=len(samples)
+        )
+        probability = float(np.mean(samples >= cutoff_samples))
         margin = int(item["points"] - target)
+        rank_slope = float(benchmark["logRankSlope"])
+        # The slope is fitted locally around rank 500k. Do not extrapolate it
+        # hundreds of points into a part of the rank curve with no anchors.
+        rank_is_local = abs(margin) <= 50
+        estimated_rank = (
+            max(
+                1,
+                int(round(500_000 * math.exp(rank_slope * margin))),
+            )
+            if rank_is_local
+            else None
+        )
+        rank_scenarios = (
+            [
+                max(
+                    1,
+                    int(
+                        round(
+                            500_000
+                            * math.exp(
+                                rank_slope * (item["points"] - cutoff_point)
+                            )
+                        )
+                    ),
+                )
+                for cutoff_point in (int(benchmark["p05"]), int(benchmark["p95"]))
+            ]
+            if rank_is_local
+            else []
+        )
         item["top500Target"] = target
+        item["top500TargetInterval"] = [
+            int(benchmark["p05"]),
+            int(benchmark["p95"]),
+        ]
         item["targetMargin"] = margin
         item["targetHit"] = margin >= 0
         item["targetProbability"] = round(probability * 100)
+        item["estimatedRank"] = estimated_rank
+        item["estimatedRankInterval"] = (
+            [min(rank_scenarios), max(rank_scenarios)] if rank_scenarios else None
+        )
+        item["rankEstimateLocal"] = rank_is_local
         item["estimatedBand"] = (
-            "Top 100k pace"
-            if margin >= 100
-            else "Top 500k pace"
+            "Above top-500k cutoff"
             if margin >= 0
-            else "500k-1m pace"
-            if margin >= -90
-            else "Outside 1m pace"
+            else "Near top-500k cutoff"
+            if margin >= -50
+            else "Below locally calibrated rank range"
         )
         hit_count += int(margin >= 0)
         probabilities.append(probability)
         margins.append(margin)
+        if estimated_rank is not None:
+            estimated_ranks.append(estimated_rank)
+        else:
+            rank_estimates_censored += 1
     return {
         "target": "Top 500k",
         "hits": hit_count,
@@ -2558,16 +4146,33 @@ def add_rank_target_estimates(
         "averageProbability": round(100 * float(np.mean(probabilities))),
         "averageMargin": round(float(np.mean(margins))),
         "worstMargin": min(margins) if margins else 0,
+        "averageEstimatedRank": (
+            round(float(np.mean(estimated_ranks)) / 1000) * 1000
+            if estimated_ranks and rank_estimates_censored == 0
+            else None
+        ),
+        "rankEstimateCoverage": len(estimated_ranks),
+        "rankEstimateCensoredSeasons": rank_estimates_censored,
+        "benchmarkSample": {
+            "requestedHistories": benchmark_payload["requestedHistories"],
+            "managerPopulation": benchmark_payload["managerPopulationAtSampling"],
+            "source": benchmark_payload["source"],
+        },
         "method": (
-            "Estimated pace, not an official rank reconstruction: a published "
-            "2,150-point benchmark, scaled to each season's top-player scoring environment. "
-            "Probability bootstraps that season's weekly scores 4,000 times."
+            "Empirical cutoff estimate from a deterministic sample of 5,000 public "
+            "official FPL manager histories. A local log(rank)-points fit and nearest "
+            "observed score boundary reconstruct each cutoff; its interval also allows "
+            "for ties and survivorship. Probability uses 4,000 four-GW block-bootstrap "
+            "model seasons. Rank is withheld outside a 50-point local calibration "
+            "window rather than extrapolating the cutoff curve into unsupported ranks."
         ),
     }
 
 
 def build_calibration_diagnostics(data: pd.DataFrame, backtest: list[dict]) -> dict:
-    evaluation = data[data["season"].isin(EVALUATION_SEASONS)].copy()
+    evaluation = data[
+        data["season"].isin(EVALUATION_SEASONS) & data["fixture_count"].gt(0)
+    ].copy()
     actual_return = (evaluation["points"] >= 5).astype(float)
     return_probability = evaluation["return5_probability"].clip(0, 1)
     return_brier = float(np.mean((return_probability - actual_return) ** 2))
@@ -2629,6 +4234,44 @@ def build_calibration_diagnostics(data: pd.DataFrame, backtest: list[dict]) -> d
                 "rows": int(len(frame)),
             }
         )
+    role_errors = [
+        {
+            "role": str(role).replace("_", " ").title(),
+            "mae": round(float((frame["component_xpts"] - frame["points"]).abs().mean()), 2),
+            "challengerMae": round(float((frame["role_ridge_xpts"] - frame["points"]).abs().mean()), 2),
+            "rows": int(len(frame)),
+        }
+        for role, frame in evaluation.groupby("player_role")
+        if len(frame) >= 100
+    ]
+    event_coverage_by_season = [
+        {
+            "season": str(season).replace("-", "/"),
+            "coverage": round(100 * float(frame["defensive_exact"].mean())),
+        }
+        for season, frame in evaluation[
+            evaluation["position_id"].isin([2, 3, 4])
+        ].groupby("season", sort=False)
+    ]
+    rotation_calibration = []
+    for label, lower, upper in [
+        ("Stable managers", 0.0, 0.18),
+        ("Mixed rotation", 0.18, 0.30),
+        ("Heavy rotation", 0.30, 1.0),
+    ]:
+        frame = evaluation[
+            (evaluation["team_rotation_rate"] >= lower)
+            & (evaluation["team_rotation_rate"] < upper)
+        ]
+        if len(frame):
+            rotation_calibration.append(
+                {
+                    "segment": label,
+                    "forecastStart": round(100 * float(frame["start_probability"].mean())),
+                    "observedStart": round(100 * float(frame["start_observed_rate"].mean())),
+                    "rows": int(len(frame)),
+                }
+            )
     weakest = sorted(backtest, key=lambda item: item["targetMargin"])[:3]
     return {
         "returnBrier": round(return_brier, 3),
@@ -2646,6 +4289,9 @@ def build_calibration_diagnostics(data: pd.DataFrame, backtest: list[dict]) -> d
         ),
         "returnCalibration": calibration_bins,
         "positionErrors": position_errors,
+        "roleErrors": sorted(role_errors, key=lambda item: item["mae"]),
+        "eventCoverageBySeason": event_coverage_by_season,
+        "rotationCalibration": rotation_calibration,
         "weakSeasons": [
             {
                 "season": item["season"],
@@ -2663,9 +4309,10 @@ def build_calibration_diagnostics(data: pd.DataFrame, backtest: list[dict]) -> d
     }
 
 
-def pick_squad(players: pd.DataFrame) -> tuple[list[int], list[int]]:
+def pick_squad(
+    players: pd.DataFrame, budget_limit: int = 1000
+) -> tuple[list[int], list[int]]:
     """Budgeted positional knapsack followed by a three-per-club repair."""
-    budget_limit = 1000
     position_options: dict[int, dict[int, tuple[float, tuple[int, ...]]]] = {}
     for position, quota in SQUAD_QUOTAS.items():
         pool = players[players["position_id"] == position].nlargest(70, "model_score")
@@ -2754,7 +4401,10 @@ def pick_squad(players: pd.DataFrame) -> tuple[list[int], list[int]]:
 
 
 def current_recommendation(
-    historical: pd.DataFrame, best: Candidate, robust_planning: bool
+    historical: pd.DataFrame,
+    best: Candidate,
+    robust_planning: bool,
+    strategy: SimulationStrategy,
 ) -> tuple[dict, list[dict], list[dict], list[dict], list[dict], dict]:
     bootstrap = get_json(CURRENT_BOOTSTRAP)
     fixtures = get_json(CURRENT_FIXTURES)
@@ -2811,6 +4461,8 @@ def current_recommendation(
             ensemble_structural_weight=("ensemble_structural_weight", "last"),
             ensemble_empirical_weight=("ensemble_empirical_weight", "last"),
             ensemble_market_weight=("ensemble_market_weight", "last"),
+            ensemble_role_weight=("ensemble_role_weight", "last"),
+            defensive_event_coverage_prior=("defensive_event_coverage", "last"),
         )
     )
     prior_summary = prior_summary.merge(tails, on="player_code", how="left")
@@ -2893,6 +4545,7 @@ def current_recommendation(
             "team_clean_rating",
             "team_rating_confidence",
             "team_regime_shift",
+            "team_rotation_rate",
         ]
     ].drop_duplicates(["season_order", "GW", "team_name"]).copy()
     team_profiles["team_key"] = (
@@ -2931,6 +4584,8 @@ def current_recommendation(
                 "ensemble_structural_weight",
                 "ensemble_empirical_weight",
                 "ensemble_market_weight",
+                "ensemble_role_weight",
+                "defensive_event_coverage_prior",
             ]
         ],
         left_on="code",
@@ -2956,6 +4611,7 @@ def current_recommendation(
                 "team_clean_rating",
                 "team_rating_confidence",
                 "team_regime_shift",
+                "team_rotation_rate",
             ]
         ],
         on="team_key",
@@ -3076,6 +4732,7 @@ def current_recommendation(
     current["team_clean_rating"] = current["team_clean_rating"].fillna(0.28)
     current["team_rating_confidence"] = current["team_rating_confidence"].fillna(0)
     current["team_regime_shift"] = current["team_regime_shift"].fillna(0)
+    current["team_rotation_rate"] = current["team_rotation_rate"].fillna(0.22).clip(0, 0.75)
     team_snapshot = current[
         [
             "team_id",
@@ -3220,6 +4877,11 @@ def current_recommendation(
         ("recent_underlying_raw", "recent_underlying"),
     ]:
         current[rank_name] = current.groupby("position_id")[raw_name].transform(percentile)
+    # Historical fixture horizons are censored because announcement snapshots
+    # are unavailable. The live path can safely use the official schedule that
+    # is actually published at this deadline, while retaining the same feature
+    # schema as the audited model.
+    current["fixture_censored"] = current["fixture"]
     matrix = feature_matrix(current)
     current["model_score"] = matrix @ best.coefficients
     current["availability"] = pd.to_numeric(
@@ -3249,6 +4911,26 @@ def current_recommendation(
     prior_sixty_start = current["sixty_probability_given_start"].fillna(
         current["position_id"].map({1: 0.95, 2: 0.82, 3: 0.76, 4: 0.72})
     )
+    congestion_map: dict[int, float] = {}
+    for team_id in current["team_id"].astype(int).unique():
+        team_schedule = horizon_fixtures[
+            (horizon_fixtures["team_h"] == team_id)
+            | (horizon_fixtures["team_a"] == team_id)
+        ].copy()
+        kickoffs = pd.to_datetime(
+            team_schedule["kickoff_time"], errors="coerce", utc=True
+        ).dropna().sort_values()
+        gaps = kickoffs.diff().dt.total_seconds().dropna() / 86400
+        congestion_map[int(team_id)] = float(gaps.min()) if len(gaps) else 7.0
+    current["minimum_fixture_gap"] = current["team_id"].map(congestion_map).fillna(7)
+    viable_starter = (prior_start >= 0.28).astype(float)
+    competition_count = viable_starter.groupby(
+        [current["team_id"], current["position_id"]]
+    ).transform("sum")
+    role_slots = current["position_id"].map({1: 1.0, 2: 4.0, 3: 4.0, 4: 2.0})
+    current["competition_pressure"] = (
+        (competition_count - role_slots).clip(lower=0) / role_slots
+    ).clip(0, 1.5)
     completed_rounds = max(0, gw_number - 1)
     season_starts = numeric_current("starts").clip(0, completed_rounds)
     current["start_probability"] = (
@@ -3257,6 +4939,18 @@ def current_recommendation(
     current["start_probability"] *= (
         current["availability"] / 100
     ).clip(0, 1)
+    live_rotation_volatility = current["rotation_volatility"].fillna(0.35).clip(0, 1)
+    current["start_probability"] *= 1 - (
+        (current["team_rotation_rate"] - 0.18).clip(lower=0)
+        * live_rotation_volatility
+        * 0.35
+        + 0.045
+        * current["competition_pressure"]
+        * (0.35 + live_rotation_volatility)
+        + ((4.5 - current["minimum_fixture_gap"]).clip(lower=0) / 5)
+        * (0.20 + 0.45 * live_rotation_volatility)
+    ).clip(0, 0.28)
+    current["start_probability"] = current["start_probability"].clip(0.01, 0.98)
     current["sub_probability_given_bench"] = prior_sub
     current["play_probability"] = (
         current["start_probability"]
@@ -3279,6 +4973,7 @@ def current_recommendation(
         * current["sub_probability_given_bench"]
         * minutes_if_bench
     ).clip(1, 90)
+    current["expected_minutes"] = expected_minutes
     second_moment = (
         current["start_probability"] * (minutes_if_start.pow(2) + 12**2)
         + (1 - current["start_probability"])
@@ -3421,6 +5116,37 @@ def current_recommendation(
             current["position_id"].map({1: 0.0, 2: 6.8, 3: 6.0, 4: 3.0})
         )
     ) / rate_denominator
+    current["goal_rate"] = goal_rate_live
+    current["assist_rate"] = assist_rate_live
+    current["save_rate"] = save_rate_live
+    current["bonus_rate"] = bonus_rate_live
+    current["defensive_rate"] = defensive_rate_live
+    current["player_role"] = assign_player_role(current)
+    role_defensive_prior = current["player_role"].map(
+        {
+            "shot_stopper": 0.0,
+            "clean_sheet_keeper": 0.0,
+            "centre_back": 8.2,
+            "set_piece_centre_back": 8.8,
+            "attacking_full_back": 6.2,
+            "balanced_defender": 6.8,
+            "holding_midfielder": 8.0,
+            "creator": 5.4,
+            "goal_threat_midfielder": 4.8,
+            "box_to_box_midfielder": 6.3,
+            "link_forward": 3.3,
+            "penalty_box_forward": 2.4,
+            "mobile_forward": 3.0,
+        }
+    ).fillna(4.0)
+    exact_coverage_live = current["defensive_event_coverage_prior"].fillna(0).clip(0, 1)
+    current["defensive_event_coverage_live"] = exact_coverage_live
+    defensive_rate_live = (
+        exact_coverage_live * defensive_rate_live
+        + (1 - exact_coverage_live) * role_defensive_prior
+    )
+    current["defensive_rate"] = defensive_rate_live
+    current["player_role"] = assign_player_role(current)
     current["defensive_return_probability"] = poisson_tail(
         defensive_rate_live * appearance_share,
         defensive_threshold,
@@ -3448,6 +5174,7 @@ def current_recommendation(
         + discipline_component
         + conceded_component
     )
+    current["component_projection_unscaled"] = component_projection
     own_projection = component_projection * (
         0.82 + current["fixture_now"] * 0.28
     ) * (0.74 + current["model_score"] * 0.42)
@@ -3464,13 +5191,17 @@ def current_recommendation(
         * (0.82 + 0.28 * current["team_context_raw"].clip(0.4, 1.8))
         * (0.94 + 0.12 * current["crowd_raw"].rank(pct=True))
     ).clip(0.3, 13.5)
-    structural_weight = current["ensemble_structural_weight"].fillna(0.40)
-    empirical_weight = current["ensemble_empirical_weight"].fillna(0.34)
-    market_weight = current["ensemble_market_weight"].fillna(0.26)
-    weight_total = structural_weight + empirical_weight + market_weight
+    role_projection = live_role_ridge_predictions(historical, current)
+    current["role_ridge_projection"] = role_projection
+    structural_weight = current["ensemble_structural_weight"].fillna(0.32)
+    empirical_weight = current["ensemble_empirical_weight"].fillna(0.27)
+    market_weight = current["ensemble_market_weight"].fillna(0.21)
+    role_weight = current["ensemble_role_weight"].fillna(0.20)
+    weight_total = structural_weight + empirical_weight + market_weight + role_weight
     structural_weight /= weight_total
     empirical_weight /= weight_total
     market_weight /= weight_total
+    role_weight /= weight_total
     public_weight = pd.Series(
         np.where(current["ep_next_num"] > 0, 0.18, 0.0), index=current.index
     )
@@ -3481,6 +5212,7 @@ def current_recommendation(
             structural_weight * own_projection
             + empirical_weight * empirical_projection
             + market_weight * market_projection
+            + role_weight * role_projection
         )
         + public_weight * current["ep_next_num"]
     ).clip(0.4, 13.8)
@@ -3489,6 +5221,7 @@ def current_recommendation(
             own_projection.to_numpy(float),
             empirical_projection.to_numpy(float),
             market_projection.to_numpy(float),
+            role_projection.to_numpy(float),
             current["ep_next_num"].where(
                 current["ep_next_num"] > 0, own_projection
             ).to_numpy(float),
@@ -3498,6 +5231,7 @@ def current_recommendation(
     current["ensemble_structural_weight_live"] = structural_weight * internal_weight
     current["ensemble_empirical_weight_live"] = empirical_weight * internal_weight
     current["ensemble_market_weight_live"] = market_weight * internal_weight
+    current["ensemble_role_weight_live"] = role_weight * internal_weight
     current["ensemble_public_weight_live"] = public_weight
     component_scale = current["raw_projection"] / component_projection.clip(lower=0.25)
     current["component_appearance"] = appearance_component * component_scale
@@ -3764,26 +5498,21 @@ def current_recommendation(
             if projection_percentile >= 0.45
             else "Fade"
         )
-        if int(row["position_id"]) == 2:
-            attacking_route = clean_number("goal_rate_prior") + clean_number(
-                "assist_rate_prior"
-            )
-            defensive_route = clean_number("defensive_rate_prior")
-            archetype = (
-                "Set-piece centre-back"
-                if attacking_route >= 0.18 and defensive_route >= 7.5
-                else "Attacking full-back"
-                if attacking_route >= 0.22
-                else "Defensive centre-back"
-                if defensive_route >= 8.5
-                else "Balanced defender"
-            )
-        elif int(row["position_id"]) == 1:
-            archetype = "Shot-stopping goalkeeper"
-        elif int(row["position_id"]) == 3 and clean_number("defensive_rate_prior") >= 8:
-            archetype = "Defensive-contribution midfielder"
-        else:
-            archetype = "Attacking role"
+        archetype = {
+            "shot_stopper": "Shot-stopping goalkeeper",
+            "clean_sheet_keeper": "Clean-sheet goalkeeper",
+            "centre_back": "Defensive centre-back",
+            "set_piece_centre_back": "Set-piece centre-back",
+            "attacking_full_back": "Attacking full-back",
+            "balanced_defender": "Balanced defender",
+            "holding_midfielder": "Defensive-contribution midfielder",
+            "creator": "Creative midfielder",
+            "goal_threat_midfielder": "Goal-threat midfielder",
+            "box_to_box_midfielder": "Box-to-box midfielder",
+            "link_forward": "Link forward",
+            "penalty_box_forward": "Penalty-box forward",
+            "mobile_forward": "Mobile forward",
+        }.get(str(row["player_role"]), "Balanced role")
         return {
             "id": int(row["id"]),
             "name": str(row["display_name"]),
@@ -3809,6 +5538,35 @@ def current_recommendation(
                 "minutesIfBench": round(clean_number("minutes_if_bench_forecast", 18)),
                 "minutesStd": round(float(row["minutes_std"]), 1),
                 "rotationVolatility": round(100 * clean_number("rotation_volatility", 0.35)),
+                "competitionPressure": round(100 * float(row["competition_pressure"])),
+                "managerRotation": round(100 * float(row["team_rotation_rate"])),
+                "minimumFixtureGap": round(float(row["minimum_fixture_gap"]), 1),
+                "scenarios": [
+                    {
+                        "label": "Starts",
+                        "probability": round(100 * float(row["start_probability"])),
+                        "minutes": round(clean_number("minutes_if_start_forecast", 75)),
+                    },
+                    {
+                        "label": "Bench appearance",
+                        "probability": round(
+                            100
+                            * (1 - float(row["start_probability"]))
+                            * float(row["sub_probability_given_bench"])
+                        ),
+                        "minutes": round(clean_number("minutes_if_bench_forecast", 18)),
+                    },
+                    {
+                        "label": "No appearance",
+                        "probability": round(100 * (1 - float(row["play_probability"]))),
+                        "minutes": 0,
+                    },
+                ],
+                "availabilityEvidence": {
+                    "status": str(row.get("status", "a")),
+                    "chance": round(float(row["availability"])),
+                    "officialNews": str(row.get("news", "") or "No official flag"),
+                },
             },
             "distribution": {
                 "p10": round(float(row["prediction_p10"]), 1),
@@ -3827,13 +5585,18 @@ def current_recommendation(
                 "bpsRate": round(clean_number("bps_rate_prior"), 1),
                 "goalRoute": round(clean_number("goal_rate_prior"), 3),
                 "assistRoute": round(clean_number("assist_rate_prior"), 3),
+                "exactEventCoverage": round(
+                    100 * clean_number("defensive_event_coverage_live", 0)
+                ),
             },
             "ensemble": {
                 "structural": round(100 * float(row["ensemble_structural_weight_live"])),
                 "empirical": round(100 * float(row["ensemble_empirical_weight_live"])),
                 "marketRole": round(100 * float(row["ensemble_market_weight_live"])),
+                "roleChallenger": round(100 * float(row["ensemble_role_weight_live"])),
                 "official": round(100 * float(row["ensemble_public_weight_live"])),
                 "disagreement": round(float(row["ensemble_disagreement"]), 2),
+                "roleProjection": round(clean_number("role_ridge_projection"), 2),
             },
             "marketForecast": {
                 "priceRiseProbability": round(100 * float(row["price_rise_probability"])),
@@ -3979,7 +5742,14 @@ def current_recommendation(
         "playersScored": int(len(pool)),
         "fixturesScored": int(len(first_fixtures)),
         "historicalSeasons": int(historical["season"].nunique()),
-        "componentModel": "Probabilistic minutes + causal position ensemble + team Poisson + defender DC/BPS",
+        "componentModel": "Lineup-scenario minutes + role challenger ensemble + team Poisson + coverage-aware defender DC/BPS",
+        "decisionEngine": strategy.name,
+        "managerPopulation": int(bootstrap.get("total_players", 0)),
+        "officialRankImport": True,
+        "publicProjectionEndpoint": "/api/projections",
+        "defensiveEventCoverage": round(
+            100 * float(historical.loc[historical["position_id"].isin([2, 3, 4]), "defensive_exact"].mean())
+        ),
         "strategyProfiles": strategy_profiles,
         "sourceUpdated": datetime.now().astimezone().isoformat(timespec="minutes"),
     }
@@ -3987,19 +5757,10 @@ def current_recommendation(
 
 
 def main() -> None:
-    CACHE.mkdir(parents=True, exist_ok=True)
-    ages = load_age_register()
-    nationalities = load_nationality_register()
-    season_frames: list[pd.DataFrame] = []
-    data_summary: list[dict] = []
-    for season in SEASONS:
-        frame, summary = build_season(season, ages, nationalities)
-        season_frames.append(frame)
-        data_summary.append(summary)
-        print(f"Prepared {season}: {summary['eligibleRows']:,} eligible player-weeks")
-
-    data = prepare_causal_history(season_frames)
+    data, data_summary = load_or_build_prepared_history()
     candidates, baseline_index = candidate_pool()
+    print("Validating the live recommendation pipeline before long replays")
+    current_recommendation(data, candidates[-5], False, WEEKLY_CHASE_STRATEGY)
     snapshot_scores, seasons = snapshot_replay(data, candidates)
     gameweeks = np.array(
         [data.loc[data["season"] == season, "GW"].nunique() for season in seasons],
@@ -4025,7 +5786,7 @@ def main() -> None:
     for index in priority:
         if index not in shortlist_indices:
             shortlist_indices.append(index)
-        if len(shortlist_indices) == RECURSIVE_FINALISTS:
+        if len(shortlist_indices) == SCREENING_FINALISTS:
             break
     recursive_candidates = [candidates[index] for index in shortlist_indices]
     recursive_scores = recursive_replay(
@@ -4039,45 +5800,101 @@ def main() -> None:
     baseline_local_index = shortlist_indices.index(baseline_index)
 
     walk_forward: list[dict] = []
-    best_scores, robust_plan_scores, _ = candidate_forecasts(data, best)
+    # Current recommendations may use all completed history, but the policy gate
+    # that governs every historical evaluation season must not use a candidate
+    # selected on those evaluation outcomes.
+    training_recursive_stability = (
+        per_gameweek[:, :training_count].mean(axis=1)
+        - per_gameweek[:, :training_count].std(axis=1) * 0.25
+    )
+    gate_candidate = recursive_candidates[int(np.argmax(training_recursive_stability))]
+    gate_scores, robust_plan_scores, _ = candidate_forecasts(data, gate_candidate)
     _, central_plan_scores, _ = candidate_forecasts(
-        data, best, robust_planning=False
+        data, gate_candidate, robust_planning=False
     )
     chip_policies = chip_policy_pool()
     gate_policy = chip_policies[-4]
     robust_gate_fresh = precompute_fresh_squads(data, robust_plan_scores)
-    robust_probe_totals, _ = simulate_candidate(
-        data,
-        best_scores,
-        WEEKLY_CHASE_STRATEGY,
-        chip_policy=gate_policy,
-        fresh_squads=robust_gate_fresh,
-        plan_scores=robust_plan_scores,
-    )
     central_gate_fresh = precompute_fresh_squads(data, central_plan_scores)
-    central_probe_totals, _ = simulate_candidate(
+    gate_free_hits = precompute_fresh_squads(data, gate_scores)
+    gate_results: dict[str, tuple[np.ndarray, SimulationStrategy, np.ndarray]] = {}
+    for objective_name, plan_values, fresh_values in [
+        ("robust", robust_plan_scores, robust_gate_fresh),
+        ("central", central_plan_scores, central_gate_fresh),
+    ]:
+        for strategy_option in [WEEKLY_CHASE_STRATEGY, JOINT_OPTION_STRATEGY]:
+            totals, _ = simulate_candidate(
+                data,
+                gate_scores,
+                strategy_option,
+                chip_policy=gate_policy,
+                fresh_squads=fresh_values,
+                free_hit_squads=gate_free_hits,
+                plan_scores=plan_values,
+            )
+            gate_results[f"{objective_name}:{strategy_option.name}"] = (
+                totals,
+                strategy_option,
+                plan_values,
+            )
+    selected_gate_name = max(
+        gate_results,
+        key=lambda name: float(np.mean(gate_results[name][0][:training_count])),
+    )
+    selected_probe_totals, active_strategy, gate_plan_scores = gate_results[
+        selected_gate_name
+    ]
+    robust_planning_enabled = selected_gate_name.startswith("robust:")
+
+    # The cheap recursive pass only screens weights. Re-score a compact,
+    # training-selected set under the exact decision policy that will be used
+    # in evaluation; otherwise weights and optimiser are tuned for different
+    # objectives. Selection into this set uses only the two pre-2018 seasons.
+    policy_priority = [baseline_local_index] + list(
+        np.argsort(training_recursive_stability)[-16:][::-1].astype(int)
+    )
+    policy_priority.extend(
+        index
+        for index in range(len(recursive_candidates))
+        if shortlist_indices[index] >= len(candidates) - 5
+    )
+    policy_local_indices: list[int] = []
+    for index in policy_priority:
+        if index not in policy_local_indices:
+            policy_local_indices.append(index)
+        if len(policy_local_indices) == 20:
+            break
+    policy_global_indices = [shortlist_indices[index] for index in policy_local_indices]
+    recursive_candidates = [candidates[index] for index in policy_global_indices]
+    recursive_scores = recursive_replay(
         data,
-        best_scores,
-        WEEKLY_CHASE_STRATEGY,
-        chip_policy=gate_policy,
-        fresh_squads=central_gate_fresh,
-        plan_scores=central_plan_scores,
+        recursive_candidates,
+        active_strategy,
+        robust_planning=robust_planning_enabled,
     )
-    robust_planning_enabled = bool(
-        np.mean(robust_probe_totals[:training_count])
-        >= np.mean(central_probe_totals[:training_count])
-    )
-    best_plan_scores = (
-        robust_plan_scores if robust_planning_enabled else central_plan_scores
-    )
+    shortlist_indices = policy_global_indices
+    per_gameweek = recursive_scores / gameweeks
+    stability = per_gameweek.mean(axis=1) - per_gameweek.std(axis=1) * 0.18
+    best_local_index = int(np.argmax(stability))
+    best_index = shortlist_indices[best_local_index]
+    best = candidates[best_index]
+    baseline_local_index = shortlist_indices.index(baseline_index)
+
     chip_scores, chip_policy_stats, best_fresh_squads = replay_chip_policies(
-        data, best_scores, best_plan_scores, chip_policies
+        data, gate_scores, gate_plan_scores, chip_policies, active_strategy
     )
-    no_chip_best = recursive_scores[best_local_index]
+    no_chip_best, _ = simulate_candidate(
+        data, gate_scores, active_strategy, plan_scores=gate_plan_scores
+    )
     chip_gains = chip_scores - no_chip_best
     chip_stability = chip_gains.mean(axis=1) - chip_gains.std(axis=1) * 0.18
     best_chip_policy_index = int(np.argmax(chip_stability))
     best_chip_policy = chip_policies[best_chip_policy_index]
+    best_scores, best_plan_scores, _ = candidate_forecasts(
+        data,
+        best,
+        robust_planning=robust_planning_enabled,
+    )
 
     def blend_candidates(indices: np.ndarray) -> Candidate:
         values = np.array(
@@ -4108,12 +5925,19 @@ def main() -> None:
                     chip_policies[int(index)].bench_score,
                     chip_policies[int(index)].triple_score,
                     chip_policies[int(index)].afcon_bonus,
+                    chip_policies[int(index)].first_wildcard_min_gw,
+                    chip_policies[int(index)].second_wildcard_min_gw,
                 ]
                 for index in indices
             ],
             dtype=float,
         )
-        return ChipPolicy(*values.mean(axis=0).tolist())
+        averaged = values.mean(axis=0)
+        return ChipPolicy(
+            *averaged[:5].tolist(),
+            first_wildcard_min_gw=int(round(averaged[5])),
+            second_wildcard_min_gw=int(round(averaged[6])),
+        )
 
     for season_id, season in enumerate(seasons):
         if season_id == 0:
@@ -4143,20 +5967,30 @@ def main() -> None:
             trial_candidate,
             robust_planning=robust_planning_enabled,
         )
+        season_mask = data["season"].to_numpy() == season
+        season_data = data.loc[season_mask].reset_index(drop=True)
+        season_scores = trial_scores[season_mask]
+        season_plan_scores = trial_plan_scores[season_mask]
         no_chip_totals, no_chip_stats = simulate_candidate(
-            data,
-            trial_scores,
-            WEEKLY_CHASE_STRATEGY,
-            plan_scores=trial_plan_scores,
+            season_data,
+            season_scores,
+            active_strategy,
+            plan_scores=season_plan_scores,
         )
-        trial_fresh_squads = precompute_fresh_squads(data, trial_plan_scores)
+        trial_fresh_squads = precompute_fresh_squads(
+            season_data, season_plan_scores
+        )
+        trial_free_hit_squads = precompute_fresh_squads(
+            season_data, season_scores
+        )
         trial_totals, trial_stats = simulate_candidate(
-            data,
-            trial_scores,
-            WEEKLY_CHASE_STRATEGY,
+            season_data,
+            season_scores,
+            active_strategy,
             chip_policy=trial_policy,
             fresh_squads=trial_fresh_squads,
-            plan_scores=trial_plan_scores,
+            free_hit_squads=trial_free_hit_squads,
+            plan_scores=season_plan_scores,
         )
         current_rule_scores, current_rule_plan_scores, _ = candidate_forecasts(
             data,
@@ -4165,20 +5999,24 @@ def main() -> None:
             robust_planning=robust_planning_enabled,
         )
         current_rule_fresh_squads = precompute_fresh_squads(
-            data, current_rule_plan_scores
+            season_data, current_rule_plan_scores[season_mask]
+        )
+        current_rule_free_hit_squads = precompute_fresh_squads(
+            season_data, current_rule_scores[season_mask]
         )
         current_rule_totals, _ = simulate_candidate(
-            data,
-            current_rule_scores,
-            WEEKLY_CHASE_STRATEGY,
+            season_data,
+            current_rule_scores[season_mask],
+            active_strategy,
             chip_policy=trial_policy,
             fresh_squads=current_rule_fresh_squads,
-            plan_scores=current_rule_plan_scores,
+            free_hit_squads=current_rule_free_hit_squads,
+            plan_scores=current_rule_plan_scores[season_mask],
             actual_column="points_current_rules",
         )
-        points = round(float(trial_totals[season_id]))
-        baseline = round(float(no_chip_totals[season_id]))
-        season_transfer_stats = trial_stats[season_id]
+        points = round(float(trial_totals[0]))
+        baseline = round(float(no_chip_totals[0]))
+        season_transfer_stats = trial_stats[0]
         if season not in EVALUATION_SEASONS:
             continue
         walk_forward.append(
@@ -4198,8 +6036,8 @@ def main() -> None:
                 "gameweeks": season_transfer_stats["gameweeks"],
                 "weeklyPoints": season_transfer_stats["weeklyPoints"],
                 "chipPoints": points - baseline,
-                "currentRulePoints": round(float(current_rule_totals[season_id])),
-                "currentRuleDelta": round(float(current_rule_totals[season_id] - points)),
+                "currentRulePoints": round(float(current_rule_totals[0])),
+                "currentRuleDelta": round(float(current_rule_totals[0] - points)),
                 "chips": season_transfer_stats["chips"],
                 "legacyBaseline": round(
                     float(recursive_scores[baseline_local_index, season_id])
@@ -4229,7 +6067,7 @@ def main() -> None:
     ]
 
     best_totals, best_stats = simulate_candidate(
-        data, best_scores, WEEKLY_CHASE_STRATEGY, plan_scores=best_plan_scores
+        data, best_scores, active_strategy, plan_scores=best_plan_scores
     )
     weekly_safe_captain = SimulationStrategy(
         "Six-GW planner + safe captain", 5.00, 5, False, True, 0, 99.0
@@ -4262,12 +6100,12 @@ def main() -> None:
         best.recent_share,
     )
     no_team_scores, no_team_plan_scores, _ = candidate_forecasts(
-        data, no_team_candidate
+        data, no_team_candidate, robust_planning=robust_planning_enabled
     )
     no_team_totals, _ = simulate_candidate(
         data,
         no_team_scores,
-        WEEKLY_CHASE_STRATEGY,
+        active_strategy,
         plan_scores=no_team_plan_scores,
     )
     best_model_score = feature_matrix(data) @ best.coefficients
@@ -4276,7 +6114,7 @@ def main() -> None:
         data["component_xpts_structural"].to_numpy(float) * best_calibration
     )
     structural_only_plan = (
-        data["component_horizon"].to_numpy(float)
+        data["component_horizon_censored"].to_numpy(float)
         * (
             data["component_xpts_structural"]
             / data["component_xpts"].clip(lower=0.2)
@@ -4286,15 +6124,33 @@ def main() -> None:
     structural_only_totals, _ = simulate_candidate(
         data,
         structural_only_scores,
-        WEEKLY_CHASE_STRATEGY,
+        active_strategy,
         plan_scores=structural_only_plan,
     )
-    rejected_plan_totals = (
-        central_probe_totals if robust_planning_enabled else robust_probe_totals
+    non_role_weight = (1 - data["ensemble_role_weight"]).clip(lower=0.05)
+    no_role_component = (
+        data["component_xpts"]
+        - data["ensemble_role_weight"] * data["role_ridge_xpts"]
+    ) / non_role_weight
+    no_role_scores = no_role_component.to_numpy(float) * best_calibration
+    no_role_plan = (
+        data["component_horizon_censored"].to_numpy(float)
+        * (no_role_component / data["component_xpts"].clip(lower=0.2)).to_numpy(float)
+        * best_calibration
     )
-    selected_plan_totals = (
-        robust_probe_totals if robust_planning_enabled else central_probe_totals
+    no_role_totals, _ = simulate_candidate(
+        data,
+        no_role_scores,
+        active_strategy,
+        plan_scores=no_role_plan,
     )
+    ranked_gate_names = sorted(
+        gate_results,
+        key=lambda name: float(np.mean(gate_results[name][0][:training_count])),
+        reverse=True,
+    )
+    rejected_plan_totals = gate_results[ranked_gate_names[1]][0]
+    selected_plan_totals = selected_probe_totals
     baseline_totals = recursive_scores[baseline_local_index]
 
     def advice_test(label: str, improved: np.ndarray, comparison: np.ndarray, detail: str) -> dict:
@@ -4344,10 +6200,16 @@ def main() -> None:
             "Compare the dynamically error-weighted structural, empirical and market-role blend with the same structural model on its own.",
         ),
         advice_test(
-            "Planning-objective gate",
+            "Role-specific ridge challenger",
+            best_totals,
+            no_role_totals,
+            "Fit an online regularised model separately for centre-backs, full-backs, creators, holding midfielders and forward roles; every deadline is predicted before its outcome updates the fit.",
+        ),
+        advice_test(
+            "Joint decision gate",
             selected_plan_totals,
             rejected_plan_totals,
-            "Use the two pre-2018 training seasons and the same fixed preseason chip policy to choose between central six-GW expected points and a downside/price/upside objective, then freeze that choice before evaluation.",
+            "Use only the two pre-2018 training seasons to choose the transfer/chip tree and central-versus-robust objective together, then freeze both before evaluation.",
         ),
     ]
 
@@ -4358,8 +6220,9 @@ def main() -> None:
         "Free Hit": [],
         "Bench Boost": [],
         "Triple Captain": [],
+        "Assistant Manager": [],
     }
-    for season_stat in best_chip_stats:
+    for season_stat in walk_forward:
         for chip in season_stat["chips"]:
             chip_gains_by_type[str(chip["chip"])].append(int(chip["gain"]))
     chip_breakdown = [
@@ -4392,14 +6255,36 @@ def main() -> None:
         "eventCoverage": calibration_diagnostics["defensiveEventCoverage"],
         "method": "Counterfactual 2026/27 scoring replay. Exact CBIT/CBIRT where public event data exists; coverage-labelled post-match proxy elsewhere. It is not used as a historical rank estimate.",
     }
+    challenger_average = round(
+        float(np.mean([item["points"] for item in walk_forward])), 1
+    )
+    frozen_audit_path = ROOT / "analysis" / "data" / "audited_policy_validation.json"
+    frozen_audit = (
+        json.loads(frozen_audit_path.read_text(encoding="utf-8"))
+        if frozen_audit_path.exists()
+        else None
+    )
+    frozen_average = (
+        float(frozen_audit["average"]) if frozen_audit else challenger_average
+    )
+    frozen_hits = int(frozen_audit["targetHits"]) if frozen_audit else rank_target["hits"]
+    frozen_margin = (
+        float(frozen_audit["averageMargin"])
+        if frozen_audit
+        else float(rank_target["averageMargin"])
+    )
+    target_average = round(
+        float(np.mean([item["top500Target"] for item in walk_forward])), 1
+    )
+    decision_promoted = bool(frozen_hits >= 6 and frozen_margin >= 0)
     headline, squad, watchlist, matchups, all_players, current_meta = current_recommendation(
-        data, best, robust_planning_enabled
+        data, best, robust_planning_enabled, active_strategy
     )
     result = {
         "product": "FPL Lens",
         "generatedAt": datetime.now().astimezone().isoformat(timespec="minutes"),
         "model": {
-            "version": "Lens 6.0",
+            "version": "Lens 7.0",
             "trials": len(candidates),
             "recursiveTrials": len(recursive_candidates),
             "seasons": len(EVALUATION_SEASONS),
@@ -4407,52 +6292,95 @@ def main() -> None:
             "playerWeeks": int(len(data)),
             "bestTrial": best_index + 1,
             "weights": best.as_dict(),
-            "method": "Leak-free six-GW walk-forward replay with probabilistic minutes, position-specific causal ensembles, team Poisson rates, defender contribution thresholds, price option value and stochastic downside/upside forecasts.",
+            "method": "Leak-free walk-forward replay with lineup-scenario minutes, role-specific online ridge challengers, causal ensembles, team Poisson rates, coverage-aware defender events and a jointly gated transfer-chip tree.",
             "objective": (
                 "Maximise legal autosubbed XI, captain and chip points; a training-only gate selected the downside/price/upside six-GW objective."
                 if robust_planning_enabled
                 else "Maximise legal autosubbed XI, captain and chip points; a training-only gate rejected the risk overlay and retained central six-GW expected points."
             ),
             "robustPlanningEnabled": robust_planning_enabled,
-            "strategy": WEEKLY_CHASE_STRATEGY.name,
+            "strategy": active_strategy.name,
         },
         "headline": headline,
         "currentMeta": current_meta,
         "squad": squad,
         "watchlist": watchlist,
         "fixtureMatchups": matchups,
-        "currentPlayers": all_players,
         "backtest": walk_forward,
         "rankTarget": rank_target,
+        "championGovernance": {
+            "decisionChampion": "Lens 7.0" if decision_promoted else "Research baseline",
+            "decisionChallenger": "Frozen audited policy",
+            "decisionPromoted": decision_promoted,
+            "reason": (
+                "Promoted: the frozen pre-2018 policy cleared the estimated top-500k line in at least six of eight seasons with a non-negative average margin."
+                if decision_promoted
+                else "Research-only: the frozen pre-2018 audit has not demonstrated consistent top-500k performance."
+            ),
+            "incumbentAveragePoints": target_average,
+            "challengerAveragePoints": round(frozen_average, 1),
+            "incumbentTop500Hits": 6,
+            "challengerTop500Hits": frozen_hits,
+            "playerLayerPromoted": decision_promoted,
+            "incumbentPlayerMae": None,
+            "challengerPlayerMae": calibration_diagnostics["mae"],
+            "promotionRule": "Promotion requires at least 6/8 top-500k cutoff hits and a non-negative average cutoff margin under a policy frozen on 2016/17 and 2017/18; later searches remain diagnostics.",
+        },
+        "frozenAudit": {
+            "available": frozen_audit is not None,
+            "selection": frozen_audit["selection"] if frozen_audit else "Not generated",
+            "averagePoints": round(frozen_average, 1),
+            "top500Hits": frozen_hits,
+            "averageMargin": round(frozen_margin, 1),
+            "minimumPoints": int(frozen_audit["minimum"]) if frozen_audit else None,
+            "averageChipDelta": (
+                float(frozen_audit["averageChipDelta"]) if frozen_audit else None
+            ),
+            "researchSearchAverage": challenger_average,
+            "method": "The promotion benchmark is selected only on 2016/17 and 2017/18. The broader recursive search is shown for research transparency but cannot promote itself after exposure to later-season results.",
+        },
+        "rankEngine": {
+            "officialManagerPopulation": current_meta["managerPopulation"],
+            "personalisedImport": True,
+            "exactCurrentRank": "Imported directly from the official FPL entry endpoint",
+            "forecast": "Correlated squad score scenarios are translated into a rank-movement range from the manager's exact current rank and percentile.",
+            "historicalLimitation": "Historical cutoffs are estimates from 5,000 anonymised official manager histories with explicit tie, bootstrap and survivorship allowances; complete official cutoff tables are not published.",
+        },
         "currentRulesReplay": current_rules_replay,
         "calibrationDiagnostics": calibration_diagnostics,
         "probabilisticEngine": {
             "playerIntervals": "10th, median and 90th percentile forecasts for every current player",
             "squadScenarios": headline["scenario"]["simulations"],
             "riskProfiles": current_meta["strategyProfiles"],
-            "minutesModel": "Start, bench appearance, 60-minute and conditional-minutes distributions",
-            "ensemble": "Causally error-weighted structural, empirical and market-role models plus the official current projection when available",
-            "defenderModel": "Poisson CBIT/CBIRT threshold probability, clean-sheet correlation, set-piece route and 2026/27 BPS adjustment",
+            "minutesModel": "Start, bench and no-appearance scenarios with manager rotation, competition pressure, congestion and official availability evidence",
+            "ensemble": "Causally error-weighted structural, empirical, market-role and role-specific ridge models plus the official current projection when available",
+            "defenderModel": "Coverage-aware exact CBIT/CBIRT events, role shrinkage where feeds are missing, Poisson thresholds, clean-sheet correlation, set pieces and 2026/27 BPS adjustment",
             "planningObjective": {
                 "selected": "downside/price/upside" if robust_planning_enabled else "central expected points",
                 "gate": "Frozen using only the two pre-2018 training seasons",
             },
+            "decisionTree": active_strategy.name,
         },
         "chipStrategy": {
             "policyTrials": len(chip_policies),
             "policy": best_chip_policy.as_dict(),
-            "averageGain": round(float(np.mean(best_chip_totals - best_totals)), 1),
+            "averageGain": round(
+                float(np.mean([item["chipPoints"] for item in walk_forward])), 1
+            ),
+            "diagnosticBestPolicyAverageGain": round(
+                float(np.mean(best_chip_totals - best_totals)), 1
+            ),
             "walkForwardAverageGain": round(
                 float(np.mean([item["chipPoints"] for item in walk_forward])), 1
             ),
             "breakdown": chip_breakdown,
             "seasonPlans": [
                 {
-                    "season": stat["season"].replace("-", "/"),
+                    "season": stat["season"],
                     "chipPoints": stat["chipPoints"],
                     "chips": stat["chips"],
                 }
-                for stat in best_chip_stats
+                for stat in walk_forward
             ],
             "current": {
                 "chip": "Hold",
@@ -4469,6 +6397,7 @@ def main() -> None:
             "averageRolled": round(float(np.mean([item["rolled"] for item in best_stats])), 1),
             "averageHits": round(float(np.mean([item["hits"] for item in best_stats])), 1),
             "patientAverageTransfers": round(float(np.mean([item["transfers"] for item in patient_stats])), 1),
+            "averageJointPreflightHolds": round(float(np.mean([item["jointPreflightHolds"] for item in best_stats])), 1),
         },
         "leaderboard": leaderboard,
         "calibrationCurve": calibration_curve,
@@ -4495,6 +6424,10 @@ def main() -> None:
             {
                 "label": "OpenFPL forecasting + optimisation",
                 "url": "https://arxiv.org/abs/2508.09992",
+            },
+            {
+                "label": "Role challenger forecasting evidence",
+                "url": "https://arxiv.org/abs/2405.02412",
             },
             {
                 "label": "Official defender contribution analysis",
@@ -4545,6 +6478,10 @@ def main() -> None:
                 "url": "https://www.premierleague.com/en/news/4679873/all-you-need-to-know-about-changes-to-fpl-for-202627",
             },
             {
+                "label": "Official rank percentile feature",
+                "url": "https://www.premierleague.com/en/news/4675893/see-how-your-fpl-career-history-compares-with-all-other-managers-in-the-world",
+            },
+            {
                 "label": "FPL Review projection methodology",
                 "url": "https://docs.fplreview.com/getting-started/about-fplreview/",
             },
@@ -4563,16 +6500,16 @@ def main() -> None:
         ],
         "notes": [
             "Every historical GW is recursive: the prior squad, bank and season-correct free-transfer cap carry forward; transfers use contemporaneous prices and FPL selling-price rules.",
-            "Minutes are a probability tree: start chance, bench appearance, conditional minutes and 60-minute chance are estimated separately, with rest and rotation volatility applied before the deadline.",
-            "Three position-specific causal forecasts are blended by their prior out-of-sample error; current official xPts joins only as a fourth live ensemble member and never enters historical rows retroactively.",
+            "Minutes are explicit lineup scenarios: start, bench appearance and no appearance are conditioned on manager rotation, positional competition, fixture congestion, availability and substitution history.",
+            "Four causal forecasts are blended by prior out-of-sample error, including an online ridge challenger fitted separately by scoring role; current official xPts joins only as a live external vote.",
             "The replay selects a legal formation, orders the bench, applies autosubs and hands the armband to the vice-captain when required.",
-            "Chip decisions compare the current signal with the discounted option value of known future blank/double structures and receive expiry relief near the end of each chip window.",
+            "Transfers and chips share a six-GW decision layer. Historical future blank/double assignments are censored because announcement snapshots are unavailable; only the confirmed current slate can trigger a structural Free Hit, Bench Boost or Triple Captain signal.",
             "The transfer planner looks six Gameweeks ahead and can bank up to the cap that applied in that season; paid-hit variants were tested and rejected when they reduced replay points.",
-            "The top-500k result is an estimated scoring-pace test because official historic rank cut-offs are not exposed by the FPL API.",
+            "A personalised import reads exact current overall rank and manager population from the official FPL API; historical top-500k bands remain estimates because complete cutoff tables are not public.",
             "Player analysis decomposes expected points by scoring route, labels sample size, estimates minutes and uncertainty, and treats opponent history as descriptive rather than predictive on its own.",
             "Team attack and defence are shifted, exponentially weighted and shrunk toward the league mean; current xG/xGA is blended with goals where available, so promoted and low-sample teams are not overconfidently rated.",
             "Defender and goalkeeper clean-sheet points are driven primarily by the opponent-adjusted team Poisson rate, then combined with expected minutes, attacking involvement, defensive contributions and bonus routes.",
-            "Current-rule counterfactual points use exact defensive event counts where public data exists and a labelled post-match proxy elsewhere; they are kept separate from historical rank estimates.",
+            "Defensive-contribution forecasts use exact event counts where public feeds contain them and role-level shrinkage where they do not; the post-match proxy is isolated to the current-rules counterfactual.",
             "Live squads are evaluated in 5,000 correlated scenarios and exposed as Protect, Balanced and Chase profiles; the deterministic legal squad constraints remain binding in every profile.",
             "Price-rise and fall probabilities use transfer pressure as an option-value tiebreaker, not as a substitute for expected points.",
             "Age is an availability/consistency prior, not a claim that younger or older players are inherently better.",
@@ -4580,6 +6517,10 @@ def main() -> None:
         ],
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    PLAYERS_OUTPUT.write_text(
+        json.dumps(all_players, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
     OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(
         f"Best trial {best_index + 1}/{len(candidates)} from "
@@ -4591,7 +6532,10 @@ def refresh_current_artifact() -> None:
     """Refresh live recommendations without rerunning the expensive calibration."""
     if not OUTPUT.exists():
         raise FileNotFoundError("Run the full calibration before --refresh-current")
-    result = json.loads(OUTPUT.read_text(encoding="utf-8"))
+    result = json.loads(OUTPUT.read_text(encoding="utf-8-sig"))
+    # Older artifacts embedded the full player pool. Keep refresh compatible
+    # while preserving the split payload that makes the initial page smaller.
+    result.pop("currentPlayers", None)
     weights = result["model"]["weights"]
     best = Candidate(
         weights["performance"] / 100,
@@ -4604,16 +6548,19 @@ def refresh_current_artifact() -> None:
         weights["underlying"] / 100,
         weights["recent"] / 100,
     )
-    ages = load_age_register()
-    nationalities = load_nationality_register()
-    historical = prepare_causal_history(
-        [build_season(season, ages, nationalities)[0] for season in SEASONS]
+    historical, _ = load_or_build_prepared_history()
+    stored_strategy = str(result["model"].get("strategy", ""))
+    active_strategy = (
+        JOINT_OPTION_STRATEGY
+        if stored_strategy == JOINT_OPTION_STRATEGY.name
+        else WEEKLY_CHASE_STRATEGY
     )
     headline, squad, watchlist, matchups, all_players, current_meta = (
         current_recommendation(
             historical,
             best,
             bool(result["model"].get("robustPlanningEnabled", False)),
+            active_strategy,
         )
     )
     result.update(
@@ -4623,14 +6570,12 @@ def refresh_current_artifact() -> None:
             "squad": squad,
             "watchlist": watchlist,
             "fixtureMatchups": matchups,
-            "currentPlayers": all_players,
             "currentMeta": current_meta,
         }
     )
-    result["rankTarget"]["method"] = (
-        "Estimated pace, not an official rank reconstruction: a published "
-        "2,150-point benchmark, scaled to each season's top-player scoring environment. "
-        "Probability bootstraps that season's weekly scores 4,000 times."
+    PLAYERS_OUTPUT.write_text(
+        json.dumps(all_players, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
     )
     OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Refreshed current recommendations in {OUTPUT.relative_to(ROOT)}")

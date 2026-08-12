@@ -1,0 +1,16 @@
+{
+  "decision": "retain-clipped-point-relevance",
+  "status": "post-exposure diagnostic only",
+  "original": {
+    "stableAverage": 2106.5,
+    "bestModel": "captainList50",
+    "bestAverage": 2114.0,
+    "bestMinimum": 1919
+  },
+  "percentileRelevance": {
+    "stableAverage": 2106.5,
+    "bestAverage": 2108.1,
+    "bestMinimumAtThatAverage": 1896
+  },
+  "reason": "Within-deadline percentile labels erased haul magnitude. The original point relevance produced a larger mean gain and better downside."
+}

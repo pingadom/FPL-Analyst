@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "status": "research-only",
+  "controlAverage": 2106.5,
+  "hybridAverage": 2147.6,
+  "captainStackAverage": 2149.5,
+  "legacyChipStackAverage": 2132.5,
+  "weeklyRebuildCeiling": 2242.9,
+  "top500Pace": 2296.8,
+  "stackLift": 43.0,
+  "remainingGap": 147.3,
+  "gapClosedPercent": 22.6,
+  "controlMinimum": 1897,
+  "hybridMinimum": 1980,
+  "targetHits": 0,
+  "experiments": [
+    {
+      "name": "Listwise transfer horizon",
+      "decision": "shadow",
+      "average": 2141.6,
+      "delta": 35.1,
+      "detail": "Largest standalone gain; prioritises persistent six-week ordering."
+    },
+    {
+      "name": "Immediate + horizon fusion",
+      "decision": "shadow",
+      "average": 2147.6,
+      "delta": 41.1,
+      "detail": "Frontier next-GW ordering and listwise transfer planning are complementary."
+    },
+    {
+      "name": "Captain listwise rank",
+      "decision": "shadow",
+      "average": 2149.5,
+      "delta": 1.9,
+      "detail": "Captain-only rerank; does not alter the transfer model."
+    },
+    {
+      "name": "Extra big-team defender boost",
+      "decision": "rejected",
+      "average": null,
+      "delta": 0,
+      "detail": "The highest clean-sheet quintile is already calibrated within roughly two-tenths of a point and is slightly overpredicted, so another big-team bonus would double-count defence strength."
+    },
+    {
+      "name": "Percentile relevance labels",
+      "decision": "rejected",
+      "average": 2128.5,
+      "delta": 22.0,
+      "detail": "Helped immediate ordering but destroyed the six-week planning gain."
+    }
+  ],
+  "bottleneck": "The carried-squad transfer path remains the largest attainable loss. Unlimited weekly rebuilds nearly reach the pace line, while legal recursive management cannot instantly reach each fresh optimum.",
+  "governance": "All new results have been exposed to the historical evaluation seasons. They may change the pre-GW1 shadow challenger, but cannot promote the production model."
+}

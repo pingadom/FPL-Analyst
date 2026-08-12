@@ -1,0 +1,162 @@
+{
+  "experiments": 9,
+  "nestedSeasons": [
+    {
+      "season": "2018/19",
+      "points": 2081,
+      "captainWeight": 1.0,
+      "benchWeight": 0.35,
+      "target": 2151,
+      "margin": -70,
+      "transfers": 35,
+      "rolled": 15
+    },
+    {
+      "season": "2019/20",
+      "points": 2040,
+      "captainWeight": 1.0,
+      "benchWeight": 0.35,
+      "target": 2160,
+      "margin": -120,
+      "transfers": 34,
+      "rolled": 18
+    },
+    {
+      "season": "2020/21",
+      "points": 2147,
+      "captainWeight": 0.7,
+      "benchWeight": 0.05,
+      "target": 2270,
+      "margin": -123,
+      "transfers": 34,
+      "rolled": 17
+    },
+    {
+      "season": "2021/22",
+      "points": 2185,
+      "captainWeight": 0.7,
+      "benchWeight": 0.05,
+      "target": 2340,
+      "margin": -155,
+      "transfers": 35,
+      "rolled": 16
+    },
+    {
+      "season": "2022/23",
+      "points": 2180,
+      "captainWeight": 0.7,
+      "benchWeight": 0.05,
+      "target": 2425,
+      "margin": -245,
+      "transfers": 30,
+      "rolled": 19
+    },
+    {
+      "season": "2023/24",
+      "points": 2122,
+      "captainWeight": 0.7,
+      "benchWeight": 0.05,
+      "target": 2373,
+      "margin": -251,
+      "transfers": 37,
+      "rolled": 15
+    },
+    {
+      "season": "2024/25",
+      "points": 2129,
+      "captainWeight": 0.7,
+      "benchWeight": 0.05,
+      "target": 2411,
+      "margin": -282,
+      "transfers": 37,
+      "rolled": 16
+    },
+    {
+      "season": "2025/26",
+      "points": 1990,
+      "captainWeight": 1.0,
+      "benchWeight": 0.35,
+      "target": 2244,
+      "margin": -254,
+      "transfers": 39,
+      "rolled": 16
+    }
+  ],
+  "nestedAverage": 2109.2,
+  "nestedTargetHits": 0,
+  "nestedAverageMargin": -187.5,
+  "experimentAverages": [
+    {
+      "captainWeight": 0.7,
+      "benchWeight": 0.05,
+      "trainingAverage": 1835.0,
+      "evaluationAverage": 2124.4,
+      "evaluationMinimum": 1928,
+      "averageTransfers": 34.8
+    },
+    {
+      "captainWeight": 0.7,
+      "benchWeight": 0.18,
+      "trainingAverage": 1821.5,
+      "evaluationAverage": 2108.0,
+      "evaluationMinimum": 1899,
+      "averageTransfers": 34.8
+    },
+    {
+      "captainWeight": 0.7,
+      "benchWeight": 0.35,
+      "trainingAverage": 1818.5,
+      "evaluationAverage": 2103.2,
+      "evaluationMinimum": 1990,
+      "averageTransfers": 35.2
+    },
+    {
+      "captainWeight": 1.0,
+      "benchWeight": 0.05,
+      "trainingAverage": 1832.5,
+      "evaluationAverage": 2114.5,
+      "evaluationMinimum": 1928,
+      "averageTransfers": 34.6
+    },
+    {
+      "captainWeight": 1.0,
+      "benchWeight": 0.18,
+      "trainingAverage": 1809.5,
+      "evaluationAverage": 2112.9,
+      "evaluationMinimum": 1952,
+      "averageTransfers": 35.0
+    },
+    {
+      "captainWeight": 1.0,
+      "benchWeight": 0.35,
+      "trainingAverage": 1847.5,
+      "evaluationAverage": 2116.9,
+      "evaluationMinimum": 1990,
+      "averageTransfers": 35.9
+    },
+    {
+      "captainWeight": 1.3,
+      "benchWeight": 0.05,
+      "trainingAverage": 1839.0,
+      "evaluationAverage": 2102.1,
+      "evaluationMinimum": 1853,
+      "averageTransfers": 34.6
+    },
+    {
+      "captainWeight": 1.3,
+      "benchWeight": 0.18,
+      "trainingAverage": 1809.5,
+      "evaluationAverage": 2101.5,
+      "evaluationMinimum": 1957,
+      "averageTransfers": 35.0
+    },
+    {
+      "captainWeight": 1.3,
+      "benchWeight": 0.35,
+      "trainingAverage": 1786.5,
+      "evaluationAverage": 2077.2,
+      "evaluationMinimum": 1924,
+      "averageTransfers": 36.2
+    }
+  ]
+}

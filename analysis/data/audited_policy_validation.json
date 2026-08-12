@@ -1,0 +1,469 @@
+{
+  "selection": "Frozen on 2016/17 and 2017/18 only",
+  "playerFamily": "team_fixture_minutes with role ensemble",
+  "weights": {
+    "performance": 32,
+    "value": 5,
+    "age": 0,
+    "fixture": 13,
+    "team": 19,
+    "crowd": 3,
+    "minutes": 18,
+    "underlying": 10,
+    "recent": 76,
+    "history": 24
+  },
+  "decisionOptions": 12,
+  "selectedDecision": "audited-team-h20-now0.80-attacking_tail",
+  "selectedDecisionTrainingScore": 1909.9,
+  "chipOptions": 4,
+  "selectedChipPolicy": {
+    "wildcardGap": 60,
+    "freeHitGap": 20,
+    "benchScore": 11,
+    "tripleScore": 15,
+    "afconBonus": 0.55,
+    "firstWildcardMinGw": 10,
+    "secondWildcardMinGw": 28
+  },
+  "selectedChipTrainingGain": 56.5,
+  "evaluation": [
+    {
+      "season": "2018/19",
+      "points": 2125,
+      "noChipPoints": 2090,
+      "chipDelta": 35,
+      "target": 2151,
+      "margin": -26,
+      "transfers": 28,
+      "rolled": 22,
+      "chips": [
+        {
+          "chip": "Wildcard",
+          "gw": 12,
+          "gain": 13,
+          "signal": 66.733,
+          "threshold": 59.371,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 28,
+          "gain": -13,
+          "signal": 62.023,
+          "threshold": 59.829,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Free Hit",
+          "gw": 31,
+          "gain": 30,
+          "signal": 42.39,
+          "threshold": 19.79,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 32,
+          "gain": 3,
+          "signal": 26.08,
+          "threshold": 14.757,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 34,
+          "gain": 17,
+          "signal": 10.774,
+          "threshold": 10.575,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "points": 1923,
+      "noChipPoints": 2025,
+      "chipDelta": -102,
+      "target": 2160,
+      "margin": -237,
+      "transfers": 28,
+      "rolled": 22,
+      "chips": [
+        {
+          "chip": "Wildcard",
+          "gw": 11,
+          "gain": -32,
+          "signal": 74.147,
+          "threshold": 59.593,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 24,
+          "gain": 12,
+          "signal": 15.657,
+          "threshold": 15.0,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 47,
+          "gain": 7,
+          "signal": 56.417,
+          "threshold": 46.8,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "points": 2143,
+      "noChipPoints": 2034,
+      "chipDelta": 109,
+      "target": 2270,
+      "margin": -127,
+      "transfers": 27,
+      "rolled": 21,
+      "chips": [
+        {
+          "chip": "Wildcard",
+          "gw": 12,
+          "gain": 3,
+          "signal": 82.625,
+          "threshold": 59.371,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Free Hit",
+          "gw": 18,
+          "gain": 33,
+          "signal": 43.723,
+          "threshold": 19.999,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 19,
+          "gain": 4,
+          "signal": 18.271,
+          "threshold": 14.999,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 26,
+          "gain": 12,
+          "signal": 14.452,
+          "threshold": 10.987,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 30,
+          "gain": 5,
+          "signal": 63.702,
+          "threshold": 59.593,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "points": 2077,
+      "noChipPoints": 2114,
+      "chipDelta": -37,
+      "target": 2340,
+      "margin": -263,
+      "transfers": 29,
+      "rolled": 20,
+      "chips": [
+        {
+          "chip": "Wildcard",
+          "gw": 17,
+          "gain": 21,
+          "signal": 84.458,
+          "threshold": 54.467,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Free Hit",
+          "gw": 18,
+          "gain": -2,
+          "signal": 22.8,
+          "threshold": 19.999,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 21,
+          "gain": 16,
+          "signal": 60.398,
+          "threshold": 59.992,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 22,
+          "gain": 4,
+          "signal": 14.939,
+          "threshold": 10.998,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 26,
+          "gain": 6,
+          "signal": 18.892,
+          "threshold": 14.982,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "points": 2167,
+      "noChipPoints": 2080,
+      "chipDelta": 87,
+      "target": 2425,
+      "margin": -258,
+      "transfers": 25,
+      "rolled": 21,
+      "chips": [
+        {
+          "chip": "Free Hit",
+          "gw": 8,
+          "gain": 24,
+          "signal": 26.048,
+          "threshold": 20.0,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 13,
+          "gain": -8,
+          "signal": 79.405,
+          "threshold": 59.028,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 20,
+          "gain": 8,
+          "signal": 15.514,
+          "threshold": 14.999,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 28,
+          "gain": 22,
+          "signal": 97.595,
+          "threshold": 59.829,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 29,
+          "gain": 6,
+          "signal": 14.066,
+          "threshold": 10.952,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "points": 2042,
+      "noChipPoints": 2024,
+      "chipDelta": 18,
+      "target": 2373,
+      "margin": -331,
+      "transfers": 28,
+      "rolled": 22,
+      "chips": [
+        {
+          "chip": "Wildcard",
+          "gw": 10,
+          "gain": -17,
+          "signal": 76.91,
+          "threshold": 59.736,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 25,
+          "gain": 5,
+          "signal": 16.597,
+          "threshold": 14.988,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 26,
+          "gain": 6,
+          "signal": 65.327,
+          "threshold": 59.928,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Free Hit",
+          "gw": 29,
+          "gain": 19,
+          "signal": 39.948,
+          "threshold": 19.912,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 34,
+          "gain": 3,
+          "signal": 10.647,
+          "threshold": 10.575,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "points": 2247,
+      "noChipPoints": 2192,
+      "chipDelta": 55,
+      "target": 2411,
+      "margin": -164,
+      "transfers": 34,
+      "rolled": 23,
+      "chips": [
+        {
+          "chip": "Wildcard",
+          "gw": 15,
+          "gain": -16,
+          "signal": 69.087,
+          "threshold": 57.681,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 24,
+          "gain": 29,
+          "signal": 17.967,
+          "threshold": 14.993,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Assistant Manager",
+          "gw": 28,
+          "gain": 6,
+          "signal": 22.353,
+          "threshold": 17.878,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold",
+          "managerTeam": 19,
+          "cost": 5
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 32,
+          "gain": 15,
+          "signal": 13.349,
+          "threshold": 10.822,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 34,
+          "gain": 6,
+          "signal": 61.523,
+          "threshold": 57.681,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "points": 2050,
+      "noChipPoints": 1888,
+      "chipDelta": 162,
+      "target": 2244,
+      "margin": -194,
+      "transfers": 37,
+      "rolled": 21,
+      "chips": [
+        {
+          "chip": "Wildcard",
+          "gw": 15,
+          "gain": -1,
+          "signal": 59.77,
+          "threshold": 57.681,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Wildcard",
+          "gw": 28,
+          "gain": 54,
+          "signal": 91.872,
+          "threshold": 59.829,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 33,
+          "gain": 16,
+          "signal": 15.355,
+          "threshold": 14.625,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Free Hit",
+          "gw": 34,
+          "gain": 30,
+          "signal": 26.07,
+          "threshold": 19.227,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ]
+    }
+  ],
+  "average": 2096.8,
+  "averageNoChips": 2055.9,
+  "averageChipDelta": 40.9,
+  "targetHits": 0,
+  "averageMargin": -200.0,
+  "minimum": 1923
+}

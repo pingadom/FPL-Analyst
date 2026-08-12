@@ -1,0 +1,411 @@
+{
+  "generatedAt": "2026-08-12T17:18+01:00",
+  "source": "Official FPL public entry history endpoint",
+  "managerPopulationAtSampling": 4038730,
+  "requestedHistories": 5000,
+  "failedHistories": 0,
+  "targetRank": 500000,
+  "method": "Deterministic random sample of active manager histories; local log(rank)-points fit plus the nearest observed score boundary. The interval includes bootstrap, points-tiebreak and survivorship allowances. No names or manager IDs are retained.",
+  "seasons": [
+    {
+      "season": "2018/19",
+      "points": 2151,
+      "fitPoints": 2149.51,
+      "p05": 2147,
+      "p95": 2152,
+      "observedBoundary": [
+        2150,
+        2151
+      ],
+      "logRankSlope": -0.0112835,
+      "logRankIntercept": 37.37630128,
+      "anchors": 1140,
+      "localAnchors": 120,
+      "localRSquared": 0.999,
+      "closestOfficialSamples": [
+        {
+          "points": 2150,
+          "rank": 500376
+        },
+        {
+          "points": 2150,
+          "rank": 500960
+        },
+        {
+          "points": 2150,
+          "rank": 501810
+        },
+        {
+          "points": 2149,
+          "rank": 502211
+        },
+        {
+          "points": 2151,
+          "rank": 495434
+        },
+        {
+          "points": 2151,
+          "rank": 494212
+        },
+        {
+          "points": 2151,
+          "rank": 493593
+        },
+        {
+          "points": 2149,
+          "rank": 506754
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "points": 2160,
+      "fitPoints": 2158.19,
+      "p05": 2156,
+      "p95": 2161,
+      "observedBoundary": [
+        2158,
+        2160
+      ],
+      "logRankSlope": -0.01158722,
+      "logRankIntercept": 38.12973725,
+      "anchors": 1388,
+      "localAnchors": 120,
+      "localRSquared": 0.999,
+      "closestOfficialSamples": [
+        {
+          "points": 2158,
+          "rank": 501817
+        },
+        {
+          "points": 2158,
+          "rank": 504747
+        },
+        {
+          "points": 2160,
+          "rank": 494529
+        },
+        {
+          "points": 2158,
+          "rank": 505834
+        },
+        {
+          "points": 2160,
+          "rank": 492741
+        },
+        {
+          "points": 2157,
+          "rank": 508019
+        },
+        {
+          "points": 2157,
+          "rank": 508507
+        },
+        {
+          "points": 2157,
+          "rank": 508687
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "points": 2270,
+      "fitPoints": 2269.43,
+      "p05": 2267,
+      "p95": 2272,
+      "observedBoundary": [
+        2270,
+        2270
+      ],
+      "logRankSlope": -0.00980865,
+      "logRankIntercept": 35.38237105,
+      "anchors": 1658,
+      "localAnchors": 120,
+      "localRSquared": 0.999,
+      "closestOfficialSamples": [
+        {
+          "points": 2270,
+          "rank": 500599
+        },
+        {
+          "points": 2270,
+          "rank": 499195
+        },
+        {
+          "points": 2271,
+          "rank": 494528
+        },
+        {
+          "points": 2271,
+          "rank": 492145
+        },
+        {
+          "points": 2271,
+          "rank": 491468
+        },
+        {
+          "points": 2268,
+          "rank": 508720
+        },
+        {
+          "points": 2272,
+          "rank": 490796
+        },
+        {
+          "points": 2268,
+          "rank": 509716
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "points": 2340,
+      "fitPoints": 2339.17,
+      "p05": 2337,
+      "p95": 2342,
+      "observedBoundary": [
+        2339,
+        2340
+      ],
+      "logRankSlope": -0.00732465,
+      "logRankIntercept": 30.25592801,
+      "anchors": 1917,
+      "localAnchors": 120,
+      "localRSquared": 0.999,
+      "closestOfficialSamples": [
+        {
+          "points": 2340,
+          "rank": 498489
+        },
+        {
+          "points": 2340,
+          "rank": 498375
+        },
+        {
+          "points": 2340,
+          "rank": 498242
+        },
+        {
+          "points": 2340,
+          "rank": 498124
+        },
+        {
+          "points": 2339,
+          "rank": 502962
+        },
+        {
+          "points": 2339,
+          "rank": 503466
+        },
+        {
+          "points": 2341,
+          "rank": 495273
+        },
+        {
+          "points": 2338,
+          "rank": 505155
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "points": 2425,
+      "fitPoints": 2424.41,
+      "p05": 2422,
+      "p95": 2427,
+      "observedBoundary": [
+        2424,
+        2425
+      ],
+      "logRankSlope": -0.01152394,
+      "logRankIntercept": 41.06110703,
+      "anchors": 2293,
+      "localAnchors": 120,
+      "localRSquared": 0.998,
+      "closestOfficialSamples": [
+        {
+          "points": 2425,
+          "rank": 499499
+        },
+        {
+          "points": 2424,
+          "rank": 501239
+        },
+        {
+          "points": 2425,
+          "rank": 498132
+        },
+        {
+          "points": 2424,
+          "rank": 503597
+        },
+        {
+          "points": 2425,
+          "rank": 496255
+        },
+        {
+          "points": 2424,
+          "rank": 504635
+        },
+        {
+          "points": 2423,
+          "rank": 508690
+        },
+        {
+          "points": 2426,
+          "rank": 491159
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "points": 2373,
+      "fitPoints": 2372.52,
+      "p05": 2370,
+      "p95": 2375,
+      "observedBoundary": [
+        2372,
+        2373
+      ],
+      "logRankSlope": -0.01121684,
+      "logRankIntercept": 39.73450269,
+      "anchors": 2645,
+      "localAnchors": 120,
+      "localRSquared": 0.999,
+      "closestOfficialSamples": [
+        {
+          "points": 2373,
+          "rank": 499825
+        },
+        {
+          "points": 2373,
+          "rank": 499196
+        },
+        {
+          "points": 2373,
+          "rank": 498104
+        },
+        {
+          "points": 2372,
+          "rank": 502308
+        },
+        {
+          "points": 2373,
+          "rank": 497231
+        },
+        {
+          "points": 2372,
+          "rank": 502880
+        },
+        {
+          "points": 2372,
+          "rank": 503190
+        },
+        {
+          "points": 2373,
+          "rank": 496194
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "points": 2411,
+      "fitPoints": 2410.84,
+      "p05": 2408,
+      "p95": 2413,
+      "observedBoundary": [
+        2411,
+        2411
+      ],
+      "logRankSlope": -0.01246083,
+      "logRankIntercept": 43.16349509,
+      "anchors": 3099,
+      "localAnchors": 120,
+      "localRSquared": 0.999,
+      "closestOfficialSamples": [
+        {
+          "points": 2411,
+          "rank": 500469
+        },
+        {
+          "points": 2411,
+          "rank": 500882
+        },
+        {
+          "points": 2411,
+          "rank": 498458
+        },
+        {
+          "points": 2411,
+          "rank": 501782
+        },
+        {
+          "points": 2411,
+          "rank": 502753
+        },
+        {
+          "points": 2412,
+          "rank": 496272
+        },
+        {
+          "points": 2410,
+          "rank": 504024
+        },
+        {
+          "points": 2410,
+          "rank": 505711
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "points": 2244,
+      "fitPoints": 2243.66,
+      "p05": 2241,
+      "p95": 2246,
+      "observedBoundary": [
+        2244,
+        2244
+      ],
+      "logRankSlope": -0.0149366,
+      "logRankIntercept": 46.63504162,
+      "anchors": 3631,
+      "localAnchors": 120,
+      "localRSquared": 0.998,
+      "closestOfficialSamples": [
+        {
+          "points": 2244,
+          "rank": 500124
+        },
+        {
+          "points": 2244,
+          "rank": 498205
+        },
+        {
+          "points": 2244,
+          "rank": 497364
+        },
+        {
+          "points": 2243,
+          "rank": 502979
+        },
+        {
+          "points": 2243,
+          "rank": 503562
+        },
+        {
+          "points": 2244,
+          "rank": 496413
+        },
+        {
+          "points": 2243,
+          "rank": 504029
+        },
+        {
+          "points": 2243,
+          "rank": 504956
+        }
+      ]
+    }
+  ]
+}

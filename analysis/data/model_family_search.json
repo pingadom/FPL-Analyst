@@ -1,0 +1,414 @@
+{
+  "experiments": 12,
+  "nestedSeasons": [
+    {
+      "season": "2018/19",
+      "points": 1966,
+      "model": "market_safety",
+      "layer": "no_role",
+      "weights": {
+        "performance": 32,
+        "value": 8,
+        "age": 0,
+        "fixture": 11,
+        "team": 15,
+        "crowd": 13,
+        "minutes": 15,
+        "underlying": 6,
+        "recent": 78,
+        "history": 22
+      },
+      "target": 2151,
+      "margin": -185,
+      "transfers": 34,
+      "rolled": 16
+    },
+    {
+      "season": "2019/20",
+      "points": 2089,
+      "model": "lens6_calibrated",
+      "layer": "no_role",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2160,
+      "margin": -71,
+      "transfers": 34,
+      "rolled": 17
+    },
+    {
+      "season": "2020/21",
+      "points": 2108,
+      "model": "lens6_calibrated",
+      "layer": "no_role",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2270,
+      "margin": -162,
+      "transfers": 36,
+      "rolled": 9
+    },
+    {
+      "season": "2021/22",
+      "points": 2008,
+      "model": "lens6_calibrated",
+      "layer": "no_role",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2340,
+      "margin": -332,
+      "transfers": 37,
+      "rolled": 9
+    },
+    {
+      "season": "2022/23",
+      "points": 2176,
+      "model": "lens6_calibrated",
+      "layer": "no_role",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2425,
+      "margin": -249,
+      "transfers": 35,
+      "rolled": 16
+    },
+    {
+      "season": "2023/24",
+      "points": 1994,
+      "model": "market_safety",
+      "layer": "role",
+      "weights": {
+        "performance": 32,
+        "value": 8,
+        "age": 0,
+        "fixture": 11,
+        "team": 15,
+        "crowd": 13,
+        "minutes": 15,
+        "underlying": 6,
+        "recent": 78,
+        "history": 22
+      },
+      "target": 2373,
+      "margin": -379,
+      "transfers": 36,
+      "rolled": 14
+    },
+    {
+      "season": "2024/25",
+      "points": 2225,
+      "model": "lens6_calibrated",
+      "layer": "no_role",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "target": 2411,
+      "margin": -186,
+      "transfers": 37,
+      "rolled": 16
+    },
+    {
+      "season": "2025/26",
+      "points": 1915,
+      "model": "market_safety",
+      "layer": "role",
+      "weights": {
+        "performance": 32,
+        "value": 8,
+        "age": 0,
+        "fixture": 11,
+        "team": 15,
+        "crowd": 13,
+        "minutes": 15,
+        "underlying": 6,
+        "recent": 78,
+        "history": 22
+      },
+      "target": 2244,
+      "margin": -329,
+      "transfers": 41,
+      "rolled": 17
+    }
+  ],
+  "nestedAverage": 2060.1,
+  "nestedTargetHitsBeforeChips": 0,
+  "nestedAverageMarginBeforeChips": -236.6,
+  "experimentAverages": [
+    {
+      "model": "lens7_calibrated",
+      "layer": "role",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "evaluationAverage": 2109.2,
+      "evaluationMinimum": 1935,
+      "averageTransfers": 35.6
+    },
+    {
+      "model": "lens7_calibrated",
+      "layer": "no_role",
+      "weights": {
+        "performance": 62,
+        "value": 1,
+        "age": 1,
+        "fixture": 8,
+        "team": 6,
+        "crowd": 1,
+        "minutes": 4,
+        "underlying": 17,
+        "recent": 77,
+        "history": 23
+      },
+      "evaluationAverage": 2117.6,
+      "evaluationMinimum": 2010,
+      "averageTransfers": 36.2
+    },
+    {
+      "model": "lens6_calibrated",
+      "layer": "role",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "evaluationAverage": 2093.9,
+      "evaluationMinimum": 1926,
+      "averageTransfers": 36.0
+    },
+    {
+      "model": "lens6_calibrated",
+      "layer": "no_role",
+      "weights": {
+        "performance": 29,
+        "value": 18,
+        "age": 2,
+        "fixture": 4,
+        "team": 9,
+        "crowd": 15,
+        "minutes": 14,
+        "underlying": 9,
+        "recent": 83,
+        "history": 17
+      },
+      "evaluationAverage": 2084.2,
+      "evaluationMinimum": 1871,
+      "averageTransfers": 36.6
+    },
+    {
+      "model": "winner_principles",
+      "layer": "role",
+      "weights": {
+        "performance": 30,
+        "value": 6,
+        "age": 0,
+        "fixture": 13,
+        "team": 17,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 13,
+        "recent": 78,
+        "history": 22
+      },
+      "evaluationAverage": 2108.0,
+      "evaluationMinimum": 1899,
+      "averageTransfers": 34.8
+    },
+    {
+      "model": "winner_principles",
+      "layer": "no_role",
+      "weights": {
+        "performance": 30,
+        "value": 6,
+        "age": 0,
+        "fixture": 13,
+        "team": 17,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 13,
+        "recent": 78,
+        "history": 22
+      },
+      "evaluationAverage": 2073.9,
+      "evaluationMinimum": 1888,
+      "averageTransfers": 36.0
+    },
+    {
+      "model": "team_fixture_minutes",
+      "layer": "role",
+      "weights": {
+        "performance": 32,
+        "value": 5,
+        "age": 0,
+        "fixture": 13,
+        "team": 19,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 10,
+        "recent": 76,
+        "history": 24
+      },
+      "evaluationAverage": 2121.2,
+      "evaluationMinimum": 1994,
+      "averageTransfers": 34.9
+    },
+    {
+      "model": "team_fixture_minutes",
+      "layer": "no_role",
+      "weights": {
+        "performance": 32,
+        "value": 5,
+        "age": 0,
+        "fixture": 13,
+        "team": 19,
+        "crowd": 3,
+        "minutes": 18,
+        "underlying": 10,
+        "recent": 76,
+        "history": 24
+      },
+      "evaluationAverage": 2063.4,
+      "evaluationMinimum": 1888,
+      "averageTransfers": 36.1
+    },
+    {
+      "model": "market_safety",
+      "layer": "role",
+      "weights": {
+        "performance": 32,
+        "value": 8,
+        "age": 0,
+        "fixture": 11,
+        "team": 15,
+        "crowd": 13,
+        "minutes": 15,
+        "underlying": 6,
+        "recent": 78,
+        "history": 22
+      },
+      "evaluationAverage": 2115.2,
+      "evaluationMinimum": 1915,
+      "averageTransfers": 35.2
+    },
+    {
+      "model": "market_safety",
+      "layer": "no_role",
+      "weights": {
+        "performance": 32,
+        "value": 8,
+        "age": 0,
+        "fixture": 11,
+        "team": 15,
+        "crowd": 13,
+        "minutes": 15,
+        "underlying": 6,
+        "recent": 78,
+        "history": 22
+      },
+      "evaluationAverage": 2071.2,
+      "evaluationMinimum": 1935,
+      "averageTransfers": 36.0
+    },
+    {
+      "model": "underlying_team",
+      "layer": "role",
+      "weights": {
+        "performance": 28,
+        "value": 5,
+        "age": 0,
+        "fixture": 11,
+        "team": 18,
+        "crowd": 3,
+        "minutes": 15,
+        "underlying": 20,
+        "recent": 75,
+        "history": 25
+      },
+      "evaluationAverage": 2110.9,
+      "evaluationMinimum": 1994,
+      "averageTransfers": 34.9
+    },
+    {
+      "model": "underlying_team",
+      "layer": "no_role",
+      "weights": {
+        "performance": 28,
+        "value": 5,
+        "age": 0,
+        "fixture": 11,
+        "team": 18,
+        "crowd": 3,
+        "minutes": 15,
+        "underlying": 20,
+        "recent": 75,
+        "history": 25
+      },
+      "evaluationAverage": 2079.2,
+      "evaluationMinimum": 1909,
+      "averageTransfers": 36.4
+    }
+  ]
+}
