@@ -28,16 +28,21 @@ test("server-renders the FPL Lens decision room", async () => {
   assert.match(html, /Optimal XV/i);
   assert.match(html, /Chip desk/i);
   assert.match(html, /144(?:<!-- -->)? chip policies/i);
-  assert.match(html, /Lens 5\.0[\s\S]{0,24}\+ chips/i);
+  assert.match(html, /Lens 6\.0[\s\S]{0,24}\+ chips/i);
   assert.match(html, /Top-500k consistency test/i);
   assert.match(html, /Player Lab/i);
   assert.match(html, /Projection anatomy/i);
+  assert.match(html, /Point distribution/i);
+  assert.match(html, /Minutes tree/i);
   assert.match(html, /Same-fixture test/i);
   assert.match(html, /Performance evidence/i);
   assert.match(html, /Team context/i);
   assert.match(html, /Poisson probability/i);
   assert.match(html, /Replay the past/i);
+  assert.match(html, /Probability calibration/i);
+  assert.match(html, /Current-rules counterfactual/i);
   assert.match(html, /Champion advice, tested/i);
+  assert.match(html, /correlated squad scenarios/i);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/i);
 });
 

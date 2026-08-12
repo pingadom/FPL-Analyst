@@ -13,6 +13,8 @@ type WeightKey =
   | "minutes"
   | "underlying";
 
+type RiskMode = "protect" | "balanced" | "chase";
+
 type Player = {
   id: number;
   name: string;
@@ -29,6 +31,43 @@ type Player = {
   verdict: "Priority" | "Strong" | "Watch" | "Fade";
   setPieces: string[];
   riskFlags: string[];
+  archetype: string;
+  minutesModel: {
+    startProbability: number;
+    playProbability: number;
+    sixtyProbability: number;
+    minutesIfStart: number;
+    minutesIfBench: number;
+    minutesStd: number;
+    rotationVolatility: number;
+  };
+  distribution: {
+    p10: number;
+    median: number;
+    p90: number;
+    blankProbability: number;
+    return5Probability: number;
+    haul8Probability: number;
+    standardDeviation: number;
+  };
+  defenderModel: {
+    actionRate: number;
+    contributionProbability: number;
+    bpsRate: number;
+    goalRoute: number;
+    assistRoute: number;
+  };
+  ensemble: {
+    structural: number;
+    empirical: number;
+    marketRole: number;
+    official: number;
+    disagreement: number;
+  };
+  marketForecast: {
+    priceRiseProbability: number;
+    priceFallProbability: number;
+  };
   components: {
     appearance: number;
     goals: number;
@@ -61,6 +100,7 @@ type Player = {
     defenceRank: number;
     strengthRank: number;
     ratingConfidence: number;
+    regimeShift: number;
   };
   comparison: {
     fixtureRank: number;
@@ -75,6 +115,7 @@ type Player = {
   };
   captainRating: number;
   score: number;
+  strategyScores: Record<RiskMode, number>;
   opponent: string;
   venue: string;
   starter: boolean;
@@ -164,6 +205,7 @@ function calculateScore(
   player: Player,
   weights: Record<WeightKey, number>,
   recentShare: number,
+  riskMode: RiskMode,
 ) {
   const recent = recentShare / 100;
   const performance =
@@ -182,9 +224,10 @@ function calculateScore(
     player.features.underlying * (weights.underlying / 100)
   );
   return (
-    0.72 * lensScore +
-    0.18 * (player.comparison.projectionRank / 100) +
-    0.10 * (player.confidence / 100)
+    0.58 * lensScore +
+    0.14 * (player.comparison.projectionRank / 100) +
+    0.10 * (player.confidence / 100) +
+    0.18 * player.strategyScores[riskMode]
   );
 }
 
@@ -250,10 +293,7 @@ function buildSquad(players: ScoredPlayer[]) {
           .sort((a, b) => b.liveScore - a.liveScore)
           .slice(0, formation[position]),
       );
-      const score = xi.reduce(
-        (sum, player) => sum + player.projected - 0.35 * player.uncertainty,
-        0,
-      );
+      const score = xi.reduce((sum, player) => sum + player.liveScore, 0);
       if (xi.length === 11 && score > bestXiScore) {
         bestXiScore = score;
         bestXi = xi;
@@ -300,7 +340,7 @@ function PlayerRow({
           {vice && <span className="vice-chip">V</span>}
         </div>
         <span className="player-meta">
-          {player.team} · {player.opponent} ({player.venue}) · {player.ownership}%
+          {player.team} · {player.opponent} ({player.venue}) · {player.minutesModel.startProbability}% start · {player.distribution.return5Probability}% return
         </span>
       </div>
       <div className="player-price">£{player.price.toFixed(1)}</div>
@@ -325,6 +365,7 @@ export default function FplDashboard() {
     underlying: calibrated.underlying,
   });
   const [recentShare, setRecentShare] = useState(calibrated.recent);
+  const [riskMode, setRiskMode] = useState<RiskMode>("balanced");
   const [now, setNow] = useState(() => Date.now());
   const [showBench, setShowBench] = useState(true);
   const [analysedId, setAnalysedId] = useState<number>(
@@ -340,9 +381,9 @@ export default function FplDashboard() {
     () =>
       (results.currentPlayers as Player[]).map((player) => ({
         ...player,
-        liveScore: calculateScore(player, weights, recentShare),
+        liveScore: calculateScore(player, weights, recentShare, riskMode),
       })),
-    [weights, recentShare],
+    [weights, recentShare, riskMode],
   );
   const selection = useMemo(() => buildSquad(scoredPlayers), [scoredPlayers]);
   const xiIds = useMemo(
@@ -399,6 +440,7 @@ export default function FplDashboard() {
       underlying: calibrated.underlying,
     });
     setRecentShare(calibrated.recent);
+    setRiskMode("balanced");
   };
   const openAnalysis = (player: ScoredPlayer) => {
     setAnalysedId(player.id);
@@ -444,7 +486,7 @@ export default function FplDashboard() {
           <div><span>Projected</span><strong>{projected.toFixed(1)}</strong><small>GW points</small></div>
           <div><span>Budget</span><strong>£{spend.toFixed(1)}</strong><small>of £100m</small></div>
           <div><span>Shape</span><strong>{formation}</strong><small>best XI</small></div>
-          <div><span>Top-500k tests</span><strong>{results.rankTarget.hits}/{results.rankTarget.seasons}</strong><small>historic pace hits</small></div>
+          <div><span>P(70+)</span><strong>{results.headline.scenario.probability70}%</strong><small>{results.headline.scenario.p10}–{results.headline.scenario.p90} scenario range</small></div>
         </div>
       </section>
 
@@ -455,6 +497,7 @@ export default function FplDashboard() {
         <span>{results.rankTarget.averageProbability}% AVG TARGET PROBABILITY</span>
         <span>{results.model.playerWeeks.toLocaleString()} PLAYER-WEEKS</span>
         <span>{results.currentMeta.playersScored} CURRENT PLAYERS SCORED</span>
+        <span>{results.headline.scenario.simulations.toLocaleString()} CORRELATED SQUAD SCENARIOS</span>
         <span>LAST REFRESH {new Date(results.generatedAt).toLocaleDateString("en-GB")}</span>
       </div>
 
@@ -496,6 +539,23 @@ export default function FplDashboard() {
               onChange={(event) => setRecentShare(Number(event.target.value))}
             />
             <div className="memory-scale"><span>Season history</span><span>Last 4 GWs</span></div>
+          </div>
+          <div className="risk-control">
+            <div className="memory-title"><strong>Decision profile</strong><span>{riskMode}</span></div>
+            <div className="risk-buttons" role="group" aria-label="Squad risk profile">
+              {(["protect", "balanced", "chase"] as RiskMode[]).map((mode) => (
+                <button
+                  type="button"
+                  className={riskMode === mode ? "active" : ""}
+                  aria-pressed={riskMode === mode}
+                  onClick={() => setRiskMode(mode)}
+                  key={mode}
+                >
+                  {mode}
+                </button>
+              ))}
+            </div>
+            <p>Protect weights downside and minutes; Chase weights 8+ point probability and upside.</p>
           </div>
           <div className="model-note">
             <span className="pulse-dot" />
@@ -567,9 +627,9 @@ export default function FplDashboard() {
             <div className="section-label"><span>04</span> PLAYER LAB</div>
             <h2>Read the player.<br />Not just the score.</h2>
             <p>
-              Open up the forecast: expected minutes, scoring routes, uncertainty,
-              opponent history, team attack and defence, and the strongest popular
-              alternative in the same fixture.
+              Open the full distribution: start and 60-minute probability, scoring
+              routes, defender contributions, ensemble disagreement, team context
+              and the strongest popular alternative in the same fixture.
             </p>
             <label className="player-picker">
               <span>PLAYER TO ANALYSE</span>
@@ -609,7 +669,7 @@ export default function FplDashboard() {
             <div className="lab-metrics">
               <div><span>GW xPTS</span><strong>{analysedPlayer.projected.toFixed(1)}</strong><small>risk-aware forecast</small></div>
               <div><span>SIX-GW xPTS</span><strong>{analysedPlayer.sixWeekProjected.toFixed(1)}</strong><small>weighted horizon</small></div>
-              <div><span>EXPECTED MINS</span><strong>{analysedPlayer.expectedMinutes}</strong><small>availability adjusted</small></div>
+              <div><span>EXPECTED MINS</span><strong>{analysedPlayer.expectedMinutes}</strong><small>{analysedPlayer.minutesModel.startProbability}% start · {analysedPlayer.minutesModel.sixtyProbability}% 60+</small></div>
               <div><span>VALUE</span><strong>{analysedPlayer.valueProjected.toFixed(2)}</strong><small>six-GW xPts / £m</small></div>
             </div>
 
@@ -676,6 +736,49 @@ export default function FplDashboard() {
                 <p>Projection uncertainty: ±{Math.max(0.4, analysedPlayer.uncertainty * 2.4).toFixed(1)} points around the central GW estimate.</p>
               </article>
 
+              <article className="probability-card">
+                <div className="lab-card-heading"><span>POINT DISTRIBUTION</span><strong>±{analysedPlayer.distribution.standardDeviation.toFixed(1)}</strong></div>
+                <div className="distribution-track" aria-label={`10th to 90th percentile: ${analysedPlayer.distribution.p10} to ${analysedPlayer.distribution.p90} points`}>
+                  <i /><b style={{ left: `${Math.min(94, Math.max(6, analysedPlayer.distribution.median / Math.max(analysedPlayer.distribution.p90, 1) * 100))}%` }} />
+                </div>
+                <div className="distribution-labels"><span>P10 <strong>{analysedPlayer.distribution.p10}</strong></span><span>MEDIAN <strong>{analysedPlayer.distribution.median}</strong></span><span>P90 <strong>{analysedPlayer.distribution.p90}</strong></span></div>
+                <div className="probability-grid">
+                  <div><strong>{analysedPlayer.distribution.blankProbability}%</strong><span>blank ≤2</span></div>
+                  <div><strong>{analysedPlayer.distribution.return5Probability}%</strong><span>return 5+</span></div>
+                  <div><strong>{analysedPlayer.distribution.haul8Probability}%</strong><span>haul 8+</span></div>
+                </div>
+              </article>
+
+              <article className="minutes-card">
+                <div className="lab-card-heading"><span>MINUTES TREE</span><strong>{analysedPlayer.minutesModel.startProbability}% START</strong></div>
+                <div className="probability-grid minutes-grid">
+                  <div><strong>{analysedPlayer.minutesModel.playProbability}%</strong><span>plays</span></div>
+                  <div><strong>{analysedPlayer.minutesModel.sixtyProbability}%</strong><span>reaches 60</span></div>
+                  <div><strong>{analysedPlayer.minutesModel.minutesIfStart}</strong><span>mins if start</span></div>
+                </div>
+                <p>Bench appearance: {analysedPlayer.minutesModel.minutesIfBench} conditional minutes · rotation volatility {analysedPlayer.minutesModel.rotationVolatility}%.</p>
+              </article>
+
+              <article className="defender-card">
+                <div className="lab-card-heading"><span>ROLE ENGINE</span><strong>{analysedPlayer.archetype}</strong></div>
+                <div className="probability-grid">
+                  <div><strong>{analysedPlayer.defenderModel.contributionProbability}%</strong><span>DC return</span></div>
+                  <div><strong>{analysedPlayer.defenderModel.actionRate}</strong><span>actions / 90</span></div>
+                  <div><strong>{analysedPlayer.defenderModel.bpsRate}</strong><span>BPS / match</span></div>
+                </div>
+                <p>Goal route {analysedPlayer.defenderModel.goalRoute.toFixed(3)} and assist route {analysedPlayer.defenderModel.assistRoute.toFixed(3)} per 90, before opponent and set-piece adjustments.</p>
+              </article>
+
+              <article className="ensemble-card">
+                <div className="lab-card-heading"><span>ENSEMBLE & PRICE</span><strong>{analysedPlayer.ensemble.disagreement.toFixed(1)} disagreement</strong></div>
+                <div className="ensemble-bars">
+                  {(["structural", "empirical", "marketRole", "official"] as const).map((key) => (
+                    <div key={key}><span>{key.replace("marketRole", "market role")}</span><i><b style={{ width: `${analysedPlayer.ensemble[key]}%` }} /></i><strong>{analysedPlayer.ensemble[key]}%</strong></div>
+                  ))}
+                </div>
+                <p>Price move forecast: {analysedPlayer.marketForecast.priceRiseProbability}% rise · {analysedPlayer.marketForecast.priceFallProbability}% fall.</p>
+              </article>
+
               <article className="team-card">
                 <div className="lab-card-heading"><span>TEAM CONTEXT</span><strong>STRENGTH #{analysedPlayer.teamContext.strengthRank}/20</strong></div>
                 <div className="team-context-grid">
@@ -687,7 +790,7 @@ export default function FplDashboard() {
                 <p>
                   Defender and goalkeeper forecasts inherit the team clean-sheet environment,
                   then add expected minutes, attacking routes, defensive contributions and bonus.
-                  Team rating confidence: {analysedPlayer.teamContext.ratingConfidence}%.
+                  Team rating confidence: {analysedPlayer.teamContext.ratingConfidence}% · regime-shift signal {analysedPlayer.teamContext.regimeShift}%.
                 </p>
               </article>
             </div>
@@ -700,8 +803,9 @@ export default function FplDashboard() {
           <div className="section-label"><span>05</span> CHIP DESK</div>
           <h2>Wait for the<br />fixture to bend.</h2>
           <p>
-            Chips are scored inside the recursive replay, not added afterward. The
-            policy can hold a chip all season when the right setup never arrives.
+            Chips are scored inside the recursive replay. Each decision compares
+            today’s edge with the discounted option value of known future blanks,
+            doubles and the chip-window expiry.
           </p>
           <div className="current-chip-call">
             <span>GW{results.chipStrategy.current.gameweek} CALL</span>
@@ -793,6 +897,39 @@ export default function FplDashboard() {
           })}
           <div className="chart-legend"><span><i className="legend-model" /> {results.model.version} + chips</span><span><i className="legend-base" /> Same model, no chips</span><span><i className="legend-target" /> Est. top-500k pace</span></div>
         </div>
+        <div className="diagnostics-panel">
+          <div className="expert-tests-heading">
+            <span>PROBABILITY CALIBRATION</span>
+            <p>Forecast quality is checked by scoring route, not hidden behind season points.</p>
+          </div>
+          <div className="diagnostic-metrics">
+            <div><strong>{results.calibrationDiagnostics.returnBrier}</strong><span>5+ return Brier</span></div>
+            <div><strong>{results.calibrationDiagnostics.minutes60Brier}</strong><span>60-minute Brier</span></div>
+            <div><strong>{results.calibrationDiagnostics.cleanSheetBrier}</strong><span>clean-sheet Brier</span></div>
+            <div><strong>{results.calibrationDiagnostics.p10P90Coverage}%</strong><span>P10–P90 coverage</span></div>
+          </div>
+          <div className="calibration-curve" aria-label="Predicted and observed five-point return rates">
+            {results.calibrationDiagnostics.returnCalibration.map((bin) => (
+              <div key={`${bin.forecast}-${bin.observed}`} title={`${bin.players.toLocaleString()} player-weeks`}>
+                <i style={{ height: `${bin.forecast}%` }} /><b style={{ height: `${bin.observed}%` }} />
+                <span>{bin.forecast}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="current-rules-panel">
+          <div>
+            <span>CURRENT-RULES COUNTERFACTUAL</span>
+            <strong>{results.currentRulesReplay.averagePoints}</strong>
+            <small>average points · {results.currentRulesReplay.eventCoverage}% exact defensive-event coverage</small>
+            <p>{results.currentRulesReplay.method}</p>
+          </div>
+          <div className="current-rule-seasons">
+            {results.currentRulesReplay.seasons.map((season) => (
+              <div key={season.season}><span>{season.season}</span><strong>{season.points}</strong><small>{season.deltaVsHistoricalRules >= 0 ? "+" : ""}{season.deltaVsHistoricalRules}</small></div>
+            ))}
+          </div>
+        </div>
         <div className="expert-tests" aria-label="Tests of FPL champion advice">
           <div className="expert-tests-heading">
             <span>CHAMPION ADVICE, TESTED</span>
@@ -815,10 +952,10 @@ export default function FplDashboard() {
           <p>{results.model.method} {results.model.objective}</p>
         </div>
         <div className="method-steps">
-          <article><span>01</span><h3>Observe</h3><p>Component expected points, price, minutes security, team attack and defence, Poisson clean-sheet probability, market movement and the next six opponents.</p></article>
+          <article><span>01</span><h3>Distribute</h3><p>Start, bench, 60-minute, return, defender-contribution and clean-sheet probabilities create a full player outcome range.</p></article>
           <article><span>02</span><h3>Shift</h3><p>All rolling statistics move back one gameweek. The model never sees the result it is trying to predict.</p></article>
-          <article><span>03</span><h3>Recurse</h3><p>{results.model.recursiveTrials} finalists carry a legal squad, bank, prices and chip inventory through every deadline.</p></article>
-          <article><span>04</span><h3>Optimise</h3><p>Six-GW transfers and {results.chipStrategy.policyTrials} chip policies compete; your sliders rebuild today’s legal £100m squad live.</p></article>
+          <article><span>03</span><h3>Ensemble</h3><p>Structural, empirical and market-role forecasts are position-weighted by prior causal error; the live official projection is an independent fourth vote.</p></article>
+          <article><span>04</span><h3>Simulate</h3><p>{results.headline.scenario.simulations.toLocaleString()} correlated squad scenarios and {results.chipStrategy.policyTrials} option-value chip policies compete under legal FPL constraints.</p></article>
         </div>
         <div className="method-footer">
           <div><span>AGE COVERAGE</span><strong>{Math.min(...results.dataSummary.map((item) => item.ageCoverage))}%+</strong></div>

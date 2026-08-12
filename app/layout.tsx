@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const origin = `${protocol}://${host}`;
   const title = "FPL Lens — Data-led squad decisions";
   const description =
-    "An interactive Fantasy Premier League analyst calibrated across eight seasons and hundreds of model replays.";
+    "A probabilistic Fantasy Premier League analyst with causal team ratings, defender modelling, calibrated ensembles and recursive season replays.";
   return {
     title,
     description,
@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: `${origin}/og.png`, width: 1744, height: 915, alt: "FPL Lens — build a squad you can defend" }],
+      images: [{ url: `${origin}/og.png`, width: 1711, height: 919, alt: "FPL Lens 6.0 — probabilistic squad analysis" }],
     },
     twitter: {
       card: "summary_large_image",

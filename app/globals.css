@@ -380,6 +380,32 @@ input[type="range"] {
   margin-top: 8px;
 }
 
+.risk-control {
+  border: 1px solid var(--ink);
+  margin-top: 10px;
+  padding: 16px;
+}
+
+.risk-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.risk-buttons button {
+  background: transparent;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  padding: 9px 4px;
+  text-transform: uppercase;
+}
+
+.risk-buttons button + button { border-left: 0; }
+.risk-buttons button.active { background: var(--ink); color: var(--acid); }
+.risk-control > p { color: var(--muted); font-size: 9px; line-height: 1.5; margin: 12px 0 0; }
+
 .model-note {
   align-items: flex-start;
   border-bottom: 1px solid var(--line);
@@ -904,6 +930,9 @@ input[type="range"] {
 
 .history-card > p,
 .signal-card > p,
+.minutes-card > p,
+.defender-card > p,
+.ensemble-card > p,
 .team-card > p {
   color: var(--muted);
   font-size: 9px;
@@ -911,6 +940,58 @@ input[type="range"] {
 }
 
 .team-card { grid-column: 1 / -1; }
+
+.distribution-track {
+  background: var(--paper-deep);
+  height: 10px;
+  margin: 38px 0 10px;
+  position: relative;
+}
+
+.distribution-track i {
+  background: var(--acid);
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.distribution-track b {
+  background: white;
+  border: 2px solid var(--ink);
+  height: 18px;
+  position: absolute;
+  top: -4px;
+  transform: translateX(-50%);
+  width: 5px;
+}
+
+.distribution-labels,
+.probability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.distribution-labels span { font-family: var(--font-mono), monospace; font-size: 8px; }
+.distribution-labels span:nth-child(2) { text-align: center; }
+.distribution-labels span:last-child { text-align: right; }
+
+.probability-grid {
+  border-top: 1px solid var(--line);
+  margin-top: 26px;
+  padding-top: 20px;
+}
+
+.probability-grid > div { display: flex; flex-direction: column; }
+.probability-grid > div + div { border-left: 1px solid var(--line); padding-left: 16px; }
+.probability-grid strong { font-family: var(--font-mono), monospace; font-size: 24px; }
+.probability-grid span { color: var(--muted); font-size: 8px; margin-top: 5px; text-transform: uppercase; }
+
+.ensemble-bars { margin-top: 30px; }
+.ensemble-bars > div { align-items: center; display: grid; gap: 8px; grid-template-columns: 70px 1fr 28px; margin-top: 12px; }
+.ensemble-bars > div > span { font-size: 8px; text-transform: uppercase; }
+.ensemble-bars i { background: var(--paper-deep); height: 8px; }
+.ensemble-bars i b { background: var(--acid-dark); display: block; height: 100%; }
+.ensemble-bars strong { font-family: var(--font-mono), monospace; font-size: 8px; text-align: right; }
 
 .team-context-grid {
   display: grid;
@@ -1372,13 +1453,82 @@ input[type="range"] {
 .legend-base { border-top: 2px solid white; }
 .legend-target { border-top: 1px dashed var(--red); }
 
+.diagnostics-panel,
+.current-rules-panel {
+  border: 1px solid #444640;
+  grid-column: 1 / -1;
+  margin-top: 34px;
+}
+
+.diagnostics-panel .expert-tests-heading {
+  min-height: 0;
+}
+
+.diagnostics-panel .expert-tests-heading p { margin-top: 12px; }
+
+.diagnostic-metrics {
+  border-top: 1px solid #444640;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.diagnostic-metrics > div {
+  display: flex;
+  flex-direction: column;
+  min-height: 110px;
+  padding: 18px;
+}
+
+.diagnostic-metrics > div + div { border-left: 1px solid #444640; }
+.diagnostic-metrics strong { color: var(--acid); font-family: var(--font-mono), monospace; font-size: 28px; margin: auto 0 5px; }
+.diagnostic-metrics span { color: #aeb0aa; font-size: 8px; text-transform: uppercase; }
+
+.calibration-curve {
+  align-items: end;
+  border-top: 1px solid #444640;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(10, 1fr);
+  height: 180px;
+  padding: 20px;
+}
+
+.calibration-curve > div { display: flex; height: 130px; justify-content: center; position: relative; }
+.calibration-curve i,
+.calibration-curve b { bottom: 18px; position: absolute; width: 26%; }
+.calibration-curve i { background: #5e6059; left: 21%; }
+.calibration-curve b { background: var(--acid); right: 21%; }
+.calibration-curve span { bottom: 0; color: #aeb0aa; font-family: var(--font-mono), monospace; font-size: 7px; position: absolute; }
+
+.current-rules-panel {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  margin-bottom: 34px;
+  margin-top: 16px;
+}
+
+.current-rules-panel > div:first-child { border-right: 1px solid #444640; padding: 22px; }
+.current-rules-panel > div:first-child > span { color: #92958d; font-family: var(--font-mono), monospace; font-size: 8px; }
+.current-rules-panel > div:first-child > strong { color: var(--acid); display: block; font-family: var(--font-mono), monospace; font-size: 42px; margin-top: 22px; }
+.current-rules-panel p { color: #aeb0aa; font-size: 10px; line-height: 1.5; }
+.current-rule-seasons { display: grid; grid-template-columns: repeat(4, 1fr); }
+.current-rule-seasons > div { display: flex; flex-direction: column; min-height: 100px; padding: 14px; }
+.current-rule-seasons > div + div { border-left: 1px solid #444640; }
+.current-rule-seasons > div:nth-child(n + 5) { border-top: 1px solid #444640; }
+.current-rule-seasons strong { font-family: var(--font-mono), monospace; font-size: 20px; margin: auto 0 4px; }
+.current-rule-seasons span,
+.current-rule-seasons small { color: #aeb0aa; font-family: var(--font-mono), monospace; font-size: 7px; }
+
 .expert-tests {
   border-left: 1px solid #444640;
   border-top: 1px solid #444640;
   display: grid;
   grid-column: 1 / -1;
-  grid-template-columns: 1.15fr repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 }
+
+.expert-tests-heading { grid-column: 1 / -1; min-height: 120px; }
+.expert-tests > .expert-tests-heading p { margin-top: 18px; }
 
 .expert-tests-heading,
 .expert-test {
@@ -1759,6 +1909,29 @@ footer > span {
     display: block;
     min-width: 0;
   }
+  .diagnostic-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+  .diagnostic-metrics > div:nth-child(3) {
+    border-left: 0;
+    border-top: 1px solid #444640;
+  }
+  .diagnostic-metrics > div:nth-child(4) { border-top: 1px solid #444640; }
+  .calibration-curve {
+    min-width: 620px;
+  }
+  .current-rules-panel {
+    display: block;
+  }
+  .current-rules-panel > div:first-child {
+    border-bottom: 1px solid #444640;
+    border-right: 0;
+  }
+  .current-rule-seasons {
+    grid-template-columns: 1fr 1fr;
+  }
+  .current-rule-seasons > div:nth-child(odd) { border-left: 0; }
+  .current-rule-seasons > div:nth-child(n + 3) { border-top: 1px solid #444640; }
   .method-section {
     padding: 54px 20px 40px;
   }
