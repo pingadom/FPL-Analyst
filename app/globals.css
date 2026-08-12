@@ -903,10 +903,34 @@ input[type="range"] {
 }
 
 .history-card > p,
-.signal-card > p {
+.signal-card > p,
+.team-card > p {
   color: var(--muted);
   font-size: 9px;
   margin: 28px 0 0;
+}
+
+.team-card { grid-column: 1 / -1; }
+
+.team-context-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 30px;
+}
+
+.team-context-grid > div {
+  display: flex;
+  flex-direction: column;
+  padding: 0 18px;
+}
+
+.team-context-grid > div:first-child { padding-left: 0; }
+.team-context-grid > div + div { border-left: 1px solid var(--line); }
+
+.team-context-grid strong {
+  font-family: var(--font-mono), monospace;
+  font-size: 27px;
+  margin: 10px 0 4px;
 }
 
 .comparison-player {
@@ -1675,6 +1699,22 @@ footer > span {
   }
   .lab-analysis-grid > article + article {
     border-top: 1px solid var(--line);
+  }
+  .team-context-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .team-context-grid > div {
+    min-height: 92px;
+  }
+  .team-context-grid > div:nth-child(3) {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    padding-top: 18px;
+  }
+  .team-context-grid > div:nth-child(4) {
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
   }
   .chip-workbench {
     margin-top: 42px;

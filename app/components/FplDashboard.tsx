@@ -8,6 +8,7 @@ type WeightKey =
   | "value"
   | "age"
   | "fixture"
+  | "team"
   | "crowd"
   | "minutes"
   | "underlying";
@@ -50,6 +51,17 @@ type Player = {
     per90: number;
     returnRate: number;
   };
+  teamContext: {
+    expectedGoalsFor: number;
+    expectedGoalsAgainst: number;
+    cleanSheetProbability: number;
+    horizonExpectedGoalsAgainst: number;
+    horizonCleanSheetProbability: number;
+    attackRank: number;
+    defenceRank: number;
+    strengthRank: number;
+    ratingConfidence: number;
+  };
   comparison: {
     fixtureRank: number;
     fixturePlayers: number;
@@ -76,6 +88,7 @@ type Player = {
     historyValue: number;
     age: number;
     fixture: number;
+    team: number;
     crowd: number;
     minutes: number;
     underlying: number;
@@ -97,6 +110,7 @@ const weightLabels: Record<WeightKey, { label: string; hint: string }> = {
   value: { label: "Value", hint: "Output per £m" },
   age: { label: "Age curve", hint: "Reliability prior" },
   fixture: { label: "Fixture", hint: "Next 6 opponents" },
+  team: { label: "Team strength", hint: "Attack + defence" },
   crowd: { label: "Market", hint: "Ownership signal" },
   minutes: { label: "Minutes", hint: "60-minute security" },
   underlying: { label: "Underlying", hint: "ICT involvement" },
@@ -162,6 +176,7 @@ function calculateScore(
     value * (weights.value / 100) +
     player.features.age * (weights.age / 100) +
     player.features.fixture * (weights.fixture / 100) +
+    player.features.team * (weights.team / 100) +
     player.features.crowd * (weights.crowd / 100) +
     player.features.minutes * (weights.minutes / 100) +
     player.features.underlying * (weights.underlying / 100)
@@ -298,12 +313,13 @@ function PlayerRow({
 }
 
 export default function FplDashboard() {
-  const calibrated = results.model.weights;
+  const calibrated = results.model.weights as typeof results.model.weights & { team: number };
   const [weights, setWeights] = useState<Record<WeightKey, number>>({
     performance: calibrated.performance,
     value: calibrated.value,
     age: calibrated.age,
     fixture: calibrated.fixture,
+    team: calibrated.team ?? 0,
     crowd: calibrated.crowd,
     minutes: calibrated.minutes,
     underlying: calibrated.underlying,
@@ -377,6 +393,7 @@ export default function FplDashboard() {
       value: calibrated.value,
       age: calibrated.age,
       fixture: calibrated.fixture,
+      team: calibrated.team ?? 0,
       crowd: calibrated.crowd,
       minutes: calibrated.minutes,
       underlying: calibrated.underlying,
@@ -551,7 +568,8 @@ export default function FplDashboard() {
             <h2>Read the player.<br />Not just the score.</h2>
             <p>
               Open up the forecast: expected minutes, scoring routes, uncertainty,
-              opponent history and the strongest popular alternative in the same fixture.
+              opponent history, team attack and defence, and the strongest popular
+              alternative in the same fixture.
             </p>
             <label className="player-picker">
               <span>PLAYER TO ANALYSE</span>
@@ -656,6 +674,21 @@ export default function FplDashboard() {
                   <div>{analysedPlayer.riskFlags.map((flag) => <i className={flag === "No major flag" ? "safe-signal" : "risk-signal"} key={flag}>{flag}</i>)}</div>
                 </div>
                 <p>Projection uncertainty: ±{Math.max(0.4, analysedPlayer.uncertainty * 2.4).toFixed(1)} points around the central GW estimate.</p>
+              </article>
+
+              <article className="team-card">
+                <div className="lab-card-heading"><span>TEAM CONTEXT</span><strong>STRENGTH #{analysedPlayer.teamContext.strengthRank}/20</strong></div>
+                <div className="team-context-grid">
+                  <div><span>ATTACK</span><strong>#{analysedPlayer.teamContext.attackRank}</strong><small>{analysedPlayer.teamContext.expectedGoalsFor.toFixed(2)} expected goals</small></div>
+                  <div><span>DEFENCE</span><strong>#{analysedPlayer.teamContext.defenceRank}</strong><small>{analysedPlayer.teamContext.expectedGoalsAgainst.toFixed(2)} expected conceded</small></div>
+                  <div><span>NEXT-GW CS</span><strong>{analysedPlayer.teamContext.cleanSheetProbability}%</strong><small>Poisson probability</small></div>
+                  <div><span>SIX-GW CS</span><strong>{analysedPlayer.teamContext.horizonCleanSheetProbability}%</strong><small>{analysedPlayer.teamContext.horizonExpectedGoalsAgainst.toFixed(2)} expected conceded / match</small></div>
+                </div>
+                <p>
+                  Defender and goalkeeper forecasts inherit the team clean-sheet environment,
+                  then add expected minutes, attacking routes, defensive contributions and bonus.
+                  Team rating confidence: {analysedPlayer.teamContext.ratingConfidence}%.
+                </p>
               </article>
             </div>
           </div>
@@ -782,7 +815,7 @@ export default function FplDashboard() {
           <p>{results.model.method} {results.model.objective}</p>
         </div>
         <div className="method-steps">
-          <article><span>01</span><h3>Observe</h3><p>Component expected points, price, minutes security, underlying involvement, market movement and the next six opponents.</p></article>
+          <article><span>01</span><h3>Observe</h3><p>Component expected points, price, minutes security, team attack and defence, Poisson clean-sheet probability, market movement and the next six opponents.</p></article>
           <article><span>02</span><h3>Shift</h3><p>All rolling statistics move back one gameweek. The model never sees the result it is trying to predict.</p></article>
           <article><span>03</span><h3>Recurse</h3><p>{results.model.recursiveTrials} finalists carry a legal squad, bank, prices and chip inventory through every deadline.</p></article>
           <article><span>04</span><h3>Optimise</h3><p>Six-GW transfers and {results.chipStrategy.policyTrials} chip policies compete; your sliders rebuild today’s legal £100m squad live.</p></article>

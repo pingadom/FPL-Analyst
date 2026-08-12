@@ -260,6 +260,44 @@ def build_season(
     raw = raw.dropna(subset=["GW", "element", "position_id"]).copy()
     raw["GW"] = raw["GW"].astype(int)
 
+    # One row per club-fixture prevents team goals/xG from being counted once
+    # for every player. These realised values are shifted before being used as
+    # features, so a deadline can only see earlier matches.
+    team_fixtures = (
+        raw.dropna(subset=["team_id", "opponent_team", "fixture"])
+        .groupby(
+            ["team_id", "GW", "fixture", "opponent_team", "was_home"],
+            as_index=False,
+        )
+        .agg(
+            team_goals=("goals_scored", "sum"),
+            team_xg=("expected_goals", "sum"),
+            team_goals_against=("goals_conceded", "max"),
+            team_xga=("expected_goals_conceded", "max"),
+            team_clean_sheet=("clean_sheets", "max"),
+        )
+    )
+    team_fixtures["team_result_points"] = np.select(
+        [
+            team_fixtures["team_goals"] > team_fixtures["team_goals_against"],
+            team_fixtures["team_goals"] == team_fixtures["team_goals_against"],
+        ],
+        [3.0, 1.0],
+        default=0.0,
+    )
+    team_weeks = (
+        team_fixtures.groupby(["team_id", "GW"], as_index=False)
+        .agg(
+            team_games=("fixture", "nunique"),
+            team_goals=("team_goals", "sum"),
+            team_xg=("team_xg", "sum"),
+            team_goals_against=("team_goals_against", "sum"),
+            team_xga=("team_xga", "sum"),
+            team_clean_sheets=("team_clean_sheet", "sum"),
+            team_result_points=("team_result_points", "sum"),
+        )
+    )
+
     weekly = (
         raw.groupby(["element", "GW"], as_index=False)
         .agg(
@@ -298,6 +336,17 @@ def build_season(
         )
         .sort_values(["element", "GW"])
     )
+    weekly = weekly.merge(team_weeks, on=["team_id", "GW"], how="left")
+    for column in [
+        "team_games",
+        "team_goals",
+        "team_xg",
+        "team_goals_against",
+        "team_xga",
+        "team_clean_sheets",
+        "team_result_points",
+    ]:
+        weekly[column] = pd.to_numeric(weekly[column], errors="coerce").fillna(0)
     weekly["season"] = season
     season_start = date(int(season[:4]), 8, 1)
     weekly["age"] = weekly["birth_date"].map(
@@ -449,11 +498,180 @@ def build_season(
     return eligible, summary
 
 
+def add_causal_team_strength(data: pd.DataFrame) -> pd.DataFrame:
+    """Add deadline-safe, time-decayed attack/defence and Poisson match rates."""
+    team_columns = [
+        "season",
+        "season_order",
+        "GW",
+        "team_id",
+        "team_name",
+        "team_games",
+        "team_goals",
+        "team_xg",
+        "team_goals_against",
+        "team_xga",
+        "team_clean_sheets",
+        "team_result_points",
+    ]
+    team = data[team_columns].drop_duplicates(
+        ["season", "GW", "team_id"], keep="first"
+    ).copy()
+    team.sort_values(["season_order", "GW", "team_id"], inplace=True)
+    games = team["team_games"].clip(lower=1)
+    goals_for = team["team_goals"] / games
+    goals_against = team["team_goals_against"] / games
+    xg_for = team["team_xg"] / games
+    xg_against = team["team_xga"] / games
+    team["attack_observation"] = np.where(
+        team["team_xg"] > 0,
+        0.72 * xg_for + 0.28 * goals_for,
+        goals_for,
+    )
+    team["defence_observation"] = np.where(
+        team["team_xga"] > 0,
+        0.72 * xg_against + 0.28 * goals_against,
+        goals_against,
+    )
+    team["form_observation"] = team["team_result_points"] / games
+    team["clean_observation"] = team["team_clean_sheets"] / games
+
+    league_week = (
+        team.groupby(["season", "season_order", "GW"], as_index=False)
+        .agg(league_goals=("team_goals", "sum"), league_games=("team_games", "sum"))
+        .sort_values(["season_order", "GW"])
+    )
+    league_week["league_observation"] = (
+        league_week["league_goals"] / league_week["league_games"].clip(lower=1)
+    )
+    league_week["league_goal_rate"] = league_week.groupby(
+        "season", sort=False
+    )["league_observation"].transform(
+        lambda values: values.expanding().mean().shift(1)
+    ).fillna(1.40).clip(0.9, 2.0)
+    team = team.merge(
+        league_week[["season", "GW", "league_goal_rate"]],
+        on=["season", "GW"],
+        how="left",
+    )
+    normalized_name = (
+        team["team_name"].fillna("").str.lower().str.replace(r"[^a-z0-9]", "", regex=True)
+    )
+    team["team_key"] = np.where(
+        team["team_name"].fillna("").str.startswith("Team "),
+        team["season"].astype(str) + ":" + normalized_name,
+        normalized_name,
+    )
+    by_team = team.groupby("team_key", sort=False)
+    team["prior_team_games"] = by_team["team_games"].transform(
+        lambda values: values.cumsum().shift(1)
+    ).fillna(0)
+    team_confidence = (
+        team["prior_team_games"] / (team["prior_team_games"] + 8)
+    ).clip(0, 0.94)
+
+    def dynamic_rating(column: str, prior: pd.Series | float) -> pd.Series:
+        rolling = team.groupby("team_key", sort=False)[column].transform(
+            lambda values: values.ewm(alpha=0.22, adjust=False).mean().shift(1)
+        )
+        if isinstance(prior, pd.Series):
+            fallback = prior
+        else:
+            fallback = pd.Series(float(prior), index=team.index)
+        rolling = rolling.fillna(fallback)
+        return team_confidence * rolling + (1 - team_confidence) * fallback
+
+    team["team_attack_rating"] = dynamic_rating(
+        "attack_observation", team["league_goal_rate"]
+    ).clip(0.45, 2.70)
+    team["team_defence_rating"] = dynamic_rating(
+        "defence_observation", team["league_goal_rate"]
+    ).clip(0.45, 2.70)
+    team["team_form_rating"] = dynamic_rating("form_observation", 1.35).clip(0, 3)
+    team["team_clean_rating"] = dynamic_rating("clean_observation", 0.28).clip(0, 0.75)
+    team["team_rating_confidence"] = team_confidence
+
+    rating_columns = [
+        "season",
+        "GW",
+        "team_id",
+        "league_goal_rate",
+        "team_attack_rating",
+        "team_defence_rating",
+        "team_form_rating",
+        "team_clean_rating",
+        "team_rating_confidence",
+    ]
+    data = data.merge(team[rating_columns], on=["season", "GW", "team_id"], how="left")
+    opponent = team[rating_columns].rename(
+        columns={
+            "team_id": "opponent_team",
+            "team_attack_rating": "opponent_attack_rating",
+            "team_defence_rating": "opponent_defence_rating",
+            "team_form_rating": "opponent_form_rating",
+            "team_clean_rating": "opponent_clean_rating",
+            "team_rating_confidence": "opponent_rating_confidence",
+            "league_goal_rate": "opponent_league_goal_rate",
+        }
+    )
+    data = data.merge(
+        opponent,
+        on=["season", "GW", "opponent_team"],
+        how="left",
+    )
+    league_rate = data["league_goal_rate"].fillna(1.40).clip(0.9, 2.0)
+    for column in [
+        "team_attack_rating",
+        "team_defence_rating",
+        "opponent_attack_rating",
+        "opponent_defence_rating",
+    ]:
+        data[column] = data[column].fillna(league_rate)
+    data["team_form_rating"] = data["team_form_rating"].fillna(1.35)
+    data["opponent_form_rating"] = data["opponent_form_rating"].fillna(1.35)
+    data["team_clean_rating"] = data["team_clean_rating"].fillna(0.28)
+    data["team_rating_confidence"] = data["team_rating_confidence"].fillna(0)
+
+    home_ga_factor = np.where(data["was_home"].fillna(False), 0.88, 1.12)
+    home_gf_factor = np.where(data["was_home"].fillna(False), 1.12, 0.88)
+    data["team_expected_goals_against"] = (
+        league_rate
+        * (data["team_defence_rating"] / league_rate).pow(0.70)
+        * (data["opponent_attack_rating"] / league_rate).pow(0.70)
+        * home_ga_factor
+    ).clip(0.30, 3.40)
+    data["team_expected_goals_for"] = (
+        league_rate
+        * (data["team_attack_rating"] / league_rate).pow(0.70)
+        * (data["opponent_defence_rating"] / league_rate).pow(0.70)
+        * home_gf_factor
+    ).clip(0.30, 3.40)
+    data["team_clean_probability"] = np.exp(
+        -data["team_expected_goals_against"]
+    ).clip(0.03, 0.74)
+    attack_index = data["team_attack_rating"] / league_rate
+    defence_index = league_rate / data["team_defence_rating"].clip(lower=0.35)
+    form_index = data["team_form_rating"] / 1.35
+    fixture_defence_index = league_rate / data["team_expected_goals_against"]
+    data["team_context_raw"] = (
+        0.28 * attack_index
+        + 0.32 * defence_index
+        + 0.12 * form_index
+        + 0.28 * fixture_defence_index
+    ).clip(0.35, 2.75)
+    data["team_defence_raw"] = fixture_defence_index.clip(0.30, 3.0)
+    data["team_attack_raw"] = (
+        data["team_expected_goals_for"] / league_rate
+    ).clip(0.30, 3.0)
+    return data
+
+
 def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     """Carry player priors across seasons and build component expected points."""
     data = pd.concat(frames, ignore_index=True)
     season_order = {season: index for index, season in enumerate(SEASONS)}
     data["season_order"] = data["season"].map(season_order).astype(int)
+    data = add_causal_team_strength(data)
     fallback_key = data["season"].astype(str) + ":" + data["element"].astype(str)
     numeric_code = pd.to_numeric(data["player_code"], errors="coerce")
     data["player_key"] = numeric_code.astype("Int64").astype(str).where(
@@ -539,22 +757,33 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     attacking_points = (
         data["goal_rate"] * goal_points + data["assist_rate"] * 3
     ) * minutes_factor * fixture_multiplier
+    blended_clean_probability = (
+        0.82 * data["team_clean_probability"]
+        + 0.18 * data["clean_sheet_rate"]
+    ).clip(0.03, 0.78)
     clean_sheet_points_ev = (
-        data["clean_sheet_rate"]
-        * clean_sheet_points
-        * p_sixty
-        * fixture_multiplier
+        blended_clean_probability * clean_sheet_points * p_sixty
     )
     save_points = (
         data["save_rate"] / 3 * minutes_factor
         * np.where(data["position_id"] == 1, 1.0, 0.0)
     )
-    bonus_points = data["bonus_rate"] * minutes_factor * fixture_multiplier
+    defender_clean_bonus = (
+        0.12
+        * data["team_clean_probability"]
+        * p_sixty
+        * data["position_id"].isin([1, 2]).astype(float)
+    )
+    bonus_points = (
+        data["bonus_rate"] * minutes_factor * fixture_multiplier
+        + defender_clean_bonus
+    )
     discipline_points = -(
         data["yellow_rate"] + 3 * data["red_rate"]
     ) * minutes_factor
     conceded_points = -(
-        data["conceded_rate"] / 2 * minutes_factor
+        data["team_expected_goals_against"] / 2
+        * minutes_factor
         * data["position_id"].isin([1, 2]).astype(float)
     )
     defensive_threshold = np.where(data["position_id"] == 2, 10.0, 12.0)
@@ -609,6 +838,9 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ("age_raw", "age_score"),
         ("fixture_horizon_raw", "fixture"),
         ("fixture_raw", "fixture_now"),
+        ("team_context_raw", "team_context"),
+        ("team_defence_raw", "team_defence"),
+        ("team_attack_raw", "team_attack"),
         ("crowd_raw", "crowd"),
         ("minutes_security_raw", "minutes_security"),
         ("long_underlying_raw", "long_underlying"),
@@ -629,6 +861,7 @@ class Candidate:
     value: float
     age: float
     fixture: float
+    team: float
     crowd: float
     minutes: float
     underlying: float
@@ -644,6 +877,7 @@ class Candidate:
                 self.value * (1 - self.recent_share),
                 self.age,
                 self.fixture,
+                self.team,
                 self.crowd,
                 self.minutes,
                 self.underlying * self.recent_share,
@@ -658,6 +892,7 @@ class Candidate:
             "value": self.value,
             "age": self.age,
             "fixture": self.fixture,
+            "team": self.team,
             "crowd": self.crowd,
             "minutes": self.minutes,
             "underlying": self.underlying,
@@ -672,7 +907,7 @@ class Candidate:
 def candidate_pool() -> tuple[list[Candidate], int]:
     rng = np.random.default_rng(20260811)
     raw_weights = rng.dirichlet(
-        [4.2, 1.4, 0.25, 2.1, 0.40, 2.8, 2.2], size=TRIALS - 5
+        [4.0, 1.2, 0.20, 1.7, 2.3, 0.35, 2.6, 2.0], size=TRIALS - 5
     )
     recent = rng.beta(5.0, 1.8, size=TRIALS - 5) * 0.55 + 0.40
     candidates = [
@@ -683,12 +918,12 @@ def candidate_pool() -> tuple[list[Candidate], int]:
         [
             # Official-winner principles: form + medium-term fixtures, reliable
             # minutes, underlying data, restrained ownership and almost no age prior.
-            Candidate(0.34, 0.08, 0.00, 0.18, 0.04, 0.21, 0.15, 0.78),
-            Candidate(0.42, 0.07, 0.00, 0.20, 0.02, 0.19, 0.10, 0.82),
-            Candidate(0.31, 0.09, 0.00, 0.17, 0.03, 0.23, 0.17, 0.72),
-            Candidate(0.46, 0.06, 0.00, 0.14, 0.02, 0.20, 0.12, 0.76),
+            Candidate(0.30, 0.06, 0.00, 0.13, 0.17, 0.03, 0.18, 0.13, 0.78),
+            Candidate(0.36, 0.05, 0.00, 0.13, 0.18, 0.02, 0.17, 0.09, 0.82),
+            Candidate(0.28, 0.07, 0.00, 0.12, 0.19, 0.03, 0.18, 0.13, 0.72),
+            Candidate(0.38, 0.04, 0.00, 0.10, 0.18, 0.02, 0.17, 0.11, 0.76),
             # Lens 1.0: retained as a proper recursive baseline.
-            Candidate(0.36, 0.09, 0.01, 0.04, 0.50, 0.00, 0.00, 0.59),
+            Candidate(0.36, 0.09, 0.01, 0.04, 0.00, 0.50, 0.00, 0.00, 0.59),
         ]
     )
     return candidates, len(candidates) - 1
@@ -703,6 +938,7 @@ def feature_matrix(data: pd.DataFrame) -> np.ndarray:
             "long_value",
             "age_score",
             "fixture",
+            "team_context",
             "crowd",
             "minutes_security",
             "recent_underlying",
@@ -1820,6 +2056,25 @@ def current_recommendation(
         90 * opponent_history["opponent_points"]
         / opponent_history["opponent_minutes"].clip(lower=1)
     )
+    team_profiles = historical[
+        [
+            "season_order",
+            "GW",
+            "team_name",
+            "team_attack_rating",
+            "team_defence_rating",
+            "team_form_rating",
+            "team_clean_rating",
+            "team_rating_confidence",
+        ]
+    ].drop_duplicates(["season_order", "GW", "team_name"]).copy()
+    team_profiles["team_key"] = (
+        team_profiles["team_name"].fillna("").str.lower().str.replace(
+            r"[^a-z0-9]", "", regex=True
+        )
+    )
+    team_profiles.sort_values(["season_order", "GW"], inplace=True)
+    team_profiles = team_profiles.groupby("team_key", as_index=False).tail(1)
 
     current = current.merge(
         prior_summary[
@@ -1841,6 +2096,26 @@ def current_recommendation(
     current["position_id"] = current["element_type"].astype(int)
     current["team_id"] = current["team"].astype(int)
     current["team_name"] = current["team_id"].map(team_name)
+    current["team_full_name"] = current["team_id"].map(team_full_name)
+    current["team_key"] = (
+        current["team_full_name"].fillna("").str.lower().str.replace(
+            r"[^a-z0-9]", "", regex=True
+        )
+    )
+    current = current.merge(
+        team_profiles[
+            [
+                "team_key",
+                "team_attack_rating",
+                "team_defence_rating",
+                "team_form_rating",
+                "team_clean_rating",
+                "team_rating_confidence",
+            ]
+        ],
+        on="team_key",
+        how="left",
+    )
     current["opponent_full_name"] = current["team_id"].map(
         lambda team_id: team_full_name.get(
             fixture_map.get(int(team_id), {}).get("opponent"), "TBD"
@@ -1940,6 +2215,143 @@ def current_recommendation(
         )
 
     current["fixture_horizon_raw"] = current["team_id"].map(horizon_strength)
+    league_goal_rate = 1.40
+    current["team_attack_rating"] = current["team_attack_rating"].fillna(
+        league_goal_rate
+    )
+    current["team_defence_rating"] = current["team_defence_rating"].fillna(
+        league_goal_rate
+    )
+    current["team_form_rating"] = current["team_form_rating"].fillna(1.35)
+    current["team_clean_rating"] = current["team_clean_rating"].fillna(0.28)
+    current["team_rating_confidence"] = current["team_rating_confidence"].fillna(0)
+    team_snapshot = current[
+        [
+            "team_id",
+            "team_attack_rating",
+            "team_defence_rating",
+            "team_form_rating",
+            "team_clean_rating",
+            "team_rating_confidence",
+        ]
+    ].drop_duplicates("team_id").set_index("team_id")
+
+    def match_rates(team_id: int, opponent_id: int, home: bool) -> tuple[float, float, float]:
+        team_row = team_snapshot.loc[int(team_id)]
+        opponent_row = team_snapshot.loc[int(opponent_id)]
+        expected_against = float(
+            league_goal_rate
+            * (float(team_row["team_defence_rating"]) / league_goal_rate) ** 0.70
+            * (float(opponent_row["team_attack_rating"]) / league_goal_rate) ** 0.70
+            * (0.88 if home else 1.12)
+        )
+        expected_for = float(
+            league_goal_rate
+            * (float(team_row["team_attack_rating"]) / league_goal_rate) ** 0.70
+            * (float(opponent_row["team_defence_rating"]) / league_goal_rate) ** 0.70
+            * (1.12 if home else 0.88)
+        )
+        expected_against = float(np.clip(expected_against, 0.30, 3.40))
+        expected_for = float(np.clip(expected_for, 0.30, 3.40))
+        return expected_for, expected_against, float(np.exp(-expected_against))
+
+    immediate_rates: dict[int, tuple[float, float, float]] = {}
+    for team_id, fixture in fixture_map.items():
+        immediate_rates[int(team_id)] = match_rates(
+            int(team_id), int(fixture["opponent"]), bool(fixture["home"])
+        )
+    current["team_expected_goals_for"] = current["team_id"].map(
+        lambda team_id: immediate_rates.get(int(team_id), (1.4, 1.4, 0.25))[0]
+    )
+    current["team_expected_goals_against"] = current["team_id"].map(
+        lambda team_id: immediate_rates.get(int(team_id), (1.4, 1.4, 0.25))[1]
+    )
+    current["team_clean_probability"] = current["team_id"].map(
+        lambda team_id: immediate_rates.get(int(team_id), (1.4, 1.4, 0.25))[2]
+    )
+
+    horizon_rates: dict[int, tuple[float, float, float]] = {}
+    for team_id, values in horizon_map.items():
+        weighted_for = 0.0
+        weighted_against = 0.0
+        weighted_clean = 0.0
+        total_weight = 0.0
+        team_fixtures = horizon_fixtures[
+            (horizon_fixtures["team_h"] == int(team_id))
+            | (horizon_fixtures["team_a"] == int(team_id))
+        ]
+        for _, fixture in team_fixtures.iterrows():
+            home = int(fixture["team_h"]) == int(team_id)
+            opponent_id = int(fixture["team_a"] if home else fixture["team_h"])
+            weight = horizon_weight[int(fixture["event"])]
+            expected_for, expected_against, clean_probability = match_rates(
+                int(team_id), opponent_id, home
+            )
+            weighted_for += weight * expected_for
+            weighted_against += weight * expected_against
+            weighted_clean += weight * clean_probability
+            total_weight += weight
+        if total_weight > 0:
+            horizon_rates[int(team_id)] = (
+                weighted_for / total_weight,
+                weighted_against / total_weight,
+                weighted_clean / total_weight,
+            )
+    current["team_horizon_expected_goals_for"] = current["team_id"].map(
+        lambda team_id: horizon_rates.get(
+            int(team_id), immediate_rates.get(int(team_id), (1.4, 1.4, 0.25))
+        )[0]
+    )
+    current["team_horizon_expected_goals_against"] = current["team_id"].map(
+        lambda team_id: horizon_rates.get(
+            int(team_id), immediate_rates.get(int(team_id), (1.4, 1.4, 0.25))
+        )[1]
+    )
+    current["team_horizon_clean_probability"] = current["team_id"].map(
+        lambda team_id: horizon_rates.get(
+            int(team_id), immediate_rates.get(int(team_id), (1.4, 1.4, 0.25))
+        )[2]
+    )
+    current["team_context_raw"] = (
+        0.28 * current["team_attack_rating"] / league_goal_rate
+        + 0.32 * league_goal_rate / current["team_defence_rating"].clip(lower=0.35)
+        + 0.12 * current["team_form_rating"] / 1.35
+        + 0.28 * league_goal_rate / current["team_expected_goals_against"].clip(lower=0.30)
+    ).clip(0.35, 2.75)
+    current["team_defence_raw"] = (
+        league_goal_rate / current["team_expected_goals_against"].clip(lower=0.30)
+    ).clip(0.30, 3.0)
+    current["team_attack_raw"] = (
+        current["team_expected_goals_for"] / league_goal_rate
+    ).clip(0.30, 3.0)
+    team_match_context = (
+        current[
+            [
+                "team_name",
+                "team_expected_goals_for",
+                "team_expected_goals_against",
+            ]
+        ]
+        .drop_duplicates("team_name")
+        .copy()
+    )
+    team_match_context["team_attack_rank"] = team_match_context[
+        "team_expected_goals_for"
+    ].rank(method="min", ascending=False)
+    team_match_context["team_defence_rank"] = team_match_context[
+        "team_expected_goals_against"
+    ].rank(method="min", ascending=True)
+    team_match_context["team_strength_rank"] = (
+        team_match_context["team_expected_goals_for"]
+        / team_match_context["team_expected_goals_against"].clip(lower=0.25)
+    ).rank(method="min", ascending=False)
+    current = current.merge(
+        team_match_context[
+            ["team_name", "team_attack_rank", "team_defence_rank", "team_strength_rank"]
+        ],
+        on="team_name",
+        how="left",
+    )
     for raw_name, rank_name in [
         ("long_raw", "long"),
         ("recent_raw", "recent"),
@@ -1948,6 +2360,9 @@ def current_recommendation(
         ("age_raw", "age_score"),
         ("fixture_horizon_raw", "fixture"),
         ("fixture_raw", "fixture_now"),
+        ("team_context_raw", "team_context"),
+        ("team_defence_raw", "team_defence"),
+        ("team_attack_raw", "team_attack"),
         ("crowd_raw", "crowd"),
         ("minutes_security_raw", "minutes_security"),
         ("long_underlying_raw", "long_underlying"),
@@ -1981,6 +2396,7 @@ def current_recommendation(
         * (current["availability"] / 100).clip(0, 1)
     ).clip(15, 90)
     appearance_share = expected_minutes / 90
+    sixty_probability = ((expected_minutes - 25) / 45).clip(0, 1)
     goals = numeric_current("goals_scored")
     assists = numeric_current("assists")
     expected_goals = numeric_current("expected_goals")
@@ -1995,24 +2411,40 @@ def current_recommendation(
     defensive_threshold = current["position_id"].map({1: 10, 2: 10, 3: 12, 4: 12}).astype(float)
     goal_points = current["position_id"].map({1: 6, 2: 6, 3: 5, 4: 4}).astype(float)
     clean_points = current["position_id"].map({1: 4, 2: 4, 3: 1, 4: 0}).astype(float)
+    team_attack_multiplier = (
+        current["team_expected_goals_for"] / league_goal_rate
+    ).pow(0.45).clip(0.70, 1.38)
     appearance_component = 1.0 + appearance_share
     goal_component = (
         ((goals + expected_goals) / (2 * rate_denominator))
         * appearance_share
         * goal_points
+        * team_attack_multiplier
     )
     assist_component = (
         ((assists + expected_assists) / (2 * rate_denominator))
         * appearance_share
         * 3
+        * team_attack_multiplier
     )
+    personal_clean_probability = (
+        (clean_sheets + 1.5) / rate_denominator
+    ).clip(0, 0.75)
+    blended_clean_probability = (
+        0.82 * current["team_clean_probability"]
+        + 0.18 * personal_clean_probability
+    ).clip(0.03, 0.78)
     clean_component = (
-        ((clean_sheets + 1.5) / rate_denominator).clip(0, 0.75)
-        * clean_points
-        * appearance_share
+        blended_clean_probability * clean_points * sixty_probability
     )
     save_component = (saves / rate_denominator / 3) * appearance_share
-    bonus_component = (bonus / rate_denominator) * appearance_share
+    bonus_component = (
+        (bonus / rate_denominator) * appearance_share
+        + 0.12
+        * current["team_clean_probability"]
+        * sixty_probability
+        * current["position_id"].isin([1, 2]).astype(float)
+    )
     defensive_component = (
         2
         * (defensive_points / rate_denominator / defensive_threshold).clip(0, 1)
@@ -2024,7 +2456,7 @@ def current_recommendation(
     conceded_component = -pd.Series(
         np.where(
             current["position_id"].isin([1, 2]),
-            goals_conceded / rate_denominator / 2 * appearance_share,
+            current["team_expected_goals_against"] / 2 * appearance_share,
             0,
         ),
         index=current.index,
@@ -2067,10 +2499,32 @@ def current_recommendation(
     weighted_games = current["team_id"].map(
         lambda team_id: sum(weight for _, weight in horizon_map.get(int(team_id), []))
     ).clip(lower=1.0)
+    horizon_attack_ratio = (
+        (current["team_horizon_expected_goals_for"] + 0.40)
+        / (current["team_expected_goals_for"] + 0.40)
+    ).clip(0.70, 1.40)
+    horizon_clean_ratio = (
+        (current["team_horizon_clean_probability"] + 0.08)
+        / (current["team_clean_probability"] + 0.08)
+    ).clip(0.65, 1.50)
+    team_horizon_multiplier = pd.Series(
+        np.select(
+            [
+                current["position_id"].isin([1, 2]),
+                current["position_id"] == 3,
+            ],
+            [
+                0.65 * horizon_clean_ratio + 0.35 * horizon_attack_ratio,
+                0.18 * horizon_clean_ratio + 0.82 * horizon_attack_ratio,
+            ],
+            default=horizon_attack_ratio,
+        ),
+        index=current.index,
+    ).clip(0.72, 1.35)
     current["horizon_projection"] = (
         current["raw_projection"]
         * weighted_games
-        * (0.82 + current["fixture"] * 0.30)
+        * team_horizon_multiplier
     )
     current["expected_minutes"] = expected_minutes
     official_disagreement = (
@@ -2201,6 +2655,21 @@ def current_recommendation(
             "verdict": verdict,
             "setPieces": set_pieces,
             "riskFlags": risk_flags,
+            "teamContext": {
+                "expectedGoalsFor": round(float(row["team_expected_goals_for"]), 2),
+                "expectedGoalsAgainst": round(float(row["team_expected_goals_against"]), 2),
+                "cleanSheetProbability": round(100 * float(row["team_clean_probability"])),
+                "horizonExpectedGoalsAgainst": round(
+                    float(row["team_horizon_expected_goals_against"]), 2
+                ),
+                "horizonCleanSheetProbability": round(
+                    100 * float(row["team_horizon_clean_probability"])
+                ),
+                "attackRank": round(float(row["team_attack_rank"])),
+                "defenceRank": round(float(row["team_defence_rank"])),
+                "strengthRank": round(float(row["team_strength_rank"])),
+                "ratingConfidence": round(100 * float(row["team_rating_confidence"])),
+            },
             "components": {
                 "appearance": round(float(row["component_appearance"]), 2),
                 "goals": round(float(row["component_goals"]), 2),
@@ -2245,6 +2714,7 @@ def current_recommendation(
                 "historyValue": round(float(row["long_value"]), 4),
                 "age": round(float(row["age_score"]), 4),
                 "fixture": round(float(row["fixture"]), 4),
+                "team": round(float(row["team_context"]), 4),
                 "crowd": round(float(row["crowd"]), 4),
                 "minutes": round(float(row["minutes_security"]), 4),
                 "underlying": round(
@@ -2318,7 +2788,7 @@ def current_recommendation(
         "playersScored": int(len(pool)),
         "fixturesScored": int(len(first_fixtures)),
         "historicalSeasons": int(historical["season"].nunique()),
-        "componentModel": "Position scoring + expected minutes + opponent history + uncertainty",
+        "componentModel": "Hierarchical team attack/defence + Poisson clean sheets + player component xPts",
         "sourceUpdated": datetime.now().astimezone().isoformat(timespec="minutes"),
     }
     return headline, squad, watchlist, matchups[:6], all_players, current_meta
@@ -2396,6 +2866,7 @@ def main() -> None:
                     recursive_candidates[int(index)].value,
                     recursive_candidates[int(index)].age,
                     recursive_candidates[int(index)].fixture,
+                    recursive_candidates[int(index)].team,
                     recursive_candidates[int(index)].crowd,
                     recursive_candidates[int(index)].minutes,
                     recursive_candidates[int(index)].underlying,
@@ -2533,6 +3004,27 @@ def main() -> None:
     permissive_hit_totals, _ = simulate_candidate(
         data, best_scores, permissive_hit_strategy, plan_scores=best_plan_scores
     )
+    non_team_scale = 1 / max(1 - best.team, 0.01)
+    no_team_candidate = Candidate(
+        best.performance * non_team_scale,
+        best.value * non_team_scale,
+        best.age * non_team_scale,
+        best.fixture * non_team_scale,
+        0.0,
+        best.crowd * non_team_scale,
+        best.minutes * non_team_scale,
+        best.underlying * non_team_scale,
+        best.recent_share,
+    )
+    no_team_scores, no_team_plan_scores, _ = candidate_forecasts(
+        data, no_team_candidate
+    )
+    no_team_totals, _ = simulate_candidate(
+        data,
+        no_team_scores,
+        WEEKLY_CHASE_STRATEGY,
+        plan_scores=no_team_plan_scores,
+    )
     baseline_totals = recursive_scores[baseline_local_index]
 
     def advice_test(label: str, improved: np.ndarray, comparison: np.ndarray, detail: str) -> dict:
@@ -2569,6 +3061,12 @@ def main() -> None:
             baseline_totals,
             "Add component expected points, six-GW fixtures, minutes security and underlying involvement to the original Lens feature set.",
         ),
+        advice_test(
+            "Team-strength signal",
+            best_totals,
+            no_team_totals,
+            "Keep all structural clean-sheet logic fixed, then test whether the separately learned causal team attack/defence feature improves recursive squad decisions.",
+        ),
     ]
 
     best_chip_totals = chip_scores[best_chip_policy_index]
@@ -2598,7 +3096,7 @@ def main() -> None:
         "product": "FPL Lens",
         "generatedAt": datetime.now().astimezone().isoformat(timespec="minutes"),
         "model": {
-            "version": "Lens 4.1",
+            "version": "Lens 5.0",
             "trials": len(candidates),
             "recursiveTrials": len(recursive_candidates),
             "seasons": len(EVALUATION_SEASONS),
@@ -2606,8 +3104,8 @@ def main() -> None:
             "playerWeeks": int(len(data)),
             "bestTrial": best_index + 1,
             "weights": best.as_dict(),
-            "method": "Leak-free six-GW walk-forward replay: one legal 15-player squad, banked transfers and chip inventory carry into every deadline using only information then available.",
-            "objective": "Maximise legal autosubbed XI, captain and chip points while penalising season-to-season volatility.",
+            "method": "Leak-free six-GW walk-forward replay with causal team attack/defence ratings, opponent-adjusted Poisson clean-sheet probabilities and player component expected points.",
+            "objective": "Maximise legal autosubbed XI, captain and chip points while penalising season-to-season volatility; one squad, bank and chip inventory carry through every deadline.",
             "strategy": WEEKLY_CHASE_STRATEGY.name,
         },
         "headline": headline,
@@ -2661,6 +3159,26 @@ def main() -> None:
                 "url": "https://github.com/vaastav/Fantasy-Premier-League",
             },
             {
+                "label": "Dixon-Coles dynamic score model",
+                "url": "https://www.research.lancs.ac.uk/portal/en/publications/modelling-association-football-scores-and-inefficiencies-in-the-football-betting-market%28d16276a2-d6e0-483b-a708-1d29663f1992%29.html",
+            },
+            {
+                "label": "Bayesian hierarchical football model",
+                "url": "https://discovery.ucl.ac.uk/id/eprint/16040/",
+            },
+            {
+                "label": "Goal-chance team-strength evidence",
+                "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0104647",
+            },
+            {
+                "label": "OpenFPL forecasting + optimisation",
+                "url": "https://arxiv.org/abs/2508.09992",
+            },
+            {
+                "label": "Official defender contribution analysis",
+                "url": "https://www.premierleague.com/en/news/4361968/which-defenders-will-get-the-most-defensive-contribution-points-in-fpl",
+            },
+            {
                 "label": "Official FPL API",
                 "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
             },
@@ -2708,6 +3226,8 @@ def main() -> None:
             "The transfer planner looks six Gameweeks ahead and can bank up to the cap that applied in that season; paid-hit variants were tested and rejected when they reduced replay points.",
             "The top-500k result is an estimated scoring-pace test because official historic rank cut-offs are not exposed by the FPL API.",
             "Player analysis decomposes expected points by scoring route, labels sample size, estimates minutes and uncertainty, and treats opponent history as descriptive rather than predictive on its own.",
+            "Team attack and defence are shifted, exponentially weighted and shrunk toward the league mean; current xG/xGA is blended with goals where available, so promoted and low-sample teams are not overconfidently rated.",
+            "Defender and goalkeeper clean-sheet points are driven primarily by the opponent-adjusted team Poisson rate, then combined with expected minutes, attacking involvement, defensive contributions and bonus routes.",
             "Age is an availability/consistency prior, not a claim that younger or older players are inherently better.",
             "Current projections are decision support, not guarantees; late team news should override the model.",
         ],
@@ -2731,6 +3251,7 @@ def refresh_current_artifact() -> None:
         weights["value"] / 100,
         weights["age"] / 100,
         weights["fixture"] / 100,
+        weights.get("team", 0) / 100,
         weights["crowd"] / 100,
         weights["minutes"] / 100,
         weights["underlying"] / 100,
