@@ -1,0 +1,864 @@
+{
+  "status": "training-selected paired recursive chip ablation on frozen multi-timescale champion",
+  "warning": "Every candidate is a full recursive rerun. Threshold selection uses only the calibration seasons; evaluation seasons are untouched. Future blank/double assignments remain censored when they were not known at the historical deadline.",
+  "baselineEvaluationAverage": 2174.9,
+  "selected": {
+    "Wildcard": {
+      "name": "wc60-early",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 60,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 6,
+        "secondWildcardMinGw": 20,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": 30.875,
+      "evaluationAverageGain": -49.6,
+      "evaluationMinimumGain": -140,
+      "evaluationMaximumGain": -7,
+      "seasonGain": [
+        169,
+        -52,
+        -7,
+        -42,
+        -33,
+        -140,
+        -28,
+        -58,
+        -70,
+        -19
+      ],
+      "evaluationUsage": [
+        [
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard"
+        ],
+        [
+          "Wildcard"
+        ]
+      ]
+    },
+    "Free Hit": {
+      "name": "fh5",
+      "chip": "Free Hit",
+      "policy": {
+        "wildcardGap": 1000000.0,
+        "freeHitGap": 5,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.0,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Free Hit"
+        ]
+      },
+      "trainingStabilityGain": -11.25,
+      "evaluationAverageGain": -55.8,
+      "evaluationMinimumGain": -145,
+      "evaluationMaximumGain": 15,
+      "seasonGain": [
+        0,
+        -18,
+        15,
+        -44,
+        -145,
+        -138,
+        7,
+        -50,
+        -104,
+        13
+      ],
+      "evaluationUsage": [
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ]
+      ]
+    }
+  },
+  "experiments": [
+    {
+      "name": "wc45-early",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 45,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 6,
+        "secondWildcardMinGw": 20,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": -110.75,
+      "evaluationAverageGain": -69.1,
+      "evaluationMinimumGain": -237,
+      "evaluationMaximumGain": 47,
+      "seasonGain": [
+        -22,
+        -164,
+        12,
+        -104,
+        -13,
+        -237,
+        -120,
+        47,
+        -67,
+        -71
+      ],
+      "evaluationUsage": [
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ]
+      ]
+    },
+    {
+      "name": "wc45-late",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 45,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": -81.375,
+      "evaluationAverageGain": -50.9,
+      "evaluationMinimumGain": -140,
+      "evaluationMaximumGain": 16,
+      "seasonGain": [
+        143,
+        -216,
+        -2,
+        -50,
+        -13,
+        -140,
+        -90,
+        -58,
+        -70,
+        16
+      ],
+      "evaluationUsage": [
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard"
+        ],
+        [
+          "Wildcard"
+        ]
+      ]
+    },
+    {
+      "name": "wc60-early",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 60,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 6,
+        "secondWildcardMinGw": 20,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": 30.875,
+      "evaluationAverageGain": -49.6,
+      "evaluationMinimumGain": -140,
+      "evaluationMaximumGain": -7,
+      "seasonGain": [
+        169,
+        -52,
+        -7,
+        -42,
+        -33,
+        -140,
+        -28,
+        -58,
+        -70,
+        -19
+      ],
+      "evaluationUsage": [
+        [
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard"
+        ],
+        [
+          "Wildcard"
+        ]
+      ]
+    },
+    {
+      "name": "wc60-late",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 60,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": 30.875,
+      "evaluationAverageGain": -63.5,
+      "evaluationMinimumGain": -140,
+      "evaluationMaximumGain": 0,
+      "seasonGain": [
+        169,
+        -52,
+        -98,
+        0,
+        -33,
+        -140,
+        -90,
+        -58,
+        -70,
+        -19
+      ],
+      "evaluationUsage": [
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard"
+        ],
+        [
+          "Wildcard"
+        ]
+      ]
+    },
+    {
+      "name": "wc75-early",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 75,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 6,
+        "secondWildcardMinGw": 20,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": 30.875,
+      "evaluationAverageGain": -33.9,
+      "evaluationMinimumGain": -105,
+      "evaluationMaximumGain": 0,
+      "seasonGain": [
+        169,
+        -52,
+        -7,
+        0,
+        -105,
+        -68,
+        0,
+        -91,
+        0,
+        0
+      ],
+      "evaluationUsage": [
+        [
+          "Wildcard"
+        ],
+        [],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [],
+        []
+      ]
+    },
+    {
+      "name": "wc75-late",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 75,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": 30.875,
+      "evaluationAverageGain": -39.0,
+      "evaluationMinimumGain": -105,
+      "evaluationMaximumGain": 0,
+      "seasonGain": [
+        169,
+        -52,
+        -48,
+        0,
+        -105,
+        -68,
+        0,
+        -91,
+        0,
+        0
+      ],
+      "evaluationUsage": [
+        [
+          "Wildcard"
+        ],
+        [],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [],
+        []
+      ]
+    },
+    {
+      "name": "wc90-early",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 90,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 6,
+        "secondWildcardMinGw": 20,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": -32.5,
+      "evaluationAverageGain": -16.9,
+      "evaluationMinimumGain": -68,
+      "evaluationMaximumGain": 0,
+      "seasonGain": [
+        0,
+        -52,
+        0,
+        0,
+        -67,
+        -68,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationUsage": [
+        [],
+        [],
+        [
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "name": "wc90-late",
+      "chip": "Wildcard",
+      "policy": {
+        "wildcardGap": 90,
+        "freeHitGap": 1000000.0,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.55,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Wildcard"
+        ]
+      },
+      "trainingStabilityGain": -32.5,
+      "evaluationAverageGain": -16.9,
+      "evaluationMinimumGain": -68,
+      "evaluationMaximumGain": 0,
+      "seasonGain": [
+        0,
+        -52,
+        0,
+        0,
+        -67,
+        -68,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationUsage": [
+        [],
+        [],
+        [
+          "Wildcard"
+        ],
+        [
+          "Wildcard",
+          "Wildcard"
+        ],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "name": "fh5",
+      "chip": "Free Hit",
+      "policy": {
+        "wildcardGap": 1000000.0,
+        "freeHitGap": 5,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.0,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Free Hit"
+        ]
+      },
+      "trainingStabilityGain": -11.25,
+      "evaluationAverageGain": -55.8,
+      "evaluationMinimumGain": -145,
+      "evaluationMaximumGain": 15,
+      "seasonGain": [
+        0,
+        -18,
+        15,
+        -44,
+        -145,
+        -138,
+        7,
+        -50,
+        -104,
+        13
+      ],
+      "evaluationUsage": [
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ]
+      ]
+    },
+    {
+      "name": "fh10",
+      "chip": "Free Hit",
+      "policy": {
+        "wildcardGap": 1000000.0,
+        "freeHitGap": 10,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.0,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Free Hit"
+        ]
+      },
+      "trainingStabilityGain": -11.25,
+      "evaluationAverageGain": -59.4,
+      "evaluationMinimumGain": -167,
+      "evaluationMaximumGain": 15,
+      "seasonGain": [
+        0,
+        -18,
+        15,
+        -44,
+        -145,
+        -167,
+        7,
+        -50,
+        -104,
+        13
+      ],
+      "evaluationUsage": [
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ]
+      ]
+    },
+    {
+      "name": "fh15",
+      "chip": "Free Hit",
+      "policy": {
+        "wildcardGap": 1000000.0,
+        "freeHitGap": 15,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.0,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Free Hit"
+        ]
+      },
+      "trainingStabilityGain": -11.25,
+      "evaluationAverageGain": -27.8,
+      "evaluationMinimumGain": -167,
+      "evaluationMaximumGain": 15,
+      "seasonGain": [
+        0,
+        -18,
+        15,
+        -44,
+        -1,
+        -167,
+        7,
+        -50,
+        5,
+        13
+      ],
+      "evaluationUsage": [
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ]
+      ]
+    },
+    {
+      "name": "fh20",
+      "chip": "Free Hit",
+      "policy": {
+        "wildcardGap": 1000000.0,
+        "freeHitGap": 20,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.0,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Free Hit"
+        ]
+      },
+      "trainingStabilityGain": -11.25,
+      "evaluationAverageGain": -9.8,
+      "evaluationMinimumGain": -86,
+      "evaluationMaximumGain": 15,
+      "seasonGain": [
+        0,
+        -18,
+        15,
+        0,
+        -86,
+        -36,
+        7,
+        6,
+        5,
+        11
+      ],
+      "evaluationUsage": [
+        [
+          "Free Hit"
+        ],
+        [],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ]
+      ]
+    },
+    {
+      "name": "fh30",
+      "chip": "Free Hit",
+      "policy": {
+        "wildcardGap": 1000000.0,
+        "freeHitGap": 30,
+        "benchScore": 1000000.0,
+        "tripleScore": 1000000.0,
+        "afconBonus": 0.0,
+        "firstWildcardMinGw": 10,
+        "secondWildcardMinGw": 28,
+        "enabledChips": [
+          "Free Hit"
+        ]
+      },
+      "trainingStabilityGain": -11.25,
+      "evaluationAverageGain": -11.6,
+      "evaluationMinimumGain": -86,
+      "evaluationMaximumGain": 15,
+      "seasonGain": [
+        0,
+        -18,
+        15,
+        0,
+        -86,
+        0,
+        -28,
+        6,
+        0,
+        0
+      ],
+      "evaluationUsage": [
+        [
+          "Free Hit"
+        ],
+        [],
+        [
+          "Free Hit"
+        ],
+        [],
+        [
+          "Free Hit"
+        ],
+        [
+          "Free Hit"
+        ],
+        [],
+        []
+      ]
+    }
+  ]
+}

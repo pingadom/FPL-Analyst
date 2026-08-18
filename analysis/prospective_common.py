@@ -21,6 +21,61 @@ BOOTSTRAP_URL = "https://fantasy.premierleague.com/api/bootstrap-static/"
 FIXTURES_URL = "https://fantasy.premierleague.com/api/fixtures/"
 
 
+def chip_set_for_gameweek(gameweek: int) -> int:
+    """Return the half-season chip set used by the 2025/26+ rules."""
+    if not 1 <= int(gameweek) <= 38:
+        raise ValueError(f"Invalid FPL gameweek for chip set: {gameweek}")
+    return 1 if int(gameweek) <= 19 else 2
+
+
+def chip_inventory_key(chip: str, gameweek: int) -> str:
+    """Stable state key; unlike the display name it survives the GW20 refresh."""
+    return f"{str(chip)}:H{chip_set_for_gameweek(gameweek)}"
+
+
+def used_chip_keys(state: dict | None) -> set[str]:
+    """Read new state and migrate legacy rows that stored only the chip name."""
+    if state is None:
+        return set()
+    result: set[str] = set()
+    for row in state.get("chipsUsed", []):
+        gameweek = int(row.get("gameweek", 1))
+        result.add(
+            str(row.get("key") or chip_inventory_key(str(row["chip"]), gameweek))
+        )
+    return result
+
+
+def selling_price(current: float, purchase: float) -> float:
+    """FPL sale value after the manager receives half of any price rise."""
+    if current <= purchase:
+        return current
+    return purchase + int((current - purchase) * 10 / 2) / 10
+
+
+def available_squad_budget(players: list[dict], state: dict | None) -> float:
+    """Return bank plus current selling value for a manager-specific rebuild."""
+    if state is None:
+        return 100.0
+    by_id = {int(row["id"]): row for row in players}
+    purchase = {
+        int(key): float(value)
+        for key, value in state.get("purchasePrices", {}).items()
+    }
+    return round(
+        float(state.get("bank", 0.0))
+        + sum(
+            selling_price(
+                float(by_id[player_id]["price"]),
+                purchase.get(player_id, float(by_id[player_id]["price"])),
+            )
+            for player_id in state.get("squadIds", [])
+            if int(player_id) in by_id
+        ),
+        1,
+    )
+
+
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
@@ -77,6 +132,7 @@ def optimise_squad(
     bench_premium_limit: float = 2.0,
     bench_premium_penalty: float = 0.22,
     minimum_spend: float = 99.5,
+    budget_limit: float = 100.0,
 ) -> tuple[list[int], list[int], int, int]:
     """Jointly solve the legal squad, XI and captain in one integer program."""
     positions = {"GK": 2, "DEF": 5, "MID": 5, "FWD": 3}
@@ -108,8 +164,9 @@ def optimise_squad(
     upper: list[float] = []
     budget = np.asarray([int(round(float(row["price"]) * 10)) for row in players])
     rows.append(np.concatenate([budget, np.zeros(2 * count)]))
-    lower.append(int(round(minimum_spend * 10)))
-    upper.append(1000)
+    effective_minimum_spend = min(float(minimum_spend), float(budget_limit))
+    lower.append(int(round(effective_minimum_spend * 10)))
+    upper.append(int(round(float(budget_limit) * 10)))
     for position, quota in positions.items():
         membership = np.asarray([1 if row["position"] == position else 0 for row in players])
         rows.append(np.concatenate([membership, np.zeros(2 * count)]))

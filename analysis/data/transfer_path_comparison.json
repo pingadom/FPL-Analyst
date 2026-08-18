@@ -1,0 +1,1569 @@
+{
+  "status": "research-only; diagnostic",
+  "models": {
+    "exactNoRules": {
+      "2018-19": {
+        "points": 2173,
+        "transfers": [
+          {
+            "gw": 2,
+            "out": [
+              "Shaqiri"
+            ],
+            "in": [
+              "Neves"
+            ],
+            "bank": 2.3
+          },
+          {
+            "gw": 4,
+            "out": [
+              "Smalling",
+              "Norris"
+            ],
+            "in": [
+              "Etheridge",
+              "Baines"
+            ],
+            "bank": 2.0
+          },
+          {
+            "gw": 5,
+            "out": [
+              "Baines"
+            ],
+            "in": [
+              "Alonso"
+            ],
+            "bank": 0.6
+          },
+          {
+            "gw": 7,
+            "out": [
+              "Salah",
+              "Guendouzi"
+            ],
+            "in": [
+              "Fraser",
+              "Sterling"
+            ],
+            "bank": 1.1
+          },
+          {
+            "gw": 8,
+            "out": [
+              "S\u00c3\u00a1nchez"
+            ],
+            "in": [
+              "Hazard"
+            ],
+            "bank": 0.0
+          },
+          {
+            "gw": 10,
+            "out": [
+              "Pogba",
+              "P\u00c3\u00a9rez"
+            ],
+            "in": [
+              "Wilson",
+              "Maddison"
+            ],
+            "bank": 0.6
+          },
+          {
+            "gw": 11,
+            "out": [
+              "van Aanholt"
+            ],
+            "in": [
+              "Laporte"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 13,
+            "out": [
+              "King",
+              "Foster"
+            ],
+            "in": [
+              "Pickford",
+              "Jim\u00c3\u00a9nez"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 15,
+            "out": [
+              "Hazard",
+              "Sterling"
+            ],
+            "in": [
+              "Sigurdsson",
+              "Salah"
+            ],
+            "bank": 1.8
+          },
+          {
+            "gw": 17,
+            "out": [
+              "Sigurdsson",
+              "Bennett"
+            ],
+            "in": [
+              "Doherty",
+              "Felipe Anderson"
+            ],
+            "bank": 0.9
+          },
+          {
+            "gw": 19,
+            "out": [
+              "Fraser",
+              "Laporte"
+            ],
+            "in": [
+              "Milivojevic",
+              "van Dijk"
+            ],
+            "bank": 0.7
+          },
+          {
+            "gw": 21,
+            "out": [
+              "Maddison",
+              "Salah"
+            ],
+            "in": [
+              "Hazard",
+              "Son"
+            ],
+            "bank": 0.7
+          },
+          {
+            "gw": 23,
+            "out": [
+              "Aubameyang",
+              "Wilson"
+            ],
+            "in": [
+              "Kane",
+              "Rond\u00c3\u00b3n"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 25,
+            "out": [
+              "Hazard",
+              "Kane"
+            ],
+            "in": [
+              "Salah",
+              "Firmino"
+            ],
+            "bank": 0.5
+          },
+          {
+            "gw": 28,
+            "out": [
+              "Salah",
+              "C\u00c3\u00a9dric"
+            ],
+            "in": [
+              "Laporte",
+              "Sterling"
+            ],
+            "bank": 1.0
+          },
+          {
+            "gw": 31,
+            "out": [
+              "Son",
+              "Jim\u00c3\u00a9nez"
+            ],
+            "in": [
+              "Man\u00c3\u00a9",
+              "P\u00c3\u00a9rez"
+            ],
+            "bank": 0.2
+          },
+          {
+            "gw": 33,
+            "out": [
+              "Laporte",
+              "Sterling"
+            ],
+            "in": [
+              "Azpilicueta",
+              "Hazard"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 35,
+            "out": [
+              "Firmino",
+              "Neves"
+            ],
+            "in": [
+              "Jota",
+              "Jim\u00c3\u00a9nez"
+            ],
+            "bank": 1.2
+          },
+          {
+            "gw": 37,
+            "out": [
+              "Alonso",
+              "Felipe Anderson"
+            ],
+            "in": [
+              "Pogba",
+              "Digne"
+            ],
+            "bank": 0.4
+          }
+        ],
+        "weeklyPoints": [
+          57.0,
+          38.0,
+          38.0,
+          42.0,
+          37.0,
+          50.0,
+          59.0,
+          90.0,
+          27.0,
+          80.0,
+          77.0,
+          36.0,
+          59.0,
+          77.0,
+          59.0,
+          64.0,
+          36.0,
+          58.0,
+          76.0,
+          67.0,
+          62.0,
+          38.0,
+          35.0,
+          62.0,
+          62.0,
+          46.0,
+          52.0,
+          42.0,
+          45.0,
+          97.0,
+          48.0,
+          62.0,
+          55.0,
+          57.0,
+          89.0,
+          66.0,
+          67.0,
+          61.0
+        ]
+      },
+      "2024-25": {
+        "points": 2262,
+        "transfers": [
+          {
+            "gw": 5,
+            "out": [
+              "\u00c3\u0098degaard",
+              "White",
+              "Palmer",
+              "B.Fernandes"
+            ],
+            "in": [
+              "Eze",
+              "Luis D\u00c3\u00adaz",
+              "M.Salah",
+              "Pedro Porro"
+            ],
+            "bank": 0.6
+          },
+          {
+            "gw": 7,
+            "out": [
+              "Eze",
+              "Mateta"
+            ],
+            "in": [
+              "Watkins",
+              "McNeil"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 9,
+            "out": [
+              "Bruno G.",
+              "Isak"
+            ],
+            "in": [
+              "Mbeumo",
+              "Wood"
+            ],
+            "bank": 0.7
+          },
+          {
+            "gw": 11,
+            "out": [
+              "Saliba",
+              "J.Murphy"
+            ],
+            "in": [
+              "Johnson",
+              "A\u00c3\u00aft-Nouri"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 13,
+            "out": [
+              "Watkins",
+              "Luis D\u00c3\u00adaz"
+            ],
+            "in": [
+              "B.Fernandes",
+              "Cunha"
+            ],
+            "bank": 1.4
+          },
+          {
+            "gw": 15,
+            "out": [
+              "McNeil",
+              "Wood"
+            ],
+            "in": [
+              "Kluivert",
+              "Evanilson"
+            ],
+            "bank": 1.7
+          },
+          {
+            "gw": 17,
+            "out": [
+              "Gvardiol",
+              "Evanilson"
+            ],
+            "in": [
+              "Robinson",
+              "Isak"
+            ],
+            "bank": 0.2
+          },
+          {
+            "gw": 19,
+            "out": [
+              "Faes",
+              "Pedro Porro"
+            ],
+            "in": [
+              "Hall",
+              "Milenkovi\u00c4\u0087"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 21,
+            "out": [
+              "Johnson",
+              "Cunha"
+            ],
+            "in": [
+              "Ra\u00c3\u00bal",
+              "Gordon"
+            ],
+            "bank": 0.4
+          },
+          {
+            "gw": 23,
+            "out": [
+              "N.Jackson",
+              "B.Fernandes"
+            ],
+            "in": [
+              "Watkins",
+              "Luis D\u00c3\u00adaz"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 25,
+            "out": [
+              "Gordon",
+              "Hall"
+            ],
+            "in": [
+              "O.Dango",
+              "Alexander-Arnold"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 28,
+            "out": [
+              "Watkins",
+              "O.Dango",
+              "Andersen"
+            ],
+            "in": [
+              "Mateta",
+              "Mu\u00c3\u00b1oz",
+              "I.Sarr"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 29,
+            "out": [
+              "Mateta"
+            ],
+            "in": [
+              "Wood"
+            ],
+            "bank": 0.5
+          },
+          {
+            "gw": 32,
+            "out": [
+              "Kluivert",
+              "Pickford",
+              "Wood"
+            ],
+            "in": [
+              "J.Murphy",
+              "Sels",
+              "Marmoush"
+            ],
+            "bank": 0.4
+          },
+          {
+            "gw": 34,
+            "out": [
+              "Alexander-Arnold",
+              "I.Sarr"
+            ],
+            "in": [
+              "Virgil",
+              "Barnes"
+            ],
+            "bank": 0.6
+          },
+          {
+            "gw": 37,
+            "out": [
+              "Luis D\u00c3\u00adaz",
+              "Virgil",
+              "Onana"
+            ],
+            "in": [
+              "Eze",
+              "Pickford",
+              "Gvardiol"
+            ],
+            "bank": 1.0
+          }
+        ],
+        "weeklyPoints": [
+          44.0,
+          54.0,
+          41.0,
+          53.0,
+          66.0,
+          41.0,
+          27.0,
+          60.0,
+          80.0,
+          46.0,
+          64.0,
+          61.0,
+          66.0,
+          68.0,
+          51.0,
+          61.0,
+          91.0,
+          59.0,
+          90.0,
+          67.0,
+          56.0,
+          39.0,
+          76.0,
+          92.0,
+          99.0,
+          76.0,
+          51.0,
+          63.0,
+          37.0,
+          55.0,
+          41.0,
+          98.0,
+          58.0,
+          56.0,
+          38.0,
+          38.0,
+          48.0,
+          51.0
+        ]
+      },
+      "2025-26": {
+        "points": 1966,
+        "transfers": [
+          {
+            "gw": 2,
+            "out": [
+              "Gvardiol"
+            ],
+            "in": [
+              "Ballard"
+            ],
+            "bank": 1.3
+          },
+          {
+            "gw": 3,
+            "out": [
+              "Enzo"
+            ],
+            "in": [
+              "Ndoye"
+            ],
+            "bank": 1.8
+          },
+          {
+            "gw": 5,
+            "out": [
+              "Rogers",
+              "Watkins"
+            ],
+            "in": [
+              "Semenyo",
+              "Woltemade"
+            ],
+            "bank": 3.0
+          },
+          {
+            "gw": 7,
+            "out": [
+              "S\u00c3\u00a1nchez",
+              "Wan-Bissaka"
+            ],
+            "in": [
+              "Pope",
+              "Burn"
+            ],
+            "bank": 2.1
+          },
+          {
+            "gw": 9,
+            "out": [
+              "Agbadou",
+              "Ndoye"
+            ],
+            "in": [
+              "Gabriel",
+              "Stach"
+            ],
+            "bank": 0.8
+          },
+          {
+            "gw": 12,
+            "out": [
+              "Burn",
+              "Bowen",
+              "Woltemade"
+            ],
+            "in": [
+              "Thiago",
+              "Mu\u00c3\u00b1oz",
+              "Mateta"
+            ],
+            "bank": 0.4
+          },
+          {
+            "gw": 14,
+            "out": [
+              "M.Salah",
+              "Stach"
+            ],
+            "in": [
+              "Saka",
+              "B.Fernandes"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 16,
+            "out": [
+              "Gabriel",
+              "Semenyo",
+              "Mbeumo",
+              "Pope",
+              "Ballard"
+            ],
+            "in": [
+              "Rice",
+              "Cash",
+              "S\u00c3\u00a1nchez",
+              "Chalobah",
+              "Foden"
+            ],
+            "bank": 0.9
+          },
+          {
+            "gw": 18,
+            "out": [
+              "Konsa",
+              "Mateta"
+            ],
+            "in": [
+              "R\u00c3\u00baben",
+              "Woltemade"
+            ],
+            "bank": 0.0
+          },
+          {
+            "gw": 20,
+            "out": [
+              "Mu\u00c3\u00b1oz",
+              "Eze"
+            ],
+            "in": [
+              "Rogers",
+              "Tarkowski"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 22,
+            "out": [
+              "B.Fernandes",
+              "Woltemade"
+            ],
+            "in": [
+              "Watkins",
+              "Bruno G."
+            ],
+            "bank": 0.4
+          },
+          {
+            "gw": 25,
+            "out": [
+              "Saka",
+              "Cucurella",
+              "Foden"
+            ],
+            "in": [
+              "J.Timber",
+              "Enzo",
+              "B.Fernandes"
+            ],
+            "bank": 1.7
+          },
+          {
+            "gw": 27,
+            "out": [
+              "R\u00c3\u00baben",
+              "Bruno G."
+            ],
+            "in": [
+              "Semenyo",
+              "Lacroix"
+            ],
+            "bank": 1.0
+          },
+          {
+            "gw": 29,
+            "out": [
+              "J.Timber",
+              "Cash"
+            ],
+            "in": [
+              "Virgil",
+              "O'Reilly"
+            ],
+            "bank": 0.9
+          },
+          {
+            "gw": 31,
+            "out": [
+              "Rice",
+              "Lacroix"
+            ],
+            "in": [
+              "Wilson",
+              "Thiaw"
+            ],
+            "bank": 2.1
+          },
+          {
+            "gw": 33,
+            "out": [
+              "Watkins",
+              "Enzo"
+            ],
+            "in": [
+              "Jo\u00c3\u00a3o Pedro",
+              "Gibbs-White"
+            ],
+            "bank": 2.0
+          },
+          {
+            "gw": 34,
+            "out": [
+              "Jo\u00c3\u00a3o Pedro"
+            ],
+            "in": [
+              "Bowen"
+            ],
+            "bank": 2.0
+          },
+          {
+            "gw": 36,
+            "out": [
+              "Chalobah",
+              "Wilson"
+            ],
+            "in": [
+              "Van Hecke",
+              "Cherki"
+            ],
+            "bank": 2.1
+          }
+        ],
+        "weeklyPoints": [
+          50.0,
+          38.0,
+          52.0,
+          48.0,
+          36.0,
+          36.0,
+          87.0,
+          54.0,
+          68.0,
+          43.0,
+          34.0,
+          64.0,
+          56.0,
+          44.0,
+          68.0,
+          75.0,
+          44.0,
+          32.0,
+          27.0,
+          74.0,
+          54.0,
+          36.0,
+          43.0,
+          27.0,
+          69.0,
+          49.0,
+          28.0,
+          64.0,
+          53.0,
+          57.0,
+          68.0,
+          69.0,
+          78.0,
+          47.0,
+          31.0,
+          52.0,
+          52.0,
+          59.0
+        ]
+      }
+    },
+    "exactHardRules": {
+      "2018-19": {
+        "points": 2046,
+        "transfers": [
+          {
+            "gw": 2,
+            "out": [
+              "Shaqiri"
+            ],
+            "in": [
+              "Neves"
+            ],
+            "bank": 2.3
+          },
+          {
+            "gw": 4,
+            "out": [
+              "Smalling",
+              "Norris"
+            ],
+            "in": [
+              "Etheridge",
+              "Baines"
+            ],
+            "bank": 2.0
+          },
+          {
+            "gw": 5,
+            "out": [
+              "Baines"
+            ],
+            "in": [
+              "Alonso"
+            ],
+            "bank": 0.6
+          },
+          {
+            "gw": 7,
+            "out": [
+              "S\u00c3\u00a1nchez",
+              "Pogba"
+            ],
+            "in": [
+              "Sterling",
+              "Bernardo Silva"
+            ],
+            "bank": 0.2
+          },
+          {
+            "gw": 9,
+            "out": [
+              "van Aanholt",
+              "Sterling"
+            ],
+            "in": [
+              "Hazard",
+              "Doherty"
+            ],
+            "bank": 0.6
+          },
+          {
+            "gw": 11,
+            "out": [
+              "Aubameyang",
+              "Bednarek"
+            ],
+            "in": [
+              "Wilson",
+              "Laporte"
+            ],
+            "bank": 2.9
+          },
+          {
+            "gw": 13,
+            "out": [
+              "Neves",
+              "Foster"
+            ],
+            "in": [
+              "Pickford",
+              "Sigurdsson"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 15,
+            "out": [
+              "Bernardo Silva",
+              "Doherty"
+            ],
+            "in": [
+              "Chilwell",
+              "Felipe Anderson"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 17,
+            "out": [
+              "King",
+              "Chilwell"
+            ],
+            "in": [
+              "Doherty",
+              "Jim\u00c3\u00a9nez"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 19,
+            "out": [
+              "Sigurdsson",
+              "Laporte"
+            ],
+            "in": [
+              "Milivojevic",
+              "van Dijk"
+            ],
+            "bank": 1.3
+          },
+          {
+            "gw": 21,
+            "out": [
+              "Salah",
+              "P\u00c3\u00a9rez"
+            ],
+            "in": [
+              "Aubameyang",
+              "Son"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 23,
+            "out": [
+              "Aubameyang",
+              "Alonso"
+            ],
+            "in": [
+              "Kane",
+              "Digne"
+            ],
+            "bank": 0.4
+          },
+          {
+            "gw": 25,
+            "out": [
+              "Hazard",
+              "Kane"
+            ],
+            "in": [
+              "Salah",
+              "Firmino"
+            ],
+            "bank": 0.8
+          },
+          {
+            "gw": 27,
+            "out": [
+              "Wilson",
+              "Firmino"
+            ],
+            "in": [
+              "Lacazette",
+              "Rond\u00c3\u00b3n"
+            ],
+            "bank": 1.1
+          },
+          {
+            "gw": 29,
+            "out": [
+              "Pickford",
+              "Son"
+            ],
+            "in": [
+              "de Gea",
+              "Pogba"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 31,
+            "out": [
+              "de Gea",
+              "Pogba"
+            ],
+            "in": [
+              "Man\u00c3\u00a9",
+              "Fabianski"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 32,
+            "out": [
+              "Salah"
+            ],
+            "in": [
+              "Sterling"
+            ],
+            "bank": 1.7
+          },
+          {
+            "gw": 33,
+            "out": [
+              "Sterling"
+            ],
+            "in": [
+              "Hazard"
+            ],
+            "bank": 2.2
+          },
+          {
+            "gw": 35,
+            "out": [
+              "Doherty",
+              "Felipe Anderson"
+            ],
+            "in": [
+              "Azpilicueta",
+              "Jota"
+            ],
+            "bank": 1.7
+          }
+        ],
+        "weeklyPoints": [
+          57.0,
+          38.0,
+          38.0,
+          42.0,
+          37.0,
+          50.0,
+          61.0,
+          76.0,
+          36.0,
+          70.0,
+          45.0,
+          45.0,
+          54.0,
+          57.0,
+          38.0,
+          84.0,
+          48.0,
+          46.0,
+          83.0,
+          70.0,
+          62.0,
+          38.0,
+          38.0,
+          55.0,
+          57.0,
+          49.0,
+          62.0,
+          47.0,
+          39.0,
+          56.0,
+          50.0,
+          58.0,
+          47.0,
+          62.0,
+          69.0,
+          63.0,
+          62.0,
+          57.0
+        ]
+      },
+      "2024-25": {
+        "points": 2173,
+        "transfers": [
+          {
+            "gw": 5,
+            "out": [
+              "\u00c3\u0098degaard",
+              "White",
+              "Palmer",
+              "B.Fernandes"
+            ],
+            "in": [
+              "Eze",
+              "Luis D\u00c3\u00adaz",
+              "M.Salah",
+              "Pedro Porro"
+            ],
+            "bank": 1.1
+          },
+          {
+            "gw": 7,
+            "out": [
+              "Eze",
+              "Mateta"
+            ],
+            "in": [
+              "Watkins",
+              "McNeil"
+            ],
+            "bank": 0.6
+          },
+          {
+            "gw": 9,
+            "out": [
+              "Bruno G.",
+              "Isak"
+            ],
+            "in": [
+              "Mbeumo",
+              "Wood"
+            ],
+            "bank": 1.2
+          },
+          {
+            "gw": 11,
+            "out": [
+              "Saliba",
+              "McNeil"
+            ],
+            "in": [
+              "Virgil",
+              "Johnson"
+            ],
+            "bank": 0.0
+          },
+          {
+            "gw": 13,
+            "out": [
+              "Watkins",
+              "Luis D\u00c3\u00adaz"
+            ],
+            "in": [
+              "B.Fernandes",
+              "Cunha"
+            ],
+            "bank": 1.1
+          },
+          {
+            "gw": 15,
+            "out": [
+              "Andersen",
+              "M.Salah"
+            ],
+            "in": [
+              "Kluivert",
+              "Wan-Bissaka"
+            ],
+            "bank": 8.2
+          },
+          {
+            "gw": 16,
+            "out": [
+              "Mbeumo"
+            ],
+            "in": [
+              "M.Salah"
+            ],
+            "bank": 2.4
+          },
+          {
+            "gw": 18,
+            "out": [
+              "Wood",
+              "Johnson"
+            ],
+            "in": [
+              "Szoboszlai",
+              "Isak"
+            ],
+            "bank": 0.0
+          },
+          {
+            "gw": 20,
+            "out": [
+              "Faes",
+              "B.Fernandes"
+            ],
+            "in": [
+              "Rogers",
+              "Huijsen"
+            ],
+            "bank": 2.4
+          },
+          {
+            "gw": 22,
+            "out": [
+              "Szoboszlai",
+              "Huijsen"
+            ],
+            "in": [
+              "Aina",
+              "Elanga"
+            ],
+            "bank": 2.5
+          },
+          {
+            "gw": 24,
+            "out": [
+              "Caicedo",
+              "Cunha"
+            ],
+            "in": [
+              "Mbeumo",
+              "Ndiaye"
+            ],
+            "bank": 0.8
+          },
+          {
+            "gw": 26,
+            "out": [
+              "Rogers",
+              "N.Jackson"
+            ],
+            "in": [
+              "O.Dango",
+              "Mateta"
+            ],
+            "bank": 1.6
+          },
+          {
+            "gw": 28,
+            "out": [
+              "Gvardiol",
+              "Aina"
+            ],
+            "in": [
+              "Mu\u00c3\u00b1oz",
+              "Alexander-Arnold"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 29,
+            "out": [
+              "Isak"
+            ],
+            "in": [
+              "Wood"
+            ],
+            "bank": 2.2
+          },
+          {
+            "gw": 32,
+            "out": [
+              "Kluivert",
+              "O.Dango",
+              "Wood"
+            ],
+            "in": [
+              "Jo\u00c3\u00a3o Pedro",
+              "B.Fernandes",
+              "J.Murphy"
+            ],
+            "bank": 0.4
+          },
+          {
+            "gw": 34,
+            "out": [
+              "Mu\u00c3\u00b1oz",
+              "Pedro Porro"
+            ],
+            "in": [
+              "Sch\u00c3\u00a4r",
+              "A\u00c3\u00aft-Nouri"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 36,
+            "out": [
+              "Mateta",
+              "Alexander-Arnold"
+            ],
+            "in": [
+              "Wissa",
+              "Gvardiol"
+            ],
+            "bank": 1.7
+          },
+          {
+            "gw": 38,
+            "out": [
+              "B.Fernandes",
+              "Elanga"
+            ],
+            "in": [
+              "Trossard",
+              "Bowen"
+            ],
+            "bank": 0.9
+          }
+        ],
+        "weeklyPoints": [
+          44.0,
+          54.0,
+          42.0,
+          55.0,
+          66.0,
+          43.0,
+          30.0,
+          60.0,
+          80.0,
+          46.0,
+          64.0,
+          63.0,
+          72.0,
+          62.0,
+          55.0,
+          64.0,
+          78.0,
+          61.0,
+          59.0,
+          47.0,
+          45.0,
+          29.0,
+          71.0,
+          109.0,
+          74.0,
+          69.0,
+          64.0,
+          44.0,
+          34.0,
+          44.0,
+          49.0,
+          82.0,
+          60.0,
+          59.0,
+          40.0,
+          45.0,
+          41.0,
+          69.0
+        ]
+      },
+      "2025-26": {
+        "points": 1887,
+        "transfers": [
+          {
+            "gw": 3,
+            "out": [
+              "Watkins",
+              "Enzo"
+            ],
+            "in": [
+              "Ekitik\u00c3\u00a9",
+              "Ndoye"
+            ],
+            "bank": 0.7
+          },
+          {
+            "gw": 5,
+            "out": [
+              "Rogers",
+              "R\u00c3\u00baben"
+            ],
+            "in": [
+              "Semenyo",
+              "Mu\u00c3\u00b1oz"
+            ],
+            "bank": 0.0
+          },
+          {
+            "gw": 7,
+            "out": [
+              "S\u00c3\u00a1nchez",
+              "Ndoye"
+            ],
+            "in": [
+              "Zubimendi",
+              "Pope"
+            ],
+            "bank": 0.3
+          },
+          {
+            "gw": 10,
+            "out": [
+              "Cucurella",
+              "Reinildo",
+              "Ekitik\u00c3\u00a9"
+            ],
+            "in": [
+              "Gabriel",
+              "Mukiele",
+              "Woltemade"
+            ],
+            "bank": 0.8
+          },
+          {
+            "gw": 12,
+            "out": [
+              "Bowen",
+              "Woltemade"
+            ],
+            "in": [
+              "Thiago",
+              "Mateta"
+            ],
+            "bank": 1.4
+          },
+          {
+            "gw": 14,
+            "out": [
+              "Semenyo",
+              "Pope"
+            ],
+            "in": [
+              "Verbruggen",
+              "B.Fernandes"
+            ],
+            "bank": 0.9
+          },
+          {
+            "gw": 16,
+            "out": [
+              "Gabriel",
+              "Zubimendi",
+              "Mbeumo",
+              "M.Salah",
+              "Mukiele"
+            ],
+            "in": [
+              "Saka",
+              "Rice",
+              "Cucurella",
+              "Chalobah",
+              "Foden"
+            ],
+            "bank": 1.0
+          },
+          {
+            "gw": 18,
+            "out": [
+              "Verbruggen",
+              "Mateta"
+            ],
+            "in": [
+              "Woltemade",
+              "Donnarumma"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 20,
+            "out": [
+              "Mu\u00c3\u00b1oz",
+              "Eze"
+            ],
+            "in": [
+              "Rogers",
+              "Tarkowski"
+            ],
+            "bank": 0.1
+          },
+          {
+            "gw": 22,
+            "out": [
+              "B.Fernandes",
+              "Woltemade"
+            ],
+            "in": [
+              "Watkins",
+              "Bruno G."
+            ],
+            "bank": 0.4
+          },
+          {
+            "gw": 25,
+            "out": [
+              "Saka",
+              "Gvardiol",
+              "Foden"
+            ],
+            "in": [
+              "Gabriel",
+              "Enzo",
+              "B.Fernandes"
+            ],
+            "bank": 0.9
+          },
+          {
+            "gw": 27,
+            "out": [
+              "Cucurella",
+              "B.Fernandes"
+            ],
+            "in": [
+              "Palmer",
+              "Lacroix"
+            ],
+            "bank": 1.0
+          },
+          {
+            "gw": 29,
+            "out": [
+              "Gabriel",
+              "Bruno G."
+            ],
+            "in": [
+              "Semenyo",
+              "Virgil"
+            ],
+            "bank": 0.6
+          },
+          {
+            "gw": 31,
+            "out": [
+              "Semenyo",
+              "Donnarumma"
+            ],
+            "in": [
+              "Verbruggen",
+              "Wilson"
+            ],
+            "bank": 3.9
+          },
+          {
+            "gw": 32,
+            "out": [
+              "Rogers"
+            ],
+            "in": [
+              "B.Fernandes"
+            ],
+            "bank": 1.0
+          },
+          {
+            "gw": 34,
+            "out": [
+              "Verbruggen",
+              "Palmer"
+            ],
+            "in": [
+              "Raya",
+              "Szoboszlai"
+            ],
+            "bank": 2.9
+          },
+          {
+            "gw": 36,
+            "out": [
+              "Chalobah",
+              "Enzo"
+            ],
+            "in": [
+              "O'Reilly",
+              "Cherki"
+            ],
+            "bank": 2.9
+          }
+        ],
+        "weeklyPoints": [
+          56.0,
+          37.0,
+          52.0,
+          43.0,
+          38.0,
+          32.0,
+          80.0,
+          48.0,
+          58.0,
+          47.0,
+          39.0,
+          56.0,
+          51.0,
+          34.0,
+          69.0,
+          72.0,
+          48.0,
+          39.0,
+          27.0,
+          62.0,
+          53.0,
+          36.0,
+          50.0,
+          26.0,
+          70.0,
+          64.0,
+          35.0,
+          40.0,
+          51.0,
+          34.0,
+          59.0,
+          58.0,
+          65.0,
+          40.0,
+          48.0,
+          51.0,
+          76.0,
+          43.0
+        ]
+      }
+    }
+  }
+}

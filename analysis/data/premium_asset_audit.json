@@ -1,0 +1,335 @@
+{
+  "method": "Replay the frozen champion once and inspect its actual weekly selections. Named assets are sanity checks, never forced constraints.",
+  "assets": [
+    {
+      "season": "2018/19",
+      "asset": "Salah",
+      "seasonPoints": 259,
+      "averagePrice": 13.18,
+      "averagePositionForecastRank": 1.9,
+      "squadRate": 15.8,
+      "xiRate": 15.8,
+      "captainRate": 15.8,
+      "rawPointsWhileOmitted": 222,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2018/19",
+      "asset": "Fernandes",
+      "seasonPoints": 0,
+      "averagePrice": 4.5,
+      "averagePositionForecastRank": 188.9,
+      "squadRate": 0.0,
+      "xiRate": 0.0,
+      "captainRate": 0.0,
+      "rawPointsWhileOmitted": 0,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2019/20",
+      "asset": "Salah",
+      "seasonPoints": 233,
+      "averagePrice": 12.48,
+      "averagePositionForecastRank": 2.9,
+      "squadRate": 0.0,
+      "xiRate": 0.0,
+      "captainRate": 0.0,
+      "rawPointsWhileOmitted": 233,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2019/20",
+      "asset": "Fernandes",
+      "seasonPoints": 117,
+      "averagePrice": 8.61,
+      "averagePositionForecastRank": 10.7,
+      "squadRate": 71.4,
+      "xiRate": 71.4,
+      "captainRate": 0.0,
+      "rawPointsWhileOmitted": 32,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2020/21",
+      "asset": "Salah",
+      "seasonPoints": 231,
+      "averagePrice": 12.45,
+      "averagePositionForecastRank": 3.9,
+      "squadRate": 40.0,
+      "xiRate": 40.0,
+      "captainRate": 20.0,
+      "rawPointsWhileOmitted": 134,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2020/21",
+      "asset": "Fernandes",
+      "seasonPoints": 244,
+      "averagePrice": 11.14,
+      "averagePositionForecastRank": 2.8,
+      "squadRate": 79.4,
+      "xiRate": 79.4,
+      "captainRate": 41.2,
+      "rawPointsWhileOmitted": 53,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2021/22",
+      "asset": "Salah",
+      "seasonPoints": 265,
+      "averagePrice": 12.94,
+      "averagePositionForecastRank": 2.1,
+      "squadRate": 51.4,
+      "xiRate": 51.4,
+      "captainRate": 37.1,
+      "rawPointsWhileOmitted": 95,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2021/22",
+      "asset": "Fernandes",
+      "seasonPoints": 151,
+      "averagePrice": 11.72,
+      "averagePositionForecastRank": 6.4,
+      "squadRate": 8.8,
+      "xiRate": 8.8,
+      "captainRate": 2.9,
+      "rawPointsWhileOmitted": 146,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2022/23",
+      "asset": "Salah",
+      "seasonPoints": 239,
+      "averagePrice": 12.86,
+      "averagePositionForecastRank": 3.3,
+      "squadRate": 0.0,
+      "xiRate": 0.0,
+      "captainRate": 0.0,
+      "rawPointsWhileOmitted": 239,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2022/23",
+      "asset": "Haaland",
+      "seasonPoints": 272,
+      "averagePrice": 12.12,
+      "averagePositionForecastRank": 1.8,
+      "squadRate": 73.5,
+      "xiRate": 73.5,
+      "captainRate": 35.3,
+      "rawPointsWhileOmitted": 84,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2022/23",
+      "asset": "Fernandes",
+      "seasonPoints": 176,
+      "averagePrice": 9.74,
+      "averagePositionForecastRank": 14.2,
+      "squadRate": 0.0,
+      "xiRate": 0.0,
+      "captainRate": 0.0,
+      "rawPointsWhileOmitted": 176,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2023/24",
+      "asset": "Salah",
+      "seasonPoints": 211,
+      "averagePrice": 13.02,
+      "averagePositionForecastRank": 5.5,
+      "squadRate": 5.6,
+      "xiRate": 5.6,
+      "captainRate": 2.8,
+      "rawPointsWhileOmitted": 201,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2023/24",
+      "asset": "Haaland",
+      "seasonPoints": 217,
+      "averagePrice": 14.12,
+      "averagePositionForecastRank": 3.2,
+      "squadRate": 30.6,
+      "xiRate": 30.6,
+      "captainRate": 16.7,
+      "rawPointsWhileOmitted": 156,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2023/24",
+      "asset": "Fernandes",
+      "seasonPoints": 166,
+      "averagePrice": 8.31,
+      "averagePositionForecastRank": 14.6,
+      "squadRate": 75.7,
+      "xiRate": 73.0,
+      "captainRate": 18.9,
+      "rawPointsWhileOmitted": 58,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2024/25",
+      "asset": "Salah",
+      "seasonPoints": 344,
+      "averagePrice": 13.31,
+      "averagePositionForecastRank": 1.9,
+      "squadRate": 72.2,
+      "xiRate": 72.2,
+      "captainRate": 44.4,
+      "rawPointsWhileOmitted": 93,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2024/25",
+      "asset": "Haaland",
+      "seasonPoints": 181,
+      "averagePrice": 14.96,
+      "averagePositionForecastRank": 4.5,
+      "squadRate": 0.0,
+      "xiRate": 0.0,
+      "captainRate": 0.0,
+      "rawPointsWhileOmitted": 181,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2024/25",
+      "asset": "Fernandes",
+      "seasonPoints": 174,
+      "averagePrice": 8.39,
+      "averagePositionForecastRank": 14.6,
+      "squadRate": 34.2,
+      "xiRate": 31.6,
+      "captainRate": 2.6,
+      "rawPointsWhileOmitted": 118,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2025/26",
+      "asset": "Salah",
+      "seasonPoints": 123,
+      "averagePrice": 14.14,
+      "averagePositionForecastRank": 16.8,
+      "squadRate": 0.0,
+      "xiRate": 0.0,
+      "captainRate": 0.0,
+      "rawPointsWhileOmitted": 123,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2025/26",
+      "asset": "Haaland",
+      "seasonPoints": 239,
+      "averagePrice": 14.71,
+      "averagePositionForecastRank": 2.6,
+      "squadRate": 0.0,
+      "xiRate": 0.0,
+      "captainRate": 0.0,
+      "rawPointsWhileOmitted": 239,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    },
+    {
+      "season": "2025/26",
+      "asset": "Fernandes",
+      "seasonPoints": 235,
+      "averagePrice": 9.46,
+      "averagePositionForecastRank": 6.6,
+      "squadRate": 42.1,
+      "xiRate": 42.1,
+      "captainRate": 23.7,
+      "rawPointsWhileOmitted": 133,
+      "warning": "Omitted raw points are not transfer regret; the replacement also scores and price affects the rest of the squad."
+    }
+  ],
+  "seasonLeaders": [
+    {
+      "season": "2018/19",
+      "topFiveHindsightSquadRate": 19.5,
+      "leaders": [
+        "Salah",
+        "Hazard",
+        "Sterling",
+        "Man\u00c3\u00a9",
+        "Robertson"
+      ]
+    },
+    {
+      "season": "2019/20",
+      "topFiveHindsightSquadRate": 33.7,
+      "leaders": [
+        "De Bruyne",
+        "Salah",
+        "Man\u00c3\u00a9",
+        "Vardy",
+        "Alexander-Arnold"
+      ]
+    },
+    {
+      "season": "2020/21",
+      "topFiveHindsightSquadRate": 67.7,
+      "leaders": [
+        "Fernandes",
+        "Kane",
+        "Salah",
+        "Son",
+        "Bamford"
+      ]
+    },
+    {
+      "season": "2021/22",
+      "topFiveHindsightSquadRate": 61.6,
+      "leaders": [
+        "Salah",
+        "Son",
+        "Alexander-Arnold",
+        "Bowen",
+        "Cancelo"
+      ]
+    },
+    {
+      "season": "2022/23",
+      "topFiveHindsightSquadRate": 53.5,
+      "leaders": [
+        "Haaland",
+        "Kane",
+        "Salah",
+        "\u00c3\u0098degaard",
+        "Rashford"
+      ]
+    },
+    {
+      "season": "2023/24",
+      "topFiveHindsightSquadRate": 32.6,
+      "leaders": [
+        "Palmer",
+        "Foden",
+        "Watkins",
+        "Saka",
+        "Haaland"
+      ]
+    },
+    {
+      "season": "2024/25",
+      "topFiveHindsightSquadRate": 60.0,
+      "leaders": [
+        "M.Salah",
+        "Mbeumo",
+        "Palmer",
+        "Isak",
+        "Wood"
+      ]
+    },
+    {
+      "season": "2025/26",
+      "topFiveHindsightSquadRate": 25.3,
+      "leaders": [
+        "Haaland",
+        "B.Fernandes",
+        "Gabriel",
+        "Semenyo",
+        "Gibbs-White"
+      ]
+    }
+  ]
+}

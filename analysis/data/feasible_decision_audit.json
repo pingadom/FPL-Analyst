@@ -1,0 +1,450 @@
+{
+  "status": "decision-frontier diagnostic",
+  "method": "Forecasts are judged on near-price pairs and the best affordable player under repeated price caps. This approximates the alternatives the legal squad optimiser can actually exchange.",
+  "overall": {
+    "oldFixedPlan": {
+      "nearPricePairAccuracy": 0.637,
+      "pairs": 1046429,
+      "meanAffordableTop1Regret": 12.5933,
+      "p90AffordableTop1Regret": 25.199,
+      "meanAffordableTop3Regret": 28.5913,
+      "budgetComparisons": 6582
+    },
+    "adaptiveStructural": {
+      "nearPricePairAccuracy": 0.626,
+      "pairs": 1046429,
+      "meanAffordableTop1Regret": 12.9357,
+      "p90AffordableTop1Regret": 25.5005,
+      "meanAffordableTop3Regret": 29.6546,
+      "budgetComparisons": 6582
+    },
+    "adaptivePriorSeasonRidge": {
+      "nearPricePairAccuracy": 0.6717,
+      "pairs": 1046429,
+      "meanAffordableTop1Regret": 11.1767,
+      "p90AffordableTop1Regret": 23.7198,
+      "meanAffordableTop3Regret": 25.1246,
+      "budgetComparisons": 6582
+    },
+    "adaptiveOnlineRidge": {
+      "nearPricePairAccuracy": 0.6721,
+      "pairs": 1046429,
+      "meanAffordableTop1Regret": 11.1497,
+      "p90AffordableTop1Regret": 23.604,
+      "meanAffordableTop3Regret": 25.0685,
+      "budgetComparisons": 6582
+    }
+  },
+  "byPosition": {
+    "GK": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.7999,
+        "pairs": 154662,
+        "meanAffordableTop1Regret": 7.1614,
+        "p90AffordableTop1Regret": 16.4711,
+        "meanAffordableTop3Regret": 14.1513,
+        "budgetComparisons": 659
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.7941,
+        "pairs": 154662,
+        "meanAffordableTop1Regret": 7.3276,
+        "p90AffordableTop1Regret": 16.5434,
+        "meanAffordableTop3Regret": 14.541,
+        "budgetComparisons": 659
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.8179,
+        "pairs": 154662,
+        "meanAffordableTop1Regret": 6.6513,
+        "p90AffordableTop1Regret": 15.7775,
+        "meanAffordableTop3Regret": 12.8157,
+        "budgetComparisons": 659
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.8183,
+        "pairs": 154662,
+        "meanAffordableTop1Regret": 6.6544,
+        "p90AffordableTop1Regret": 15.7418,
+        "meanAffordableTop3Regret": 12.6942,
+        "budgetComparisons": 659
+      }
+    },
+    "DEF": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.5995,
+        "pairs": 429845,
+        "meanAffordableTop1Regret": 13.4494,
+        "p90AffordableTop1Regret": 24.5412,
+        "meanAffordableTop3Regret": 31.697,
+        "budgetComparisons": 901
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.5876,
+        "pairs": 429845,
+        "meanAffordableTop1Regret": 13.9024,
+        "p90AffordableTop1Regret": 25.2027,
+        "meanAffordableTop3Regret": 33.4484,
+        "budgetComparisons": 901
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6363,
+        "pairs": 429845,
+        "meanAffordableTop1Regret": 11.5799,
+        "p90AffordableTop1Regret": 22.4008,
+        "meanAffordableTop3Regret": 28.191,
+        "budgetComparisons": 901
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.6368,
+        "pairs": 429845,
+        "meanAffordableTop1Regret": 11.5518,
+        "p90AffordableTop1Regret": 21.8266,
+        "meanAffordableTop3Regret": 27.9909,
+        "budgetComparisons": 901
+      }
+    },
+    "MID": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.5927,
+        "pairs": 313759,
+        "meanAffordableTop1Regret": 14.1045,
+        "p90AffordableTop1Regret": 27.5144,
+        "meanAffordableTop3Regret": 33.4645,
+        "budgetComparisons": 2566
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.5783,
+        "pairs": 313759,
+        "meanAffordableTop1Regret": 14.6528,
+        "p90AffordableTop1Regret": 28.0682,
+        "meanAffordableTop3Regret": 34.5203,
+        "budgetComparisons": 2566
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6332,
+        "pairs": 313759,
+        "meanAffordableTop1Regret": 12.6645,
+        "p90AffordableTop1Regret": 25.7297,
+        "meanAffordableTop3Regret": 28.9881,
+        "budgetComparisons": 2566
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.6337,
+        "pairs": 313759,
+        "meanAffordableTop1Regret": 12.618,
+        "p90AffordableTop1Regret": 25.5777,
+        "meanAffordableTop3Regret": 28.8956,
+        "budgetComparisons": 2566
+      }
+    },
+    "FWD": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.6698,
+        "pairs": 148163,
+        "meanAffordableTop1Regret": 12.1578,
+        "p90AffordableTop1Regret": 23.7668,
+        "meanAffordableTop3Regret": 26.2352,
+        "budgetComparisons": 2456
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.663,
+        "pairs": 148163,
+        "meanAffordableTop1Regret": 12.2919,
+        "p90AffordableTop1Regret": 24.082,
+        "meanAffordableTop3Regret": 27.2345,
+        "budgetComparisons": 2456
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.7035,
+        "pairs": 148163,
+        "meanAffordableTop1Regret": 10.6885,
+        "p90AffordableTop1Regret": 23.0764,
+        "meanAffordableTop3Regret": 23.2658,
+        "budgetComparisons": 2456
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.7032,
+        "pairs": 148163,
+        "meanAffordableTop1Regret": 10.6743,
+        "p90AffordableTop1Regret": 23.2203,
+        "meanAffordableTop3Regret": 23.3181,
+        "budgetComparisons": 2456
+      }
+    }
+  },
+  "bySeason": {
+    "2018/19": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.6436,
+        "pairs": 127061,
+        "meanAffordableTop1Regret": 11.8223,
+        "p90AffordableTop1Regret": 23.3291,
+        "meanAffordableTop3Regret": 25.8246,
+        "budgetComparisons": 779
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.6318,
+        "pairs": 127061,
+        "meanAffordableTop1Regret": 12.4324,
+        "p90AffordableTop1Regret": 23.6161,
+        "meanAffordableTop3Regret": 27.6069,
+        "budgetComparisons": 779
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6718,
+        "pairs": 127061,
+        "meanAffordableTop1Regret": 10.4807,
+        "p90AffordableTop1Regret": 21.6425,
+        "meanAffordableTop3Regret": 23.2321,
+        "budgetComparisons": 779
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.6738,
+        "pairs": 127061,
+        "meanAffordableTop1Regret": 10.4597,
+        "p90AffordableTop1Regret": 21.6425,
+        "meanAffordableTop3Regret": 22.9959,
+        "budgetComparisons": 779
+      }
+    },
+    "2019/20": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.6375,
+        "pairs": 129842,
+        "meanAffordableTop1Regret": 11.1697,
+        "p90AffordableTop1Regret": 22.6997,
+        "meanAffordableTop3Regret": 25.4961,
+        "budgetComparisons": 774
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.6294,
+        "pairs": 129842,
+        "meanAffordableTop1Regret": 12.2775,
+        "p90AffordableTop1Regret": 25.6421,
+        "meanAffordableTop3Regret": 27.7012,
+        "budgetComparisons": 774
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6587,
+        "pairs": 129842,
+        "meanAffordableTop1Regret": 10.0887,
+        "p90AffordableTop1Regret": 21.7135,
+        "meanAffordableTop3Regret": 22.9849,
+        "budgetComparisons": 774
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.6582,
+        "pairs": 129842,
+        "meanAffordableTop1Regret": 9.9022,
+        "p90AffordableTop1Regret": 21.404,
+        "meanAffordableTop3Regret": 22.7303,
+        "budgetComparisons": 774
+      }
+    },
+    "2020/21": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.6305,
+        "pairs": 126699,
+        "meanAffordableTop1Regret": 13.093,
+        "p90AffordableTop1Regret": 27.4531,
+        "meanAffordableTop3Regret": 29.8073,
+        "budgetComparisons": 735
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.6206,
+        "pairs": 126699,
+        "meanAffordableTop1Regret": 12.4922,
+        "p90AffordableTop1Regret": 25.5289,
+        "meanAffordableTop3Regret": 30.8831,
+        "budgetComparisons": 735
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6668,
+        "pairs": 126699,
+        "meanAffordableTop1Regret": 11.4961,
+        "p90AffordableTop1Regret": 24.9417,
+        "meanAffordableTop3Regret": 26.6255,
+        "budgetComparisons": 735
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.668,
+        "pairs": 126699,
+        "meanAffordableTop1Regret": 11.6243,
+        "p90AffordableTop1Regret": 24.1198,
+        "meanAffordableTop3Regret": 26.626,
+        "budgetComparisons": 735
+      }
+    },
+    "2021/22": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.6238,
+        "pairs": 120050,
+        "meanAffordableTop1Regret": 13.1499,
+        "p90AffordableTop1Regret": 25.7027,
+        "meanAffordableTop3Regret": 30.4139,
+        "budgetComparisons": 832
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.6159,
+        "pairs": 120050,
+        "meanAffordableTop1Regret": 13.6698,
+        "p90AffordableTop1Regret": 25.7027,
+        "meanAffordableTop3Regret": 31.0366,
+        "budgetComparisons": 832
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6649,
+        "pairs": 120050,
+        "meanAffordableTop1Regret": 11.5634,
+        "p90AffordableTop1Regret": 22.6414,
+        "meanAffordableTop3Regret": 26.6583,
+        "budgetComparisons": 832
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.6647,
+        "pairs": 120050,
+        "meanAffordableTop1Regret": 11.5405,
+        "p90AffordableTop1Regret": 22.7125,
+        "meanAffordableTop3Regret": 26.6255,
+        "budgetComparisons": 832
+      }
+    },
+    "2022/23": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.6299,
+        "pairs": 129660,
+        "meanAffordableTop1Regret": 12.9139,
+        "p90AffordableTop1Regret": 26.6938,
+        "meanAffordableTop3Regret": 30.4635,
+        "budgetComparisons": 762
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.6175,
+        "pairs": 129660,
+        "meanAffordableTop1Regret": 13.7804,
+        "p90AffordableTop1Regret": 27.12,
+        "meanAffordableTop3Regret": 31.7354,
+        "budgetComparisons": 762
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6741,
+        "pairs": 129660,
+        "meanAffordableTop1Regret": 11.2507,
+        "p90AffordableTop1Regret": 24.8126,
+        "meanAffordableTop3Regret": 25.4331,
+        "budgetComparisons": 762
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.6745,
+        "pairs": 129660,
+        "meanAffordableTop1Regret": 11.2998,
+        "p90AffordableTop1Regret": 25.6355,
+        "meanAffordableTop3Regret": 25.2777,
+        "budgetComparisons": 762
+      }
+    },
+    "2023/24": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.647,
+        "pairs": 137543,
+        "meanAffordableTop1Regret": 12.7389,
+        "p90AffordableTop1Regret": 26.687,
+        "meanAffordableTop3Regret": 28.8687,
+        "budgetComparisons": 894
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.6372,
+        "pairs": 137543,
+        "meanAffordableTop1Regret": 13.0507,
+        "p90AffordableTop1Regret": 26.6906,
+        "meanAffordableTop3Regret": 29.4751,
+        "budgetComparisons": 894
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6863,
+        "pairs": 137543,
+        "meanAffordableTop1Regret": 10.7052,
+        "p90AffordableTop1Regret": 25.0362,
+        "meanAffordableTop3Regret": 25.2647,
+        "budgetComparisons": 894
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.6862,
+        "pairs": 137543,
+        "meanAffordableTop1Regret": 10.5821,
+        "p90AffordableTop1Regret": 24.748,
+        "meanAffordableTop3Regret": 25.3797,
+        "budgetComparisons": 894
+      }
+    },
+    "2024/25": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.6488,
+        "pairs": 137661,
+        "meanAffordableTop1Regret": 12.6319,
+        "p90AffordableTop1Regret": 24.2233,
+        "meanAffordableTop3Regret": 28.7376,
+        "budgetComparisons": 888
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.6329,
+        "pairs": 137661,
+        "meanAffordableTop1Regret": 12.6465,
+        "p90AffordableTop1Regret": 24.3345,
+        "meanAffordableTop3Regret": 29.6694,
+        "budgetComparisons": 888
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6782,
+        "pairs": 137661,
+        "meanAffordableTop1Regret": 11.1401,
+        "p90AffordableTop1Regret": 23.7896,
+        "meanAffordableTop3Regret": 24.9143,
+        "budgetComparisons": 888
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.679,
+        "pairs": 137661,
+        "meanAffordableTop1Regret": 11.0784,
+        "p90AffordableTop1Regret": 23.7019,
+        "meanAffordableTop3Regret": 24.9008,
+        "budgetComparisons": 888
+      }
+    },
+    "2025/26": {
+      "oldFixedPlan": {
+        "nearPricePairAccuracy": 0.633,
+        "pairs": 137913,
+        "meanAffordableTop1Regret": 13.098,
+        "p90AffordableTop1Regret": 23.7198,
+        "meanAffordableTop3Regret": 28.9579,
+        "budgetComparisons": 918
+      },
+      "adaptiveStructural": {
+        "nearPricePairAccuracy": 0.621,
+        "pairs": 137913,
+        "meanAffordableTop1Regret": 13.0743,
+        "p90AffordableTop1Regret": 23.7198,
+        "meanAffordableTop3Regret": 29.2364,
+        "budgetComparisons": 918
+      },
+      "adaptivePriorSeasonRidge": {
+        "nearPricePairAccuracy": 0.6711,
+        "pairs": 137913,
+        "meanAffordableTop1Regret": 12.5113,
+        "p90AffordableTop1Regret": 24.5371,
+        "meanAffordableTop3Regret": 25.7534,
+        "budgetComparisons": 918
+      },
+      "adaptiveOnlineRidge": {
+        "nearPricePairAccuracy": 0.6705,
+        "pairs": 137913,
+        "meanAffordableTop1Regret": 12.55,
+        "p90AffordableTop1Regret": 24.5371,
+        "meanAffordableTop3Regret": 25.8261,
+        "budgetComparisons": 918
+      }
+    }
+  }
+}

@@ -1,0 +1,7678 @@
+{
+  "status": "research-only; captain stability gate failed",
+  "method": "Fixed-XI captain decision evaluation. Player-opponent records are shifted, restricted to single-fixture appearances and shrunk by 8-10 prior matches; learned ranks refit at GW1/GW13/GW25 using only completed rows.",
+  "baseline": {
+    "name": "frozen",
+    "average": 2174.9,
+    "minimum": 2031,
+    "developmentAverage": 2181.7,
+    "holdoutAverage": 2154.5,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2126
+      },
+      {
+        "season": "2019/20",
+        "points": 2154
+      },
+      {
+        "season": "2020/21",
+        "points": 2219
+      },
+      {
+        "season": "2021/22",
+        "points": 2266
+      },
+      {
+        "season": "2022/23",
+        "points": 2243
+      },
+      {
+        "season": "2023/24",
+        "points": 2082
+      },
+      {
+        "season": "2024/25",
+        "points": 2278
+      },
+      {
+        "season": "2025/26",
+        "points": 2031
+      }
+    ],
+    "averageDelta": 0.0,
+    "developmentDelta": 0.0,
+    "holdoutDelta": 0.0,
+    "worstSeasonDelta": 0,
+    "improvedSeasons": 0,
+    "declinedSeasons": 0,
+    "seasonDeltas": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "changedCaptains": 0,
+    "positiveChanges": 0,
+    "negativeChanges": 0,
+    "captainPointsPerWeek": 6.691,
+    "oracleRegretPerWeek": 5.704,
+    "changedDecisionLog": []
+  },
+  "correlationAudit": [
+    {
+      "minimumPriorMatches": 0,
+      "rows": 12120,
+      "coverage": 1.0,
+      "rawH2HSpearman": 0.0622,
+      "structuralSpearman": 0.1596
+    },
+    {
+      "minimumPriorMatches": 1,
+      "rows": 9542,
+      "coverage": 0.7873,
+      "rawH2HSpearman": 0.0696,
+      "structuralSpearman": 0.1706
+    },
+    {
+      "minimumPriorMatches": 2,
+      "rows": 7069,
+      "coverage": 0.5833,
+      "rawH2HSpearman": 0.0712,
+      "structuralSpearman": 0.1693
+    },
+    {
+      "minimumPriorMatches": 3,
+      "rows": 5378,
+      "coverage": 0.4437,
+      "rawH2HSpearman": 0.0798,
+      "structuralSpearman": 0.1776
+    },
+    {
+      "minimumPriorMatches": 4,
+      "rows": 3919,
+      "coverage": 0.3233,
+      "rawH2HSpearman": 0.077,
+      "structuralSpearman": 0.1686
+    }
+  ],
+  "models": [
+    {
+      "name": "frozen",
+      "average": 2174.9,
+      "minimum": 2031,
+      "developmentAverage": 2181.7,
+      "holdoutAverage": 2154.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2126
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2219
+        },
+        {
+          "season": "2021/22",
+          "points": 2266
+        },
+        {
+          "season": "2022/23",
+          "points": 2243
+        },
+        {
+          "season": "2023/24",
+          "points": 2082
+        },
+        {
+          "season": "2024/25",
+          "points": 2278
+        },
+        {
+          "season": "2025/26",
+          "points": 2031
+        }
+      ],
+      "averageDelta": 0.0,
+      "developmentDelta": 0.0,
+      "holdoutDelta": 0.0,
+      "worstSeasonDelta": 0,
+      "improvedSeasons": 0,
+      "declinedSeasons": 0,
+      "seasonDeltas": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "changedCaptains": 0,
+      "positiveChanges": 0,
+      "negativeChanges": 0,
+      "captainPointsPerWeek": 6.691,
+      "oracleRegretPerWeek": 5.704,
+      "changedDecisionLog": []
+    },
+    {
+      "name": "ceiling15",
+      "average": 2177.0,
+      "minimum": 2038,
+      "developmentAverage": 2181.3,
+      "holdoutAverage": 2164.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2116
+        },
+        {
+          "season": "2019/20",
+          "points": 2141
+        },
+        {
+          "season": "2020/21",
+          "points": 2230
+        },
+        {
+          "season": "2021/22",
+          "points": 2284
+        },
+        {
+          "season": "2022/23",
+          "points": 2250
+        },
+        {
+          "season": "2023/24",
+          "points": 2067
+        },
+        {
+          "season": "2024/25",
+          "points": 2290
+        },
+        {
+          "season": "2025/26",
+          "points": 2038
+        }
+      ],
+      "averageDelta": 2.1,
+      "developmentDelta": -0.3,
+      "holdoutDelta": 9.5,
+      "worstSeasonDelta": -15,
+      "improvedSeasons": 5,
+      "declinedSeasons": 3,
+      "seasonDeltas": [
+        -10,
+        -13,
+        11,
+        18,
+        7,
+        -15,
+        12,
+        7
+      ],
+      "changedCaptains": 69,
+      "positiveChanges": 29,
+      "negativeChanges": 26,
+      "captainPointsPerWeek": 6.784,
+      "oracleRegretPerWeek": 5.612,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 14,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Vardy",
+          "vice": "P\u00c3\u00a9rez",
+          "delta": 4,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.003
+        },
+        {
+          "season": "2019/20",
+          "gw": 19,
+          "from": "Richarlison",
+          "to": "Alli",
+          "vice": "Richarlison",
+          "delta": 5,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.38
+        },
+        {
+          "season": "2019/20",
+          "gw": 20,
+          "from": "Richarlison",
+          "to": "Alli",
+          "vice": "Rashford",
+          "delta": -4,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2019/20",
+          "gw": 25,
+          "from": "Richarlison",
+          "to": "Alexander-Arnold",
+          "vice": "Richarlison",
+          "delta": 4,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.626
+        },
+        {
+          "season": "2019/20",
+          "gw": 39,
+          "from": "De Bruyne",
+          "to": "Jim\u00c3\u00a9nez",
+          "vice": "De Bruyne",
+          "delta": -7,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.078
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "De Bruyne",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 3,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Kane",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": 5,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.077
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 35,
+          "from": "Salah",
+          "to": "Fernandes",
+          "vice": "Salah",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.898
+        },
+        {
+          "season": "2020/21",
+          "gw": 37,
+          "from": "Fernandes",
+          "to": "Salah",
+          "vice": "Fernandes",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.905
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Gallagher",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 15,
+          "from": "Alexander-Arnold",
+          "to": "Bernardo",
+          "vice": "Alexander-Arnold",
+          "delta": 6,
+          "toH2HMatches": 4,
+          "toH2HUplift": 1.01
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Cash",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 8,
+          "from": "Kulusevski",
+          "to": "Haaland",
+          "vice": "Kulusevski",
+          "delta": 1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 19,
+          "from": "Kane",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": -14,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 21,
+          "from": "Kane",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": 11,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.272
+        },
+        {
+          "season": "2023/24",
+          "gw": 3,
+          "from": "B.Fernandes",
+          "to": "Mbeumo",
+          "vice": "B.Fernandes",
+          "delta": -10,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.232
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 6,
+          "from": "B.Fernandes",
+          "to": "Mbeumo",
+          "vice": "B.Fernandes",
+          "delta": -9,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.531
+        },
+        {
+          "season": "2023/24",
+          "gw": 8,
+          "from": "B.Fernandes",
+          "to": "Haaland",
+          "vice": "B.Fernandes",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.675
+        },
+        {
+          "season": "2023/24",
+          "gw": 9,
+          "from": "Haaland",
+          "to": "Watkins",
+          "vice": "Haaland",
+          "delta": 3,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2023/24",
+          "gw": 18,
+          "from": "Watkins",
+          "to": "Salah",
+          "vice": "Watkins",
+          "delta": 5,
+          "toH2HMatches": 9,
+          "toH2HUplift": -0.269
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Foden",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.161
+        },
+        {
+          "season": "2023/24",
+          "gw": 31,
+          "from": "Saka",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Saka",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.015
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 8,
+          "from": "Luis D\u00c3\u00adaz",
+          "to": "Palmer",
+          "vice": "Gabriel",
+          "delta": 1,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.137
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2024/25",
+          "gw": 23,
+          "from": "Isak",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": -5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.766
+        },
+        {
+          "season": "2024/25",
+          "gw": 25,
+          "from": "Alexander-Arnold",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": 7,
+          "toH2HMatches": 11,
+          "toH2HUplift": -0.216
+        },
+        {
+          "season": "2024/25",
+          "gw": 28,
+          "from": "Mbeumo",
+          "to": "M.Salah",
+          "vice": "Mbeumo",
+          "delta": 13,
+          "toH2HMatches": 9,
+          "toH2HUplift": -0.254
+        },
+        {
+          "season": "2024/25",
+          "gw": 31,
+          "from": "Isak",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.592
+        },
+        {
+          "season": "2024/25",
+          "gw": 37,
+          "from": "Mbeumo",
+          "to": "Eze",
+          "vice": "Mbeumo",
+          "delta": 1,
+          "toH2HMatches": 6,
+          "toH2HUplift": 1.445
+        },
+        {
+          "season": "2025/26",
+          "gw": 6,
+          "from": "Semenyo",
+          "to": "Mbeumo",
+          "vice": "Semenyo",
+          "delta": -5,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 12,
+          "from": "Mateta",
+          "to": "Thiago",
+          "vice": "Mateta",
+          "delta": 3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 14,
+          "from": "Mbeumo",
+          "to": "B.Fernandes",
+          "vice": "Mbeumo",
+          "delta": 2,
+          "toH2HMatches": 11,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "B.Fernandes",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 23,
+          "from": "Semenyo",
+          "to": "Thiago",
+          "vice": "Semenyo",
+          "delta": -6,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2025/26",
+          "gw": 27,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Enzo",
+          "delta": 2,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.234
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Cunha",
+          "vice": "Rice",
+          "delta": -3,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.956
+        },
+        {
+          "season": "2025/26",
+          "gw": 33,
+          "from": "Jo\u00c3\u00a3o Pedro",
+          "to": "Thiago",
+          "vice": "Jo\u00c3\u00a3o Pedro",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.2
+        },
+        {
+          "season": "2025/26",
+          "gw": 34,
+          "from": "Bowen",
+          "to": "Szoboszlai",
+          "vice": "Bowen",
+          "delta": -9,
+          "toH2HMatches": 5,
+          "toH2HUplift": -0.527
+        },
+        {
+          "season": "2025/26",
+          "gw": 35,
+          "from": "Rogers",
+          "to": "Thiago",
+          "vice": "Rogers",
+          "delta": 5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.614
+        },
+        {
+          "season": "2025/26",
+          "gw": 38,
+          "from": "Szoboszlai",
+          "to": "B.Fernandes",
+          "vice": "Szoboszlai",
+          "delta": 12,
+          "toH2HMatches": 10,
+          "toH2HUplift": -0.223
+        }
+      ]
+    },
+    {
+      "name": "historyDirect025",
+      "average": 2169.6,
+      "minimum": 2004,
+      "developmentAverage": 2180.8,
+      "holdoutAverage": 2136.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2111
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2218
+        },
+        {
+          "season": "2021/22",
+          "points": 2276
+        },
+        {
+          "season": "2022/23",
+          "points": 2253
+        },
+        {
+          "season": "2023/24",
+          "points": 2073
+        },
+        {
+          "season": "2024/25",
+          "points": 2268
+        },
+        {
+          "season": "2025/26",
+          "points": 2004
+        }
+      ],
+      "averageDelta": -5.2,
+      "developmentDelta": -0.8,
+      "holdoutDelta": -18.5,
+      "worstSeasonDelta": -27,
+      "improvedSeasons": 2,
+      "declinedSeasons": 5,
+      "seasonDeltas": [
+        -15,
+        0,
+        -1,
+        10,
+        10,
+        -9,
+        -10,
+        -27
+      ],
+      "changedCaptains": 24,
+      "positiveChanges": 8,
+      "negativeChanges": 15,
+      "captainPointsPerWeek": 6.641,
+      "oracleRegretPerWeek": 5.755,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2018/19",
+          "gw": 38,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Vardy",
+          "vice": "P\u00c3\u00a9rez",
+          "delta": -5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.479
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Gallagher",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 23,
+          "from": "Jota",
+          "to": "Alexander-Arnold",
+          "vice": "Jota",
+          "delta": -3,
+          "toH2HMatches": 5,
+          "toH2HUplift": 1.228
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Cash",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "\u00c3\u0098degaard",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2022/23",
+          "gw": 33,
+          "from": "Watkins",
+          "to": "Kane",
+          "vice": "Watkins",
+          "delta": 9,
+          "toH2HMatches": 8,
+          "toH2HUplift": -0.446
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 32,
+          "from": "Palmer",
+          "to": "Foden",
+          "vice": "Palmer",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.09
+        },
+        {
+          "season": "2024/25",
+          "gw": 3,
+          "from": "Palmer",
+          "to": "Isak",
+          "vice": "Palmer",
+          "delta": 3,
+          "toH2HMatches": 3,
+          "toH2HUplift": 1.398
+        },
+        {
+          "season": "2024/25",
+          "gw": 32,
+          "from": "J.Murphy",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": -13,
+          "toH2HMatches": 12,
+          "toH2HUplift": -0.351
+        },
+        {
+          "season": "2025/26",
+          "gw": 6,
+          "from": "Semenyo",
+          "to": "Mbeumo",
+          "vice": "Semenyo",
+          "delta": -5,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 13,
+          "from": "Thiago",
+          "to": "Mateta",
+          "vice": "Mbeumo",
+          "delta": -7,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.702
+        },
+        {
+          "season": "2025/26",
+          "gw": 26,
+          "from": "Rice",
+          "to": "Rogers",
+          "vice": "Semenyo",
+          "delta": -12,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.952
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "Rogers",
+          "vice": "Gibbs-White",
+          "delta": -3,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.107
+        }
+      ]
+    },
+    {
+      "name": "historyDirect050",
+      "average": 2172.2,
+      "minimum": 2009,
+      "developmentAverage": 2178.2,
+      "holdoutAverage": 2154.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2111
+        },
+        {
+          "season": "2019/20",
+          "points": 2147
+        },
+        {
+          "season": "2020/21",
+          "points": 2215
+        },
+        {
+          "season": "2021/22",
+          "points": 2276
+        },
+        {
+          "season": "2022/23",
+          "points": 2246
+        },
+        {
+          "season": "2023/24",
+          "points": 2074
+        },
+        {
+          "season": "2024/25",
+          "points": 2300
+        },
+        {
+          "season": "2025/26",
+          "points": 2009
+        }
+      ],
+      "averageDelta": -2.6,
+      "developmentDelta": -3.5,
+      "holdoutDelta": 0.0,
+      "worstSeasonDelta": -22,
+      "improvedSeasons": 3,
+      "declinedSeasons": 5,
+      "seasonDeltas": [
+        -15,
+        -7,
+        -4,
+        10,
+        3,
+        -8,
+        22,
+        -22
+      ],
+      "changedCaptains": 41,
+      "positiveChanges": 14,
+      "negativeChanges": 22,
+      "captainPointsPerWeek": 6.697,
+      "oracleRegretPerWeek": 5.699,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2018/19",
+          "gw": 38,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Vardy",
+          "vice": "P\u00c3\u00a9rez",
+          "delta": -5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.479
+        },
+        {
+          "season": "2019/20",
+          "gw": 22,
+          "from": "Rashford",
+          "to": "Vardy",
+          "vice": "Rashford",
+          "delta": -7,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.197
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 34,
+          "from": "Iheanacho",
+          "to": "Pereira",
+          "vice": "Iheanacho",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 23,
+          "from": "Jota",
+          "to": "Alexander-Arnold",
+          "vice": "Jota",
+          "delta": -3,
+          "toH2HMatches": 5,
+          "toH2HUplift": 1.228
+        },
+        {
+          "season": "2021/22",
+          "gw": 29,
+          "from": "Saka",
+          "to": "Son",
+          "vice": "Saka",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.177
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Cash",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 22,
+          "from": "Rashford",
+          "to": "Haaland",
+          "vice": "Rashford",
+          "delta": -18,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Kane",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2022/23",
+          "gw": 33,
+          "from": "Watkins",
+          "to": "Kane",
+          "vice": "Watkins",
+          "delta": 9,
+          "toH2HMatches": 8,
+          "toH2HUplift": -0.446
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Kane",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 12,
+          "from": "Watkins",
+          "to": "B.Fernandes",
+          "vice": "Watkins",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 32,
+          "from": "Palmer",
+          "to": "Watkins",
+          "vice": "Foden",
+          "delta": 8,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.099
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2023/24",
+          "gw": 38,
+          "from": "Palmer",
+          "to": "N.Jackson",
+          "vice": "Saka",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.333
+        },
+        {
+          "season": "2024/25",
+          "gw": 3,
+          "from": "Palmer",
+          "to": "Isak",
+          "vice": "Havertz",
+          "delta": 3,
+          "toH2HMatches": 3,
+          "toH2HUplift": 1.398
+        },
+        {
+          "season": "2024/25",
+          "gw": 28,
+          "from": "Mbeumo",
+          "to": "M.Salah",
+          "vice": "Mbeumo",
+          "delta": 13,
+          "toH2HMatches": 9,
+          "toH2HUplift": -0.254
+        },
+        {
+          "season": "2024/25",
+          "gw": 29,
+          "from": "Wood",
+          "to": "B.Fernandes",
+          "vice": "Wood",
+          "delta": 15,
+          "toH2HMatches": 7,
+          "toH2HUplift": 1.5
+        },
+        {
+          "season": "2024/25",
+          "gw": 32,
+          "from": "J.Murphy",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": -13,
+          "toH2HMatches": 12,
+          "toH2HUplift": -0.351
+        },
+        {
+          "season": "2024/25",
+          "gw": 35,
+          "from": "Mbeumo",
+          "to": "Isak",
+          "vice": "M.Salah",
+          "delta": 4,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.513
+        },
+        {
+          "season": "2025/26",
+          "gw": 1,
+          "from": "Mbeumo",
+          "to": "Watkins",
+          "vice": "Bowen",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": 0.177
+        },
+        {
+          "season": "2025/26",
+          "gw": 6,
+          "from": "Semenyo",
+          "to": "Mbeumo",
+          "vice": "Semenyo",
+          "delta": -5,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 10,
+          "from": "Mbeumo",
+          "to": "Woltemade",
+          "vice": "Mbeumo",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 13,
+          "from": "Thiago",
+          "to": "Mateta",
+          "vice": "Mbeumo",
+          "delta": -7,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.702
+        },
+        {
+          "season": "2025/26",
+          "gw": 15,
+          "from": "B.Fernandes",
+          "to": "Mbeumo",
+          "vice": "B.Fernandes",
+          "delta": -10,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.647
+        },
+        {
+          "season": "2025/26",
+          "gw": 26,
+          "from": "Rice",
+          "to": "Rogers",
+          "vice": "Semenyo",
+          "delta": -12,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.952
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "Rogers",
+          "vice": "O'Reilly",
+          "delta": -3,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.107
+        },
+        {
+          "season": "2025/26",
+          "gw": 37,
+          "from": "Thiago",
+          "to": "Bowen",
+          "vice": "Thiago",
+          "delta": 0,
+          "toH2HMatches": 11,
+          "toH2HUplift": -0.211
+        },
+        {
+          "season": "2025/26",
+          "gw": 38,
+          "from": "Szoboszlai",
+          "to": "B.Fernandes",
+          "vice": "Szoboszlai",
+          "delta": 12,
+          "toH2HMatches": 10,
+          "toH2HUplift": -0.223
+        }
+      ]
+    },
+    {
+      "name": "historyDirect100",
+      "average": 2169.9,
+      "minimum": 1988,
+      "developmentAverage": 2179.7,
+      "holdoutAverage": 2140.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2111
+        },
+        {
+          "season": "2019/20",
+          "points": 2156
+        },
+        {
+          "season": "2020/21",
+          "points": 2216
+        },
+        {
+          "season": "2021/22",
+          "points": 2269
+        },
+        {
+          "season": "2022/23",
+          "points": 2250
+        },
+        {
+          "season": "2023/24",
+          "points": 2076
+        },
+        {
+          "season": "2024/25",
+          "points": 2293
+        },
+        {
+          "season": "2025/26",
+          "points": 1988
+        }
+      ],
+      "averageDelta": -5.0,
+      "developmentDelta": -2.0,
+      "holdoutDelta": -14.0,
+      "worstSeasonDelta": -43,
+      "improvedSeasons": 4,
+      "declinedSeasons": 4,
+      "seasonDeltas": [
+        -15,
+        2,
+        -3,
+        3,
+        7,
+        -6,
+        15,
+        -43
+      ],
+      "changedCaptains": 64,
+      "positiveChanges": 25,
+      "negativeChanges": 32,
+      "captainPointsPerWeek": 6.646,
+      "oracleRegretPerWeek": 5.749,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2018/19",
+          "gw": 38,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Vardy",
+          "vice": "Hazard",
+          "delta": -5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.479
+        },
+        {
+          "season": "2019/20",
+          "gw": 9,
+          "from": "Callum Wilson",
+          "to": "Vardy",
+          "vice": "Callum Wilson",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.548
+        },
+        {
+          "season": "2019/20",
+          "gw": 12,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Tielemans",
+          "vice": "Vardy",
+          "delta": 5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.493
+        },
+        {
+          "season": "2019/20",
+          "gw": 13,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Richarlison",
+          "vice": "P\u00c3\u00a9rez",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2019/20",
+          "gw": 14,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Vardy",
+          "vice": "P\u00c3\u00a9rez",
+          "delta": 4,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.003
+        },
+        {
+          "season": "2019/20",
+          "gw": 22,
+          "from": "Rashford",
+          "to": "Vardy",
+          "vice": "Rashford",
+          "delta": -7,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.197
+        },
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Jim\u00c3\u00a9nez",
+          "vice": "Azpilicueta",
+          "delta": 11,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.177
+        },
+        {
+          "season": "2019/20",
+          "gw": 26,
+          "from": "Richarlison",
+          "to": "Jim\u00c3\u00a9nez",
+          "vice": "Alli",
+          "delta": -11,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.577
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 28,
+          "from": "Rashford",
+          "to": "Fernandes",
+          "vice": "Rashford",
+          "delta": 1,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.915
+        },
+        {
+          "season": "2020/21",
+          "gw": 34,
+          "from": "Iheanacho",
+          "to": "Pereira",
+          "vice": "Watkins",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 22,
+          "from": "Jota",
+          "to": "Son",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.537
+        },
+        {
+          "season": "2021/22",
+          "gw": 23,
+          "from": "Jota",
+          "to": "Alexander-Arnold",
+          "vice": "Jota",
+          "delta": -3,
+          "toH2HMatches": 5,
+          "toH2HUplift": 1.228
+        },
+        {
+          "season": "2021/22",
+          "gw": 24,
+          "from": "Jota",
+          "to": "Son",
+          "vice": "Jota",
+          "delta": -9,
+          "toH2HMatches": 5,
+          "toH2HUplift": 1.45
+        },
+        {
+          "season": "2021/22",
+          "gw": 28,
+          "from": "Ward-Prowse",
+          "to": "Son",
+          "vice": "Ward-Prowse",
+          "delta": 3,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.432
+        },
+        {
+          "season": "2021/22",
+          "gw": 29,
+          "from": "Saka",
+          "to": "Son",
+          "vice": "Kulusevski",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.177
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Cash",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 3,
+          "from": "Son",
+          "to": "Kane",
+          "vice": "Son",
+          "delta": 3,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.83
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 22,
+          "from": "Rashford",
+          "to": "Haaland",
+          "vice": "\u00c3\u0098degaard",
+          "delta": -18,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 25,
+          "from": "\u00c3\u0098degaard",
+          "to": "Haaland",
+          "vice": "\u00c3\u0098degaard",
+          "delta": -1,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.369
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Kane",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Kane",
+          "vice": "Watkins",
+          "delta": 4,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.996
+        },
+        {
+          "season": "2022/23",
+          "gw": 33,
+          "from": "Watkins",
+          "to": "Kane",
+          "vice": "Watkins",
+          "delta": 9,
+          "toH2HMatches": 8,
+          "toH2HUplift": -0.446
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Kane",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 12,
+          "from": "Watkins",
+          "to": "B.Fernandes",
+          "vice": "Watkins",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2023/24",
+          "gw": 13,
+          "from": "Watkins",
+          "to": "Haaland",
+          "vice": "Watkins",
+          "delta": 2,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.667
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 32,
+          "from": "Palmer",
+          "to": "Watkins",
+          "vice": "Saka",
+          "delta": 8,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.099
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2023/24",
+          "gw": 38,
+          "from": "Palmer",
+          "to": "N.Jackson",
+          "vice": "Saka",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.333
+        },
+        {
+          "season": "2024/25",
+          "gw": 3,
+          "from": "Palmer",
+          "to": "Isak",
+          "vice": "Havertz",
+          "delta": 3,
+          "toH2HMatches": 3,
+          "toH2HUplift": 1.398
+        },
+        {
+          "season": "2024/25",
+          "gw": 6,
+          "from": "Luis D\u00c3\u00adaz",
+          "to": "Havertz",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 4,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2024/25",
+          "gw": 28,
+          "from": "Mbeumo",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": 13,
+          "toH2HMatches": 9,
+          "toH2HUplift": -0.254
+        },
+        {
+          "season": "2024/25",
+          "gw": 29,
+          "from": "Wood",
+          "to": "B.Fernandes",
+          "vice": "Mbeumo",
+          "delta": 15,
+          "toH2HMatches": 7,
+          "toH2HUplift": 1.5
+        },
+        {
+          "season": "2024/25",
+          "gw": 32,
+          "from": "J.Murphy",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": -13,
+          "toH2HMatches": 12,
+          "toH2HUplift": -0.351
+        },
+        {
+          "season": "2024/25",
+          "gw": 33,
+          "from": "Gvardiol",
+          "to": "M.Salah",
+          "vice": "Gvardiol",
+          "delta": -4,
+          "toH2HMatches": 10,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2024/25",
+          "gw": 35,
+          "from": "Mbeumo",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": -3,
+          "toH2HMatches": 10,
+          "toH2HUplift": -0.686
+        },
+        {
+          "season": "2025/26",
+          "gw": 1,
+          "from": "Mbeumo",
+          "to": "Watkins",
+          "vice": "Bowen",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": 0.177
+        },
+        {
+          "season": "2025/26",
+          "gw": 5,
+          "from": "Semenyo",
+          "to": "Woltemade",
+          "vice": "Semenyo",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 6,
+          "from": "Semenyo",
+          "to": "Mbeumo",
+          "vice": "Semenyo",
+          "delta": -5,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 7,
+          "from": "Semenyo",
+          "to": "Watkins",
+          "vice": "Semenyo",
+          "delta": -16,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.052
+        },
+        {
+          "season": "2025/26",
+          "gw": 10,
+          "from": "Mbeumo",
+          "to": "Woltemade",
+          "vice": "Mbeumo",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 11,
+          "from": "Mateta",
+          "to": "Woltemade",
+          "vice": "Mateta",
+          "delta": 3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 13,
+          "from": "Thiago",
+          "to": "Mbeumo",
+          "vice": "Mateta",
+          "delta": -12,
+          "toH2HMatches": 7,
+          "toH2HUplift": 0.033
+        },
+        {
+          "season": "2025/26",
+          "gw": 15,
+          "from": "B.Fernandes",
+          "to": "Mbeumo",
+          "vice": "B.Fernandes",
+          "delta": -10,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.647
+        },
+        {
+          "season": "2025/26",
+          "gw": 17,
+          "from": "Foden",
+          "to": "B.Fernandes",
+          "vice": "Foden",
+          "delta": -2,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.084
+        },
+        {
+          "season": "2025/26",
+          "gw": 18,
+          "from": "Foden",
+          "to": "B.Fernandes",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.007
+        },
+        {
+          "season": "2025/26",
+          "gw": 26,
+          "from": "Rice",
+          "to": "Rogers",
+          "vice": "Semenyo",
+          "delta": -12,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.952
+        },
+        {
+          "season": "2025/26",
+          "gw": 31,
+          "from": "Jo\u00c3\u00a3o Pedro",
+          "to": "Rogers",
+          "vice": "Jo\u00c3\u00a3o Pedro",
+          "delta": 4,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.333
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "Rogers",
+          "vice": "Bowen",
+          "delta": -3,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.107
+        },
+        {
+          "season": "2025/26",
+          "gw": 37,
+          "from": "Thiago",
+          "to": "Bowen",
+          "vice": "Gibbs-White",
+          "delta": 0,
+          "toH2HMatches": 11,
+          "toH2HUplift": -0.211
+        },
+        {
+          "season": "2025/26",
+          "gw": 38,
+          "from": "Szoboszlai",
+          "to": "B.Fernandes",
+          "vice": "Szoboszlai",
+          "delta": 12,
+          "toH2HMatches": 10,
+          "toH2HUplift": -0.223
+        }
+      ]
+    },
+    {
+      "name": "contextML05",
+      "average": 2173.5,
+      "minimum": 2042,
+      "developmentAverage": 2178.8,
+      "holdoutAverage": 2157.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2122
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2219
+        },
+        {
+          "season": "2021/22",
+          "points": 2266
+        },
+        {
+          "season": "2022/23",
+          "points": 2240
+        },
+        {
+          "season": "2023/24",
+          "points": 2072
+        },
+        {
+          "season": "2024/25",
+          "points": 2273
+        },
+        {
+          "season": "2025/26",
+          "points": 2042
+        }
+      ],
+      "averageDelta": -1.4,
+      "developmentDelta": -2.8,
+      "holdoutDelta": 3.0,
+      "worstSeasonDelta": -10,
+      "improvedSeasons": 1,
+      "declinedSeasons": 4,
+      "seasonDeltas": [
+        -4,
+        0,
+        0,
+        0,
+        -3,
+        -10,
+        -5,
+        11
+      ],
+      "changedCaptains": 19,
+      "positiveChanges": 4,
+      "negativeChanges": 8,
+      "captainPointsPerWeek": 6.639,
+      "oracleRegretPerWeek": 5.757,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2020/21",
+          "gw": 26,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.635
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 18,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -4,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.466
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "\u00c3\u0098degaard",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2025/26",
+          "gw": 14,
+          "from": "Mbeumo",
+          "to": "B.Fernandes",
+          "vice": "Mbeumo",
+          "delta": 2,
+          "toH2HMatches": 11,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "B.Fernandes",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyML05",
+      "average": 2172.0,
+      "minimum": 2037,
+      "developmentAverage": 2177.7,
+      "holdoutAverage": 2155.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2116
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2218
+        },
+        {
+          "season": "2021/22",
+          "points": 2266
+        },
+        {
+          "season": "2022/23",
+          "points": 2243
+        },
+        {
+          "season": "2023/24",
+          "points": 2069
+        },
+        {
+          "season": "2024/25",
+          "points": 2273
+        },
+        {
+          "season": "2025/26",
+          "points": 2037
+        }
+      ],
+      "averageDelta": -2.9,
+      "developmentDelta": -4.0,
+      "holdoutDelta": 0.5,
+      "worstSeasonDelta": -13,
+      "improvedSeasons": 1,
+      "declinedSeasons": 4,
+      "seasonDeltas": [
+        -10,
+        0,
+        -1,
+        0,
+        0,
+        -13,
+        -5,
+        6
+      ],
+      "changedCaptains": 22,
+      "positiveChanges": 5,
+      "negativeChanges": 10,
+      "captainPointsPerWeek": 6.62,
+      "oracleRegretPerWeek": 5.776,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 26,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.635
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 20,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -1,
+          "toH2HMatches": 8,
+          "toH2HUplift": -0.121
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "\u00c3\u0098degaard",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyCeiling05",
+      "average": 2172.0,
+      "minimum": 2032,
+      "developmentAverage": 2178.5,
+      "holdoutAverage": 2152.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2116
+        },
+        {
+          "season": "2019/20",
+          "points": 2151
+        },
+        {
+          "season": "2020/21",
+          "points": 2218
+        },
+        {
+          "season": "2021/22",
+          "points": 2266
+        },
+        {
+          "season": "2022/23",
+          "points": 2241
+        },
+        {
+          "season": "2023/24",
+          "points": 2079
+        },
+        {
+          "season": "2024/25",
+          "points": 2273
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": -2.9,
+      "developmentDelta": -3.2,
+      "holdoutDelta": -2.0,
+      "worstSeasonDelta": -10,
+      "improvedSeasons": 1,
+      "declinedSeasons": 6,
+      "seasonDeltas": [
+        -10,
+        -3,
+        -1,
+        0,
+        -2,
+        -3,
+        -5,
+        1
+      ],
+      "changedCaptains": 16,
+      "positiveChanges": 4,
+      "negativeChanges": 9,
+      "captainPointsPerWeek": 6.644,
+      "oracleRegretPerWeek": 5.752,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2025/26",
+          "gw": 6,
+          "from": "Semenyo",
+          "to": "Mbeumo",
+          "vice": "Semenyo",
+          "delta": -5,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "contextML10",
+      "average": 2172.9,
+      "minimum": 2042,
+      "developmentAverage": 2177.0,
+      "holdoutAverage": 2160.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2122
+        },
+        {
+          "season": "2019/20",
+          "points": 2149
+        },
+        {
+          "season": "2020/21",
+          "points": 2219
+        },
+        {
+          "season": "2021/22",
+          "points": 2265
+        },
+        {
+          "season": "2022/23",
+          "points": 2241
+        },
+        {
+          "season": "2023/24",
+          "points": 2066
+        },
+        {
+          "season": "2024/25",
+          "points": 2279
+        },
+        {
+          "season": "2025/26",
+          "points": 2042
+        }
+      ],
+      "averageDelta": -2.0,
+      "developmentDelta": -4.7,
+      "holdoutDelta": 6.0,
+      "worstSeasonDelta": -16,
+      "improvedSeasons": 2,
+      "declinedSeasons": 5,
+      "seasonDeltas": [
+        -4,
+        -5,
+        0,
+        -1,
+        -2,
+        -16,
+        1,
+        11
+      ],
+      "changedCaptains": 28,
+      "positiveChanges": 6,
+      "negativeChanges": 12,
+      "captainPointsPerWeek": 6.625,
+      "oracleRegretPerWeek": 5.77,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Vardy",
+          "vice": "Azpilicueta",
+          "delta": -2,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.277
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 26,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.635
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Zaha",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 18,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -4,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.466
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Mitoma",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Kane",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2025/26",
+          "gw": 14,
+          "from": "Mbeumo",
+          "to": "B.Fernandes",
+          "vice": "Mbeumo",
+          "delta": 2,
+          "toH2HMatches": 11,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyML10",
+      "average": 2174.2,
+      "minimum": 2038,
+      "developmentAverage": 2179.5,
+      "holdoutAverage": 2158.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2116
+        },
+        {
+          "season": "2019/20",
+          "points": 2151
+        },
+        {
+          "season": "2020/21",
+          "points": 2227
+        },
+        {
+          "season": "2021/22",
+          "points": 2265
+        },
+        {
+          "season": "2022/23",
+          "points": 2255
+        },
+        {
+          "season": "2023/24",
+          "points": 2063
+        },
+        {
+          "season": "2024/25",
+          "points": 2279
+        },
+        {
+          "season": "2025/26",
+          "points": 2038
+        }
+      ],
+      "averageDelta": -0.6,
+      "developmentDelta": -2.2,
+      "holdoutDelta": 4.0,
+      "worstSeasonDelta": -19,
+      "improvedSeasons": 4,
+      "declinedSeasons": 4,
+      "seasonDeltas": [
+        -10,
+        -3,
+        8,
+        -1,
+        12,
+        -19,
+        1,
+        7
+      ],
+      "changedCaptains": 33,
+      "positiveChanges": 9,
+      "negativeChanges": 14,
+      "captainPointsPerWeek": 6.668,
+      "oracleRegretPerWeek": 5.728,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 5,
+          "from": "Salah",
+          "to": "Kane",
+          "vice": "Salah",
+          "delta": 9,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.278
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 26,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.635
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Cash",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 20,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -1,
+          "toH2HMatches": 8,
+          "toH2HUplift": -0.121
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Mitoma",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Kane",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Semenyo",
+          "vice": "Rice",
+          "delta": -2,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.001
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyCeiling10",
+      "average": 2171.5,
+      "minimum": 2028,
+      "developmentAverage": 2178.5,
+      "holdoutAverage": 2150.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2116
+        },
+        {
+          "season": "2019/20",
+          "points": 2151
+        },
+        {
+          "season": "2020/21",
+          "points": 2220
+        },
+        {
+          "season": "2021/22",
+          "points": 2264
+        },
+        {
+          "season": "2022/23",
+          "points": 2241
+        },
+        {
+          "season": "2023/24",
+          "points": 2079
+        },
+        {
+          "season": "2024/25",
+          "points": 2273
+        },
+        {
+          "season": "2025/26",
+          "points": 2028
+        }
+      ],
+      "averageDelta": -3.4,
+      "developmentDelta": -3.2,
+      "holdoutDelta": -4.0,
+      "worstSeasonDelta": -10,
+      "improvedSeasons": 1,
+      "declinedSeasons": 7,
+      "seasonDeltas": [
+        -10,
+        -3,
+        1,
+        -2,
+        -2,
+        -3,
+        -5,
+        -3
+      ],
+      "changedCaptains": 32,
+      "positiveChanges": 9,
+      "negativeChanges": 14,
+      "captainPointsPerWeek": 6.631,
+      "oracleRegretPerWeek": 5.765,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Cash",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 19,
+          "from": "Kane",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": -14,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "\u00c3\u0098degaard",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2025/26",
+          "gw": 6,
+          "from": "Semenyo",
+          "to": "Mbeumo",
+          "vice": "Semenyo",
+          "delta": -5,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "B.Fernandes",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 23,
+          "from": "Semenyo",
+          "to": "Thiago",
+          "vice": "Semenyo",
+          "delta": -6,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2025/26",
+          "gw": 27,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 2,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.234
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "contextML15",
+      "average": 2176.2,
+      "minimum": 2040,
+      "developmentAverage": 2182.5,
+      "holdoutAverage": 2157.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2122
+        },
+        {
+          "season": "2019/20",
+          "points": 2155
+        },
+        {
+          "season": "2020/21",
+          "points": 2221
+        },
+        {
+          "season": "2021/22",
+          "points": 2279
+        },
+        {
+          "season": "2022/23",
+          "points": 2252
+        },
+        {
+          "season": "2023/24",
+          "points": 2066
+        },
+        {
+          "season": "2024/25",
+          "points": 2275
+        },
+        {
+          "season": "2025/26",
+          "points": 2040
+        }
+      ],
+      "averageDelta": 1.4,
+      "developmentDelta": 0.8,
+      "holdoutDelta": 3.0,
+      "worstSeasonDelta": -16,
+      "improvedSeasons": 5,
+      "declinedSeasons": 3,
+      "seasonDeltas": [
+        -4,
+        1,
+        2,
+        13,
+        9,
+        -16,
+        -3,
+        9
+      ],
+      "changedCaptains": 38,
+      "positiveChanges": 10,
+      "negativeChanges": 16,
+      "captainPointsPerWeek": 6.652,
+      "oracleRegretPerWeek": 5.744,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Vardy",
+          "vice": "Richarlison",
+          "delta": -2,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.277
+        },
+        {
+          "season": "2019/20",
+          "gw": 43,
+          "from": "Azpilicueta",
+          "to": "De Bruyne",
+          "vice": "Azpilicueta",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.224
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "De Bruyne",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 26,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.635
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Gallagher",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Zaha",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Trossard",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 18,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -4,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.466
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Mitoma",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Kane",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2023/24",
+          "gw": 32,
+          "from": "Palmer",
+          "to": "Foden",
+          "vice": "Palmer",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.09
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2024/25",
+          "gw": 33,
+          "from": "Gvardiol",
+          "to": "M.Salah",
+          "vice": "Gvardiol",
+          "delta": -4,
+          "toH2HMatches": 10,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 14,
+          "from": "Mbeumo",
+          "to": "B.Fernandes",
+          "vice": "Mbeumo",
+          "delta": 2,
+          "toH2HMatches": 11,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Semenyo",
+          "vice": "Rice",
+          "delta": -2,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.001
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyML15",
+      "average": 2176.0,
+      "minimum": 2038,
+      "developmentAverage": 2182.5,
+      "holdoutAverage": 2156.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2115
+        },
+        {
+          "season": "2019/20",
+          "points": 2155
+        },
+        {
+          "season": "2020/21",
+          "points": 2229
+        },
+        {
+          "season": "2021/22",
+          "points": 2278
+        },
+        {
+          "season": "2022/23",
+          "points": 2255
+        },
+        {
+          "season": "2023/24",
+          "points": 2063
+        },
+        {
+          "season": "2024/25",
+          "points": 2275
+        },
+        {
+          "season": "2025/26",
+          "points": 2038
+        }
+      ],
+      "averageDelta": 1.1,
+      "developmentDelta": 0.8,
+      "holdoutDelta": 2.0,
+      "worstSeasonDelta": -19,
+      "improvedSeasons": 5,
+      "declinedSeasons": 3,
+      "seasonDeltas": [
+        -11,
+        1,
+        10,
+        12,
+        12,
+        -19,
+        -3,
+        7
+      ],
+      "changedCaptains": 45,
+      "positiveChanges": 14,
+      "negativeChanges": 19,
+      "captainPointsPerWeek": 6.691,
+      "oracleRegretPerWeek": 5.704,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 6,
+          "from": "Salah",
+          "to": "Aubameyang",
+          "vice": "Salah",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Vardy",
+          "vice": "Azpilicueta",
+          "delta": -2,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.277
+        },
+        {
+          "season": "2019/20",
+          "gw": 43,
+          "from": "Azpilicueta",
+          "to": "De Bruyne",
+          "vice": "Azpilicueta",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.224
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "De Bruyne",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 5,
+          "from": "Salah",
+          "to": "Kane",
+          "vice": "Salah",
+          "delta": 9,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.278
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 26,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.635
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Gallagher",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Zaha",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Trossard",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 20,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -1,
+          "toH2HMatches": 8,
+          "toH2HUplift": -0.121
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Kane",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Toney",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2024/25",
+          "gw": 33,
+          "from": "Gvardiol",
+          "to": "M.Salah",
+          "vice": "Gvardiol",
+          "delta": -4,
+          "toH2HMatches": 10,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 24,
+          "from": "Watkins",
+          "to": "Cunha",
+          "vice": "Watkins",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 1.032
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Semenyo",
+          "vice": "Rice",
+          "delta": -2,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.001
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyCeiling15",
+      "average": 2178.0,
+      "minimum": 2042,
+      "developmentAverage": 2182.7,
+      "holdoutAverage": 2164.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2116
+        },
+        {
+          "season": "2019/20",
+          "points": 2142
+        },
+        {
+          "season": "2020/21",
+          "points": 2233
+        },
+        {
+          "season": "2021/22",
+          "points": 2284
+        },
+        {
+          "season": "2022/23",
+          "points": 2242
+        },
+        {
+          "season": "2023/24",
+          "points": 2079
+        },
+        {
+          "season": "2024/25",
+          "points": 2286
+        },
+        {
+          "season": "2025/26",
+          "points": 2042
+        }
+      ],
+      "averageDelta": 3.1,
+      "developmentDelta": 1.0,
+      "holdoutDelta": 9.5,
+      "worstSeasonDelta": -12,
+      "improvedSeasons": 4,
+      "declinedSeasons": 4,
+      "seasonDeltas": [
+        -10,
+        -12,
+        14,
+        18,
+        -1,
+        -3,
+        8,
+        11
+      ],
+      "changedCaptains": 49,
+      "positiveChanges": 19,
+      "negativeChanges": 19,
+      "captainPointsPerWeek": 6.765,
+      "oracleRegretPerWeek": 5.631,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Vardy",
+          "vice": "Azpilicueta",
+          "delta": -2,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.277
+        },
+        {
+          "season": "2019/20",
+          "gw": 39,
+          "from": "De Bruyne",
+          "to": "Jim\u00c3\u00a9nez",
+          "vice": "De Bruyne",
+          "delta": -7,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.078
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "De Bruyne",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 3,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Kane",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": 5,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.077
+        },
+        {
+          "season": "2020/21",
+          "gw": 5,
+          "from": "Salah",
+          "to": "Kane",
+          "vice": "Salah",
+          "delta": 9,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.278
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 37,
+          "from": "Fernandes",
+          "to": "Salah",
+          "vice": "Fernandes",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.905
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Gallagher",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 15,
+          "from": "Alexander-Arnold",
+          "to": "Bernardo",
+          "vice": "Alexander-Arnold",
+          "delta": 6,
+          "toH2HMatches": 4,
+          "toH2HUplift": 1.01
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Zaha",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 19,
+          "from": "Kane",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": -14,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Mitoma",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Kane",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 8,
+          "from": "B.Fernandes",
+          "to": "Haaland",
+          "vice": "B.Fernandes",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.675
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2024/25",
+          "gw": 25,
+          "from": "Alexander-Arnold",
+          "to": "M.Salah",
+          "vice": "Alexander-Arnold",
+          "delta": 7,
+          "toH2HMatches": 11,
+          "toH2HUplift": -0.216
+        },
+        {
+          "season": "2024/25",
+          "gw": 31,
+          "from": "Isak",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.592
+        },
+        {
+          "season": "2025/26",
+          "gw": 6,
+          "from": "Semenyo",
+          "to": "Mbeumo",
+          "vice": "Semenyo",
+          "delta": -5,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 23,
+          "from": "Semenyo",
+          "to": "Thiago",
+          "vice": "Semenyo",
+          "delta": -6,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2025/26",
+          "gw": 27,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 2,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.234
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Cunha",
+          "vice": "Semenyo",
+          "delta": -3,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.956
+        },
+        {
+          "season": "2025/26",
+          "gw": 35,
+          "from": "Rogers",
+          "to": "Thiago",
+          "vice": "Rogers",
+          "delta": 5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.614
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        },
+        {
+          "season": "2025/26",
+          "gw": 38,
+          "from": "Szoboszlai",
+          "to": "B.Fernandes",
+          "vice": "Szoboszlai",
+          "delta": 12,
+          "toH2HMatches": 10,
+          "toH2HUplift": -0.223
+        }
+      ]
+    },
+    {
+      "name": "contextML20",
+      "average": 2174.9,
+      "minimum": 2040,
+      "developmentAverage": 2182.8,
+      "holdoutAverage": 2151.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2122
+        },
+        {
+          "season": "2019/20",
+          "points": 2159
+        },
+        {
+          "season": "2020/21",
+          "points": 2221
+        },
+        {
+          "season": "2021/22",
+          "points": 2278
+        },
+        {
+          "season": "2022/23",
+          "points": 2252
+        },
+        {
+          "season": "2023/24",
+          "points": 2065
+        },
+        {
+          "season": "2024/25",
+          "points": 2262
+        },
+        {
+          "season": "2025/26",
+          "points": 2040
+        }
+      ],
+      "averageDelta": 0.0,
+      "developmentDelta": 1.2,
+      "holdoutDelta": -3.5,
+      "worstSeasonDelta": -17,
+      "improvedSeasons": 5,
+      "declinedSeasons": 3,
+      "seasonDeltas": [
+        -4,
+        5,
+        2,
+        12,
+        9,
+        -17,
+        -16,
+        9
+      ],
+      "changedCaptains": 46,
+      "positiveChanges": 13,
+      "negativeChanges": 20,
+      "captainPointsPerWeek": 6.657,
+      "oracleRegretPerWeek": 5.739,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 14,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Vardy",
+          "vice": "P\u00c3\u00a9rez",
+          "delta": 4,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.003
+        },
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Vardy",
+          "vice": "Richarlison",
+          "delta": -2,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.277
+        },
+        {
+          "season": "2019/20",
+          "gw": 43,
+          "from": "Azpilicueta",
+          "to": "De Bruyne",
+          "vice": "Azpilicueta",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.224
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "De Bruyne",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 26,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.635
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Gallagher",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Saka",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Zaha",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Trossard",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 18,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -4,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.466
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Kane",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Toney",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 8,
+          "from": "B.Fernandes",
+          "to": "Haaland",
+          "vice": "B.Fernandes",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.675
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 24,
+          "from": "Foden",
+          "to": "Watkins",
+          "vice": "Foden",
+          "delta": -1,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.973
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2023/24",
+          "gw": 32,
+          "from": "Palmer",
+          "to": "Foden",
+          "vice": "Palmer",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.09
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2024/25",
+          "gw": 32,
+          "from": "J.Murphy",
+          "to": "M.Salah",
+          "vice": "J.Murphy",
+          "delta": -13,
+          "toH2HMatches": 12,
+          "toH2HUplift": -0.351
+        },
+        {
+          "season": "2024/25",
+          "gw": 33,
+          "from": "Gvardiol",
+          "to": "M.Salah",
+          "vice": "Gvardiol",
+          "delta": -4,
+          "toH2HMatches": 10,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 14,
+          "from": "Mbeumo",
+          "to": "B.Fernandes",
+          "vice": "Mbeumo",
+          "delta": 2,
+          "toH2HMatches": 11,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Semenyo",
+          "vice": "Rice",
+          "delta": -2,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.001
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyML20",
+      "average": 2173.1,
+      "minimum": 2038,
+      "developmentAverage": 2180.8,
+      "holdoutAverage": 2150.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2115
+        },
+        {
+          "season": "2019/20",
+          "points": 2155
+        },
+        {
+          "season": "2020/21",
+          "points": 2234
+        },
+        {
+          "season": "2021/22",
+          "points": 2278
+        },
+        {
+          "season": "2022/23",
+          "points": 2240
+        },
+        {
+          "season": "2023/24",
+          "points": 2063
+        },
+        {
+          "season": "2024/25",
+          "points": 2262
+        },
+        {
+          "season": "2025/26",
+          "points": 2038
+        }
+      ],
+      "averageDelta": -1.8,
+      "developmentDelta": -0.8,
+      "holdoutDelta": -4.5,
+      "worstSeasonDelta": -19,
+      "improvedSeasons": 4,
+      "declinedSeasons": 4,
+      "seasonDeltas": [
+        -11,
+        1,
+        15,
+        12,
+        -3,
+        -19,
+        -16,
+        7
+      ],
+      "changedCaptains": 52,
+      "positiveChanges": 16,
+      "negativeChanges": 23,
+      "captainPointsPerWeek": 6.62,
+      "oracleRegretPerWeek": 5.776,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 6,
+          "from": "Salah",
+          "to": "Aubameyang",
+          "vice": "Salah",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Vardy",
+          "vice": "Richarlison",
+          "delta": -2,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.277
+        },
+        {
+          "season": "2019/20",
+          "gw": 43,
+          "from": "Azpilicueta",
+          "to": "De Bruyne",
+          "vice": "Azpilicueta",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.224
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "De Bruyne",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 5,
+          "from": "Salah",
+          "to": "Kane",
+          "vice": "Salah",
+          "delta": 9,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.278
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 26,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.635
+        },
+        {
+          "season": "2020/21",
+          "gw": 32,
+          "from": "Fernandes",
+          "to": "Rashford",
+          "vice": "Fernandes",
+          "delta": 5,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.04
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Gallagher",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Saka",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Zaha",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Trossard",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 19,
+          "from": "Kane",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": -14,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 20,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -1,
+          "toH2HMatches": 8,
+          "toH2HUplift": -0.121
+        },
+        {
+          "season": "2022/23",
+          "gw": 25,
+          "from": "\u00c3\u0098degaard",
+          "to": "Haaland",
+          "vice": "\u00c3\u0098degaard",
+          "delta": -1,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.369
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Kane",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Toney",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 8,
+          "from": "B.Fernandes",
+          "to": "Haaland",
+          "vice": "B.Fernandes",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.675
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2024/25",
+          "gw": 32,
+          "from": "J.Murphy",
+          "to": "M.Salah",
+          "vice": "J.Murphy",
+          "delta": -13,
+          "toH2HMatches": 12,
+          "toH2HUplift": -0.351
+        },
+        {
+          "season": "2024/25",
+          "gw": 33,
+          "from": "Gvardiol",
+          "to": "M.Salah",
+          "vice": "Gvardiol",
+          "delta": -4,
+          "toH2HMatches": 10,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 24,
+          "from": "Watkins",
+          "to": "Cunha",
+          "vice": "Watkins",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 1.032
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Semenyo",
+          "vice": "Cunha",
+          "delta": -2,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.001
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Szoboszlai",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyCeiling20",
+      "average": 2180.0,
+      "minimum": 2045,
+      "developmentAverage": 2184.0,
+      "holdoutAverage": 2168.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2116
+        },
+        {
+          "season": "2019/20",
+          "points": 2142
+        },
+        {
+          "season": "2020/21",
+          "points": 2233
+        },
+        {
+          "season": "2021/22",
+          "points": 2284
+        },
+        {
+          "season": "2022/23",
+          "points": 2253
+        },
+        {
+          "season": "2023/24",
+          "points": 2076
+        },
+        {
+          "season": "2024/25",
+          "points": 2291
+        },
+        {
+          "season": "2025/26",
+          "points": 2045
+        }
+      ],
+      "averageDelta": 5.1,
+      "developmentDelta": 2.3,
+      "holdoutDelta": 13.5,
+      "worstSeasonDelta": -12,
+      "improvedSeasons": 5,
+      "declinedSeasons": 3,
+      "seasonDeltas": [
+        -10,
+        -12,
+        14,
+        18,
+        10,
+        -6,
+        13,
+        14
+      ],
+      "changedCaptains": 62,
+      "positiveChanges": 26,
+      "negativeChanges": 23,
+      "captainPointsPerWeek": 6.81,
+      "oracleRegretPerWeek": 5.586,
+      "changedDecisionLog": [
+        {
+          "season": "2018/19",
+          "gw": 4,
+          "from": "Aubameyang",
+          "to": "Salah",
+          "vice": "Aubameyang",
+          "delta": -6,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2018/19",
+          "gw": 28,
+          "from": "Lacazette",
+          "to": "Sterling",
+          "vice": "Lacazette",
+          "delta": -4,
+          "toH2HMatches": 1,
+          "toH2HUplift": 1.159
+        },
+        {
+          "season": "2019/20",
+          "gw": 14,
+          "from": "P\u00c3\u00a9rez",
+          "to": "Vardy",
+          "vice": "P\u00c3\u00a9rez",
+          "delta": 4,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.003
+        },
+        {
+          "season": "2019/20",
+          "gw": 20,
+          "from": "Richarlison",
+          "to": "Alli",
+          "vice": "Richarlison",
+          "delta": -4,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Vardy",
+          "vice": "Azpilicueta",
+          "delta": -2,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.277
+        },
+        {
+          "season": "2019/20",
+          "gw": 39,
+          "from": "De Bruyne",
+          "to": "Jim\u00c3\u00a9nez",
+          "vice": "De Bruyne",
+          "delta": -7,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.078
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "De Bruyne",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 3,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Kane",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": 5,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.077
+        },
+        {
+          "season": "2020/21",
+          "gw": 5,
+          "from": "Salah",
+          "to": "Kane",
+          "vice": "Salah",
+          "delta": 9,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.278
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2020/21",
+          "gw": 37,
+          "from": "Fernandes",
+          "to": "Salah",
+          "vice": "Fernandes",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.905
+        },
+        {
+          "season": "2021/22",
+          "gw": 14,
+          "from": "Gallagher",
+          "to": "Salah",
+          "vice": "Gallagher",
+          "delta": 14,
+          "toH2HMatches": 4,
+          "toH2HUplift": -1.145
+        },
+        {
+          "season": "2021/22",
+          "gw": 15,
+          "from": "Alexander-Arnold",
+          "to": "Bernardo",
+          "vice": "Alexander-Arnold",
+          "delta": 6,
+          "toH2HMatches": 4,
+          "toH2HUplift": 1.01
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Zaha",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 6,
+          "from": "Son",
+          "to": "Kulusevski",
+          "vice": "Son",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Trossard",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 19,
+          "from": "Kane",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": -14,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 21,
+          "from": "Kane",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": 11,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.272
+        },
+        {
+          "season": "2022/23",
+          "gw": 27,
+          "from": "Mitoma",
+          "to": "Toney",
+          "vice": "Mitoma",
+          "delta": 1,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.041
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Toney",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 8,
+          "from": "B.Fernandes",
+          "to": "Haaland",
+          "vice": "B.Fernandes",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.675
+        },
+        {
+          "season": "2023/24",
+          "gw": 9,
+          "from": "Haaland",
+          "to": "Watkins",
+          "vice": "Haaland",
+          "delta": 3,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 33,
+          "from": "Foden",
+          "to": "Luis D\u00c3\u00adaz",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.356
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2024/25",
+          "gw": 8,
+          "from": "Luis D\u00c3\u00adaz",
+          "to": "Palmer",
+          "vice": "Luis D\u00c3\u00adaz",
+          "delta": 1,
+          "toH2HMatches": 2,
+          "toH2HUplift": -0.137
+        },
+        {
+          "season": "2024/25",
+          "gw": 9,
+          "from": "Mbeumo",
+          "to": "Palmer",
+          "vice": "Mbeumo",
+          "delta": -5,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.858
+        },
+        {
+          "season": "2024/25",
+          "gw": 23,
+          "from": "Isak",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": -5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.766
+        },
+        {
+          "season": "2024/25",
+          "gw": 25,
+          "from": "Alexander-Arnold",
+          "to": "M.Salah",
+          "vice": "Alexander-Arnold",
+          "delta": 7,
+          "toH2HMatches": 11,
+          "toH2HUplift": -0.216
+        },
+        {
+          "season": "2024/25",
+          "gw": 28,
+          "from": "Mbeumo",
+          "to": "M.Salah",
+          "vice": "Mbeumo",
+          "delta": 13,
+          "toH2HMatches": 9,
+          "toH2HUplift": -0.254
+        },
+        {
+          "season": "2024/25",
+          "gw": 31,
+          "from": "Isak",
+          "to": "M.Salah",
+          "vice": "Isak",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.592
+        },
+        {
+          "season": "2024/25",
+          "gw": 33,
+          "from": "Gvardiol",
+          "to": "M.Salah",
+          "vice": "Gvardiol",
+          "delta": -4,
+          "toH2HMatches": 10,
+          "toH2HUplift": -1.5
+        },
+        {
+          "season": "2025/26",
+          "gw": 6,
+          "from": "Semenyo",
+          "to": "Mbeumo",
+          "vice": "Semenyo",
+          "delta": -5,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 12,
+          "from": "Mateta",
+          "to": "Thiago",
+          "vice": "Mateta",
+          "delta": 3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 23,
+          "from": "Semenyo",
+          "to": "Thiago",
+          "vice": "Semenyo",
+          "delta": -6,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2025/26",
+          "gw": 24,
+          "from": "Watkins",
+          "to": "Cunha",
+          "vice": "Watkins",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 1.032
+        },
+        {
+          "season": "2025/26",
+          "gw": 27,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 2,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.234
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Cunha",
+          "vice": "Semenyo",
+          "delta": -3,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.956
+        },
+        {
+          "season": "2025/26",
+          "gw": 35,
+          "from": "Rogers",
+          "to": "Thiago",
+          "vice": "Rogers",
+          "delta": 5,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.614
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        },
+        {
+          "season": "2025/26",
+          "gw": 38,
+          "from": "Szoboszlai",
+          "to": "B.Fernandes",
+          "vice": "Szoboszlai",
+          "delta": 12,
+          "toH2HMatches": 10,
+          "toH2HUplift": -0.223
+        }
+      ]
+    },
+    {
+      "name": "historyAgree10",
+      "average": 2173.2,
+      "minimum": 2037,
+      "developmentAverage": 2178.5,
+      "holdoutAverage": 2157.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2126
+        },
+        {
+          "season": "2019/20",
+          "points": 2151
+        },
+        {
+          "season": "2020/21",
+          "points": 2218
+        },
+        {
+          "season": "2021/22",
+          "points": 2266
+        },
+        {
+          "season": "2022/23",
+          "points": 2241
+        },
+        {
+          "season": "2023/24",
+          "points": 2069
+        },
+        {
+          "season": "2024/25",
+          "points": 2278
+        },
+        {
+          "season": "2025/26",
+          "points": 2037
+        }
+      ],
+      "averageDelta": -1.6,
+      "developmentDelta": -3.2,
+      "holdoutDelta": 3.0,
+      "worstSeasonDelta": -13,
+      "improvedSeasons": 1,
+      "declinedSeasons": 4,
+      "seasonDeltas": [
+        0,
+        -3,
+        -1,
+        0,
+        -2,
+        -13,
+        0,
+        6
+      ],
+      "changedCaptains": 20,
+      "positiveChanges": 6,
+      "negativeChanges": 6,
+      "captainPointsPerWeek": 6.712,
+      "oracleRegretPerWeek": 5.683,
+      "changedDecisionLog": [
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 18,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -4,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.466
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Kane",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyAgree15",
+      "average": 2176.4,
+      "minimum": 2038,
+      "developmentAverage": 2182.5,
+      "holdoutAverage": 2158.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2126
+        },
+        {
+          "season": "2019/20",
+          "points": 2162
+        },
+        {
+          "season": "2020/21",
+          "points": 2220
+        },
+        {
+          "season": "2021/22",
+          "points": 2266
+        },
+        {
+          "season": "2022/23",
+          "points": 2252
+        },
+        {
+          "season": "2023/24",
+          "points": 2069
+        },
+        {
+          "season": "2024/25",
+          "points": 2278
+        },
+        {
+          "season": "2025/26",
+          "points": 2038
+        }
+      ],
+      "averageDelta": 1.5,
+      "developmentDelta": 0.8,
+      "holdoutDelta": 3.5,
+      "worstSeasonDelta": -13,
+      "improvedSeasons": 4,
+      "declinedSeasons": 1,
+      "seasonDeltas": [
+        0,
+        8,
+        1,
+        0,
+        9,
+        -13,
+        0,
+        7
+      ],
+      "changedCaptains": 26,
+      "positiveChanges": 9,
+      "negativeChanges": 8,
+      "captainPointsPerWeek": 6.768,
+      "oracleRegretPerWeek": 5.628,
+      "changedDecisionLog": [
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Jim\u00c3\u00a9nez",
+          "vice": "Azpilicueta",
+          "delta": 11,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.177
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Maddison",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 18,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -4,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.466
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Kane",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 24,
+          "from": "Watkins",
+          "to": "Cunha",
+          "vice": "Watkins",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 1.032
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Semenyo",
+          "vice": "Rice",
+          "delta": -2,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.001
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    },
+    {
+      "name": "historyAgree20",
+      "average": 2175.5,
+      "minimum": 2038,
+      "developmentAverage": 2180.3,
+      "holdoutAverage": 2161.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2126
+        },
+        {
+          "season": "2019/20",
+          "points": 2162
+        },
+        {
+          "season": "2020/21",
+          "points": 2229
+        },
+        {
+          "season": "2021/22",
+          "points": 2264
+        },
+        {
+          "season": "2022/23",
+          "points": 2238
+        },
+        {
+          "season": "2023/24",
+          "points": 2063
+        },
+        {
+          "season": "2024/25",
+          "points": 2284
+        },
+        {
+          "season": "2025/26",
+          "points": 2038
+        }
+      ],
+      "averageDelta": 0.6,
+      "developmentDelta": -1.3,
+      "holdoutDelta": 6.5,
+      "worstSeasonDelta": -19,
+      "improvedSeasons": 4,
+      "declinedSeasons": 3,
+      "seasonDeltas": [
+        0,
+        8,
+        10,
+        -2,
+        -5,
+        -19,
+        6,
+        7
+      ],
+      "changedCaptains": 34,
+      "positiveChanges": 11,
+      "negativeChanges": 12,
+      "captainPointsPerWeek": 6.749,
+      "oracleRegretPerWeek": 5.646,
+      "changedDecisionLog": [
+        {
+          "season": "2019/20",
+          "gw": 23,
+          "from": "Azpilicueta",
+          "to": "Jim\u00c3\u00a9nez",
+          "vice": "Vardy",
+          "delta": 11,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.177
+        },
+        {
+          "season": "2019/20",
+          "gw": 44,
+          "from": "Jim\u00c3\u00a9nez",
+          "to": "Fernandes",
+          "vice": "Jim\u00c3\u00a9nez",
+          "delta": -3,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 5,
+          "from": "Salah",
+          "to": "Kane",
+          "vice": "Salah",
+          "delta": 9,
+          "toH2HMatches": 3,
+          "toH2HUplift": -0.278
+        },
+        {
+          "season": "2020/21",
+          "gw": 8,
+          "from": "Sterling",
+          "to": "Son",
+          "vice": "Sterling",
+          "delta": 2,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2020/21",
+          "gw": 16,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": 2,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.034
+        },
+        {
+          "season": "2020/21",
+          "gw": 17,
+          "from": "Vardy",
+          "to": "Salah",
+          "vice": "Vardy",
+          "delta": -3,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.378
+        },
+        {
+          "season": "2021/22",
+          "gw": 16,
+          "from": "Alexander-Arnold",
+          "to": "Salah",
+          "vice": "Alexander-Arnold",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": -0.076
+        },
+        {
+          "season": "2021/22",
+          "gw": 26,
+          "from": "Jota",
+          "to": "Alisson",
+          "vice": "Jota",
+          "delta": 0,
+          "toH2HMatches": 3,
+          "toH2HUplift": 0.172
+        },
+        {
+          "season": "2021/22",
+          "gw": 31,
+          "from": "Alexander-Arnold",
+          "to": "Son",
+          "vice": "Alexander-Arnold",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.196
+        },
+        {
+          "season": "2021/22",
+          "gw": 37,
+          "from": "Cash",
+          "to": "Son",
+          "vice": "Cash",
+          "delta": -1,
+          "toH2HMatches": 4,
+          "toH2HUplift": 0.382
+        },
+        {
+          "season": "2022/23",
+          "gw": 12,
+          "from": "Maddison",
+          "to": "Kane",
+          "vice": "Trossard",
+          "delta": 0,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.201
+        },
+        {
+          "season": "2022/23",
+          "gw": 16,
+          "from": "De Bruyne",
+          "to": "Haaland",
+          "vice": "De Bruyne",
+          "delta": -1,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 17,
+          "from": "Trossard",
+          "to": "Haaland",
+          "vice": "Trossard",
+          "delta": 11,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 18,
+          "from": "Haaland",
+          "to": "Kane",
+          "vice": "Haaland",
+          "delta": -4,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.466
+        },
+        {
+          "season": "2022/23",
+          "gw": 19,
+          "from": "Kane",
+          "to": "Haaland",
+          "vice": "Kane",
+          "delta": -14,
+          "toH2HMatches": 0,
+          "toH2HUplift": 0.0
+        },
+        {
+          "season": "2022/23",
+          "gw": 28,
+          "from": "\u00c3\u0098degaard",
+          "to": "Watkins",
+          "vice": "Kane",
+          "delta": 3,
+          "toH2HMatches": 1,
+          "toH2HUplift": -0.362
+        },
+        {
+          "season": "2023/24",
+          "gw": 4,
+          "from": "Mbeumo",
+          "to": "Sterling",
+          "vice": "Mbeumo",
+          "delta": -6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 1.41
+        },
+        {
+          "season": "2023/24",
+          "gw": 5,
+          "from": "Sterling",
+          "to": "B.Fernandes",
+          "vice": "Sterling",
+          "delta": -1,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.487
+        },
+        {
+          "season": "2023/24",
+          "gw": 20,
+          "from": "Watkins",
+          "to": "Son",
+          "vice": "Watkins",
+          "delta": 1,
+          "toH2HMatches": 7,
+          "toH2HUplift": -0.07
+        },
+        {
+          "season": "2023/24",
+          "gw": 21,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Son",
+          "delta": 0,
+          "toH2HMatches": 6,
+          "toH2HUplift": 0.424
+        },
+        {
+          "season": "2023/24",
+          "gw": 22,
+          "from": "Son",
+          "to": "Watkins",
+          "vice": "Foden",
+          "delta": 0,
+          "toH2HMatches": 5,
+          "toH2HUplift": 0.443
+        },
+        {
+          "season": "2023/24",
+          "gw": 25,
+          "from": "Saka",
+          "to": "Foden",
+          "vice": "Saka",
+          "delta": -10,
+          "toH2HMatches": 8,
+          "toH2HUplift": 0.268
+        },
+        {
+          "season": "2024/25",
+          "gw": 5,
+          "from": "Isak",
+          "to": "Palmer",
+          "vice": "Isak",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.505
+        },
+        {
+          "season": "2025/26",
+          "gw": 19,
+          "from": "B.Fernandes",
+          "to": "Foden",
+          "vice": "Cunha",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.989
+        },
+        {
+          "season": "2025/26",
+          "gw": 24,
+          "from": "Watkins",
+          "to": "Cunha",
+          "vice": "Watkins",
+          "delta": 0,
+          "toH2HMatches": 4,
+          "toH2HUplift": 1.032
+        },
+        {
+          "season": "2025/26",
+          "gw": 28,
+          "from": "Rogers",
+          "to": "Semenyo",
+          "vice": "Rogers",
+          "delta": 6,
+          "toH2HMatches": 2,
+          "toH2HUplift": 0.542
+        },
+        {
+          "season": "2025/26",
+          "gw": 32,
+          "from": "Rice",
+          "to": "Semenyo",
+          "vice": "Rice",
+          "delta": -2,
+          "toH2HMatches": 6,
+          "toH2HUplift": -0.001
+        },
+        {
+          "season": "2025/26",
+          "gw": 36,
+          "from": "Gibbs-White",
+          "to": "O'Reilly",
+          "vice": "Rogers",
+          "delta": 0,
+          "toH2HMatches": 1,
+          "toH2HUplift": 0.272
+        }
+      ]
+    }
+  ],
+  "selected": null,
+  "selectionRule": "Positive development, non-negative two-season holdout, worst season at least -8, no more than two declining seasons; maximise downside-adjusted average gain.",
+  "productionPromotion": false
+}

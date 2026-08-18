@@ -1,0 +1,681 @@
+{
+  "status": "research-only; robust promotion gate failed",
+  "method": "Season-ahead causal gradient trees trained only on earlier seasons. Short/long lineup features are shifted before the target GW. Recursive policy variants are compared with the frozen champion; the last two seasons are untouched holdout.",
+  "features": [
+    "position_id",
+    "GW",
+    "price",
+    "log_selected",
+    "log_transfer_balance",
+    "age",
+    "observations",
+    "past_minutes",
+    "start_probability",
+    "play_probability",
+    "sixty_probability",
+    "expected_minutes",
+    "minutes_std",
+    "minutes_model_confidence",
+    "competition_pressure",
+    "rotation_volatility",
+    "team_rotation_rate",
+    "team_rest_days",
+    "fixture_count",
+    "price_rise_probability",
+    "price_fall_probability",
+    "recent_minutes_2",
+    "recent_minutes_3",
+    "recent_minutes_6",
+    "recent_start_2",
+    "recent_start_3",
+    "recent_start_6",
+    "recent_play_2",
+    "recent_play_3",
+    "recent_play_6",
+    "recent_sixty_3",
+    "recent_sixty_6",
+    "minutes_change_2v6",
+    "start_change_2v6",
+    "play_change_2v6",
+    "recent_points_3",
+    "recent_ict_3"
+  ],
+  "decisionWeightedMetrics": {
+    "play": {
+      "baseline": {
+        "brier": 0.08818,
+        "mae": 0.20542,
+        "bias": -0.03773
+      },
+      "challenger": {
+        "brier": 0.06063,
+        "mae": 0.13224,
+        "bias": -0.00942
+      }
+    },
+    "start": {
+      "baseline": {
+        "brier": 0.13182,
+        "mae": 0.29432,
+        "bias": -0.0606
+      },
+      "challenger": {
+        "brier": 0.10971,
+        "mae": 0.21375,
+        "bias": 0.01494
+      }
+    },
+    "sixty": {
+      "baseline": {
+        "brier": 0.15833,
+        "mae": 0.34448,
+        "bias": -0.12795
+      },
+      "challenger": {
+        "brier": 0.10216,
+        "mae": 0.21731,
+        "bias": -0.01844
+      }
+    },
+    "minutes": {
+      "baseline": {
+        "brier": 0.10569,
+        "mae": 0.26995,
+        "bias": -0.08128
+      },
+      "challenger": {
+        "brier": 0.07815,
+        "mae": 0.16047,
+        "bias": 0.01402
+      }
+    }
+  },
+  "baseline": {
+    "average": 2174.9,
+    "minimum": 2031,
+    "developmentAverage": 2181.7,
+    "holdoutAverage": 2154.5,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2126
+      },
+      {
+        "season": "2019/20",
+        "points": 2154
+      },
+      {
+        "season": "2020/21",
+        "points": 2219
+      },
+      {
+        "season": "2021/22",
+        "points": 2266
+      },
+      {
+        "season": "2022/23",
+        "points": 2243
+      },
+      {
+        "season": "2023/24",
+        "points": 2082
+      },
+      {
+        "season": "2024/25",
+        "points": 2278
+      },
+      {
+        "season": "2025/26",
+        "points": 2031
+      }
+    ]
+  },
+  "variants": [
+    {
+      "name": "symmetric-0.20",
+      "mode": "symmetric",
+      "strength": 0.2,
+      "average": 2094.9,
+      "minimum": 1972,
+      "developmentAverage": 2113.8,
+      "holdoutAverage": 2038.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2032
+        },
+        {
+          "season": "2019/20",
+          "points": 2039
+        },
+        {
+          "season": "2020/21",
+          "points": 2302
+        },
+        {
+          "season": "2021/22",
+          "points": 2125
+        },
+        {
+          "season": "2022/23",
+          "points": 2135
+        },
+        {
+          "season": "2023/24",
+          "points": 2050
+        },
+        {
+          "season": "2024/25",
+          "points": 2104
+        },
+        {
+          "season": "2025/26",
+          "points": 1972
+        }
+      ],
+      "averageDelta": -80.0,
+      "developmentDelta": -67.9,
+      "holdoutDelta": -116.5,
+      "improvedSeasons": 1,
+      "worseSeasons": 7,
+      "worstSeasonDelta": -174
+    },
+    {
+      "name": "symmetric-0.35",
+      "mode": "symmetric",
+      "strength": 0.35,
+      "average": 2130.2,
+      "minimum": 1949,
+      "developmentAverage": 2152.7,
+      "holdoutAverage": 2063.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2114
+        },
+        {
+          "season": "2019/20",
+          "points": 2046
+        },
+        {
+          "season": "2020/21",
+          "points": 2306
+        },
+        {
+          "season": "2021/22",
+          "points": 2146
+        },
+        {
+          "season": "2022/23",
+          "points": 2243
+        },
+        {
+          "season": "2023/24",
+          "points": 2061
+        },
+        {
+          "season": "2024/25",
+          "points": 2177
+        },
+        {
+          "season": "2025/26",
+          "points": 1949
+        }
+      ],
+      "averageDelta": -44.7,
+      "developmentDelta": -29.0,
+      "holdoutDelta": -91.5,
+      "improvedSeasons": 1,
+      "worseSeasons": 6,
+      "worstSeasonDelta": -120
+    },
+    {
+      "name": "symmetric-0.50",
+      "mode": "symmetric",
+      "strength": 0.5,
+      "average": 2106.4,
+      "minimum": 1945,
+      "developmentAverage": 2133.5,
+      "holdoutAverage": 2025.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2138
+        },
+        {
+          "season": "2019/20",
+          "points": 2031
+        },
+        {
+          "season": "2020/21",
+          "points": 2171
+        },
+        {
+          "season": "2021/22",
+          "points": 2240
+        },
+        {
+          "season": "2022/23",
+          "points": 2140
+        },
+        {
+          "season": "2023/24",
+          "points": 2081
+        },
+        {
+          "season": "2024/25",
+          "points": 2105
+        },
+        {
+          "season": "2025/26",
+          "points": 1945
+        }
+      ],
+      "averageDelta": -68.5,
+      "developmentDelta": -48.2,
+      "holdoutDelta": -129.5,
+      "improvedSeasons": 1,
+      "worseSeasons": 7,
+      "worstSeasonDelta": -173
+    },
+    {
+      "name": "symmetric-0.75",
+      "mode": "symmetric",
+      "strength": 0.75,
+      "average": 2109.0,
+      "minimum": 1873,
+      "developmentAverage": 2149.2,
+      "holdoutAverage": 1988.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2146
+        },
+        {
+          "season": "2019/20",
+          "points": 2078
+        },
+        {
+          "season": "2020/21",
+          "points": 2158
+        },
+        {
+          "season": "2021/22",
+          "points": 2198
+        },
+        {
+          "season": "2022/23",
+          "points": 2181
+        },
+        {
+          "season": "2023/24",
+          "points": 2134
+        },
+        {
+          "season": "2024/25",
+          "points": 2104
+        },
+        {
+          "season": "2025/26",
+          "points": 1873
+        }
+      ],
+      "averageDelta": -65.9,
+      "developmentDelta": -32.5,
+      "holdoutDelta": -166.0,
+      "improvedSeasons": 2,
+      "worseSeasons": 6,
+      "worstSeasonDelta": -174
+    },
+    {
+      "name": "symmetric-1.00",
+      "mode": "symmetric",
+      "strength": 1.0,
+      "average": 2121.8,
+      "minimum": 1964,
+      "developmentAverage": 2131.5,
+      "holdoutAverage": 2092.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2063
+        },
+        {
+          "season": "2019/20",
+          "points": 2053
+        },
+        {
+          "season": "2020/21",
+          "points": 2182
+        },
+        {
+          "season": "2021/22",
+          "points": 2197
+        },
+        {
+          "season": "2022/23",
+          "points": 2159
+        },
+        {
+          "season": "2023/24",
+          "points": 2135
+        },
+        {
+          "season": "2024/25",
+          "points": 2221
+        },
+        {
+          "season": "2025/26",
+          "points": 1964
+        }
+      ],
+      "averageDelta": -53.1,
+      "developmentDelta": -50.2,
+      "holdoutDelta": -62.0,
+      "improvedSeasons": 1,
+      "worseSeasons": 7,
+      "worstSeasonDelta": -101
+    },
+    {
+      "name": "lineup-symmetric-0.20",
+      "mode": "lineup-symmetric",
+      "strength": 0.2,
+      "average": 2152.9,
+      "minimum": 1974,
+      "developmentAverage": 2171.0,
+      "holdoutAverage": 2098.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2081
+        },
+        {
+          "season": "2019/20",
+          "points": 2133
+        },
+        {
+          "season": "2020/21",
+          "points": 2266
+        },
+        {
+          "season": "2021/22",
+          "points": 2256
+        },
+        {
+          "season": "2022/23",
+          "points": 2221
+        },
+        {
+          "season": "2023/24",
+          "points": 2069
+        },
+        {
+          "season": "2024/25",
+          "points": 2223
+        },
+        {
+          "season": "2025/26",
+          "points": 1974
+        }
+      ],
+      "averageDelta": -22.0,
+      "developmentDelta": -10.7,
+      "holdoutDelta": -56.0,
+      "improvedSeasons": 1,
+      "worseSeasons": 7,
+      "worstSeasonDelta": -57
+    },
+    {
+      "name": "lineup-symmetric-0.50",
+      "mode": "lineup-symmetric",
+      "strength": 0.5,
+      "average": 2137.4,
+      "minimum": 1955,
+      "developmentAverage": 2158.2,
+      "holdoutAverage": 2075.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2075
+        },
+        {
+          "season": "2019/20",
+          "points": 2119
+        },
+        {
+          "season": "2020/21",
+          "points": 2241
+        },
+        {
+          "season": "2021/22",
+          "points": 2231
+        },
+        {
+          "season": "2022/23",
+          "points": 2221
+        },
+        {
+          "season": "2023/24",
+          "points": 2062
+        },
+        {
+          "season": "2024/25",
+          "points": 2195
+        },
+        {
+          "season": "2025/26",
+          "points": 1955
+        }
+      ],
+      "averageDelta": -37.5,
+      "developmentDelta": -23.5,
+      "holdoutDelta": -79.5,
+      "improvedSeasons": 1,
+      "worseSeasons": 7,
+      "worstSeasonDelta": -83
+    },
+    {
+      "name": "lineup-downside-0.25",
+      "mode": "lineup-downside",
+      "strength": 0.25,
+      "average": 2168.1,
+      "minimum": 2032,
+      "developmentAverage": 2172.3,
+      "holdoutAverage": 2155.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2092
+        },
+        {
+          "season": "2019/20",
+          "points": 2143
+        },
+        {
+          "season": "2020/21",
+          "points": 2204
+        },
+        {
+          "season": "2021/22",
+          "points": 2284
+        },
+        {
+          "season": "2022/23",
+          "points": 2234
+        },
+        {
+          "season": "2023/24",
+          "points": 2077
+        },
+        {
+          "season": "2024/25",
+          "points": 2279
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": -6.8,
+      "developmentDelta": -9.4,
+      "holdoutDelta": 1.0,
+      "improvedSeasons": 3,
+      "worseSeasons": 5,
+      "worstSeasonDelta": -34
+    },
+    {
+      "name": "lineup-downside-0.50",
+      "mode": "lineup-downside",
+      "strength": 0.5,
+      "average": 2167.1,
+      "minimum": 2027,
+      "developmentAverage": 2171.8,
+      "holdoutAverage": 2153.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2095
+        },
+        {
+          "season": "2019/20",
+          "points": 2137
+        },
+        {
+          "season": "2020/21",
+          "points": 2204
+        },
+        {
+          "season": "2021/22",
+          "points": 2284
+        },
+        {
+          "season": "2022/23",
+          "points": 2236
+        },
+        {
+          "season": "2023/24",
+          "points": 2075
+        },
+        {
+          "season": "2024/25",
+          "points": 2279
+        },
+        {
+          "season": "2025/26",
+          "points": 2027
+        }
+      ],
+      "averageDelta": -7.8,
+      "developmentDelta": -9.9,
+      "holdoutDelta": -1.5,
+      "improvedSeasons": 2,
+      "worseSeasons": 6,
+      "worstSeasonDelta": -31
+    },
+    {
+      "name": "lineup-downside-0.75",
+      "mode": "lineup-downside",
+      "strength": 0.75,
+      "average": 2166.5,
+      "minimum": 2027,
+      "developmentAverage": 2171.7,
+      "holdoutAverage": 2151.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2098
+        },
+        {
+          "season": "2019/20",
+          "points": 2149
+        },
+        {
+          "season": "2020/21",
+          "points": 2204
+        },
+        {
+          "season": "2021/22",
+          "points": 2284
+        },
+        {
+          "season": "2022/23",
+          "points": 2230
+        },
+        {
+          "season": "2023/24",
+          "points": 2065
+        },
+        {
+          "season": "2024/25",
+          "points": 2275
+        },
+        {
+          "season": "2025/26",
+          "points": 2027
+        }
+      ],
+      "averageDelta": -8.4,
+      "developmentDelta": -10.0,
+      "holdoutDelta": -3.5,
+      "improvedSeasons": 1,
+      "worseSeasons": 7,
+      "worstSeasonDelta": -28
+    },
+    {
+      "name": "lineup-downside-1.00",
+      "mode": "lineup-downside",
+      "strength": 1.0,
+      "average": 2166.2,
+      "minimum": 2028,
+      "developmentAverage": 2169.7,
+      "holdoutAverage": 2156.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2100
+        },
+        {
+          "season": "2019/20",
+          "points": 2148
+        },
+        {
+          "season": "2020/21",
+          "points": 2194
+        },
+        {
+          "season": "2021/22",
+          "points": 2281
+        },
+        {
+          "season": "2022/23",
+          "points": 2230
+        },
+        {
+          "season": "2023/24",
+          "points": 2065
+        },
+        {
+          "season": "2024/25",
+          "points": 2284
+        },
+        {
+          "season": "2025/26",
+          "points": 2028
+        }
+      ],
+      "averageDelta": -8.7,
+      "developmentDelta": -12.0,
+      "holdoutDelta": 1.5,
+      "improvedSeasons": 2,
+      "worseSeasons": 6,
+      "worstSeasonDelta": -26
+    }
+  ],
+  "promotionGate": {
+    "developmentDelta": "> 0",
+    "holdoutDelta": ">= 5 points/season",
+    "worstSeasonDelta": ">= 0",
+    "improvedSeasons": ">= 5 of 8"
+  },
+  "selected": null
+}

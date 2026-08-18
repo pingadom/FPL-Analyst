@@ -1,0 +1,1223 @@
+{
+  "status": "research-only; historical odds lack exact FPL-deadline capture timestamps",
+  "method": "Prior-season-only Poisson and logistic models transform no-vig first-set 1X2 and over/under prices into team attack, defence and clean-sheet priors. A downside-only causal minutes model is combined in a small development-only grid.",
+  "sourcePolicy": {
+    "provider": "Football-Data.co.uk",
+    "usedColumns": "Avg/BbAv/B365 first-set columns without C",
+    "closingColumnsForbidden": true,
+    "timingLimitation": "The archive identifies first-set rather than closing prices, but does not prove the exact timestamp preceded every historical FPL deadline.",
+    "files": [
+      {
+        "season": "2012-13",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1213/E0.csv",
+        "sha256": "1df561d34a9b79ff8cb1fccd4fd279d183e74cd871063a307ecf18f01e0d622f",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2013-14",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1314/E0.csv",
+        "sha256": "3cf16078fde2e0e6c6cb07ebdb20ca98d1a755c9508a18bbeb4ad6837fad2b42",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2014-15",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1415/E0.csv",
+        "sha256": "76b7858051ff6b17f46f49f26fdc70c1f29537270492606f5cc63d67fad5d149",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2015-16",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1516/E0.csv",
+        "sha256": "bd3502a18c38a1597fd9af62e2366b4015006d3528dd4d18b311bd6237bbc085",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2016-17",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1617/E0.csv",
+        "sha256": "9625a7652b5f98fbd3e2e4d378c851fc246693f3343e34a72428d5b6e864d3e0",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2017-18",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1718/E0.csv",
+        "sha256": "4f3389365ef3f7ac966764ed8ba67cf3b79f5aebed18dd224099c4b2c98bc67b",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2018-19",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1819/E0.csv",
+        "sha256": "7c096b3c2ecd54c6993d22eeea73450c2bde11e3457238b226b8f43c62dfc35e",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2019-20",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1920/E0.csv",
+        "sha256": "100037618b94f94057400bb02bf6bac4ef74ddaa58cde4b38370839c39caee61",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2020-21",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2021/E0.csv",
+        "sha256": "5afe63f69401457b8354eaacee24f9a3e520b3c3af6329564a9783e20d789c62",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2021-22",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2122/E0.csv",
+        "sha256": "335afcbabeb2939fa10ab39ba3e8215072d0b577cb8d0705c1e44c56e934e703",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2022-23",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2223/E0.csv",
+        "sha256": "8442792d3b614c94ea3cf381bd2736805889cc1713169035368fff19c3d02380",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2023-24",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2324/E0.csv",
+        "sha256": "b2e057b0ed959f198b0f63d2391c01239f3608e6de5db68edab3f88e04d07ff3",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2024-25",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2425/E0.csv",
+        "sha256": "d0c8ce4a96d886cf60cf101f570f4a3893844226f91c7bd769eb568c49edbfa4",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2025-26",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2526/E0.csv",
+        "sha256": "3e3a8352f9ada6789c508d6ca184424421fed56a30400904a4a327c583407e62",
+        "oddsTiming": "first non-closing market set only"
+      }
+    ]
+  },
+  "mapping": {
+    "evaluationSingleTeamWeeks": 5643,
+    "coveredTeamWeeks": 5643,
+    "coverage": 1.0
+  },
+  "teamForecastMetrics": {
+    "rows": 5643,
+    "goalsForMae": {
+      "structural": 0.9607,
+      "market": 0.9055
+    },
+    "goalsAgainstMae": {
+      "structural": 0.9729,
+      "market": 0.9141
+    },
+    "cleanSheetBrier": {
+      "structural": 0.23587,
+      "market": 0.22495
+    }
+  },
+  "baselineNoChips": {
+    "average": 2179.8,
+    "minimum": 2032,
+    "developmentAverage": 2187.7,
+    "holdoutAverage": 2156.0,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2126
+      },
+      {
+        "season": "2019/20",
+        "points": 2156
+      },
+      {
+        "season": "2020/21",
+        "points": 2223
+      },
+      {
+        "season": "2021/22",
+        "points": 2287
+      },
+      {
+        "season": "2022/23",
+        "points": 2243
+      },
+      {
+        "season": "2023/24",
+        "points": 2091
+      },
+      {
+        "season": "2024/25",
+        "points": 2280
+      },
+      {
+        "season": "2025/26",
+        "points": 2032
+      }
+    ]
+  },
+  "experiments": [
+    {
+      "marketStrength": 0.15,
+      "minuteDownsideStrength": 0.0,
+      "average": 2111.4,
+      "minimum": 2044,
+      "developmentAverage": 2094.5,
+      "holdoutAverage": 2162.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2085
+        },
+        {
+          "season": "2019/20",
+          "points": 2159
+        },
+        {
+          "season": "2020/21",
+          "points": 2067
+        },
+        {
+          "season": "2021/22",
+          "points": 2081
+        },
+        {
+          "season": "2022/23",
+          "points": 2075
+        },
+        {
+          "season": "2023/24",
+          "points": 2100
+        },
+        {
+          "season": "2024/25",
+          "points": 2280
+        },
+        {
+          "season": "2025/26",
+          "points": 2044
+        }
+      ],
+      "averageDelta": -68.4,
+      "developmentDelta": -93.2,
+      "developmentStability": -110.427,
+      "holdoutDelta": 6.0,
+      "worstSeasonDelta": -206,
+      "positiveSeasons": 3,
+      "negativeSeasons": 4,
+      "seasonDeltas": [
+        -41,
+        3,
+        -156,
+        -206,
+        -168,
+        9,
+        0,
+        12
+      ]
+    },
+    {
+      "marketStrength": 0.15,
+      "minuteDownsideStrength": 0.15,
+      "average": 2109.4,
+      "minimum": 2041,
+      "developmentAverage": 2092.3,
+      "holdoutAverage": 2160.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2085
+        },
+        {
+          "season": "2019/20",
+          "points": 2159
+        },
+        {
+          "season": "2020/21",
+          "points": 2067
+        },
+        {
+          "season": "2021/22",
+          "points": 2067
+        },
+        {
+          "season": "2022/23",
+          "points": 2075
+        },
+        {
+          "season": "2023/24",
+          "points": 2101
+        },
+        {
+          "season": "2024/25",
+          "points": 2280
+        },
+        {
+          "season": "2025/26",
+          "points": 2041
+        }
+      ],
+      "averageDelta": -70.4,
+      "developmentDelta": -95.3,
+      "developmentStability": -113.263,
+      "holdoutDelta": 4.5,
+      "worstSeasonDelta": -220,
+      "positiveSeasons": 3,
+      "negativeSeasons": 4,
+      "seasonDeltas": [
+        -41,
+        3,
+        -156,
+        -220,
+        -168,
+        10,
+        0,
+        9
+      ]
+    },
+    {
+      "marketStrength": 0.15,
+      "minuteDownsideStrength": 0.3,
+      "average": 2111.1,
+      "minimum": 2044,
+      "developmentAverage": 2094.5,
+      "holdoutAverage": 2161.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2085
+        },
+        {
+          "season": "2019/20",
+          "points": 2159
+        },
+        {
+          "season": "2020/21",
+          "points": 2071
+        },
+        {
+          "season": "2021/22",
+          "points": 2067
+        },
+        {
+          "season": "2022/23",
+          "points": 2075
+        },
+        {
+          "season": "2023/24",
+          "points": 2110
+        },
+        {
+          "season": "2024/25",
+          "points": 2278
+        },
+        {
+          "season": "2025/26",
+          "points": 2044
+        }
+      ],
+      "averageDelta": -68.6,
+      "developmentDelta": -93.2,
+      "developmentStability": -111.369,
+      "holdoutDelta": 5.0,
+      "worstSeasonDelta": -220,
+      "positiveSeasons": 3,
+      "negativeSeasons": 5,
+      "seasonDeltas": [
+        -41,
+        3,
+        -152,
+        -220,
+        -168,
+        19,
+        -2,
+        12
+      ]
+    },
+    {
+      "marketStrength": 0.3,
+      "minuteDownsideStrength": 0.0,
+      "average": 2101.4,
+      "minimum": 2020,
+      "developmentAverage": 2085.5,
+      "holdoutAverage": 2149.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2083
+        },
+        {
+          "season": "2019/20",
+          "points": 2152
+        },
+        {
+          "season": "2020/21",
+          "points": 2060
+        },
+        {
+          "season": "2021/22",
+          "points": 2039
+        },
+        {
+          "season": "2022/23",
+          "points": 2073
+        },
+        {
+          "season": "2023/24",
+          "points": 2106
+        },
+        {
+          "season": "2024/25",
+          "points": 2278
+        },
+        {
+          "season": "2025/26",
+          "points": 2020
+        }
+      ],
+      "averageDelta": -78.4,
+      "developmentDelta": -102.2,
+      "developmentStability": -121.563,
+      "holdoutDelta": -7.0,
+      "worstSeasonDelta": -248,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        -43,
+        -4,
+        -163,
+        -248,
+        -170,
+        15,
+        -2,
+        -12
+      ]
+    },
+    {
+      "marketStrength": 0.3,
+      "minuteDownsideStrength": 0.15,
+      "average": 2100.2,
+      "minimum": 2020,
+      "developmentAverage": 2084.0,
+      "holdoutAverage": 2149.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2083
+        },
+        {
+          "season": "2019/20",
+          "points": 2152
+        },
+        {
+          "season": "2020/21",
+          "points": 2060
+        },
+        {
+          "season": "2021/22",
+          "points": 2035
+        },
+        {
+          "season": "2022/23",
+          "points": 2073
+        },
+        {
+          "season": "2023/24",
+          "points": 2101
+        },
+        {
+          "season": "2024/25",
+          "points": 2278
+        },
+        {
+          "season": "2025/26",
+          "points": 2020
+        }
+      ],
+      "averageDelta": -79.5,
+      "developmentDelta": -103.7,
+      "developmentStability": -123.067,
+      "holdoutDelta": -7.0,
+      "worstSeasonDelta": -252,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        -43,
+        -4,
+        -163,
+        -252,
+        -170,
+        10,
+        -2,
+        -12
+      ]
+    },
+    {
+      "marketStrength": 0.3,
+      "minuteDownsideStrength": 0.3,
+      "average": 2102.2,
+      "minimum": 2029,
+      "developmentAverage": 2085.2,
+      "holdoutAverage": 2153.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2083
+        },
+        {
+          "season": "2019/20",
+          "points": 2143
+        },
+        {
+          "season": "2020/21",
+          "points": 2060
+        },
+        {
+          "season": "2021/22",
+          "points": 2039
+        },
+        {
+          "season": "2022/23",
+          "points": 2076
+        },
+        {
+          "season": "2023/24",
+          "points": 2110
+        },
+        {
+          "season": "2024/25",
+          "points": 2278
+        },
+        {
+          "season": "2025/26",
+          "points": 2029
+        }
+      ],
+      "averageDelta": -77.5,
+      "developmentDelta": -102.5,
+      "developmentStability": -121.701,
+      "holdoutDelta": -2.5,
+      "worstSeasonDelta": -248,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        -43,
+        -13,
+        -163,
+        -248,
+        -167,
+        19,
+        -2,
+        -3
+      ]
+    },
+    {
+      "marketStrength": 0.5,
+      "minuteDownsideStrength": 0.0,
+      "average": 2081.2,
+      "minimum": 1997,
+      "developmentAverage": 2086.8,
+      "holdoutAverage": 2064.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2128
+        },
+        {
+          "season": "2019/20",
+          "points": 2143
+        },
+        {
+          "season": "2020/21",
+          "points": 2072
+        },
+        {
+          "season": "2021/22",
+          "points": 2048
+        },
+        {
+          "season": "2022/23",
+          "points": 2088
+        },
+        {
+          "season": "2023/24",
+          "points": 2042
+        },
+        {
+          "season": "2024/25",
+          "points": 2132
+        },
+        {
+          "season": "2025/26",
+          "points": 1997
+        }
+      ],
+      "averageDelta": -98.5,
+      "developmentDelta": -100.8,
+      "developmentStability": -118.253,
+      "holdoutDelta": -91.5,
+      "worstSeasonDelta": -239,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        2,
+        -13,
+        -151,
+        -239,
+        -155,
+        -49,
+        -148,
+        -35
+      ]
+    },
+    {
+      "marketStrength": 0.5,
+      "minuteDownsideStrength": 0.15,
+      "average": 2083.5,
+      "minimum": 1997,
+      "developmentAverage": 2089.2,
+      "holdoutAverage": 2066.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2120
+        },
+        {
+          "season": "2019/20",
+          "points": 2143
+        },
+        {
+          "season": "2020/21",
+          "points": 2072
+        },
+        {
+          "season": "2021/22",
+          "points": 2058
+        },
+        {
+          "season": "2022/23",
+          "points": 2100
+        },
+        {
+          "season": "2023/24",
+          "points": 2042
+        },
+        {
+          "season": "2024/25",
+          "points": 2136
+        },
+        {
+          "season": "2025/26",
+          "points": 1997
+        }
+      ],
+      "averageDelta": -96.2,
+      "developmentDelta": -98.5,
+      "developmentStability": -114.847,
+      "holdoutDelta": -89.5,
+      "worstSeasonDelta": -229,
+      "positiveSeasons": 0,
+      "negativeSeasons": 8,
+      "seasonDeltas": [
+        -6,
+        -13,
+        -151,
+        -229,
+        -143,
+        -49,
+        -144,
+        -35
+      ]
+    },
+    {
+      "marketStrength": 0.5,
+      "minuteDownsideStrength": 0.3,
+      "average": 2082.2,
+      "minimum": 1997,
+      "developmentAverage": 2088.3,
+      "holdoutAverage": 2064.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2102
+        },
+        {
+          "season": "2019/20",
+          "points": 2143
+        },
+        {
+          "season": "2020/21",
+          "points": 2072
+        },
+        {
+          "season": "2021/22",
+          "points": 2062
+        },
+        {
+          "season": "2022/23",
+          "points": 2100
+        },
+        {
+          "season": "2023/24",
+          "points": 2051
+        },
+        {
+          "season": "2024/25",
+          "points": 2131
+        },
+        {
+          "season": "2025/26",
+          "points": 1997
+        }
+      ],
+      "averageDelta": -97.5,
+      "developmentDelta": -99.3,
+      "developmentStability": -115.043,
+      "holdoutDelta": -92.0,
+      "worstSeasonDelta": -225,
+      "positiveSeasons": 0,
+      "negativeSeasons": 8,
+      "seasonDeltas": [
+        -24,
+        -13,
+        -151,
+        -225,
+        -143,
+        -40,
+        -149,
+        -35
+      ]
+    },
+    {
+      "marketStrength": 0.7,
+      "minuteDownsideStrength": 0.0,
+      "average": 2076.1,
+      "minimum": 1998,
+      "developmentAverage": 2074.8,
+      "holdoutAverage": 2080.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2121
+        },
+        {
+          "season": "2019/20",
+          "points": 2063
+        },
+        {
+          "season": "2020/21",
+          "points": 2116
+        },
+        {
+          "season": "2021/22",
+          "points": 2045
+        },
+        {
+          "season": "2022/23",
+          "points": 2065
+        },
+        {
+          "season": "2023/24",
+          "points": 2039
+        },
+        {
+          "season": "2024/25",
+          "points": 2162
+        },
+        {
+          "season": "2025/26",
+          "points": 1998
+        }
+      ],
+      "averageDelta": -103.6,
+      "developmentDelta": -112.8,
+      "developmentStability": -128.472,
+      "holdoutDelta": -76.0,
+      "worstSeasonDelta": -242,
+      "positiveSeasons": 0,
+      "negativeSeasons": 8,
+      "seasonDeltas": [
+        -5,
+        -93,
+        -107,
+        -242,
+        -178,
+        -52,
+        -118,
+        -34
+      ]
+    },
+    {
+      "marketStrength": 0.7,
+      "minuteDownsideStrength": 0.15,
+      "average": 2077.2,
+      "minimum": 1995,
+      "developmentAverage": 2076.8,
+      "holdoutAverage": 2078.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2121
+        },
+        {
+          "season": "2019/20",
+          "points": 2063
+        },
+        {
+          "season": "2020/21",
+          "points": 2116
+        },
+        {
+          "season": "2021/22",
+          "points": 2045
+        },
+        {
+          "season": "2022/23",
+          "points": 2077
+        },
+        {
+          "season": "2023/24",
+          "points": 2039
+        },
+        {
+          "season": "2024/25",
+          "points": 2162
+        },
+        {
+          "season": "2025/26",
+          "points": 1995
+        }
+      ],
+      "averageDelta": -102.5,
+      "developmentDelta": -110.8,
+      "developmentStability": -126.161,
+      "holdoutDelta": -77.5,
+      "worstSeasonDelta": -242,
+      "positiveSeasons": 0,
+      "negativeSeasons": 8,
+      "seasonDeltas": [
+        -5,
+        -93,
+        -107,
+        -242,
+        -166,
+        -52,
+        -118,
+        -37
+      ]
+    },
+    {
+      "marketStrength": 0.7,
+      "minuteDownsideStrength": 0.3,
+      "average": 2076.1,
+      "minimum": 1995,
+      "developmentAverage": 2075.3,
+      "holdoutAverage": 2078.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2113
+        },
+        {
+          "season": "2019/20",
+          "points": 2053
+        },
+        {
+          "season": "2020/21",
+          "points": 2116
+        },
+        {
+          "season": "2021/22",
+          "points": 2045
+        },
+        {
+          "season": "2022/23",
+          "points": 2077
+        },
+        {
+          "season": "2023/24",
+          "points": 2048
+        },
+        {
+          "season": "2024/25",
+          "points": 2162
+        },
+        {
+          "season": "2025/26",
+          "points": 1995
+        }
+      ],
+      "averageDelta": -103.6,
+      "developmentDelta": -112.3,
+      "developmentStability": -127.495,
+      "holdoutDelta": -77.5,
+      "worstSeasonDelta": -242,
+      "positiveSeasons": 0,
+      "negativeSeasons": 8,
+      "seasonDeltas": [
+        -13,
+        -103,
+        -107,
+        -242,
+        -166,
+        -43,
+        -118,
+        -37
+      ]
+    },
+    {
+      "marketStrength": 1.0,
+      "minuteDownsideStrength": 0.0,
+      "average": 2100.1,
+      "minimum": 2026,
+      "developmentAverage": 2101.3,
+      "holdoutAverage": 2096.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2120
+        },
+        {
+          "season": "2019/20",
+          "points": 2102
+        },
+        {
+          "season": "2020/21",
+          "points": 2061
+        },
+        {
+          "season": "2021/22",
+          "points": 2035
+        },
+        {
+          "season": "2022/23",
+          "points": 2099
+        },
+        {
+          "season": "2023/24",
+          "points": 2191
+        },
+        {
+          "season": "2024/25",
+          "points": 2167
+        },
+        {
+          "season": "2025/26",
+          "points": 2026
+        }
+      ],
+      "averageDelta": -79.6,
+      "developmentDelta": -86.3,
+      "developmentStability": -109.241,
+      "holdoutDelta": -59.5,
+      "worstSeasonDelta": -252,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        -6,
+        -54,
+        -162,
+        -252,
+        -144,
+        100,
+        -113,
+        -6
+      ]
+    },
+    {
+      "marketStrength": 1.0,
+      "minuteDownsideStrength": 0.15,
+      "average": 2100.1,
+      "minimum": 2026,
+      "developmentAverage": 2101.7,
+      "holdoutAverage": 2095.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2120
+        },
+        {
+          "season": "2019/20",
+          "points": 2102
+        },
+        {
+          "season": "2020/21",
+          "points": 2062
+        },
+        {
+          "season": "2021/22",
+          "points": 2035
+        },
+        {
+          "season": "2022/23",
+          "points": 2099
+        },
+        {
+          "season": "2023/24",
+          "points": 2192
+        },
+        {
+          "season": "2024/25",
+          "points": 2165
+        },
+        {
+          "season": "2025/26",
+          "points": 2026
+        }
+      ],
+      "averageDelta": -79.6,
+      "developmentDelta": -86.0,
+      "developmentStability": -108.94,
+      "holdoutDelta": -60.5,
+      "worstSeasonDelta": -252,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        -6,
+        -54,
+        -161,
+        -252,
+        -144,
+        101,
+        -115,
+        -6
+      ]
+    },
+    {
+      "marketStrength": 1.0,
+      "minuteDownsideStrength": 0.3,
+      "average": 2099.2,
+      "minimum": 2020,
+      "developmentAverage": 2101.5,
+      "holdoutAverage": 2092.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2115
+        },
+        {
+          "season": "2019/20",
+          "points": 2102
+        },
+        {
+          "season": "2020/21",
+          "points": 2062
+        },
+        {
+          "season": "2021/22",
+          "points": 2039
+        },
+        {
+          "season": "2022/23",
+          "points": 2099
+        },
+        {
+          "season": "2023/24",
+          "points": 2192
+        },
+        {
+          "season": "2024/25",
+          "points": 2165
+        },
+        {
+          "season": "2025/26",
+          "points": 2020
+        }
+      ],
+      "averageDelta": -80.5,
+      "developmentDelta": -86.2,
+      "developmentStability": -108.802,
+      "holdoutDelta": -63.5,
+      "worstSeasonDelta": -248,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        -11,
+        -54,
+        -161,
+        -248,
+        -144,
+        101,
+        -115,
+        -12
+      ]
+    }
+  ],
+  "selectedByDevelopmentOnly": {
+    "marketStrength": 1.0,
+    "minuteDownsideStrength": 0.3,
+    "average": 2099.2,
+    "minimum": 2020,
+    "developmentAverage": 2101.5,
+    "holdoutAverage": 2092.5,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2115
+      },
+      {
+        "season": "2019/20",
+        "points": 2102
+      },
+      {
+        "season": "2020/21",
+        "points": 2062
+      },
+      {
+        "season": "2021/22",
+        "points": 2039
+      },
+      {
+        "season": "2022/23",
+        "points": 2099
+      },
+      {
+        "season": "2023/24",
+        "points": 2192
+      },
+      {
+        "season": "2024/25",
+        "points": 2165
+      },
+      {
+        "season": "2025/26",
+        "points": 2020
+      }
+    ],
+    "averageDelta": -80.5,
+    "developmentDelta": -86.2,
+    "developmentStability": -108.802,
+    "holdoutDelta": -63.5,
+    "worstSeasonDelta": -248,
+    "positiveSeasons": 1,
+    "negativeSeasons": 7,
+    "seasonDeltas": [
+      -11,
+      -54,
+      -161,
+      -248,
+      -144,
+      101,
+      -115,
+      -12
+    ]
+  },
+  "auditedChipInteraction": {
+    "baseline": {
+      "average": 2190.6,
+      "minimum": 2032,
+      "developmentAverage": 2197.3,
+      "holdoutAverage": 2170.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2156
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2098
+        },
+        {
+          "season": "2024/25",
+          "points": 2309
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ]
+    },
+    "challenger": {
+      "average": 2114.8,
+      "minimum": 2020,
+      "developmentAverage": 2117.3,
+      "holdoutAverage": 2107.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2131
+        },
+        {
+          "season": "2019/20",
+          "points": 2102
+        },
+        {
+          "season": "2020/21",
+          "points": 2075
+        },
+        {
+          "season": "2021/22",
+          "points": 2048
+        },
+        {
+          "season": "2022/23",
+          "points": 2145
+        },
+        {
+          "season": "2023/24",
+          "points": 2203
+        },
+        {
+          "season": "2024/25",
+          "points": 2194
+        },
+        {
+          "season": "2025/26",
+          "points": 2020
+        }
+      ],
+      "averageDelta": -75.9,
+      "developmentDelta": -80.0,
+      "developmentStability": -103.228,
+      "holdoutDelta": -63.5,
+      "worstSeasonDelta": -257,
+      "positiveSeasons": 2,
+      "negativeSeasons": 6,
+      "seasonDeltas": [
+        2,
+        -54,
+        -163,
+        -257,
+        -113,
+        105,
+        -115,
+        -12
+      ]
+    }
+  },
+  "promotionGate": {
+    "developmentDeltaAtLeastFive": false,
+    "holdoutNonNegative": false,
+    "worstSeasonAtLeastMinusFifteen": false,
+    "positiveSeasonsAtLeastFive": false,
+    "deadlineTimestampAuditable": false
+  },
+  "productionPromotion": false
+}

@@ -425,6 +425,9 @@ export default function FplDashboard() {
     .slice(1)
     .map((position) => starters.filter((player) => player.position === position).length)
     .join("-");
+  const recommendedChipScenario = chipScenarios.scenarios.find(
+    (scenario) => scenario.chip === chipScenarios.recommendation,
+  );
   const topRanks = useMemo(
     () => [...scoredPlayers].sort((a, b) => b.liveScore - a.liveScore).slice(0, 6),
     [scoredPlayers],
@@ -1002,7 +1005,7 @@ export default function FplDashboard() {
           </div>
 
           <div className="research-heading">
-            <div><span>THREE PRE-REGISTERED MANAGERS</span><p>Same deadline evidence, different decision layer.</p></div>
+            <div><span>{shadowStatus.managers.length} PRE-REGISTERED MANAGERS</span><p>Same deadline evidence, different decision layer.</p></div>
             <strong>{shadowStatus.decisionStatus}</strong>
           </div>
           <div className="shadow-managers">
@@ -1019,7 +1022,7 @@ export default function FplDashboard() {
 
           <div className="research-heading scenario-heading">
             <div><span>CHIP SCENARIO GATES</span><p>Expected gain alone is not enough; structure and downside must also pass.</p></div>
-            <strong>{chipScenarios.optionValueOfWaiting.toFixed(1)} wait value</strong>
+            <strong>{(recommendedChipScenario?.reservationValue ?? 0).toFixed(1)} reservation</strong>
           </div>
           <div className="scenario-grid">
             {chipScenarios.scenarios.filter((scenario) => scenario.chip !== "Hold").map((scenario) => (

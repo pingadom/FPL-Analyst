@@ -1,7 +1,20 @@
 {
-  "status": "research-only; historically exposed",
-  "method": "25% causal frontier immediate rerank + 25% causal listwise six-week rerank + 50% causal captain rerank. The chip row uses the already-frozen legacy threshold policy, not the new prospective scenario engine.",
-  "promotionRule": "This stack can replace the shadow challenger before GW1 lock, but cannot replace production until frozen prospective evidence clears the promotion gate.",
+  "status": "historical champion; requires prospective shadow validation",
+  "method": "25% causal frontier immediate rerank + 25% causal listwise six-week rerank + 50% causal captain rerank. Legacy chips remain as a diagnostic; the audited row enables only the walk-forward validated Bench Boost and Triple Captain gates.",
+  "promotionRule": "Use the audited row as the historical research champion. Do not claim a rank guarantee or enable automatic Wildcard/Free Hit until frozen prospective evidence clears the promotion gate.",
+  "auditedChipPolicy": {
+    "wildcardGap": 1000000.0,
+    "freeHitGap": 1000000.0,
+    "benchScore": 11.0,
+    "tripleScore": 15.0,
+    "afconBonus": 0.0,
+    "firstWildcardMinGw": 10,
+    "secondWildcardMinGw": 28,
+    "enabledChips": [
+      "Bench Boost",
+      "Triple Captain"
+    ]
+  },
   "variants": {
     "hybrid": {
       "average": 2147.6,
@@ -150,10 +163,10 @@
       ]
     },
     "hybridCaptain50LegacyChips": {
-      "average": 2132.5,
+      "average": 2139.9,
       "minimum": 2044,
       "targetHits": 0,
-      "averageMargin": -164.2,
+      "averageMargin": -156.9,
       "averageTransfers": 29.1,
       "evaluation": [
         {
@@ -174,41 +187,41 @@
         },
         {
           "season": "2020/21",
-          "points": 2246,
+          "points": 2250,
           "target": 2270,
-          "margin": -24,
+          "margin": -20,
           "transfers": 28,
           "rolled": 20
         },
         {
           "season": "2021/22",
-          "points": 2178,
+          "points": 2189,
           "target": 2340,
-          "margin": -162,
+          "margin": -151,
           "transfers": 29,
           "rolled": 20
         },
         {
           "season": "2022/23",
-          "points": 2131,
+          "points": 2141,
           "target": 2425,
-          "margin": -294,
+          "margin": -284,
           "transfers": 25,
           "rolled": 20
         },
         {
           "season": "2023/24",
-          "points": 2074,
+          "points": 2079,
           "target": 2373,
-          "margin": -299,
+          "margin": -294,
           "transfers": 28,
           "rolled": 22
         },
         {
           "season": "2024/25",
-          "points": 2188,
+          "points": 2217,
           "target": 2411,
-          "margin": -223,
+          "margin": -194,
           "transfers": 34,
           "rolled": 21
         },
@@ -219,6 +232,79 @@
           "margin": -200,
           "transfers": 38,
           "rolled": 21
+        }
+      ]
+    },
+    "hybridCaptain50AuditedChips": {
+      "average": 2164.1,
+      "minimum": 1999,
+      "targetHits": 0,
+      "averageMargin": -132.6,
+      "averageTransfers": 31.9,
+      "evaluation": [
+        {
+          "season": "2018/19",
+          "points": 2097,
+          "target": 2151,
+          "margin": -54,
+          "transfers": 32,
+          "rolled": 20
+        },
+        {
+          "season": "2019/20",
+          "points": 2112,
+          "target": 2160,
+          "margin": -48,
+          "transfers": 26,
+          "rolled": 24
+        },
+        {
+          "season": "2020/21",
+          "points": 2210,
+          "target": 2270,
+          "margin": -60,
+          "transfers": 31,
+          "rolled": 20
+        },
+        {
+          "season": "2021/22",
+          "points": 2216,
+          "target": 2340,
+          "margin": -124,
+          "transfers": 32,
+          "rolled": 18
+        },
+        {
+          "season": "2022/23",
+          "points": 2277,
+          "target": 2425,
+          "margin": -148,
+          "transfers": 29,
+          "rolled": 19
+        },
+        {
+          "season": "2023/24",
+          "points": 2072,
+          "target": 2373,
+          "margin": -301,
+          "transfers": 32,
+          "rolled": 20
+        },
+        {
+          "season": "2024/25",
+          "points": 2330,
+          "target": 2411,
+          "margin": -81,
+          "transfers": 35,
+          "rolled": 20
+        },
+        {
+          "season": "2025/26",
+          "points": 1999,
+          "target": 2244,
+          "margin": -245,
+          "transfers": 38,
+          "rolled": 19
         }
       ]
     }

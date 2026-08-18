@@ -1,0 +1,2004 @@
+{
+  "status": "training-selected fixed-path chip timing diagnostic",
+  "warning": "TC/BB gains are evaluated on a fixed no-chip squad path; Wildcard and Free Hit require paired recursive evaluation.",
+  "selected": {
+    "quantile": 0.5,
+    "trainingAverageGain": 24.0,
+    "trainingMinimumGain": 10.0,
+    "evaluationAverageGain": 17.4,
+    "evaluationMinimumGain": 6.0,
+    "seasons": [
+      {
+        "season": "2016/17",
+        "gain": 10.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 15.0,
+            "gw": 27,
+            "signal": 17.633,
+            "actualGain": 6.0,
+            "structural": true
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 11.0,
+            "gw": 37,
+            "signal": 11.295,
+            "actualGain": 4.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2017/18",
+        "gain": 38.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 16.198,
+            "gw": 38,
+            "signal": 6.868,
+            "actualGain": 11.0,
+            "structural": false
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 11.295,
+            "gw": 37,
+            "signal": 13.225,
+            "actualGain": 27.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2018/19",
+        "gain": 15.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 16.198,
+            "gw": 25,
+            "signal": 11.046,
+            "actualGain": 3.0,
+            "structural": true
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 11.295,
+            "gw": 32,
+            "signal": 12.929,
+            "actualGain": 12.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2019/20",
+        "gain": 6.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 14.763,
+            "gw": 29,
+            "signal": 6.183,
+            "actualGain": 2.0,
+            "structural": false
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 12.929,
+            "gw": 24,
+            "signal": 10.04,
+            "actualGain": 4.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2020/21",
+        "gain": 9.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 14.14,
+            "gw": 26,
+            "signal": 15.024,
+            "actualGain": 6.0,
+            "structural": true
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 12.112,
+            "gw": 35,
+            "signal": 9.395,
+            "actualGain": 3.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2021/22",
+        "gain": 25.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 14.894,
+            "gw": 26,
+            "signal": 15.808,
+            "actualGain": 11.0,
+            "structural": true
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 10.848,
+            "gw": 26,
+            "signal": 12.532,
+            "actualGain": 14.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2022/23",
+        "gain": 16.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 15.139,
+            "gw": 23,
+            "signal": 16.308,
+            "actualGain": 10.0,
+            "structural": true
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 11.86,
+            "gw": 20,
+            "signal": 12.028,
+            "actualGain": 6.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2023/24",
+        "gain": 11.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 15.378,
+            "gw": 37,
+            "signal": 16.774,
+            "actualGain": 4.0,
+            "structural": true
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 12.28,
+            "gw": 37,
+            "signal": 12.133,
+            "actualGain": 7.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2024/25",
+        "gain": 40.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 15.316,
+            "gw": 24,
+            "signal": 15.958,
+            "actualGain": 29.0,
+            "structural": true
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              38
+            ],
+            "threshold": 12.081,
+            "gw": 32,
+            "signal": 14.27,
+            "actualGain": 11.0,
+            "structural": true
+          }
+        ]
+      },
+      {
+        "season": "2025/26",
+        "gain": 17.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "window": [
+              1,
+              19
+            ],
+            "threshold": 15.316,
+            "gw": 19,
+            "signal": 7.057,
+            "actualGain": 3.0,
+            "structural": false
+          },
+          {
+            "chip": "Triple Captain",
+            "window": [
+              20,
+              38
+            ],
+            "threshold": 15.316,
+            "gw": 36,
+            "signal": 12.623,
+            "actualGain": 5.0,
+            "structural": true
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              1,
+              19
+            ],
+            "threshold": 12.081,
+            "gw": 19,
+            "signal": 11.977,
+            "actualGain": 7.0,
+            "structural": false
+          },
+          {
+            "chip": "Bench Boost",
+            "window": [
+              20,
+              38
+            ],
+            "threshold": 12.081,
+            "gw": 38,
+            "signal": 13.024,
+            "actualGain": 2.0,
+            "structural": false
+          }
+        ]
+      }
+    ]
+  },
+  "policies": [
+    {
+      "quantile": 0.5,
+      "trainingAverageGain": 24.0,
+      "trainingMinimumGain": 10.0,
+      "evaluationAverageGain": 17.4,
+      "evaluationMinimumGain": 6.0,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 10.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.0,
+              "gw": 27,
+              "signal": 17.633,
+              "actualGain": 6.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.0,
+              "gw": 37,
+              "signal": 11.295,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 38.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.198,
+              "gw": 38,
+              "signal": 6.868,
+              "actualGain": 11.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.295,
+              "gw": 37,
+              "signal": 13.225,
+              "actualGain": 27.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 15.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.198,
+              "gw": 25,
+              "signal": 11.046,
+              "actualGain": 3.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.295,
+              "gw": 32,
+              "signal": 12.929,
+              "actualGain": 12.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 6.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 14.763,
+              "gw": 29,
+              "signal": 6.183,
+              "actualGain": 2.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.929,
+              "gw": 24,
+              "signal": 10.04,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 9.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 14.14,
+              "gw": 26,
+              "signal": 15.024,
+              "actualGain": 6.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.112,
+              "gw": 35,
+              "signal": 9.395,
+              "actualGain": 3.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 25.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 14.894,
+              "gw": 26,
+              "signal": 15.808,
+              "actualGain": 11.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 10.848,
+              "gw": 26,
+              "signal": 12.532,
+              "actualGain": 14.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 16.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.139,
+              "gw": 23,
+              "signal": 16.308,
+              "actualGain": 10.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.86,
+              "gw": 20,
+              "signal": 12.028,
+              "actualGain": 6.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 11.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.378,
+              "gw": 37,
+              "signal": 16.774,
+              "actualGain": 4.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.28,
+              "gw": 37,
+              "signal": 12.133,
+              "actualGain": 7.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 40.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.316,
+              "gw": 24,
+              "signal": 15.958,
+              "actualGain": 29.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.081,
+              "gw": 32,
+              "signal": 14.27,
+              "actualGain": 11.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 17.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 15.316,
+              "gw": 19,
+              "signal": 7.057,
+              "actualGain": 3.0,
+              "structural": false
+            },
+            {
+              "chip": "Triple Captain",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 15.316,
+              "gw": 36,
+              "signal": 12.623,
+              "actualGain": 5.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 12.081,
+              "gw": 19,
+              "signal": 11.977,
+              "actualGain": 7.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 12.081,
+              "gw": 38,
+              "signal": 13.024,
+              "actualGain": 2.0,
+              "structural": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.65,
+      "trainingAverageGain": 24.0,
+      "trainingMinimumGain": 10.0,
+      "evaluationAverageGain": 16.1,
+      "evaluationMinimumGain": 6.0,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 10.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.0,
+              "gw": 27,
+              "signal": 17.633,
+              "actualGain": 6.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.0,
+              "gw": 37,
+              "signal": 11.295,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 38.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.629,
+              "gw": 38,
+              "signal": 6.868,
+              "actualGain": 11.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.295,
+              "gw": 37,
+              "signal": 13.225,
+              "actualGain": 27.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 15.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.629,
+              "gw": 25,
+              "signal": 11.046,
+              "actualGain": 3.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.874,
+              "gw": 32,
+              "signal": 12.929,
+              "actualGain": 12.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 6.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.624,
+              "gw": 29,
+              "signal": 6.183,
+              "actualGain": 2.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.107,
+              "gw": 24,
+              "signal": 10.04,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 9.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 14.701,
+              "gw": 26,
+              "signal": 15.024,
+              "actualGain": 6.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.003,
+              "gw": 35,
+              "signal": 9.395,
+              "actualGain": 3.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 25.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.532,
+              "gw": 26,
+              "signal": 15.808,
+              "actualGain": 11.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.564,
+              "gw": 26,
+              "signal": 12.532,
+              "actualGain": 14.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 28.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.359,
+              "gw": 23,
+              "signal": 16.308,
+              "actualGain": 10.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.83,
+              "gw": 23,
+              "signal": 13.718,
+              "actualGain": 18.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 11.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.151,
+              "gw": 37,
+              "signal": 16.774,
+              "actualGain": 4.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.054,
+              "gw": 37,
+              "signal": 12.133,
+              "actualGain": 7.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 18.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.138,
+              "gw": 33,
+              "signal": 12.279,
+              "actualGain": 7.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.95,
+              "gw": 32,
+              "signal": 14.27,
+              "actualGain": 11.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 17.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 15.951,
+              "gw": 19,
+              "signal": 7.057,
+              "actualGain": 3.0,
+              "structural": false
+            },
+            {
+              "chip": "Triple Captain",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 15.951,
+              "gw": 36,
+              "signal": 12.623,
+              "actualGain": 5.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 12.96,
+              "gw": 19,
+              "signal": 11.977,
+              "actualGain": 7.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 12.96,
+              "gw": 38,
+              "signal": 13.024,
+              "actualGain": 2.0,
+              "structural": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.75,
+      "trainingAverageGain": 24.0,
+      "trainingMinimumGain": 10.0,
+      "evaluationAverageGain": 17.4,
+      "evaluationMinimumGain": 6.0,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 10.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.0,
+              "gw": 27,
+              "signal": 17.633,
+              "actualGain": 6.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.0,
+              "gw": 37,
+              "signal": 11.295,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 38.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.916,
+              "gw": 38,
+              "signal": 6.868,
+              "actualGain": 11.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.295,
+              "gw": 37,
+              "signal": 13.225,
+              "actualGain": 27.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 15.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.916,
+              "gw": 25,
+              "signal": 11.046,
+              "actualGain": 3.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.26,
+              "gw": 32,
+              "signal": 12.929,
+              "actualGain": 12.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 6.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.198,
+              "gw": 29,
+              "signal": 6.183,
+              "actualGain": 2.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.225,
+              "gw": 24,
+              "signal": 10.04,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 16.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.481,
+              "gw": 35,
+              "signal": 17.054,
+              "actualGain": 13.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.151,
+              "gw": 35,
+              "signal": 9.395,
+              "actualGain": 3.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 28.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.547,
+              "gw": 36,
+              "signal": 12.195,
+              "actualGain": 14.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.381,
+              "gw": 26,
+              "signal": 12.532,
+              "actualGain": 14.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 28.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.7,
+              "gw": 23,
+              "signal": 16.308,
+              "actualGain": 10.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.027,
+              "gw": 23,
+              "signal": 13.718,
+              "actualGain": 18.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 11.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.82,
+              "gw": 37,
+              "signal": 16.774,
+              "actualGain": 4.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.374,
+              "gw": 37,
+              "signal": 12.133,
+              "actualGain": 7.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 18.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.786,
+              "gw": 33,
+              "signal": 12.279,
+              "actualGain": 7.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.267,
+              "gw": 32,
+              "signal": 14.27,
+              "actualGain": 11.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 17.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 16.424,
+              "gw": 19,
+              "signal": 7.057,
+              "actualGain": 3.0,
+              "structural": false
+            },
+            {
+              "chip": "Triple Captain",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 16.424,
+              "gw": 36,
+              "signal": 12.623,
+              "actualGain": 5.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 13.374,
+              "gw": 19,
+              "signal": 11.977,
+              "actualGain": 7.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 13.374,
+              "gw": 38,
+              "signal": 13.024,
+              "actualGain": 2.0,
+              "structural": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.85,
+      "trainingAverageGain": 24.0,
+      "trainingMinimumGain": 10.0,
+      "evaluationAverageGain": 18.4,
+      "evaluationMinimumGain": 6.0,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 10.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.0,
+              "gw": 27,
+              "signal": 17.633,
+              "actualGain": 6.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.0,
+              "gw": 37,
+              "signal": 11.295,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 38.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.203,
+              "gw": 38,
+              "signal": 6.868,
+              "actualGain": 11.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.295,
+              "gw": 37,
+              "signal": 13.225,
+              "actualGain": 27.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 15.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.203,
+              "gw": 25,
+              "signal": 11.046,
+              "actualGain": 3.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.646,
+              "gw": 32,
+              "signal": 12.929,
+              "actualGain": 12.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 6.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.772,
+              "gw": 29,
+              "signal": 6.183,
+              "actualGain": 2.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.247,
+              "gw": 24,
+              "signal": 10.04,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 16.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.342,
+              "gw": 35,
+              "signal": 17.054,
+              "actualGain": 13.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.239,
+              "gw": 35,
+              "signal": 9.395,
+              "actualGain": 3.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 34.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.199,
+              "gw": 36,
+              "signal": 12.195,
+              "actualGain": 14.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.077,
+              "gw": 28,
+              "signal": 13.655,
+              "actualGain": 20.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 30.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.618,
+              "gw": 27,
+              "signal": 17.325,
+              "actualGain": 12.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.267,
+              "gw": 23,
+              "signal": 13.718,
+              "actualGain": 18.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 11.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.217,
+              "gw": 37,
+              "signal": 16.774,
+              "actualGain": 4.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.786,
+              "gw": 37,
+              "signal": 12.133,
+              "actualGain": 7.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 18.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.095,
+              "gw": 33,
+              "signal": 12.279,
+              "actualGain": 7.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.709,
+              "gw": 32,
+              "signal": 14.27,
+              "actualGain": 11.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 17.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 16.949,
+              "gw": 19,
+              "signal": 7.057,
+              "actualGain": 3.0,
+              "structural": false
+            },
+            {
+              "chip": "Triple Captain",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 16.949,
+              "gw": 36,
+              "signal": 12.623,
+              "actualGain": 5.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 13.967,
+              "gw": 19,
+              "signal": 11.977,
+              "actualGain": 7.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 13.967,
+              "gw": 38,
+              "signal": 13.024,
+              "actualGain": 2.0,
+              "structural": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.9,
+      "trainingAverageGain": 24.0,
+      "trainingMinimumGain": 10.0,
+      "evaluationAverageGain": 18.4,
+      "evaluationMinimumGain": 6.0,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 10.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 15.0,
+              "gw": 27,
+              "signal": 17.633,
+              "actualGain": 6.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.0,
+              "gw": 37,
+              "signal": 11.295,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 38.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.346,
+              "gw": 38,
+              "signal": 6.868,
+              "actualGain": 11.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 11.295,
+              "gw": 37,
+              "signal": 13.225,
+              "actualGain": 27.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 15.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.346,
+              "gw": 25,
+              "signal": 11.046,
+              "actualGain": 3.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 12.839,
+              "gw": 32,
+              "signal": 12.929,
+              "actualGain": 12.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 6.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.059,
+              "gw": 29,
+              "signal": 6.183,
+              "actualGain": 2.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.259,
+              "gw": 24,
+              "signal": 10.04,
+              "actualGain": 4.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 16.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 16.772,
+              "gw": 35,
+              "signal": 17.054,
+              "actualGain": 13.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.253,
+              "gw": 35,
+              "signal": 9.395,
+              "actualGain": 3.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 34.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.344,
+              "gw": 36,
+              "signal": 12.195,
+              "actualGain": 14.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.225,
+              "gw": 28,
+              "signal": 13.655,
+              "actualGain": 20.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 30.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.112,
+              "gw": 27,
+              "signal": 17.325,
+              "actualGain": 12.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 13.468,
+              "gw": 23,
+              "signal": 13.718,
+              "actualGain": 18.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 11.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.383,
+              "gw": 37,
+              "signal": 16.774,
+              "actualGain": 4.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 14.384,
+              "gw": 37,
+              "signal": 12.133,
+              "actualGain": 7.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 18.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 17.339,
+              "gw": 33,
+              "signal": 12.279,
+              "actualGain": 7.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                38
+              ],
+              "threshold": 14.126,
+              "gw": 32,
+              "signal": 14.27,
+              "actualGain": 11.0,
+              "structural": true
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 17.0,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 17.244,
+              "gw": 19,
+              "signal": 7.057,
+              "actualGain": 3.0,
+              "structural": false
+            },
+            {
+              "chip": "Triple Captain",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 17.244,
+              "gw": 36,
+              "signal": 12.623,
+              "actualGain": 5.0,
+              "structural": true
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                1,
+                19
+              ],
+              "threshold": 14.24,
+              "gw": 19,
+              "signal": 11.977,
+              "actualGain": 7.0,
+              "structural": false
+            },
+            {
+              "chip": "Bench Boost",
+              "window": [
+                20,
+                38
+              ],
+              "threshold": 14.24,
+              "gw": 38,
+              "signal": 13.024,
+              "actualGain": 2.0,
+              "structural": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

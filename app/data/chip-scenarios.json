@@ -1,18 +1,29 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "season": "2026-27",
   "gameweek": 1,
   "snapshotHash": "5278ff3730a7d4ab223782296fc3bca737b6dea761439c706b2fad448767605f",
   "snapshotStatus": "provisional",
   "simulationCount": 5000,
-  "recommendation": "Hold",
-  "managerPlans": {},
-  "optionValueOfWaiting": 0.0,
+  "recommendation": "Bench Boost",
+  "chipSet": 1,
+  "chipsRemaining": [
+    "Wildcard",
+    "Free Hit",
+    "Bench Boost",
+    "Triple Captain"
+  ],
+  "weeksUntilSetExpiry": 19,
+  "forcedByExpiryCollision": false,
   "currentStructure": {
     "blankPlayers": 0,
     "doublePlayers": 0,
     "benchDoublePlayers": 0,
-    "captainHasDouble": false
+    "captainHasDouble": false,
+    "captainIsStrongPremiumSingle": false,
+    "benchExpectedMinutes": 281.0,
+    "benchMeanPlayProbability": 90.5,
+    "benchMinimumPlayProbability": 89.0
   },
   "scenarios": [
     {
@@ -23,49 +34,139 @@
       "p90Gain": 0.0,
       "probabilityPositive": 0.0,
       "gatePassed": true,
-      "netOfWaitValue": 0.0
+      "available": true,
+      "reservationValue": 0.0,
+      "riskAdjustedGain": 0.0,
+      "netOfReservation": 0.0,
+      "learnedExpectedGain": null,
+      "permanentTransferValueForegone": null,
+      "manualReviewTriggered": false
     },
     {
       "chip": "Free Hit",
-      "meanGain": 5.0,
-      "p10Gain": -2.6,
-      "medianGain": 5.0,
-      "p90Gain": 12.8,
-      "probabilityPositive": 80.7,
+      "meanGain": 4.4,
+      "p10Gain": -22.6,
+      "medianGain": 3.0,
+      "p90Gain": 32.3,
+      "probabilityPositive": 56.3,
       "gatePassed": false,
-      "netOfWaitValue": 5.0
+      "available": false,
+      "reservationValue": 8.5,
+      "riskAdjustedGain": -3.7,
+      "netOfReservation": -12.2,
+      "learnedExpectedGain": -8.0,
+      "permanentTransferValueForegone": 0.0,
+      "manualReviewTriggered": false
     },
     {
       "chip": "Bench Boost",
-      "meanGain": 14.8,
-      "p10Gain": 11.6,
-      "medianGain": 14.8,
-      "p90Gain": 18.1,
-      "probabilityPositive": 100.0,
-      "gatePassed": false,
-      "netOfWaitValue": 14.8
+      "meanGain": 10.4,
+      "p10Gain": 1.8,
+      "medianGain": 8.6,
+      "p90Gain": 21.3,
+      "probabilityPositive": 97.8,
+      "gatePassed": true,
+      "available": true,
+      "reservationValue": 5.0,
+      "riskAdjustedGain": 7.8,
+      "netOfReservation": 2.9,
+      "learnedExpectedGain": null,
+      "permanentTransferValueForegone": null,
+      "manualReviewTriggered": false
     },
     {
       "chip": "Triple Captain",
-      "meanGain": 5.2,
-      "p10Gain": 3.4,
-      "medianGain": 5.2,
-      "p90Gain": 7.1,
-      "probabilityPositive": 100.0,
+      "meanGain": 5.6,
+      "p10Gain": 1.0,
+      "medianGain": 4.3,
+      "p90Gain": 12.0,
+      "probabilityPositive": 99.1,
       "gatePassed": false,
-      "netOfWaitValue": 5.2
+      "available": true,
+      "reservationValue": 9.4,
+      "riskAdjustedGain": 4.2,
+      "netOfReservation": -5.2,
+      "learnedExpectedGain": null,
+      "permanentTransferValueForegone": null,
+      "manualReviewTriggered": false
     },
     {
       "chip": "Wildcard",
       "meanGain": 19.0,
-      "p10Gain": 4.2,
-      "medianGain": 18.9,
+      "p10Gain": 4.7,
+      "medianGain": 18.7,
       "p90Gain": 33.9,
-      "probabilityPositive": 95.2,
+      "probabilityPositive": 95.6,
       "gatePassed": false,
-      "netOfWaitValue": 19.0
+      "available": false,
+      "reservationValue": 21.4,
+      "riskAdjustedGain": 14.7,
+      "netOfReservation": -6.7,
+      "learnedExpectedGain": null,
+      "permanentTransferValueForegone": null,
+      "manualReviewTriggered": false
     }
   ],
+  "squads": {
+    "current": [
+      1,
+      4,
+      388,
+      61,
+      498,
+      399,
+      124,
+      368,
+      67,
+      428,
+      55,
+      384,
+      113,
+      106,
+      491
+    ],
+    "freeHit": [
+      411,
+      426,
+      4,
+      388,
+      1,
+      400,
+      124,
+      113,
+      236,
+      123,
+      465,
+      171,
+      272,
+      556,
+      508
+    ],
+    "wildcard": [
+      411,
+      4,
+      388,
+      1,
+      400,
+      55,
+      124,
+      109,
+      61,
+      368,
+      67,
+      356,
+      113,
+      321,
+      192
+    ]
+  },
+  "captains": {
+    "current": "Gabriel",
+    "freeHit": "Haaland",
+    "wildcard": "Haaland"
+  },
+  "availableBudget": 100.0,
+  "managerPlans": {},
   "futureScheduleSignals": [
     {
       "gameweek": 2,
@@ -103,64 +204,37 @@
       "doubleTeams": []
     }
   ],
-  "squads": {
-    "current": [
-      1,
-      4,
-      388,
-      61,
-      498,
-      399,
-      124,
-      67,
-      368,
-      428,
-      55,
-      384,
-      113,
-      106,
-      491
-    ],
-    "freeHit": [
-      411,
-      426,
-      4,
-      388,
-      1,
-      400,
-      124,
-      113,
-      236,
-      123,
-      465,
-      497,
-      321,
-      305,
-      304
-    ],
-    "wildcard": [
-      411,
-      4,
-      388,
-      1,
-      400,
-      55,
-      124,
-      109,
-      61,
-      67,
-      368,
-      356,
-      113,
-      321,
-      192
-    ]
+  "reservationCalibration": {
+    "Triple Captain": {
+      "q25": 8.593,
+      "q50": 9.337,
+      "q65": 9.807,
+      "q75": 10.143,
+      "q85": 10.575,
+      "q90": 10.902
+    },
+    "Bench Boost": {
+      "q25": 3.435,
+      "q50": 4.87,
+      "q65": 5.806,
+      "q75": 6.516,
+      "q85": 7.053,
+      "q90": 7.574
+    }
   },
-  "captains": {
-    "current": "Gabriel",
-    "freeHit": "Haaland",
-    "wildcard": "Haaland"
+  "freeHitCalibration": {
+    "status": "past-only live Free Hit cross-check; prospective shadow",
+    "trainedThrough": "2025/26",
+    "trainingRows": 379,
+    "activationThreshold": 3.0,
+    "causalValidation": {
+      "evaluationRows": 303,
+      "rawCorrelation": 0.166,
+      "learnedCorrelation": 0.231,
+      "rawMae": 13.94,
+      "learnedMae": 13.41
+    }
   },
-  "method": "Paired 5,000-draw Monte Carlo with common player outcomes, correlated team shocks, explicit downside gates, schedule structure, and the estimated option value of saving each chip.",
-  "warning": "This is a frozen policy diagnostic, not a promise of rank. A chip is recommended only when both structural and downside gates pass."
+  "method": "Paired 5,000-draw two-part Monte Carlo with explicit no-shows, autosubs, captain-to-vice fallback, club shocks, manager-specific selling budgets and chip-specific reservation values. TC/BB are marginal gains; FH is temporary; WC is valued over the horizon.",
+  "warning": "Historical TC/BB reservation values are causal but modestly stable. Wildcard and Free Hit retain conservative gates until their paired recursive challengers beat the no-chip control out of sample."
 }

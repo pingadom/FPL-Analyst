@@ -1,0 +1,367 @@
+{
+  "method": "Calibration by within-deadline, within-position forecast rank; positive bias means overprediction.",
+  "aggregate": [
+    {
+      "bucket": "top3",
+      "rows": 3636,
+      "forecast": 5.632,
+      "actual": 4.816,
+      "bias": 0.817,
+      "mae": 3.59
+    },
+    {
+      "bucket": "4-8",
+      "rows": 6060,
+      "forecast": 4.511,
+      "actual": 4.0,
+      "bias": 0.51,
+      "mae": 3.142
+    },
+    {
+      "bucket": "9-15",
+      "rows": 8484,
+      "forecast": 3.721,
+      "actual": 3.439,
+      "bias": 0.282,
+      "mae": 2.841
+    },
+    {
+      "bucket": "16-30",
+      "rows": 18175,
+      "forecast": 2.651,
+      "actual": 2.439,
+      "bias": 0.212,
+      "mae": 2.222
+    },
+    {
+      "bucket": "31+",
+      "rows": 163167,
+      "forecast": 1.091,
+      "actual": 0.848,
+      "bias": 0.243,
+      "mae": 1.059
+    }
+  ],
+  "seasons": [
+    {
+      "season": "2018/19",
+      "bucket": "top3",
+      "rows": 456,
+      "forecast": 5.783,
+      "actual": 4.886,
+      "bias": 0.897
+    },
+    {
+      "season": "2018/19",
+      "bucket": "4-8",
+      "rows": 760,
+      "forecast": 4.694,
+      "actual": 4.092,
+      "bias": 0.602
+    },
+    {
+      "season": "2018/19",
+      "bucket": "9-15",
+      "rows": 1064,
+      "forecast": 3.83,
+      "actual": 3.545,
+      "bias": 0.285
+    },
+    {
+      "season": "2018/19",
+      "bucket": "16-30",
+      "rows": 2280,
+      "forecast": 2.691,
+      "actual": 2.366,
+      "bias": 0.326
+    },
+    {
+      "season": "2018/19",
+      "bucket": "31+",
+      "rows": 16574,
+      "forecast": 1.206,
+      "actual": 0.997,
+      "bias": 0.209
+    },
+    {
+      "season": "2019/20",
+      "bucket": "top3",
+      "rows": 456,
+      "forecast": 5.809,
+      "actual": 4.862,
+      "bias": 0.947
+    },
+    {
+      "season": "2019/20",
+      "bucket": "4-8",
+      "rows": 760,
+      "forecast": 4.64,
+      "actual": 3.979,
+      "bias": 0.661
+    },
+    {
+      "season": "2019/20",
+      "bucket": "9-15",
+      "rows": 1064,
+      "forecast": 3.815,
+      "actual": 3.537,
+      "bias": 0.278
+    },
+    {
+      "season": "2019/20",
+      "bucket": "16-30",
+      "rows": 2280,
+      "forecast": 2.673,
+      "actual": 2.358,
+      "bias": 0.315
+    },
+    {
+      "season": "2019/20",
+      "bucket": "31+",
+      "rows": 17753,
+      "forecast": 1.161,
+      "actual": 0.937,
+      "bias": 0.224
+    },
+    {
+      "season": "2020/21",
+      "bucket": "top3",
+      "rows": 456,
+      "forecast": 5.84,
+      "actual": 4.792,
+      "bias": 1.048
+    },
+    {
+      "season": "2020/21",
+      "bucket": "4-8",
+      "rows": 760,
+      "forecast": 4.717,
+      "actual": 4.167,
+      "bias": 0.55
+    },
+    {
+      "season": "2020/21",
+      "bucket": "9-15",
+      "rows": 1064,
+      "forecast": 3.858,
+      "actual": 3.625,
+      "bias": 0.233
+    },
+    {
+      "season": "2020/21",
+      "bucket": "16-30",
+      "rows": 2280,
+      "forecast": 2.708,
+      "actual": 2.459,
+      "bias": 0.249
+    },
+    {
+      "season": "2020/21",
+      "bucket": "31+",
+      "rows": 18329,
+      "forecast": 1.147,
+      "actual": 0.907,
+      "bias": 0.24
+    },
+    {
+      "season": "2021/22",
+      "bucket": "top3",
+      "rows": 456,
+      "forecast": 5.814,
+      "actual": 5.024,
+      "bias": 0.79
+    },
+    {
+      "season": "2021/22",
+      "bucket": "4-8",
+      "rows": 760,
+      "forecast": 4.617,
+      "actual": 3.933,
+      "bias": 0.684
+    },
+    {
+      "season": "2021/22",
+      "bucket": "9-15",
+      "rows": 1064,
+      "forecast": 3.788,
+      "actual": 3.414,
+      "bias": 0.373
+    },
+    {
+      "season": "2021/22",
+      "bucket": "16-30",
+      "rows": 2275,
+      "forecast": 2.717,
+      "actual": 2.546,
+      "bias": 0.171
+    },
+    {
+      "season": "2021/22",
+      "bucket": "31+",
+      "rows": 18675,
+      "forecast": 1.145,
+      "actual": 0.895,
+      "bias": 0.251
+    },
+    {
+      "season": "2022/23",
+      "bucket": "top3",
+      "rows": 444,
+      "forecast": 5.542,
+      "actual": 4.901,
+      "bias": 0.641
+    },
+    {
+      "season": "2022/23",
+      "bucket": "4-8",
+      "rows": 740,
+      "forecast": 4.301,
+      "actual": 4.068,
+      "bias": 0.233
+    },
+    {
+      "season": "2022/23",
+      "bucket": "9-15",
+      "rows": 1036,
+      "forecast": 3.555,
+      "actual": 3.533,
+      "bias": 0.022
+    },
+    {
+      "season": "2022/23",
+      "bucket": "16-30",
+      "rows": 2220,
+      "forecast": 2.548,
+      "actual": 2.392,
+      "bias": 0.156
+    },
+    {
+      "season": "2022/23",
+      "bucket": "31+",
+      "rows": 20517,
+      "forecast": 1.076,
+      "actual": 0.856,
+      "bias": 0.22
+    },
+    {
+      "season": "2023/24",
+      "bucket": "top3",
+      "rows": 456,
+      "forecast": 5.391,
+      "actual": 4.656,
+      "bias": 0.735
+    },
+    {
+      "season": "2023/24",
+      "bucket": "4-8",
+      "rows": 760,
+      "forecast": 4.32,
+      "actual": 3.837,
+      "bias": 0.484
+    },
+    {
+      "season": "2023/24",
+      "bucket": "9-15",
+      "rows": 1064,
+      "forecast": 3.608,
+      "actual": 3.286,
+      "bias": 0.323
+    },
+    {
+      "season": "2023/24",
+      "bucket": "16-30",
+      "rows": 2280,
+      "forecast": 2.604,
+      "actual": 2.508,
+      "bias": 0.097
+    },
+    {
+      "season": "2023/24",
+      "bucket": "31+",
+      "rows": 24182,
+      "forecast": 0.995,
+      "actual": 0.704,
+      "bias": 0.292
+    },
+    {
+      "season": "2024/25",
+      "bucket": "top3",
+      "rows": 456,
+      "forecast": 5.614,
+      "actual": 4.952,
+      "bias": 0.662
+    },
+    {
+      "season": "2024/25",
+      "bucket": "4-8",
+      "rows": 760,
+      "forecast": 4.486,
+      "actual": 3.954,
+      "bias": 0.532
+    },
+    {
+      "season": "2024/25",
+      "bucket": "9-15",
+      "rows": 1064,
+      "forecast": 3.661,
+      "actual": 3.267,
+      "bias": 0.394
+    },
+    {
+      "season": "2024/25",
+      "bucket": "16-30",
+      "rows": 2280,
+      "forecast": 2.588,
+      "actual": 2.366,
+      "bias": 0.222
+    },
+    {
+      "season": "2024/25",
+      "bucket": "31+",
+      "rows": 22359,
+      "forecast": 1.036,
+      "actual": 0.767,
+      "bias": 0.269
+    },
+    {
+      "season": "2025/26",
+      "bucket": "top3",
+      "rows": 456,
+      "forecast": 5.264,
+      "actual": 4.456,
+      "bias": 0.808
+    },
+    {
+      "season": "2025/26",
+      "bucket": "4-8",
+      "rows": 760,
+      "forecast": 4.306,
+      "actual": 3.976,
+      "bias": 0.33
+    },
+    {
+      "season": "2025/26",
+      "bucket": "9-15",
+      "rows": 1064,
+      "forecast": 3.649,
+      "actual": 3.305,
+      "bias": 0.343
+    },
+    {
+      "season": "2025/26",
+      "bucket": "16-30",
+      "rows": 2280,
+      "forecast": 2.678,
+      "actual": 2.52,
+      "bias": 0.158
+    },
+    {
+      "season": "2025/26",
+      "bucket": "31+",
+      "rows": 24778,
+      "forecast": 1.034,
+      "actual": 0.811,
+      "bias": 0.223
+    }
+  ]
+}

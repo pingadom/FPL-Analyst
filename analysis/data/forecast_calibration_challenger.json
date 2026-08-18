@@ -1,0 +1,155 @@
+{
+  "status": "training-selected causal calibration challenger",
+  "predictiveCalibration": {
+    "immediateMaeBefore": 1.35,
+    "immediateMaeAfter": 1.1853,
+    "horizonMaeBefore": 4.107,
+    "horizonMaeAfter": 3.348
+  },
+  "selected": {
+    "name": "full-stack",
+    "trainingStability": 2064.25,
+    "evaluationAverage": 2149.5,
+    "evaluationMinimum": 1999,
+    "seasonTotals": [
+      2041,
+      2103,
+      2085,
+      2112,
+      2196,
+      2198,
+      2261,
+      2055,
+      2290,
+      1999
+    ],
+    "transfers": [
+      32,
+      26,
+      31,
+      32,
+      29,
+      32,
+      35,
+      38
+    ]
+  },
+  "lift": {
+    "average": 0.0,
+    "minimum": 0
+  },
+  "experiments": [
+    {
+      "name": "full-stack",
+      "trainingStability": 2064.25,
+      "evaluationAverage": 2149.5,
+      "evaluationMinimum": 1999,
+      "seasonTotals": [
+        2041,
+        2103,
+        2085,
+        2112,
+        2196,
+        2198,
+        2261,
+        2055,
+        2290,
+        1999
+      ],
+      "transfers": [
+        32,
+        26,
+        31,
+        32,
+        29,
+        32,
+        35,
+        38
+      ]
+    },
+    {
+      "name": "immediate-calibrated",
+      "trainingStability": 2063.125,
+      "evaluationAverage": 2151.0,
+      "evaluationMinimum": 1999,
+      "seasonTotals": [
+        2041,
+        2100,
+        2098,
+        2112,
+        2185,
+        2198,
+        2264,
+        2052,
+        2300,
+        1999
+      ],
+      "transfers": [
+        32,
+        26,
+        31,
+        32,
+        29,
+        32,
+        35,
+        38
+      ]
+    },
+    {
+      "name": "horizon-calibrated",
+      "trainingStability": 2022.0,
+      "evaluationAverage": 2031.1,
+      "evaluationMinimum": 1967,
+      "seasonTotals": [
+        2037,
+        2013,
+        2100,
+        1977,
+        2000,
+        1967,
+        2010,
+        2037,
+        2108,
+        2050
+      ],
+      "transfers": [
+        10,
+        8,
+        25,
+        20,
+        16,
+        21,
+        36,
+        35
+      ]
+    },
+    {
+      "name": "both-calibrated",
+      "trainingStability": 2019.5,
+      "evaluationAverage": 2033.1,
+      "evaluationMinimum": 1961,
+      "seasonTotals": [
+        2037,
+        2009,
+        2105,
+        1961,
+        2004,
+        1967,
+        2017,
+        2040,
+        2118,
+        2053
+      ],
+      "transfers": [
+        10,
+        8,
+        25,
+        20,
+        16,
+        21,
+        36,
+        35
+      ]
+    }
+  ]
+}

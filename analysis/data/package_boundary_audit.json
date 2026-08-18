@@ -1,0 +1,997 @@
+{
+  "status": "package optimiser-boundary diagnostic",
+  "method": "Evaluate causal action probabilities only on non-goalkeeper packages the frozen champion actually selected, rather than on the full generated frontier.",
+  "frontierPackages": 17125,
+  "championChosenPackagesAllSeasons": 169,
+  "evaluationBoundary": {
+    "rows": 118,
+    "positiveRate": 0.7288,
+    "alwaysPositiveAccuracy": 0.7288,
+    "classifierAccuracy50": 0.6525,
+    "brier": 0.216,
+    "probabilityValueCorrelation": 0.0436
+  },
+  "byMoveCount": [
+    {
+      "moves": 1,
+      "candidates": 10985,
+      "meanPredictedGain": 5.213,
+      "meanAdaptiveTargetGain": -0.043,
+      "meanOvervaluation": 5.255
+    },
+    {
+      "moves": 2,
+      "candidates": 5751,
+      "meanPredictedGain": 17.496,
+      "meanAdaptiveTargetGain": 3.968,
+      "meanOvervaluation": 13.527
+    },
+    {
+      "moves": 3,
+      "candidates": 300,
+      "meanPredictedGain": 23.419,
+      "meanAdaptiveTargetGain": 5.142,
+      "meanOvervaluation": 18.276
+    },
+    {
+      "moves": 4,
+      "candidates": 59,
+      "meanPredictedGain": 25.872,
+      "meanAdaptiveTargetGain": 12.168,
+      "meanOvervaluation": 13.704
+    },
+    {
+      "moves": 5,
+      "candidates": 30,
+      "meanPredictedGain": 39.039,
+      "meanAdaptiveTargetGain": 32.94,
+      "meanOvervaluation": 6.099
+    }
+  ],
+  "decisions": [
+    {
+      "season": "2018/19",
+      "gw": 2,
+      "moves": 1,
+      "predictedGain": 25.636,
+      "adaptiveTargetGain": 0.058,
+      "positiveProbability": 0.4442
+    },
+    {
+      "season": "2018/19",
+      "gw": 5,
+      "moves": 1,
+      "predictedGain": 17.382,
+      "adaptiveTargetGain": 4.785,
+      "positiveProbability": 0.5089
+    },
+    {
+      "season": "2018/19",
+      "gw": 7,
+      "moves": 2,
+      "predictedGain": 20.946,
+      "adaptiveTargetGain": 11.781,
+      "positiveProbability": 0.542
+    },
+    {
+      "season": "2018/19",
+      "gw": 9,
+      "moves": 2,
+      "predictedGain": 30.714,
+      "adaptiveTargetGain": -32.355,
+      "positiveProbability": 0.7061
+    },
+    {
+      "season": "2018/19",
+      "gw": 11,
+      "moves": 2,
+      "predictedGain": 26.107,
+      "adaptiveTargetGain": 5.681,
+      "positiveProbability": 0.7577
+    },
+    {
+      "season": "2018/19",
+      "gw": 17,
+      "moves": 2,
+      "predictedGain": 22.24,
+      "adaptiveTargetGain": 14.631,
+      "positiveProbability": 0.5383
+    },
+    {
+      "season": "2018/19",
+      "gw": 23,
+      "moves": 2,
+      "predictedGain": 23.593,
+      "adaptiveTargetGain": -10.538,
+      "positiveProbability": 0.5818
+    },
+    {
+      "season": "2018/19",
+      "gw": 25,
+      "moves": 2,
+      "predictedGain": 18.897,
+      "adaptiveTargetGain": 19.655,
+      "positiveProbability": 0.6445
+    },
+    {
+      "season": "2018/19",
+      "gw": 28,
+      "moves": 2,
+      "predictedGain": 25.827,
+      "adaptiveTargetGain": 21.013,
+      "positiveProbability": 0.5103
+    },
+    {
+      "season": "2018/19",
+      "gw": 31,
+      "moves": 2,
+      "predictedGain": 45.18,
+      "adaptiveTargetGain": 22.41,
+      "positiveProbability": 0.6755
+    },
+    {
+      "season": "2018/19",
+      "gw": 33,
+      "moves": 2,
+      "predictedGain": 44.223,
+      "adaptiveTargetGain": 5.304,
+      "positiveProbability": 0.7442
+    },
+    {
+      "season": "2018/19",
+      "gw": 35,
+      "moves": 2,
+      "predictedGain": 26.127,
+      "adaptiveTargetGain": 5.087,
+      "positiveProbability": 0.8268
+    },
+    {
+      "season": "2019/20",
+      "gw": 3,
+      "moves": 2,
+      "predictedGain": 47.37,
+      "adaptiveTargetGain": 9.174,
+      "positiveProbability": 0.8709
+    },
+    {
+      "season": "2019/20",
+      "gw": 7,
+      "moves": 2,
+      "predictedGain": 19.548,
+      "adaptiveTargetGain": -12.09,
+      "positiveProbability": 0.7228
+    },
+    {
+      "season": "2019/20",
+      "gw": 9,
+      "moves": 2,
+      "predictedGain": 25.558,
+      "adaptiveTargetGain": 5.626,
+      "positiveProbability": 0.5562
+    },
+    {
+      "season": "2019/20",
+      "gw": 11,
+      "moves": 2,
+      "predictedGain": 24.447,
+      "adaptiveTargetGain": 22.75,
+      "positiveProbability": 0.9139
+    },
+    {
+      "season": "2019/20",
+      "gw": 18,
+      "moves": 2,
+      "predictedGain": 28.064,
+      "adaptiveTargetGain": -36.578,
+      "positiveProbability": 0.8472
+    },
+    {
+      "season": "2019/20",
+      "gw": 23,
+      "moves": 2,
+      "predictedGain": 24.52,
+      "adaptiveTargetGain": 51.858,
+      "positiveProbability": 0.3388
+    },
+    {
+      "season": "2019/20",
+      "gw": 26,
+      "moves": 2,
+      "predictedGain": 22.385,
+      "adaptiveTargetGain": -1.653,
+      "positiveProbability": 0.5157
+    },
+    {
+      "season": "2019/20",
+      "gw": 42,
+      "moves": 2,
+      "predictedGain": 19.694,
+      "adaptiveTargetGain": 7.606,
+      "positiveProbability": 0.4904
+    },
+    {
+      "season": "2019/20",
+      "gw": 45,
+      "moves": 2,
+      "predictedGain": 17.48,
+      "adaptiveTargetGain": 9.088,
+      "positiveProbability": 0.613
+    },
+    {
+      "season": "2020/21",
+      "gw": 2,
+      "moves": 1,
+      "predictedGain": 36.156,
+      "adaptiveTargetGain": 3.216,
+      "positiveProbability": 0.6914
+    },
+    {
+      "season": "2020/21",
+      "gw": 4,
+      "moves": 2,
+      "predictedGain": 25.654,
+      "adaptiveTargetGain": -4.455,
+      "positiveProbability": 0.4877
+    },
+    {
+      "season": "2020/21",
+      "gw": 8,
+      "moves": 2,
+      "predictedGain": 23.774,
+      "adaptiveTargetGain": -3.071,
+      "positiveProbability": 0.3956
+    },
+    {
+      "season": "2020/21",
+      "gw": 9,
+      "moves": 1,
+      "predictedGain": 19.954,
+      "adaptiveTargetGain": 24.716,
+      "positiveProbability": 0.6331
+    },
+    {
+      "season": "2020/21",
+      "gw": 11,
+      "moves": 2,
+      "predictedGain": 26.374,
+      "adaptiveTargetGain": 19.863,
+      "positiveProbability": 0.6281
+    },
+    {
+      "season": "2020/21",
+      "gw": 14,
+      "moves": 2,
+      "predictedGain": 21.441,
+      "adaptiveTargetGain": 19.501,
+      "positiveProbability": 0.5741
+    },
+    {
+      "season": "2020/21",
+      "gw": 15,
+      "moves": 1,
+      "predictedGain": 20.573,
+      "adaptiveTargetGain": -29.389,
+      "positiveProbability": 0.4888
+    },
+    {
+      "season": "2020/21",
+      "gw": 16,
+      "moves": 1,
+      "predictedGain": 35.946,
+      "adaptiveTargetGain": -15.47,
+      "positiveProbability": 0.5122
+    },
+    {
+      "season": "2020/21",
+      "gw": 18,
+      "moves": 2,
+      "predictedGain": 61.601,
+      "adaptiveTargetGain": 34.199,
+      "positiveProbability": 0.8482
+    },
+    {
+      "season": "2020/21",
+      "gw": 20,
+      "moves": 2,
+      "predictedGain": 25.902,
+      "adaptiveTargetGain": 32.944,
+      "positiveProbability": 0.5899
+    },
+    {
+      "season": "2020/21",
+      "gw": 21,
+      "moves": 1,
+      "predictedGain": 18.602,
+      "adaptiveTargetGain": 6.506,
+      "positiveProbability": 0.767
+    },
+    {
+      "season": "2020/21",
+      "gw": 24,
+      "moves": 2,
+      "predictedGain": 17.951,
+      "adaptiveTargetGain": 6.483,
+      "positiveProbability": 0.3643
+    },
+    {
+      "season": "2020/21",
+      "gw": 29,
+      "moves": 2,
+      "predictedGain": 48.693,
+      "adaptiveTargetGain": 23.691,
+      "positiveProbability": 0.6705
+    },
+    {
+      "season": "2020/21",
+      "gw": 31,
+      "moves": 2,
+      "predictedGain": 26.742,
+      "adaptiveTargetGain": 19.141,
+      "positiveProbability": 0.845
+    },
+    {
+      "season": "2020/21",
+      "gw": 33,
+      "moves": 2,
+      "predictedGain": 40.405,
+      "adaptiveTargetGain": 29.071,
+      "positiveProbability": 0.596
+    },
+    {
+      "season": "2020/21",
+      "gw": 35,
+      "moves": 2,
+      "predictedGain": 18.423,
+      "adaptiveTargetGain": 12.506,
+      "positiveProbability": 0.5788
+    },
+    {
+      "season": "2020/21",
+      "gw": 37,
+      "moves": 2,
+      "predictedGain": 21.321,
+      "adaptiveTargetGain": 4.121,
+      "positiveProbability": 0.584
+    },
+    {
+      "season": "2021/22",
+      "gw": 2,
+      "moves": 1,
+      "predictedGain": 24.083,
+      "adaptiveTargetGain": 11.629,
+      "positiveProbability": 0.7167
+    },
+    {
+      "season": "2021/22",
+      "gw": 4,
+      "moves": 2,
+      "predictedGain": 24.564,
+      "adaptiveTargetGain": -8.372,
+      "positiveProbability": 0.7695
+    },
+    {
+      "season": "2021/22",
+      "gw": 6,
+      "moves": 2,
+      "predictedGain": 23.1,
+      "adaptiveTargetGain": 14.375,
+      "positiveProbability": 0.6701
+    },
+    {
+      "season": "2021/22",
+      "gw": 8,
+      "moves": 2,
+      "predictedGain": 23.387,
+      "adaptiveTargetGain": 7.887,
+      "positiveProbability": 0.6399
+    },
+    {
+      "season": "2021/22",
+      "gw": 10,
+      "moves": 2,
+      "predictedGain": 24.885,
+      "adaptiveTargetGain": 2.847,
+      "positiveProbability": 0.9156
+    },
+    {
+      "season": "2021/22",
+      "gw": 12,
+      "moves": 2,
+      "predictedGain": 22.372,
+      "adaptiveTargetGain": 12.577,
+      "positiveProbability": 0.66
+    },
+    {
+      "season": "2021/22",
+      "gw": 14,
+      "moves": 2,
+      "predictedGain": 18.697,
+      "adaptiveTargetGain": 24.32,
+      "positiveProbability": 0.4785
+    },
+    {
+      "season": "2021/22",
+      "gw": 17,
+      "moves": 2,
+      "predictedGain": 21.947,
+      "adaptiveTargetGain": 17.245,
+      "positiveProbability": 0.7483
+    },
+    {
+      "season": "2021/22",
+      "gw": 18,
+      "moves": 1,
+      "predictedGain": 20.983,
+      "adaptiveTargetGain": 1.35,
+      "positiveProbability": 0.6819
+    },
+    {
+      "season": "2021/22",
+      "gw": 19,
+      "moves": 1,
+      "predictedGain": 28.811,
+      "adaptiveTargetGain": 16.09,
+      "positiveProbability": 0.6866
+    },
+    {
+      "season": "2021/22",
+      "gw": 20,
+      "moves": 1,
+      "predictedGain": 23.301,
+      "adaptiveTargetGain": 19.216,
+      "positiveProbability": 0.9389
+    },
+    {
+      "season": "2021/22",
+      "gw": 22,
+      "moves": 2,
+      "predictedGain": 27.576,
+      "adaptiveTargetGain": 33.613,
+      "positiveProbability": 0.8476
+    },
+    {
+      "season": "2021/22",
+      "gw": 24,
+      "moves": 2,
+      "predictedGain": 18.94,
+      "adaptiveTargetGain": 1.392,
+      "positiveProbability": 0.6987
+    },
+    {
+      "season": "2021/22",
+      "gw": 26,
+      "moves": 2,
+      "predictedGain": 18.055,
+      "adaptiveTargetGain": 18.269,
+      "positiveProbability": 0.7501
+    },
+    {
+      "season": "2021/22",
+      "gw": 27,
+      "moves": 1,
+      "predictedGain": 26.17,
+      "adaptiveTargetGain": 3.419,
+      "positiveProbability": 0.776
+    },
+    {
+      "season": "2021/22",
+      "gw": 29,
+      "moves": 2,
+      "predictedGain": 23.996,
+      "adaptiveTargetGain": 15.093,
+      "positiveProbability": 0.8077
+    },
+    {
+      "season": "2021/22",
+      "gw": 30,
+      "moves": 1,
+      "predictedGain": 26.126,
+      "adaptiveTargetGain": -4.951,
+      "positiveProbability": 0.8075
+    },
+    {
+      "season": "2021/22",
+      "gw": 37,
+      "moves": 2,
+      "predictedGain": 19.874,
+      "adaptiveTargetGain": -10.493,
+      "positiveProbability": 0.6986
+    },
+    {
+      "season": "2022/23",
+      "gw": 5,
+      "moves": 2,
+      "predictedGain": 21.353,
+      "adaptiveTargetGain": 3.391,
+      "positiveProbability": 0.7335
+    },
+    {
+      "season": "2022/23",
+      "gw": 6,
+      "moves": 1,
+      "predictedGain": 18.267,
+      "adaptiveTargetGain": 3.511,
+      "positiveProbability": 0.2414
+    },
+    {
+      "season": "2022/23",
+      "gw": 10,
+      "moves": 2,
+      "predictedGain": 26.653,
+      "adaptiveTargetGain": 13.484,
+      "positiveProbability": 0.5729
+    },
+    {
+      "season": "2022/23",
+      "gw": 12,
+      "moves": 2,
+      "predictedGain": 53.28,
+      "adaptiveTargetGain": 11.204,
+      "positiveProbability": 0.7002
+    },
+    {
+      "season": "2022/23",
+      "gw": 13,
+      "moves": 1,
+      "predictedGain": 25.063,
+      "adaptiveTargetGain": -1.587,
+      "positiveProbability": 0.2094
+    },
+    {
+      "season": "2022/23",
+      "gw": 21,
+      "moves": 1,
+      "predictedGain": 3.421,
+      "adaptiveTargetGain": 0.204,
+      "positiveProbability": 0.3613
+    },
+    {
+      "season": "2022/23",
+      "gw": 22,
+      "moves": 2,
+      "predictedGain": 21.293,
+      "adaptiveTargetGain": 41.905,
+      "positiveProbability": 0.8029
+    },
+    {
+      "season": "2022/23",
+      "gw": 25,
+      "moves": 2,
+      "predictedGain": 41.61,
+      "adaptiveTargetGain": 1.572,
+      "positiveProbability": 0.872
+    },
+    {
+      "season": "2022/23",
+      "gw": 27,
+      "moves": 2,
+      "predictedGain": 24.805,
+      "adaptiveTargetGain": 22.414,
+      "positiveProbability": 0.863
+    },
+    {
+      "season": "2022/23",
+      "gw": 28,
+      "moves": 1,
+      "predictedGain": 26.154,
+      "adaptiveTargetGain": 11.572,
+      "positiveProbability": 0.3941
+    },
+    {
+      "season": "2022/23",
+      "gw": 30,
+      "moves": 2,
+      "predictedGain": 18.434,
+      "adaptiveTargetGain": 7.099,
+      "positiveProbability": 0.7243
+    },
+    {
+      "season": "2022/23",
+      "gw": 32,
+      "moves": 2,
+      "predictedGain": 36.075,
+      "adaptiveTargetGain": 5.712,
+      "positiveProbability": 0.8627
+    },
+    {
+      "season": "2022/23",
+      "gw": 34,
+      "moves": 2,
+      "predictedGain": 20.086,
+      "adaptiveTargetGain": -7.583,
+      "positiveProbability": 0.4715
+    },
+    {
+      "season": "2022/23",
+      "gw": 38,
+      "moves": 2,
+      "predictedGain": 18.463,
+      "adaptiveTargetGain": 23.9,
+      "positiveProbability": 0.3598
+    },
+    {
+      "season": "2023/24",
+      "gw": 2,
+      "moves": 1,
+      "predictedGain": 5.595,
+      "adaptiveTargetGain": -5.906,
+      "positiveProbability": 0.2304
+    },
+    {
+      "season": "2023/24",
+      "gw": 4,
+      "moves": 2,
+      "predictedGain": 28.207,
+      "adaptiveTargetGain": 7.378,
+      "positiveProbability": 0.7785
+    },
+    {
+      "season": "2023/24",
+      "gw": 7,
+      "moves": 2,
+      "predictedGain": 31.144,
+      "adaptiveTargetGain": 25.597,
+      "positiveProbability": 0.7015
+    },
+    {
+      "season": "2023/24",
+      "gw": 12,
+      "moves": 2,
+      "predictedGain": 27.904,
+      "adaptiveTargetGain": -7.569,
+      "positiveProbability": 0.7138
+    },
+    {
+      "season": "2023/24",
+      "gw": 14,
+      "moves": 2,
+      "predictedGain": 20.455,
+      "adaptiveTargetGain": -2.004,
+      "positiveProbability": 0.6216
+    },
+    {
+      "season": "2023/24",
+      "gw": 18,
+      "moves": 2,
+      "predictedGain": 33.95,
+      "adaptiveTargetGain": 39.681,
+      "positiveProbability": 0.6437
+    },
+    {
+      "season": "2023/24",
+      "gw": 20,
+      "moves": 2,
+      "predictedGain": 34.617,
+      "adaptiveTargetGain": -5.139,
+      "positiveProbability": 0.8294
+    },
+    {
+      "season": "2023/24",
+      "gw": 25,
+      "moves": 2,
+      "predictedGain": 21.275,
+      "adaptiveTargetGain": 13.527,
+      "positiveProbability": 0.8953
+    },
+    {
+      "season": "2023/24",
+      "gw": 27,
+      "moves": 2,
+      "predictedGain": 19.816,
+      "adaptiveTargetGain": -4.571,
+      "positiveProbability": 0.6322
+    },
+    {
+      "season": "2023/24",
+      "gw": 31,
+      "moves": 2,
+      "predictedGain": 27.849,
+      "adaptiveTargetGain": 20.485,
+      "positiveProbability": 0.7449
+    },
+    {
+      "season": "2023/24",
+      "gw": 32,
+      "moves": 1,
+      "predictedGain": 17.115,
+      "adaptiveTargetGain": 41.009,
+      "positiveProbability": 0.5366
+    },
+    {
+      "season": "2023/24",
+      "gw": 34,
+      "moves": 2,
+      "predictedGain": 24.294,
+      "adaptiveTargetGain": -12.784,
+      "positiveProbability": 0.7602
+    },
+    {
+      "season": "2023/24",
+      "gw": 37,
+      "moves": 2,
+      "predictedGain": 28.574,
+      "adaptiveTargetGain": 9.3,
+      "positiveProbability": 0.8599
+    },
+    {
+      "season": "2024/25",
+      "gw": 3,
+      "moves": 2,
+      "predictedGain": 23.877,
+      "adaptiveTargetGain": 26.432,
+      "positiveProbability": 0.6456
+    },
+    {
+      "season": "2024/25",
+      "gw": 5,
+      "moves": 2,
+      "predictedGain": 19.665,
+      "adaptiveTargetGain": 10.23,
+      "positiveProbability": 0.6088
+    },
+    {
+      "season": "2024/25",
+      "gw": 7,
+      "moves": 2,
+      "predictedGain": 24.215,
+      "adaptiveTargetGain": -0.201,
+      "positiveProbability": 0.7529
+    },
+    {
+      "season": "2024/25",
+      "gw": 9,
+      "moves": 2,
+      "predictedGain": 28.617,
+      "adaptiveTargetGain": 32.132,
+      "positiveProbability": 0.8597
+    },
+    {
+      "season": "2024/25",
+      "gw": 11,
+      "moves": 2,
+      "predictedGain": 20.608,
+      "adaptiveTargetGain": 37.6,
+      "positiveProbability": 0.5115
+    },
+    {
+      "season": "2024/25",
+      "gw": 13,
+      "moves": 2,
+      "predictedGain": 22.428,
+      "adaptiveTargetGain": -8.747,
+      "positiveProbability": 0.6254
+    },
+    {
+      "season": "2024/25",
+      "gw": 15,
+      "moves": 2,
+      "predictedGain": 23.772,
+      "adaptiveTargetGain": -20.563,
+      "positiveProbability": 0.691
+    },
+    {
+      "season": "2024/25",
+      "gw": 16,
+      "moves": 1,
+      "predictedGain": 26.307,
+      "adaptiveTargetGain": 43.041,
+      "positiveProbability": 0.6669
+    },
+    {
+      "season": "2024/25",
+      "gw": 19,
+      "moves": 3,
+      "predictedGain": 26.331,
+      "adaptiveTargetGain": -6.183,
+      "positiveProbability": 0.7605
+    },
+    {
+      "season": "2024/25",
+      "gw": 21,
+      "moves": 2,
+      "predictedGain": 22.055,
+      "adaptiveTargetGain": 22.803,
+      "positiveProbability": 0.6507
+    },
+    {
+      "season": "2024/25",
+      "gw": 24,
+      "moves": 3,
+      "predictedGain": 20.393,
+      "adaptiveTargetGain": -1.07,
+      "positiveProbability": 0.6283
+    },
+    {
+      "season": "2024/25",
+      "gw": 26,
+      "moves": 2,
+      "predictedGain": 26.054,
+      "adaptiveTargetGain": -12.693,
+      "positiveProbability": 0.6965
+    },
+    {
+      "season": "2024/25",
+      "gw": 28,
+      "moves": 2,
+      "predictedGain": 21.449,
+      "adaptiveTargetGain": 14.079,
+      "positiveProbability": 0.8013
+    },
+    {
+      "season": "2024/25",
+      "gw": 29,
+      "moves": 1,
+      "predictedGain": 20.51,
+      "adaptiveTargetGain": 10.44,
+      "positiveProbability": 0.3796
+    },
+    {
+      "season": "2024/25",
+      "gw": 30,
+      "moves": 1,
+      "predictedGain": 35.909,
+      "adaptiveTargetGain": 7.719,
+      "positiveProbability": 0.8169
+    },
+    {
+      "season": "2024/25",
+      "gw": 33,
+      "moves": 3,
+      "predictedGain": 34.978,
+      "adaptiveTargetGain": 26.064,
+      "positiveProbability": 0.8188
+    },
+    {
+      "season": "2024/25",
+      "gw": 34,
+      "moves": 1,
+      "predictedGain": 23.721,
+      "adaptiveTargetGain": 0.988,
+      "positiveProbability": 0.4729
+    },
+    {
+      "season": "2024/25",
+      "gw": 37,
+      "moves": 3,
+      "predictedGain": 20.597,
+      "adaptiveTargetGain": 17.093,
+      "positiveProbability": 0.7619
+    },
+    {
+      "season": "2025/26",
+      "gw": 2,
+      "moves": 1,
+      "predictedGain": 23.532,
+      "adaptiveTargetGain": -0.4,
+      "positiveProbability": 0.5718
+    },
+    {
+      "season": "2025/26",
+      "gw": 3,
+      "moves": 1,
+      "predictedGain": 22.798,
+      "adaptiveTargetGain": -2.24,
+      "positiveProbability": 0.5749
+    },
+    {
+      "season": "2025/26",
+      "gw": 5,
+      "moves": 2,
+      "predictedGain": 26.562,
+      "adaptiveTargetGain": 18.206,
+      "positiveProbability": 0.6228
+    },
+    {
+      "season": "2025/26",
+      "gw": 7,
+      "moves": 2,
+      "predictedGain": 19.118,
+      "adaptiveTargetGain": 19.233,
+      "positiveProbability": 0.5521
+    },
+    {
+      "season": "2025/26",
+      "gw": 12,
+      "moves": 2,
+      "predictedGain": 22.095,
+      "adaptiveTargetGain": 18.275,
+      "positiveProbability": 0.8363
+    },
+    {
+      "season": "2025/26",
+      "gw": 14,
+      "moves": 2,
+      "predictedGain": 22.237,
+      "adaptiveTargetGain": 17.325,
+      "positiveProbability": 0.7333
+    },
+    {
+      "season": "2025/26",
+      "gw": 16,
+      "moves": 5,
+      "predictedGain": 41.491,
+      "adaptiveTargetGain": 49.552,
+      "positiveProbability": 0.31
+    },
+    {
+      "season": "2025/26",
+      "gw": 17,
+      "moves": 1,
+      "predictedGain": 18.973,
+      "adaptiveTargetGain": -6.49,
+      "positiveProbability": 0.5272
+    },
+    {
+      "season": "2025/26",
+      "gw": 19,
+      "moves": 2,
+      "predictedGain": 18.547,
+      "adaptiveTargetGain": 10.286,
+      "positiveProbability": 0.477
+    },
+    {
+      "season": "2025/26",
+      "gw": 21,
+      "moves": 2,
+      "predictedGain": 19.24,
+      "adaptiveTargetGain": -0.428,
+      "positiveProbability": 0.6313
+    },
+    {
+      "season": "2025/26",
+      "gw": 23,
+      "moves": 2,
+      "predictedGain": 18.985,
+      "adaptiveTargetGain": 0.003,
+      "positiveProbability": 0.56
+    },
+    {
+      "season": "2025/26",
+      "gw": 29,
+      "moves": 3,
+      "predictedGain": 31.953,
+      "adaptiveTargetGain": 12.956,
+      "positiveProbability": 0.6311
+    },
+    {
+      "season": "2025/26",
+      "gw": 30,
+      "moves": 1,
+      "predictedGain": 19.155,
+      "adaptiveTargetGain": -14.575,
+      "positiveProbability": 0.6571
+    },
+    {
+      "season": "2025/26",
+      "gw": 31,
+      "moves": 1,
+      "predictedGain": 19.465,
+      "adaptiveTargetGain": -17.601,
+      "positiveProbability": 0.5735
+    },
+    {
+      "season": "2025/26",
+      "gw": 33,
+      "moves": 2,
+      "predictedGain": 20.574,
+      "adaptiveTargetGain": 54.194,
+      "positiveProbability": 0.8616
+    },
+    {
+      "season": "2025/26",
+      "gw": 34,
+      "moves": 1,
+      "predictedGain": 19.875,
+      "adaptiveTargetGain": 4.998,
+      "positiveProbability": 0.4996
+    },
+    {
+      "season": "2025/26",
+      "gw": 38,
+      "moves": 4,
+      "predictedGain": 19.98,
+      "adaptiveTargetGain": 15.45,
+      "positiveProbability": 0.1895
+    }
+  ]
+}

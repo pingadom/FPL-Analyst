@@ -1,0 +1,1482 @@
+{
+  "status": "diagnostic; no model was promoted from this audit alone",
+  "method": "Frozen champion recursive replay. Decision weights are 0.2 frontier, 0.5 owned, 1.0 XI, 1.5 captain and 1.25 transfer-boundary; tags stack. Route attribution uses only information and FPL events present in the historical snapshots.",
+  "exposure": {
+    "credibleFrontier": {
+      "rows": 24240,
+      "weightedRows": 10520.0,
+      "forecast": 4.659,
+      "actual": 4.19,
+      "bias": 0.469,
+      "mae": 3.273,
+      "noShowRate": 0.0957,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 3216.6,
+          "shareOfWeightedAbsoluteError": 0.3565,
+          "bias": -0.305
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 2069.9,
+          "shareOfWeightedAbsoluteError": 0.1975,
+          "bias": -0.778
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 1908.3,
+          "shareOfWeightedAbsoluteError": 0.1366,
+          "bias": -0.366
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 1562.9,
+          "shareOfWeightedAbsoluteError": 0.1242,
+          "bias": 2.211
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 944.1,
+          "shareOfWeightedAbsoluteError": 0.1156,
+          "bias": 4.215
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 490.9,
+          "shareOfWeightedAbsoluteError": 0.0468,
+          "bias": 2.599
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 279.8,
+          "shareOfWeightedAbsoluteError": 0.0217,
+          "bias": -1.834
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 47.6,
+          "shareOfWeightedAbsoluteError": 0.001,
+          "bias": 0.517
+        }
+      ]
+    },
+    "owned": {
+      "rows": 4410,
+      "weightedRows": 6969.2,
+      "forecast": 4.929,
+      "actual": 4.435,
+      "bias": 0.494,
+      "mae": 3.417,
+      "noShowRate": 0.0872,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 2577.6,
+          "shareOfWeightedAbsoluteError": 0.4192,
+          "bias": -0.176
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 1132.9,
+          "shareOfWeightedAbsoluteError": 0.167,
+          "bias": -0.673
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 1171.9,
+          "shareOfWeightedAbsoluteError": 0.1246,
+          "bias": -0.434
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 968.4,
+          "shareOfWeightedAbsoluteError": 0.1153,
+          "bias": 2.348
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 561.4,
+          "shareOfWeightedAbsoluteError": 0.1048,
+          "bias": 4.448
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 292.3,
+          "shareOfWeightedAbsoluteError": 0.0426,
+          "bias": 2.669
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 229.9,
+          "shareOfWeightedAbsoluteError": 0.0256,
+          "bias": -1.749
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 34.7,
+          "shareOfWeightedAbsoluteError": 0.0009,
+          "bias": 0.463
+        }
+      ]
+    },
+    "startingXI": {
+      "rows": 3300,
+      "weightedRows": 6324.2,
+      "forecast": 5.129,
+      "actual": 4.606,
+      "bias": 0.523,
+      "mae": 3.521,
+      "noShowRate": 0.0749,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 2479.8,
+          "shareOfWeightedAbsoluteError": 0.4373,
+          "bias": -0.151
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 996.6,
+          "shareOfWeightedAbsoluteError": 0.163,
+          "bias": -0.608
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 1033.2,
+          "shareOfWeightedAbsoluteError": 0.1183,
+          "bias": -0.369
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 859.8,
+          "shareOfWeightedAbsoluteError": 0.1117,
+          "bias": 2.41
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 468.9,
+          "shareOfWeightedAbsoluteError": 0.101,
+          "bias": 4.797
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 248.4,
+          "shareOfWeightedAbsoluteError": 0.0418,
+          "bias": 2.95
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 225.7,
+          "shareOfWeightedAbsoluteError": 0.0266,
+          "bias": -1.719
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 11.7,
+          "shareOfWeightedAbsoluteError": 0.0003,
+          "bias": 0.137
+        }
+      ]
+    },
+    "captain": {
+      "rows": 303,
+      "weightedRows": 1019.6,
+      "forecast": 6.765,
+      "actual": 6.481,
+      "bias": 0.284,
+      "mae": 4.503,
+      "noShowRate": 0.0621,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 526.7,
+          "shareOfWeightedAbsoluteError": 0.5637,
+          "bias": -0.406
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 195.6,
+          "shareOfWeightedAbsoluteError": 0.202,
+          "bias": -0.694
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 63.3,
+          "shareOfWeightedAbsoluteError": 0.0885,
+          "bias": 6.422
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 98.5,
+          "shareOfWeightedAbsoluteError": 0.0621,
+          "bias": 2.158
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 37.7,
+          "shareOfWeightedAbsoluteError": 0.0431,
+          "bias": 3.672
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 72.9,
+          "shareOfWeightedAbsoluteError": 0.0285,
+          "bias": -0.938
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 24.9,
+          "shareOfWeightedAbsoluteError": 0.012,
+          "bias": -2.0
+        }
+      ]
+    },
+    "transferBoundary": {
+      "rows": 456,
+      "weightedRows": 1066.1,
+      "forecast": 5.387,
+      "actual": 4.6,
+      "bias": 0.788,
+      "mae": 3.612,
+      "noShowRate": 0.1078,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 381.8,
+          "shareOfWeightedAbsoluteError": 0.4138,
+          "bias": -0.114
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 189.1,
+          "shareOfWeightedAbsoluteError": 0.1928,
+          "bias": 0.494
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 103.7,
+          "shareOfWeightedAbsoluteError": 0.1139,
+          "bias": 4.231
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 149.5,
+          "shareOfWeightedAbsoluteError": 0.1058,
+          "bias": -0.355
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 118.8,
+          "shareOfWeightedAbsoluteError": 0.0839,
+          "bias": 2.398
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 59.4,
+          "shareOfWeightedAbsoluteError": 0.0538,
+          "bias": 3.366
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 57.5,
+          "shareOfWeightedAbsoluteError": 0.0345,
+          "bias": -1.497
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 6.2,
+          "shareOfWeightedAbsoluteError": 0.0015,
+          "bias": 0.927
+        }
+      ]
+    },
+    "allDecisionWeighted": {
+      "rows": 25273,
+      "weightedRows": 11377.5,
+      "forecast": 4.519,
+      "actual": 4.067,
+      "bias": 0.452,
+      "mae": 3.203,
+      "noShowRate": 0.1069,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 3419.6,
+          "shareOfWeightedAbsoluteError": 0.3498,
+          "bias": -0.307
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 2273.2,
+          "shareOfWeightedAbsoluteError": 0.2024,
+          "bias": -0.847
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 2002.8,
+          "shareOfWeightedAbsoluteError": 0.1351,
+          "bias": -0.398
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 1666.6,
+          "shareOfWeightedAbsoluteError": 0.1227,
+          "bias": 2.184
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 1098.1,
+          "shareOfWeightedAbsoluteError": 0.1203,
+          "bias": 3.994
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 557.7,
+          "shareOfWeightedAbsoluteError": 0.0472,
+          "bias": 2.454
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 281.3,
+          "shareOfWeightedAbsoluteError": 0.0208,
+          "bias": -1.863
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 78.4,
+          "shareOfWeightedAbsoluteError": 0.0015,
+          "bias": 0.581
+        }
+      ]
+    }
+  },
+  "position": {
+    "GK": {
+      "rows": 6099,
+      "weightedRows": 1837.0,
+      "forecast": 3.761,
+      "actual": 3.299,
+      "bias": 0.462,
+      "mae": 2.521,
+      "noShowRate": 0.1322,
+      "causes": [
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 799.9,
+          "shareOfWeightedAbsoluteError": 0.4063,
+          "bias": -0.533
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 469.8,
+          "shareOfWeightedAbsoluteError": 0.287,
+          "bias": 1.95
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 279.9,
+          "shareOfWeightedAbsoluteError": 0.1385,
+          "bias": -0.842
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 174.8,
+          "shareOfWeightedAbsoluteError": 0.1177,
+          "bias": 3.119
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 53.9,
+          "shareOfWeightedAbsoluteError": 0.0247,
+          "bias": 2.078
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 24.7,
+          "shareOfWeightedAbsoluteError": 0.0163,
+          "bias": -2.199
+        },
+        {
+          "cause": "attacking returns",
+          "weightedRows": 6.6,
+          "shareOfWeightedAbsoluteError": 0.0055,
+          "bias": -3.705
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 27.5,
+          "shareOfWeightedAbsoluteError": 0.004,
+          "bias": 0.575
+        }
+      ]
+    },
+    "DEF": {
+      "rows": 6547,
+      "weightedRows": 3155.8,
+      "forecast": 4.184,
+      "actual": 3.666,
+      "bias": 0.519,
+      "mae": 3.127,
+      "noShowRate": 0.117,
+      "causes": [
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 1179.0,
+          "shareOfWeightedAbsoluteError": 0.3068,
+          "bias": -0.308
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 550.5,
+          "shareOfWeightedAbsoluteError": 0.1813,
+          "bias": -0.951
+        },
+        {
+          "cause": "attacking returns",
+          "weightedRows": 430.4,
+          "shareOfWeightedAbsoluteError": 0.1686,
+          "bias": -1.14
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 487.6,
+          "shareOfWeightedAbsoluteError": 0.1554,
+          "bias": 2.917
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 342.4,
+          "shareOfWeightedAbsoluteError": 0.1341,
+          "bias": 3.865
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 114.8,
+          "shareOfWeightedAbsoluteError": 0.0373,
+          "bias": 2.942
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 38.3,
+          "shareOfWeightedAbsoluteError": 0.0155,
+          "bias": -2.104
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 12.8,
+          "shareOfWeightedAbsoluteError": 0.0011,
+          "bias": 0.824
+        }
+      ]
+    },
+    "MID": {
+      "rows": 6504,
+      "weightedRows": 3728.8,
+      "forecast": 5.135,
+      "actual": 4.7,
+      "bias": 0.435,
+      "mae": 3.558,
+      "noShowRate": 0.0862,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 1837.5,
+          "shareOfWeightedAbsoluteError": 0.5266,
+          "bias": -0.179
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 814.4,
+          "shareOfWeightedAbsoluteError": 0.2152,
+          "bias": -0.836
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 318.7,
+          "shareOfWeightedAbsoluteError": 0.1101,
+          "bias": 4.584
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 421.1,
+          "shareOfWeightedAbsoluteError": 0.0761,
+          "bias": 1.91
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 201.1,
+          "shareOfWeightedAbsoluteError": 0.0516,
+          "bias": 2.686
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 105.9,
+          "shareOfWeightedAbsoluteError": 0.019,
+          "bias": -1.592
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 23.9,
+          "shareOfWeightedAbsoluteError": 0.0011,
+          "bias": -0.308
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 6.2,
+          "shareOfWeightedAbsoluteError": 0.0003,
+          "bias": 0.372
+        }
+      ]
+    },
+    "FWD": {
+      "rows": 6123,
+      "weightedRows": 2656.0,
+      "forecast": 4.578,
+      "actual": 4.186,
+      "bias": 0.391,
+      "mae": 3.266,
+      "noShowRate": 0.1064,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 1145.0,
+          "shareOfWeightedAbsoluteError": 0.4694,
+          "bias": -0.179
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 628.5,
+          "shareOfWeightedAbsoluteError": 0.241,
+          "bias": -0.77
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 262.3,
+          "shareOfWeightedAbsoluteError": 0.1217,
+          "bias": 4.026
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 288.2,
+          "shareOfWeightedAbsoluteError": 0.0692,
+          "bias": 1.726
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 187.8,
+          "shareOfWeightedAbsoluteError": 0.0639,
+          "bias": 2.015
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 112.4,
+          "shareOfWeightedAbsoluteError": 0.0321,
+          "bias": -1.964
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 31.8,
+          "shareOfWeightedAbsoluteError": 0.0026,
+          "bias": 0.53
+        }
+      ]
+    }
+  },
+  "season": {
+    "2018/19": {
+      "rows": 3186,
+      "weightedRows": 1425.5,
+      "forecast": 4.523,
+      "actual": 4.069,
+      "bias": 0.454,
+      "mae": 3.154,
+      "noShowRate": 0.0828,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 435.1,
+          "shareOfWeightedAbsoluteError": 0.3456,
+          "bias": 0.02
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 279.8,
+          "shareOfWeightedAbsoluteError": 0.2047,
+          "bias": -0.693
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 311.2,
+          "shareOfWeightedAbsoluteError": 0.1656,
+          "bias": -0.176
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 176.7,
+          "shareOfWeightedAbsoluteError": 0.1119,
+          "bias": 2.243
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 108.2,
+          "shareOfWeightedAbsoluteError": 0.1001,
+          "bias": 4.16
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 67.5,
+          "shareOfWeightedAbsoluteError": 0.05,
+          "bias": 1.792
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 37.0,
+          "shareOfWeightedAbsoluteError": 0.0206,
+          "bias": -2.34
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 10.2,
+          "shareOfWeightedAbsoluteError": 0.0015,
+          "bias": 0.649
+        }
+      ]
+    },
+    "2019/20": {
+      "rows": 3162,
+      "weightedRows": 1419.3,
+      "forecast": 4.584,
+      "actual": 3.99,
+      "bias": 0.594,
+      "mae": 3.147,
+      "noShowRate": 0.0861,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 500.6,
+          "shareOfWeightedAbsoluteError": 0.4051,
+          "bias": 0.369
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 234.7,
+          "shareOfWeightedAbsoluteError": 0.1723,
+          "bias": -1.052
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 289.1,
+          "shareOfWeightedAbsoluteError": 0.1545,
+          "bias": -0.135
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 191.3,
+          "shareOfWeightedAbsoluteError": 0.1077,
+          "bias": 2.02
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 102.4,
+          "shareOfWeightedAbsoluteError": 0.0947,
+          "bias": 4.133
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 64.9,
+          "shareOfWeightedAbsoluteError": 0.0489,
+          "bias": 2.918
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 26.2,
+          "shareOfWeightedAbsoluteError": 0.0155,
+          "bias": -2.249
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 10.2,
+          "shareOfWeightedAbsoluteError": 0.0014,
+          "bias": 0.503
+        }
+      ]
+    },
+    "2020/21": {
+      "rows": 3190,
+      "weightedRows": 1414.2,
+      "forecast": 4.674,
+      "actual": 4.162,
+      "bias": 0.512,
+      "mae": 3.263,
+      "noShowRate": 0.1164,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 409.9,
+          "shareOfWeightedAbsoluteError": 0.3359,
+          "bias": -0.1
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 291.5,
+          "shareOfWeightedAbsoluteError": 0.2135,
+          "bias": -0.789
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 258.9,
+          "shareOfWeightedAbsoluteError": 0.145,
+          "bias": -0.189
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 150.2,
+          "shareOfWeightedAbsoluteError": 0.1264,
+          "bias": 3.883
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 187.9,
+          "shareOfWeightedAbsoluteError": 0.112,
+          "bias": 1.904
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 62.4,
+          "shareOfWeightedAbsoluteError": 0.0421,
+          "bias": 2.739
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 44.8,
+          "shareOfWeightedAbsoluteError": 0.024,
+          "bias": -1.625
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 8.7,
+          "shareOfWeightedAbsoluteError": 0.0011,
+          "bias": 0.551
+        }
+      ]
+    },
+    "2021/22": {
+      "rows": 3166,
+      "weightedRows": 1410.3,
+      "forecast": 4.597,
+      "actual": 4.156,
+      "bias": 0.442,
+      "mae": 3.164,
+      "noShowRate": 0.1265,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 402.8,
+          "shareOfWeightedAbsoluteError": 0.3229,
+          "bias": -0.283
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 304.8,
+          "shareOfWeightedAbsoluteError": 0.2254,
+          "bias": -0.887
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 158.7,
+          "shareOfWeightedAbsoluteError": 0.1433,
+          "bias": 4.031
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 265.8,
+          "shareOfWeightedAbsoluteError": 0.1392,
+          "bias": -0.09
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 158.5,
+          "shareOfWeightedAbsoluteError": 0.0943,
+          "bias": 2.325
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 63.9,
+          "shareOfWeightedAbsoluteError": 0.0399,
+          "bias": 2.192
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 42.0,
+          "shareOfWeightedAbsoluteError": 0.0325,
+          "bias": -2.968
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 13.9,
+          "shareOfWeightedAbsoluteError": 0.0024,
+          "bias": 0.556
+        }
+      ]
+    },
+    "2022/23": {
+      "rows": 3072,
+      "weightedRows": 1373.3,
+      "forecast": 4.473,
+      "actual": 4.319,
+      "bias": 0.154,
+      "mae": 3.145,
+      "noShowRate": 0.0969,
+      "causes": [
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 507.6,
+          "shareOfWeightedAbsoluteError": 0.3973,
+          "bias": -0.928
+        },
+        {
+          "cause": "attacking returns",
+          "weightedRows": 293.9,
+          "shareOfWeightedAbsoluteError": 0.2321,
+          "bias": -0.086
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 119.9,
+          "shareOfWeightedAbsoluteError": 0.1052,
+          "bias": 3.792
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 187.6,
+          "shareOfWeightedAbsoluteError": 0.1012,
+          "bias": 1.749
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 148.9,
+          "shareOfWeightedAbsoluteError": 0.0953,
+          "bias": -0.837
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 59.1,
+          "shareOfWeightedAbsoluteError": 0.0407,
+          "bias": 1.736
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 41.7,
+          "shareOfWeightedAbsoluteError": 0.0264,
+          "bias": -1.415
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 14.6,
+          "shareOfWeightedAbsoluteError": 0.0019,
+          "bias": 0.461
+        }
+      ]
+    },
+    "2023/24": {
+      "rows": 3192,
+      "weightedRows": 1431.5,
+      "forecast": 4.371,
+      "actual": 3.842,
+      "bias": 0.528,
+      "mae": 3.268,
+      "noShowRate": 0.1481,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 412.5,
+          "shareOfWeightedAbsoluteError": 0.3572,
+          "bias": -0.802
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 245.4,
+          "shareOfWeightedAbsoluteError": 0.1628,
+          "bias": -0.875
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 184.2,
+          "shareOfWeightedAbsoluteError": 0.1625,
+          "bias": 4.126
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 231.9,
+          "shareOfWeightedAbsoluteError": 0.1314,
+          "bias": 2.516
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 215.5,
+          "shareOfWeightedAbsoluteError": 0.1181,
+          "bias": -0.882
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 89.6,
+          "shareOfWeightedAbsoluteError": 0.0483,
+          "bias": 2.12
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 39.1,
+          "shareOfWeightedAbsoluteError": 0.0172,
+          "bias": -1.289
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 13.4,
+          "shareOfWeightedAbsoluteError": 0.0026,
+          "bias": 0.642
+        }
+      ]
+    },
+    "2024/25": {
+      "rows": 3147,
+      "weightedRows": 1444.5,
+      "forecast": 4.596,
+      "actual": 4.212,
+      "bias": 0.384,
+      "mae": 3.294,
+      "noShowRate": 0.0902,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 517.0,
+          "shareOfWeightedAbsoluteError": 0.4426,
+          "bias": -0.843
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 240.3,
+          "shareOfWeightedAbsoluteError": 0.1483,
+          "bias": 2.376
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 276.3,
+          "shareOfWeightedAbsoluteError": 0.1358,
+          "bias": -0.393
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 183.4,
+          "shareOfWeightedAbsoluteError": 0.1109,
+          "bias": -0.693
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 123.9,
+          "shareOfWeightedAbsoluteError": 0.0983,
+          "bias": 3.773
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 66.7,
+          "shareOfWeightedAbsoluteError": 0.0462,
+          "bias": 2.984
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 34.5,
+          "shareOfWeightedAbsoluteError": 0.0175,
+          "bias": -0.375
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 2.6,
+          "shareOfWeightedAbsoluteError": 0.0005,
+          "bias": 0.638
+        }
+      ]
+    },
+    "2025/26": {
+      "rows": 3158,
+      "weightedRows": 1459.0,
+      "forecast": 4.339,
+      "actual": 3.801,
+      "bias": 0.538,
+      "mae": 3.186,
+      "noShowRate": 0.1081,
+      "causes": [
+        {
+          "cause": "attacking returns",
+          "weightedRows": 448.0,
+          "shareOfWeightedAbsoluteError": 0.3476,
+          "bias": -0.658
+        },
+        {
+          "cause": "other events",
+          "weightedRows": 292.5,
+          "shareOfWeightedAbsoluteError": 0.1708,
+          "bias": 2.217
+        },
+        {
+          "cause": "unexpected minutes",
+          "weightedRows": 226.0,
+          "shareOfWeightedAbsoluteError": 0.1483,
+          "bias": -0.753
+        },
+        {
+          "cause": "no-show/availability",
+          "weightedRows": 150.7,
+          "shareOfWeightedAbsoluteError": 0.1307,
+          "bias": 4.03
+        },
+        {
+          "cause": "team clean sheet",
+          "weightedRows": 237.2,
+          "shareOfWeightedAbsoluteError": 0.1267,
+          "bias": -0.87
+        },
+        {
+          "cause": "reduced minutes/benching",
+          "weightedRows": 83.9,
+          "shareOfWeightedAbsoluteError": 0.0611,
+          "bias": 3.056
+        },
+        {
+          "cause": "bonus",
+          "weightedRows": 16.2,
+          "shareOfWeightedAbsoluteError": 0.0138,
+          "bias": -3.654
+        },
+        {
+          "cause": "minutes/appearance",
+          "weightedRows": 4.6,
+          "shareOfWeightedAbsoluteError": 0.0011,
+          "bias": 0.915
+        }
+      ]
+    }
+  },
+  "worstMisses": [
+    {
+      "season": "2021/22",
+      "gw": 36,
+      "player": "De Bruyne",
+      "position": "MID",
+      "forecast": 6.2,
+      "actual": 30.0,
+      "minutes": 180,
+      "expectedMinutes": 53,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2021/22",
+      "gw": 28,
+      "player": "Cash",
+      "position": "DEF",
+      "forecast": 5.28,
+      "actual": 29.0,
+      "minutes": 180,
+      "expectedMinutes": 73,
+      "cause": "attacking returns",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2021/22",
+      "gw": 36,
+      "player": "Sterling",
+      "position": "MID",
+      "forecast": 4.58,
+      "actual": 28.0,
+      "minutes": 180,
+      "expectedMinutes": 41,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2023/24",
+      "gw": 34,
+      "player": "Mateta",
+      "position": "FWD",
+      "forecast": 6.11,
+      "actual": 29.0,
+      "minutes": 157,
+      "expectedMinutes": 68,
+      "cause": "attacking returns",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2024/25",
+      "gw": 32,
+      "player": "Barnes",
+      "position": "MID",
+      "forecast": 4.25,
+      "actual": 27.0,
+      "minutes": 180,
+      "expectedMinutes": 31,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2020/21",
+      "gw": 19,
+      "player": "Stones",
+      "position": "DEF",
+      "forecast": 4.43,
+      "actual": 27.0,
+      "minutes": 180,
+      "expectedMinutes": 50,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2019/20",
+      "gw": 44,
+      "player": "Antonio",
+      "position": "MID",
+      "forecast": 3.68,
+      "actual": 26.0,
+      "minutes": 77,
+      "expectedMinutes": 67,
+      "cause": "attacking returns",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2023/24",
+      "gw": 37,
+      "player": "Gvardiol",
+      "position": "DEF",
+      "forecast": 5.01,
+      "actual": 27.0,
+      "minutes": 180,
+      "expectedMinutes": 55,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2021/22",
+      "gw": 26,
+      "player": "Man\u00c3\u00a9",
+      "position": "MID",
+      "forecast": 4.74,
+      "actual": 26.0,
+      "minutes": 180,
+      "expectedMinutes": 47,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2024/25",
+      "gw": 24,
+      "player": "M.Salah",
+      "position": "MID",
+      "forecast": 7.98,
+      "actual": 29.0,
+      "minutes": 177,
+      "expectedMinutes": 75,
+      "cause": "attacking returns",
+      "owned": true,
+      "captain": true,
+      "transferBoundary": false
+    },
+    {
+      "season": "2021/22",
+      "gw": 26,
+      "player": "Salah",
+      "position": "MID",
+      "forecast": 7.38,
+      "actual": 28.0,
+      "minutes": 180,
+      "expectedMinutes": 50,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2022/23",
+      "gw": 25,
+      "player": "Martinelli",
+      "position": "MID",
+      "forecast": 5.66,
+      "actual": 26.0,
+      "minutes": 180,
+      "expectedMinutes": 61,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2023/24",
+      "gw": 34,
+      "player": "White",
+      "position": "DEF",
+      "forecast": 5.94,
+      "actual": 26.0,
+      "minutes": 180,
+      "expectedMinutes": 64,
+      "cause": "unexpected minutes",
+      "owned": true,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2023/24",
+      "gw": 33,
+      "player": "Palmer",
+      "position": "MID",
+      "forecast": 6.04,
+      "actual": 26.0,
+      "minutes": 79,
+      "expectedMinutes": 71,
+      "cause": "attacking returns",
+      "owned": true,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2024/25",
+      "gw": 6,
+      "player": "Palmer",
+      "position": "MID",
+      "forecast": 5.1,
+      "actual": 25.0,
+      "minutes": 90,
+      "expectedMinutes": 69,
+      "cause": "attacking returns",
+      "owned": true,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2018/19",
+      "gw": 27,
+      "player": "Deulofeu",
+      "position": "MID",
+      "forecast": 3.24,
+      "actual": 23.0,
+      "minutes": 85,
+      "expectedMinutes": 71,
+      "cause": "attacking returns",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2019/20",
+      "gw": 19,
+      "player": "Alexander-Arnold",
+      "position": "DEF",
+      "forecast": 4.36,
+      "actual": 24.0,
+      "minutes": 90,
+      "expectedMinutes": 73,
+      "cause": "attacking returns",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2020/21",
+      "gw": 4,
+      "player": "Grealish",
+      "position": "MID",
+      "forecast": 4.52,
+      "actual": 24.0,
+      "minutes": 90,
+      "expectedMinutes": 76,
+      "cause": "attacking returns",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2021/22",
+      "gw": 37,
+      "player": "Maddison",
+      "position": "MID",
+      "forecast": 6.59,
+      "actual": 25.0,
+      "minutes": 180,
+      "expectedMinutes": 48,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2024/25",
+      "gw": 33,
+      "player": "Trossard",
+      "position": "MID",
+      "forecast": 5.72,
+      "actual": 24.0,
+      "minutes": 173,
+      "expectedMinutes": 59,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2020/21",
+      "gw": 2,
+      "player": "Son",
+      "position": "MID",
+      "forecast": 5.72,
+      "actual": 24.0,
+      "minutes": 90,
+      "expectedMinutes": 71,
+      "cause": "attacking returns",
+      "owned": true,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2021/22",
+      "gw": 22,
+      "player": "Fernandes",
+      "position": "MID",
+      "forecast": 4.79,
+      "actual": 23.0,
+      "minutes": 178,
+      "expectedMinutes": 57,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2021/22",
+      "gw": 28,
+      "player": "Coutinho",
+      "position": "MID",
+      "forecast": 4.91,
+      "actual": 23.0,
+      "minutes": 156,
+      "expectedMinutes": 43,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2023/24",
+      "gw": 7,
+      "player": "Watkins",
+      "position": "FWD",
+      "forecast": 5.16,
+      "actual": 23.0,
+      "minutes": 90,
+      "expectedMinutes": 73,
+      "cause": "attacking returns",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2021/22",
+      "gw": 9,
+      "player": "Salah",
+      "position": "MID",
+      "forecast": 6.67,
+      "actual": 24.0,
+      "minutes": 90,
+      "expectedMinutes": 75,
+      "cause": "attacking returns",
+      "owned": true,
+      "captain": true,
+      "transferBoundary": false
+    },
+    {
+      "season": "2022/23",
+      "gw": 36,
+      "player": "Wilson",
+      "position": "FWD",
+      "forecast": 6.72,
+      "actual": 24.0,
+      "minutes": 162,
+      "expectedMinutes": 41,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2023/24",
+      "gw": 34,
+      "player": "Branthwaite",
+      "position": "DEF",
+      "forecast": 2.89,
+      "actual": 20.0,
+      "minutes": 180,
+      "expectedMinutes": 69,
+      "cause": "team clean sheet",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2019/20",
+      "gw": 22,
+      "player": "Ag\u00c3\u00bcero",
+      "position": "FWD",
+      "forecast": 2.9,
+      "actual": 20.0,
+      "minutes": 90,
+      "expectedMinutes": 30,
+      "cause": "unexpected minutes",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2019/20",
+      "gw": 11,
+      "player": "Lundstram",
+      "position": "DEF",
+      "forecast": 3.94,
+      "actual": 21.0,
+      "minutes": 90,
+      "expectedMinutes": 75,
+      "cause": "attacking returns",
+      "owned": true,
+      "captain": false,
+      "transferBoundary": false
+    },
+    {
+      "season": "2025/26",
+      "gw": 32,
+      "player": "Mavropanos",
+      "position": "DEF",
+      "forecast": 4.09,
+      "actual": 21.0,
+      "minutes": 90,
+      "expectedMinutes": 71,
+      "cause": "attacking returns",
+      "owned": false,
+      "captain": false,
+      "transferBoundary": false
+    }
+  ]
+}

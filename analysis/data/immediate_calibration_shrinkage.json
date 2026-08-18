@@ -1,0 +1,120 @@
+{
+  "status": "training-selected causal shrinkage",
+  "selected": {
+    "share": 0.0,
+    "trainingStability": 2064.25,
+    "evaluationAverage": 2149.5,
+    "evaluationMinimum": 1999,
+    "seasonTotals": [
+      2041,
+      2103,
+      2085,
+      2112,
+      2196,
+      2198,
+      2261,
+      2055,
+      2290,
+      1999
+    ],
+    "averageTransfers": 31.9
+  },
+  "experiments": [
+    {
+      "share": 0.0,
+      "trainingStability": 2064.25,
+      "evaluationAverage": 2149.5,
+      "evaluationMinimum": 1999,
+      "seasonTotals": [
+        2041,
+        2103,
+        2085,
+        2112,
+        2196,
+        2198,
+        2261,
+        2055,
+        2290,
+        1999
+      ],
+      "averageTransfers": 31.9
+    },
+    {
+      "share": 0.25,
+      "trainingStability": 2064.25,
+      "evaluationAverage": 2149.8,
+      "evaluationMinimum": 1999,
+      "seasonTotals": [
+        2041,
+        2103,
+        2089,
+        2121,
+        2183,
+        2193,
+        2261,
+        2055,
+        2297,
+        1999
+      ],
+      "averageTransfers": 31.9
+    },
+    {
+      "share": 0.5,
+      "trainingStability": 2063.875,
+      "evaluationAverage": 2149.8,
+      "evaluationMinimum": 1999,
+      "seasonTotals": [
+        2041,
+        2102,
+        2090,
+        2121,
+        2182,
+        2193,
+        2261,
+        2055,
+        2297,
+        1999
+      ],
+      "averageTransfers": 31.9
+    },
+    {
+      "share": 0.75,
+      "trainingStability": 2062.0,
+      "evaluationAverage": 2149.4,
+      "evaluationMinimum": 1999,
+      "seasonTotals": [
+        2041,
+        2097,
+        2090,
+        2113,
+        2187,
+        2193,
+        2261,
+        2055,
+        2297,
+        1999
+      ],
+      "averageTransfers": 31.9
+    },
+    {
+      "share": 1.0,
+      "trainingStability": 2063.125,
+      "evaluationAverage": 2151.0,
+      "evaluationMinimum": 1999,
+      "seasonTotals": [
+        2041,
+        2100,
+        2098,
+        2112,
+        2185,
+        2198,
+        2264,
+        2052,
+        2300,
+        1999
+      ],
+      "averageTransfers": 31.9
+    }
+  ],
+  "selectedLift": 0.0
+}

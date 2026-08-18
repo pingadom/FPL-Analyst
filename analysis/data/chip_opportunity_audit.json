@@ -1,0 +1,547 @@
+{
+  "method": "Hold the no-chip recursive squad path fixed. In each legal chip window, compare the deadline-predicted best TC/BB week with the hindsight best week on that same path.",
+  "averages": {
+    "predictedTripleActualGain": 6.7,
+    "oracleTripleActualGain": 20.0,
+    "tripleTimingRegret": 13.3,
+    "predictedBenchActualGain": 7.2,
+    "oracleBenchActualGain": 22.4,
+    "benchTimingRegret": 15.2,
+    "structuralTripleWindows": 7,
+    "structuralTripleActualGain": 11.1,
+    "structuralBenchWindows": 7,
+    "structuralBenchActualGain": 10.4
+  },
+  "seasons": [
+    {
+      "season": "2018/19",
+      "windows": [
+        {
+          "start": 1,
+          "end": 38,
+          "predictedTriple": {
+            "gw": 3,
+            "predictedTripleCaptainGain": 9.0904,
+            "actualTripleCaptainGain": 8.0,
+            "predictedBenchBoostGain": 11.8406,
+            "actualBenchBoostGain": 5.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 8,
+            "predictedTripleCaptainGain": 5.7124,
+            "actualTripleCaptainGain": 15.0,
+            "predictedBenchBoostGain": 10.9827,
+            "actualBenchBoostGain": 6.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "predictedBench": {
+            "gw": 1,
+            "predictedTripleCaptainGain": 7.333,
+            "actualTripleCaptainGain": 8.0,
+            "predictedBenchBoostGain": 15.6873,
+            "actualBenchBoostGain": 20.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleBench": {
+            "gw": 36,
+            "predictedTripleCaptainGain": 6.7204,
+            "actualTripleCaptainGain": 13.0,
+            "predictedBenchBoostGain": 10.347,
+            "actualBenchBoostGain": 26.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedTriple": {
+            "gw": 25,
+            "predictedTripleCaptainGain": 5.5228,
+            "actualTripleCaptainGain": 3.0,
+            "predictedBenchBoostGain": 12.7313,
+            "actualBenchBoostGain": 12.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedBench": {
+            "gw": 35,
+            "predictedTripleCaptainGain": 8.3111,
+            "actualTripleCaptainGain": 3.0,
+            "predictedBenchBoostGain": 13.1308,
+            "actualBenchBoostGain": 17.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 1
+          }
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "windows": [
+        {
+          "start": 1,
+          "end": 38,
+          "predictedTriple": {
+            "gw": 17,
+            "predictedTripleCaptainGain": 8.4444,
+            "actualTripleCaptainGain": 5.0,
+            "predictedBenchBoostGain": 7.9665,
+            "actualBenchBoostGain": 0.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 10,
+            "predictedTripleCaptainGain": 6.6434,
+            "actualTripleCaptainGain": 20.0,
+            "predictedBenchBoostGain": 11.4897,
+            "actualBenchBoostGain": 7.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "predictedBench": {
+            "gw": 1,
+            "predictedTripleCaptainGain": 7.7311,
+            "actualTripleCaptainGain": 1.0,
+            "predictedBenchBoostGain": 15.3696,
+            "actualBenchBoostGain": 3.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleBench": {
+            "gw": 3,
+            "predictedTripleCaptainGain": 5.935,
+            "actualTripleCaptainGain": 3.0,
+            "predictedBenchBoostGain": 12.1383,
+            "actualBenchBoostGain": 16.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedTriple": null,
+          "structuralPredictedBench": {
+            "gw": 24,
+            "predictedTripleCaptainGain": 5.059,
+            "actualTripleCaptainGain": 13.0,
+            "predictedBenchBoostGain": 9.8896,
+            "actualBenchBoostGain": 4.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 1
+          }
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "windows": [
+        {
+          "start": 1,
+          "end": 38,
+          "predictedTriple": {
+            "gw": 20,
+            "predictedTripleCaptainGain": 9.3394,
+            "actualTripleCaptainGain": 2.0,
+            "predictedBenchBoostGain": 10.8781,
+            "actualBenchBoostGain": 4.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 22,
+            "predictedTripleCaptainGain": 7.6577,
+            "actualTripleCaptainGain": 17.0,
+            "predictedBenchBoostGain": 9.7057,
+            "actualBenchBoostGain": 3.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "predictedBench": {
+            "gw": 1,
+            "predictedTripleCaptainGain": 6.4927,
+            "actualTripleCaptainGain": 2.0,
+            "predictedBenchBoostGain": 16.1693,
+            "actualBenchBoostGain": 4.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleBench": {
+            "gw": 12,
+            "predictedTripleCaptainGain": 6.6726,
+            "actualTripleCaptainGain": 9.0,
+            "predictedBenchBoostGain": 12.1137,
+            "actualBenchBoostGain": 19.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedTriple": {
+            "gw": 35,
+            "predictedTripleCaptainGain": 8.5272,
+            "actualTripleCaptainGain": 13.0,
+            "predictedBenchBoostGain": 9.2454,
+            "actualBenchBoostGain": 3.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 1
+          },
+          "structuralPredictedBench": {
+            "gw": 27,
+            "predictedTripleCaptainGain": 5.2497,
+            "actualTripleCaptainGain": 5.0,
+            "predictedBenchBoostGain": 11.6827,
+            "actualBenchBoostGain": 8.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 1
+          }
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "windows": [
+        {
+          "start": 1,
+          "end": 38,
+          "predictedTriple": {
+            "gw": 17,
+            "predictedTripleCaptainGain": 10.4341,
+            "actualTripleCaptainGain": 8.0,
+            "predictedBenchBoostGain": 6.4145,
+            "actualBenchBoostGain": 3.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 9,
+            "predictedTripleCaptainGain": 6.6701,
+            "actualTripleCaptainGain": 24.0,
+            "predictedBenchBoostGain": 6.3695,
+            "actualBenchBoostGain": 1.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "predictedBench": {
+            "gw": 1,
+            "predictedTripleCaptainGain": 6.3568,
+            "actualTripleCaptainGain": 17.0,
+            "predictedBenchBoostGain": 16.2591,
+            "actualBenchBoostGain": 0.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleBench": {
+            "gw": 11,
+            "predictedTripleCaptainGain": 5.7651,
+            "actualTripleCaptainGain": 2.0,
+            "predictedBenchBoostGain": 8.5793,
+            "actualBenchBoostGain": 21.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedTriple": {
+            "gw": 26,
+            "predictedTripleCaptainGain": 7.9038,
+            "actualTripleCaptainGain": 11.0,
+            "predictedBenchBoostGain": 12.2322,
+            "actualBenchBoostGain": 14.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 2
+          },
+          "structuralPredictedBench": {
+            "gw": 36,
+            "predictedTripleCaptainGain": 6.0976,
+            "actualTripleCaptainGain": 14.0,
+            "predictedBenchBoostGain": 13.8713,
+            "actualBenchBoostGain": 7.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 2
+          }
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "windows": [
+        {
+          "start": 1,
+          "end": 38,
+          "predictedTriple": {
+            "gw": 13,
+            "predictedTripleCaptainGain": 10.3605,
+            "actualTripleCaptainGain": 13.0,
+            "predictedBenchBoostGain": 6.2254,
+            "actualBenchBoostGain": 2.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 9,
+            "predictedTripleCaptainGain": 8.2075,
+            "actualTripleCaptainGain": 23.0,
+            "predictedBenchBoostGain": 8.4839,
+            "actualBenchBoostGain": 2.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "predictedBench": {
+            "gw": 29,
+            "predictedTripleCaptainGain": 6.1871,
+            "actualTripleCaptainGain": 7.0,
+            "predictedBenchBoostGain": 17.0595,
+            "actualBenchBoostGain": 19.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 1
+          },
+          "oracleBench": {
+            "gw": 34,
+            "predictedTripleCaptainGain": 8.7346,
+            "actualTripleCaptainGain": 16.0,
+            "predictedBenchBoostGain": 16.1524,
+            "actualBenchBoostGain": 26.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 1
+          },
+          "structuralPredictedTriple": {
+            "gw": 34,
+            "predictedTripleCaptainGain": 8.7346,
+            "actualTripleCaptainGain": 16.0,
+            "predictedBenchBoostGain": 16.1524,
+            "actualBenchBoostGain": 26.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 1
+          },
+          "structuralPredictedBench": {
+            "gw": 29,
+            "predictedTripleCaptainGain": 6.1871,
+            "actualTripleCaptainGain": 7.0,
+            "predictedBenchBoostGain": 17.0595,
+            "actualBenchBoostGain": 19.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 1
+          }
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "windows": [
+        {
+          "start": 1,
+          "end": 38,
+          "predictedTriple": {
+            "gw": 27,
+            "predictedTripleCaptainGain": 8.8769,
+            "actualTripleCaptainGain": 7.0,
+            "predictedBenchBoostGain": 9.7547,
+            "actualBenchBoostGain": 8.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 34,
+            "predictedTripleCaptainGain": 6.9044,
+            "actualTripleCaptainGain": 20.0,
+            "predictedBenchBoostGain": 11.0167,
+            "actualBenchBoostGain": 12.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 1
+          },
+          "predictedBench": {
+            "gw": 1,
+            "predictedTripleCaptainGain": 6.915,
+            "actualTripleCaptainGain": 3.0,
+            "predictedBenchBoostGain": 17.1811,
+            "actualBenchBoostGain": 0.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleBench": {
+            "gw": 35,
+            "predictedTripleCaptainGain": 7.12,
+            "actualTripleCaptainGain": 4.0,
+            "predictedBenchBoostGain": 11.1392,
+            "actualBenchBoostGain": 17.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedTriple": {
+            "gw": 37,
+            "predictedTripleCaptainGain": 8.3872,
+            "actualTripleCaptainGain": 4.0,
+            "predictedBenchBoostGain": 11.9829,
+            "actualBenchBoostGain": 7.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 1
+          },
+          "structuralPredictedBench": {
+            "gw": 37,
+            "predictedTripleCaptainGain": 8.3872,
+            "actualTripleCaptainGain": 4.0,
+            "predictedBenchBoostGain": 11.9829,
+            "actualBenchBoostGain": 7.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 1
+          }
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "windows": [
+        {
+          "start": 1,
+          "end": 38,
+          "predictedTriple": {
+            "gw": 18,
+            "predictedTripleCaptainGain": 10.5853,
+            "actualTripleCaptainGain": 9.0,
+            "predictedBenchBoostGain": 9.7863,
+            "actualBenchBoostGain": 10.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 24,
+            "predictedTripleCaptainGain": 7.9791,
+            "actualTripleCaptainGain": 29.0,
+            "predictedBenchBoostGain": 14.7008,
+            "actualBenchBoostGain": 7.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 0
+          },
+          "predictedBench": {
+            "gw": 1,
+            "predictedTripleCaptainGain": 6.9311,
+            "actualTripleCaptainGain": 5.0,
+            "predictedBenchBoostGain": 17.4303,
+            "actualBenchBoostGain": 9.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleBench": {
+            "gw": 7,
+            "predictedTripleCaptainGain": 6.9835,
+            "actualTripleCaptainGain": 1.0,
+            "predictedBenchBoostGain": 11.4252,
+            "actualBenchBoostGain": 24.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedTriple": {
+            "gw": 24,
+            "predictedTripleCaptainGain": 7.9791,
+            "actualTripleCaptainGain": 29.0,
+            "predictedBenchBoostGain": 14.7008,
+            "actualBenchBoostGain": 7.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedBench": {
+            "gw": 32,
+            "predictedTripleCaptainGain": 6.9872,
+            "actualTripleCaptainGain": 19.0,
+            "predictedBenchBoostGain": 14.12,
+            "actualBenchBoostGain": 11.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 1
+          }
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "windows": [
+        {
+          "start": 1,
+          "end": 19,
+          "predictedTriple": {
+            "gw": 17,
+            "predictedTripleCaptainGain": 7.7083,
+            "actualTripleCaptainGain": 3.0,
+            "predictedBenchBoostGain": 12.9145,
+            "actualBenchBoostGain": 16.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 7,
+            "predictedTripleCaptainGain": 6.0026,
+            "actualTripleCaptainGain": 18.0,
+            "predictedBenchBoostGain": 10.8189,
+            "actualBenchBoostGain": 25.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "predictedBench": {
+            "gw": 1,
+            "predictedTripleCaptainGain": 6.1406,
+            "actualTripleCaptainGain": 2.0,
+            "predictedBenchBoostGain": 16.6904,
+            "actualBenchBoostGain": 2.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleBench": {
+            "gw": 7,
+            "predictedTripleCaptainGain": 6.0026,
+            "actualTripleCaptainGain": 18.0,
+            "predictedBenchBoostGain": 10.8189,
+            "actualBenchBoostGain": 25.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedTriple": null,
+          "structuralPredictedBench": null
+        },
+        {
+          "start": 20,
+          "end": 38,
+          "predictedTriple": {
+            "gw": 34,
+            "predictedTripleCaptainGain": 7.5246,
+            "actualTripleCaptainGain": 5.0,
+            "predictedBenchBoostGain": 3.1127,
+            "actualBenchBoostGain": 0.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleTriple": {
+            "gw": 26,
+            "predictedTripleCaptainGain": 5.5955,
+            "actualTripleCaptainGain": 14.0,
+            "predictedBenchBoostGain": 12.3923,
+            "actualBenchBoostGain": 28.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 0
+          },
+          "predictedBench": {
+            "gw": 37,
+            "predictedTripleCaptainGain": 6.5721,
+            "actualTripleCaptainGain": 9.0,
+            "predictedBenchBoostGain": 13.5417,
+            "actualBenchBoostGain": 8.0,
+            "captainFixtureCount": 1,
+            "benchDoubleCount": 0
+          },
+          "oracleBench": {
+            "gw": 26,
+            "predictedTripleCaptainGain": 5.5955,
+            "actualTripleCaptainGain": 14.0,
+            "predictedBenchBoostGain": 12.3923,
+            "actualBenchBoostGain": 28.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedTriple": {
+            "gw": 33,
+            "predictedTripleCaptainGain": 6.4294,
+            "actualTripleCaptainGain": 2.0,
+            "predictedBenchBoostGain": 9.3537,
+            "actualBenchBoostGain": 1.0,
+            "captainFixtureCount": 2,
+            "benchDoubleCount": 0
+          },
+          "structuralPredictedBench": null
+        }
+      ]
+    }
+  ]
+}

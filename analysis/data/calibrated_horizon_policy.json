@@ -1,0 +1,121 @@
+{
+  "status": "training-selected calibrated-scale policy",
+  "selected": {
+    "hurdle": 16.0,
+    "trainingStability": 2022.0,
+    "evaluationAverage": 2031.1,
+    "evaluationMinimum": 1967,
+    "seasonTotals": [
+      2037,
+      2013,
+      2100,
+      1977,
+      2000,
+      1967,
+      2010,
+      2037,
+      2108,
+      2050
+    ],
+    "averageTransfers": 21.4
+  },
+  "experiments": [
+    {
+      "hurdle": 8.0,
+      "trainingStability": 1954.625,
+      "evaluationAverage": 2083.1,
+      "evaluationMinimum": 2009,
+      "seasonTotals": [
+        1913,
+        2024,
+        2104,
+        2122,
+        2026,
+        2068,
+        2078,
+        2096,
+        2162,
+        2009
+      ],
+      "averageTransfers": 33.1
+    },
+    {
+      "hurdle": 10.0,
+      "trainingStability": 1937.875,
+      "evaluationAverage": 2080.1,
+      "evaluationMinimum": 1993,
+      "seasonTotals": [
+        1924,
+        1961,
+        2082,
+        2022,
+        2133,
+        2062,
+        2080,
+        2082,
+        2187,
+        1993
+      ],
+      "averageTransfers": 29.4
+    },
+    {
+      "hurdle": 12.0,
+      "trainingStability": 1963.625,
+      "evaluationAverage": 2055.9,
+      "evaluationMinimum": 1985,
+      "seasonTotals": [
+        1978,
+        1955,
+        2102,
+        2026,
+        2083,
+        2044,
+        2087,
+        2026,
+        2094,
+        1985
+      ],
+      "averageTransfers": 27.8
+    },
+    {
+      "hurdle": 14.0,
+      "trainingStability": 1959.0,
+      "evaluationAverage": 2041.5,
+      "evaluationMinimum": 1960,
+      "seasonTotals": [
+        2024,
+        1920,
+        2239,
+        2011,
+        2007,
+        1977,
+        2081,
+        2025,
+        2032,
+        1960
+      ],
+      "averageTransfers": 23.8
+    },
+    {
+      "hurdle": 16.0,
+      "trainingStability": 2022.0,
+      "evaluationAverage": 2031.1,
+      "evaluationMinimum": 1967,
+      "seasonTotals": [
+        2037,
+        2013,
+        2100,
+        1977,
+        2000,
+        1967,
+        2010,
+        2037,
+        2108,
+        2050
+      ],
+      "averageTransfers": 21.4
+    }
+  ],
+  "referenceFullStackAverage": 2149.5,
+  "selectedLift": -118.4
+}

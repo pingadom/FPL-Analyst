@@ -51,7 +51,7 @@ test("server-renders the FPL Lens decision room", async () => {
   assert.match(html, /Champion advice, tested/i);
   assert.match(html, /correlated squad scenarios/i);
   assert.match(html, /Frozen research season/i);
-  assert.match(html, /Three pre-registered managers/i);
+  assert.match(html, /4(?:<!-- -->)? pre-registered managers/i);
   assert.match(html, /Chip scenario gates/i);
   assert.match(html, /Championship stack challenger/i);
   assert.match(html, /Performance ladder/i);
@@ -68,7 +68,7 @@ test("serves the frozen prospective research audit", async () => {
   const payload = await response.json();
   assert.match(payload.deadline.snapshotHash, /^[a-f0-9]{64}$/);
   assert.equal(payload.deadline.status, "provisional");
-  assert.equal(payload.shadows.managers.length, 3);
+  assert.equal(payload.shadows.managers.length, 4);
   assert.equal(payload.chips.simulationCount, 5000);
   assert.equal(payload.frontier.status, "shadow challenger");
   assert.equal(payload.listwise.status, "shadow challenger");

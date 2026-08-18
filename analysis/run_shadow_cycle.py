@@ -1,4 +1,4 @@
-"""Run three frozen prospective managers from the same deadline snapshot."""
+"""Run four frozen prospective managers from the same deadline snapshot."""
 
 from __future__ import annotations
 
@@ -6,7 +6,18 @@ import argparse
 import json
 from collections import Counter
 
-from prospective_common import APP_DATA, ROOT, SHADOW_ROOT, atomic_json, optimise_squad, payload_hash
+from prospective_common import (
+    APP_DATA,
+    ROOT,
+    SHADOW_ROOT,
+    available_squad_budget,
+    atomic_json,
+    chip_inventory_key,
+    optimise_squad,
+    payload_hash,
+    selling_price,
+    used_chip_keys,
+)
 
 
 MANAGERS = (
@@ -39,6 +50,16 @@ MANAGERS = (
         "chips": True,
         "transferHurdle": 2.2,
         "description": "Frontier next-GW, listwise six-week and captain reranks at frozen blends.",
+    },
+    {
+        "id": "captain-route-consensus",
+        "name": "Scoring-route captain",
+        "planScore": "listwiseHorizonScore",
+        "lineupScore": "frontierImmediateScore",
+        "captainScore": "routeCaptainScore",
+        "chips": True,
+        "transferHurdle": 2.2,
+        "description": "Same squad model as the hybrid challenger; captaincy adds a five-seed scoring-route consensus and conservative defender tie-break.",
     },
 )
 
@@ -96,12 +117,6 @@ def best_lineup(
     goalkeeper = next(index for index in bench if players[index]["position"] == "GK")
     bench = [goalkeeper] + [index for index in bench if index != goalkeeper]
     return xi, bench, captain, vice
-
-
-def selling_price(current: float, purchase: float) -> float:
-    if current <= purchase:
-        return current
-    return purchase + int((current - purchase) * 10 / 2) / 10
 
 
 def transfer_plan(
@@ -199,7 +214,20 @@ def main() -> None:
         listwise_row = listwise.get(int(row["id"]), {})
         listwise_horizon = float(listwise_row.get("planBlend25", horizon)) * (0.75 + 0.25 * minute_ratio)
         listwise_captain = float(listwise_row.get("captainBlend50", row["captainRating"]))
-        listwise_captain *= 0.50 + 0.50 * min(1.0, new_minutes / 75)
+        # Expected minutes are already inputs to both captain models.  Apply a
+        # further penalty only when deadline intelligence is worse than the
+        # model snapshot; using absolute minutes here double-counted rotation.
+        deadline_captain_factor = 0.50 + 0.50 * min(1.0, minute_ratio)
+        listwise_captain *= deadline_captain_factor
+        route_captain = float(
+            listwise_row.get("routeCaptainScore", listwise_captain)
+        )
+        route_captain *= deadline_captain_factor
+        action_consensus = float(
+            listwise_row.get("actionConsensusMapped", horizon)
+        ) * (0.75 + 0.25 * minute_ratio)
+        if not bool(listwise_row.get("actionPolicyActive", False)):
+            action_consensus = horizon
         players.append(
             {
                 **row,
@@ -210,6 +238,9 @@ def main() -> None:
                 "frontierImmediateScore": frontier_immediate * (0.25 + 0.75 * minute_ratio),
                 "listwiseHorizonScore": listwise_horizon,
                 "listwiseCaptainScore": listwise_captain,
+                "routeCaptainScore": route_captain,
+                "actionConsensusScore": action_consensus,
+                "actionConsensusVote": float(listwise_row.get("actionVote", 0)),
             }
         )
     season_root = SHADOW_ROOT / status["season"]
@@ -223,8 +254,17 @@ def main() -> None:
             if manager["chips"]
             else "Hold"
         )
-        used_chips = set() if state is None else {row["chip"] for row in state.get("chipsUsed", [])}
-        if chip_use in used_chips:
+        current_chip_key = chip_inventory_key(chip_use, int(status["gameweek"]))
+        used_chips = used_chip_keys(state)
+        if chip_use != "Hold" and current_chip_key in used_chips:
+            chip_use = "Hold"
+        if (
+            chip_use == "Free Hit"
+            and int(status["gameweek"]) == 20
+            and state is not None
+            and chip_inventory_key("Free Hit", 19) in used_chips
+        ):
+            # Official rule: FH19 cannot be followed immediately by FH20.
             chip_use = "Hold"
         transfers: list[dict] = []
         if state is None:
@@ -232,19 +272,38 @@ def main() -> None:
             bank = round(100 - sum(float(players[index]["price"]) for index in squad), 1)
             free_transfers = 1
         elif chip_use == "Wildcard":
-            squad, _, _, _ = optimise_squad(players, manager["planScore"])
-            bank = round(float(state["bank"]) + sum(
-                selling_price(float(players[next(i for i, p in enumerate(players) if int(p["id"]) == player_id)]["price"]), float(state["purchasePrices"].get(str(player_id), 0)))
+            available_budget = available_squad_budget(players, state)
+            squad, _, _, _ = optimise_squad(
+                players,
+                manager["planScore"],
+                minimum_spend=max(0.0, available_budget - 0.5),
+                budget_limit=available_budget,
+            )
+            bank = round(
+                available_budget
+                - sum(float(players[index]["price"]) for index in squad),
+                1,
+            )
+            free_transfers = int(state.get("freeTransfers", 1))
+        elif chip_use == "Free Hit":
+            by_id = {int(row["id"]): index for index, row in enumerate(players)}
+            squad = [
+                by_id[player_id]
                 for player_id in state["squadIds"]
-                if any(int(p["id"]) == player_id for p in players)
-            ) - sum(float(players[index]["price"]) for index in squad), 1)
+                if player_id in by_id
+            ]
+            transfers = []
+            bank = float(state["bank"])
             free_transfers = int(state.get("freeTransfers", 1))
         else:
             squad, transfers, bank, free_transfers = transfer_plan(
                 players, state, manager["planScore"], float(manager["transferHurdle"])
             )
         if chip_use == "Free Hit":
-            temporary_ids = set(chip["squads"]["freeHit"])
+            plan_squads = manager_chip_plan.get("squads", {})
+            temporary_ids = set(
+                plan_squads.get("freeHit", chip["squads"]["freeHit"])
+            )
             decision_squad = [index for index, row in enumerate(players) if int(row["id"]) in temporary_ids]
         else:
             decision_squad = squad
@@ -282,7 +341,15 @@ def main() -> None:
             }
             used = [] if state is None else list(state.get("chipsUsed", []))
             if chip_use != "Hold":
-                used.append({"chip": chip_use, "gameweek": int(status["gameweek"])})
+                used.append(
+                    {
+                        "chip": chip_use,
+                        "gameweek": int(status["gameweek"]),
+                        "key": chip_inventory_key(
+                            chip_use, int(status["gameweek"])
+                        ),
+                    }
+                )
             atomic_json(
                 state_path,
                 {

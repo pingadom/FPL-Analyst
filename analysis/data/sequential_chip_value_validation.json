@@ -1,0 +1,4287 @@
+{
+  "status": "training-selected causal optimal-stopping chip challenger",
+  "currentRules": "2026/27 has two complete sets of Wildcard, Free Hit, Triple Captain and Bench Boost; the first set expires at the GW19 deadline.",
+  "method": "TC/BB marginal values are learned from prior seasons only. Each week compares current risk-adjusted value with an empirical reservation value that decays toward expiry. Strong single fixtures are eligible; unused chips are forced into distinct final weeks.",
+  "fitAudit": [
+    {
+      "season": "2017-18",
+      "chip": "Triple Captain",
+      "trainingSeasons": 1,
+      "trainingRows": 38,
+      "testRows": 38
+    },
+    {
+      "season": "2017-18",
+      "chip": "Bench Boost",
+      "trainingSeasons": 1,
+      "trainingRows": 38,
+      "testRows": 38
+    },
+    {
+      "season": "2018-19",
+      "chip": "Triple Captain",
+      "trainingSeasons": 2,
+      "trainingRows": 76,
+      "testRows": 38
+    },
+    {
+      "season": "2018-19",
+      "chip": "Bench Boost",
+      "trainingSeasons": 2,
+      "trainingRows": 76,
+      "testRows": 38
+    },
+    {
+      "season": "2019-20",
+      "chip": "Triple Captain",
+      "trainingSeasons": 3,
+      "trainingRows": 114,
+      "testRows": 38
+    },
+    {
+      "season": "2019-20",
+      "chip": "Bench Boost",
+      "trainingSeasons": 3,
+      "trainingRows": 114,
+      "testRows": 38
+    },
+    {
+      "season": "2020-21",
+      "chip": "Triple Captain",
+      "trainingSeasons": 4,
+      "trainingRows": 152,
+      "testRows": 38
+    },
+    {
+      "season": "2020-21",
+      "chip": "Bench Boost",
+      "trainingSeasons": 4,
+      "trainingRows": 152,
+      "testRows": 38
+    },
+    {
+      "season": "2021-22",
+      "chip": "Triple Captain",
+      "trainingSeasons": 5,
+      "trainingRows": 190,
+      "testRows": 38
+    },
+    {
+      "season": "2021-22",
+      "chip": "Bench Boost",
+      "trainingSeasons": 5,
+      "trainingRows": 190,
+      "testRows": 38
+    },
+    {
+      "season": "2022-23",
+      "chip": "Triple Captain",
+      "trainingSeasons": 6,
+      "trainingRows": 228,
+      "testRows": 37
+    },
+    {
+      "season": "2022-23",
+      "chip": "Bench Boost",
+      "trainingSeasons": 6,
+      "trainingRows": 228,
+      "testRows": 37
+    },
+    {
+      "season": "2023-24",
+      "chip": "Triple Captain",
+      "trainingSeasons": 7,
+      "trainingRows": 265,
+      "testRows": 38
+    },
+    {
+      "season": "2023-24",
+      "chip": "Bench Boost",
+      "trainingSeasons": 7,
+      "trainingRows": 265,
+      "testRows": 38
+    },
+    {
+      "season": "2024-25",
+      "chip": "Triple Captain",
+      "trainingSeasons": 8,
+      "trainingRows": 303,
+      "testRows": 38
+    },
+    {
+      "season": "2024-25",
+      "chip": "Bench Boost",
+      "trainingSeasons": 8,
+      "trainingRows": 303,
+      "testRows": 38
+    },
+    {
+      "season": "2025-26",
+      "chip": "Triple Captain",
+      "trainingSeasons": 9,
+      "trainingRows": 341,
+      "testRows": 38
+    },
+    {
+      "season": "2025-26",
+      "chip": "Bench Boost",
+      "trainingSeasons": 9,
+      "trainingRows": 341,
+      "testRows": 38
+    }
+  ],
+  "historicalReservationCalibration": {
+    "Triple Captain": {
+      "q25": 8.593,
+      "q50": 9.337,
+      "q65": 9.807,
+      "q75": 10.143,
+      "q85": 10.575,
+      "q90": 10.902
+    },
+    "Bench Boost": {
+      "q25": 3.435,
+      "q50": 4.87,
+      "q65": 5.806,
+      "q75": 6.516,
+      "q85": 7.053,
+      "q90": 7.574
+    }
+  },
+  "noChipEvaluationAverage": 2174.9,
+  "oldAuditedPolicy": {
+    "evaluationAverageGain": 10.6,
+    "evaluationMinimumGain": 0.0,
+    "evaluationAveragePoints": 2185.5,
+    "seasonGain": [
+      3,
+      0,
+      13,
+      18,
+      15,
+      7,
+      29,
+      0
+    ],
+    "choices": [
+      [
+        {
+          "chip": "Triple Captain",
+          "gw": 32,
+          "gain": 3,
+          "signal": 20.676,
+          "threshold": 14.757,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [],
+      [
+        {
+          "chip": "Bench Boost",
+          "gw": 25,
+          "gain": 7,
+          "signal": 11.213,
+          "threshold": 10.992,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 26,
+          "gain": 6,
+          "signal": 15.024,
+          "threshold": 14.982,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [
+        {
+          "chip": "Bench Boost",
+          "gw": 26,
+          "gain": 14,
+          "signal": 12.899,
+          "threshold": 10.987,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 28,
+          "gain": 4,
+          "signal": 15.253,
+          "threshold": 14.957,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [
+        {
+          "chip": "Bench Boost",
+          "gw": 20,
+          "gain": 5,
+          "signal": 12.127,
+          "threshold": 10.999,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 23,
+          "gain": 10,
+          "signal": 16.308,
+          "threshold": 14.995,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [
+        {
+          "chip": "Triple Captain",
+          "gw": 25,
+          "gain": 5,
+          "signal": 15.113,
+          "threshold": 14.988,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 34,
+          "gain": 2,
+          "signal": 12.166,
+          "threshold": 10.575,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [
+        {
+          "chip": "Triple Captain",
+          "gw": 24,
+          "gain": 29,
+          "signal": 15.958,
+          "threshold": 14.993,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      []
+    ]
+  },
+  "selected": {
+    "quantile": 0.65,
+    "riskPenalty": 0.3,
+    "trainingStabilityGain": 12.25,
+    "evaluationAverageGain": 11.9,
+    "evaluationMinimumGain": 5.0,
+    "evaluationAveragePoints": 2186.8,
+    "seasons": [
+      {
+        "season": "2016/17",
+        "gain": 16.0,
+        "points": 1985,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 2,
+            "predictedValue": 11.569,
+            "reservationValue": 6.0,
+            "actualGain": 2.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 6,
+            "predictedValue": 9.075,
+            "reservationValue": 8.0,
+            "actualGain": 14.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2017/18",
+        "gain": 10.0,
+        "points": 2194,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 1,
+            "predictedValue": 7.468,
+            "reservationValue": 6.723,
+            "actualGain": -3.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 32,
+            "predictedValue": 5.255,
+            "reservationValue": 4.593,
+            "actualGain": 13.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2018/19",
+        "gain": 16.0,
+        "points": 2142,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 1,
+            "predictedValue": 9.208,
+            "reservationValue": 8.466,
+            "actualGain": 8.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 5,
+            "predictedValue": 6.101,
+            "reservationValue": 6.089,
+            "actualGain": 8.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2019/20",
+        "gain": 7.0,
+        "points": 2161,
+        "choices": [
+          {
+            "chip": "Bench Boost",
+            "gw": 1,
+            "predictedValue": 6.608,
+            "reservationValue": 6.212,
+            "actualGain": 3.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 7,
+            "predictedValue": 8.975,
+            "reservationValue": 8.865,
+            "actualGain": 4.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2020/21",
+        "gain": 5.0,
+        "points": 2224,
+        "choices": [
+          {
+            "chip": "Bench Boost",
+            "gw": 1,
+            "predictedValue": 7.269,
+            "reservationValue": 6.595,
+            "actualGain": 4.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 8,
+            "predictedValue": 9.093,
+            "reservationValue": 8.813,
+            "actualGain": 1.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2021/22",
+        "gain": 15.0,
+        "points": 2281,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 15,
+            "predictedValue": 9.129,
+            "reservationValue": 8.607,
+            "actualGain": 9.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 31,
+            "predictedValue": 5.121,
+            "reservationValue": 4.87,
+            "actualGain": 6.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2022/23",
+        "gain": 16.0,
+        "points": 2259,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 1,
+            "predictedValue": 10.394,
+            "reservationValue": 9.056,
+            "actualGain": 5.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 26,
+            "predictedValue": 4.919,
+            "reservationValue": 4.654,
+            "actualGain": 11.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2023/24",
+        "gain": 5.0,
+        "points": 2087,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 1,
+            "predictedValue": 10.051,
+            "reservationValue": 9.246,
+            "actualGain": 3.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 25,
+            "predictedValue": 4.56,
+            "reservationValue": 3.917,
+            "actualGain": 2.0,
+            "fixtureCount": 5,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2024/25",
+        "gain": 12.0,
+        "points": 2290,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 3,
+            "predictedValue": 9.597,
+            "reservationValue": 9.452,
+            "actualGain": 6.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 21,
+            "predictedValue": 3.96,
+            "reservationValue": 3.918,
+            "actualGain": 6.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          }
+        ]
+      },
+      {
+        "season": "2025/26",
+        "gain": 19.0,
+        "points": 2050,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 1,
+            "predictedValue": 9.704,
+            "reservationValue": 9.61,
+            "actualGain": 2.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 8,
+            "predictedValue": 5.313,
+            "reservationValue": 4.198,
+            "actualGain": 5.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 24,
+            "predictedValue": 9.259,
+            "reservationValue": 9.074,
+            "actualGain": 9.0,
+            "fixtureCount": 1,
+            "forcedByExpiry": false
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 28,
+            "predictedValue": 4.509,
+            "reservationValue": 3.927,
+            "actualGain": 3.0,
+            "fixtureCount": 4,
+            "forcedByExpiry": false
+          }
+        ]
+      }
+    ]
+  },
+  "pairedVsOld": [
+    {
+      "season": "2018/19",
+      "oldGain": 3.0,
+      "newGain": 16.0,
+      "delta": 13.0
+    },
+    {
+      "season": "2019/20",
+      "oldGain": 0.0,
+      "newGain": 7.0,
+      "delta": 7.0
+    },
+    {
+      "season": "2020/21",
+      "oldGain": 13.0,
+      "newGain": 5.0,
+      "delta": -8.0
+    },
+    {
+      "season": "2021/22",
+      "oldGain": 18.0,
+      "newGain": 15.0,
+      "delta": -3.0
+    },
+    {
+      "season": "2022/23",
+      "oldGain": 15.0,
+      "newGain": 16.0,
+      "delta": 1.0
+    },
+    {
+      "season": "2023/24",
+      "oldGain": 7.0,
+      "newGain": 5.0,
+      "delta": -2.0
+    },
+    {
+      "season": "2024/25",
+      "oldGain": 29.0,
+      "newGain": 12.0,
+      "delta": -17.0
+    },
+    {
+      "season": "2025/26",
+      "oldGain": 0.0,
+      "newGain": 19.0,
+      "delta": 19.0
+    }
+  ],
+  "diagnosticBounds": {
+    "warning": "Full-window predicted and hindsight assignments are noncausal and cannot be promoted.",
+    "predicted": [
+      {
+        "season": "2016/17",
+        "predictedObjective": 27.1,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 2,
+            "value": 13.02
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 13,
+            "value": 14.04
+          }
+        ]
+      },
+      {
+        "season": "2017/18",
+        "predictedObjective": 22.2,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 38,
+            "value": 10.47
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 37,
+            "value": 11.74
+          }
+        ]
+      },
+      {
+        "season": "2018/19",
+        "predictedObjective": 25.1,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 37,
+            "value": 12.15
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 32,
+            "value": 12.99
+          }
+        ]
+      },
+      {
+        "season": "2019/20",
+        "predictedObjective": 23.7,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 46,
+            "value": 11.36
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 24,
+            "value": 12.39
+          }
+        ]
+      },
+      {
+        "season": "2020/21",
+        "predictedObjective": 24.5,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 32,
+            "value": 11.39
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 25,
+            "value": 13.1
+          }
+        ]
+      },
+      {
+        "season": "2021/22",
+        "predictedObjective": 19.7,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 27,
+            "value": 11.81
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 37,
+            "value": 7.94
+          }
+        ]
+      },
+      {
+        "season": "2022/23",
+        "predictedObjective": 22.6,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 37,
+            "value": 13.67
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 34,
+            "value": 8.9
+          }
+        ]
+      },
+      {
+        "season": "2023/24",
+        "predictedObjective": 22.1,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 34,
+            "value": 13.57
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 37,
+            "value": 8.54
+          }
+        ]
+      },
+      {
+        "season": "2024/25",
+        "predictedObjective": 20.5,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 24,
+            "value": 13.01
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 30,
+            "value": 7.52
+          }
+        ]
+      },
+      {
+        "season": "2025/26",
+        "predictedObjective": 41.5,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 19,
+            "value": 12.09
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 18,
+            "value": 8.49
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 26,
+            "value": 12.76
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 38,
+            "value": 8.15
+          }
+        ]
+      }
+    ],
+    "oracle": [
+      {
+        "season": "2016/17",
+        "actualGain": 41.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 25,
+            "value": 15.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 8,
+            "value": 26.0
+          }
+        ]
+      },
+      {
+        "season": "2017/18",
+        "actualGain": 52.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 31,
+            "value": 29.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 14,
+            "value": 23.0
+          }
+        ]
+      },
+      {
+        "season": "2018/19",
+        "actualGain": 44.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 30,
+            "value": 21.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 36,
+            "value": 23.0
+          }
+        ]
+      },
+      {
+        "season": "2019/20",
+        "actualGain": 45.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 10,
+            "value": 20.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 29,
+            "value": 25.0
+          }
+        ]
+      },
+      {
+        "season": "2020/21",
+        "actualGain": 38.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 27,
+            "value": 19.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 12,
+            "value": 19.0
+          }
+        ]
+      },
+      {
+        "season": "2021/22",
+        "actualGain": 45.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 9,
+            "value": 24.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 11,
+            "value": 21.0
+          }
+        ]
+      },
+      {
+        "season": "2022/23",
+        "actualGain": 58.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 9,
+            "value": 23.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 27,
+            "value": 35.0
+          }
+        ]
+      },
+      {
+        "season": "2023/24",
+        "actualGain": 31.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 23,
+            "value": 18.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 19,
+            "value": 13.0
+          }
+        ]
+      },
+      {
+        "season": "2024/25",
+        "actualGain": 53.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 24,
+            "value": 29.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 7,
+            "value": 24.0
+          }
+        ]
+      },
+      {
+        "season": "2025/26",
+        "actualGain": 83.0,
+        "choices": [
+          {
+            "chip": "Triple Captain",
+            "gw": 7,
+            "value": 18.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 16,
+            "value": 27.0
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 26,
+            "value": 14.0
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 20,
+            "value": 24.0
+          }
+        ]
+      }
+    ],
+    "oracleEvaluationAverageGain": 49.6
+  },
+  "policies": [
+    {
+      "quantile": 0.5,
+      "riskPenalty": 0.0,
+      "trainingStabilityGain": 7.5,
+      "evaluationAverageGain": 12.1,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2187.0,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 6.0,
+          "points": 1975,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 11.164,
+              "reservationValue": 8.0,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 13.018,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 10.0,
+          "points": 2194,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 8.771,
+              "reservationValue": 7.746,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 32,
+              "predictedValue": 8.086,
+              "reservationValue": 6.593,
+              "actualGain": 13.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 16.0,
+          "points": 2142,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.567,
+              "reservationValue": 9.003,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 2,
+              "predictedValue": 8.85,
+              "reservationValue": 8.227,
+              "actualGain": 8.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 5.0,
+          "points": 2159,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 9.406,
+              "reservationValue": 8.817,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 6,
+              "predictedValue": 9.861,
+              "reservationValue": 9.813,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 6.0,
+          "points": 2225,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 10.0,
+              "reservationValue": 9.017,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 6,
+              "predictedValue": 9.853,
+              "reservationValue": 9.852,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 12.0,
+          "points": 2278,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 13,
+              "predictedValue": 9.853,
+              "reservationValue": 9.776,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 31,
+              "predictedValue": 7.907,
+              "reservationValue": 7.786,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 16.0,
+          "points": 2259,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 11.512,
+              "reservationValue": 9.981,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 26,
+              "predictedValue": 7.631,
+              "reservationValue": 7.046,
+              "actualGain": 11.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 11.201,
+              "reservationValue": 10.107,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 7.644,
+              "reservationValue": 6.554,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 12.0,
+          "points": 2290,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 3,
+              "predictedValue": 10.948,
+              "reservationValue": 10.157,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 21,
+              "predictedValue": 6.781,
+              "reservationValue": 6.481,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 25.0,
+          "points": 2056,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.828,
+              "reservationValue": 10.265,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 7.804,
+              "reservationValue": 6.562,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 23,
+              "predictedValue": 10.225,
+              "reservationValue": 10.057,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 6.814,
+              "reservationValue": 6.562,
+              "actualGain": 10.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.5,
+      "riskPenalty": 0.15,
+      "trainingStabilityGain": 10.875,
+      "evaluationAverageGain": 12.9,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2187.8,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 6.0,
+          "points": 1975,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 9.539,
+              "reservationValue": 8.0,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 12.294,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 19.0,
+          "points": 2203,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 8.119,
+              "reservationValue": 7.108,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 30,
+              "predictedValue": 6.443,
+              "reservationValue": 6.353,
+              "actualGain": 22.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 16.0,
+          "points": 2142,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.888,
+              "reservationValue": 8.374,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 2,
+              "predictedValue": 7.536,
+              "reservationValue": 6.865,
+              "actualGain": 8.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 19.0,
+          "points": 2173,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 8.007,
+              "reservationValue": 7.352,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 4,
+              "predictedValue": 9.246,
+              "reservationValue": 9.196,
+              "actualGain": 16.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 6.0,
+          "points": 2225,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 8.635,
+              "reservationValue": 7.605,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 7,
+              "predictedValue": 9.3,
+              "reservationValue": 9.2,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 12.0,
+          "points": 2278,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 13,
+              "predictedValue": 9.256,
+              "reservationValue": 9.128,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 31,
+              "predictedValue": 6.514,
+              "reservationValue": 6.189,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 14.0,
+          "points": 2257,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.953,
+              "reservationValue": 9.323,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 5.753,
+              "reservationValue": 5.63,
+              "actualGain": 9.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.626,
+              "reservationValue": 9.501,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 6.102,
+              "reservationValue": 4.963,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 12.0,
+          "points": 2290,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 3,
+              "predictedValue": 10.273,
+              "reservationValue": 9.569,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 21,
+              "predictedValue": 5.371,
+              "reservationValue": 4.913,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 19.0,
+          "points": 2050,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.266,
+              "reservationValue": 9.663,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 6.559,
+              "reservationValue": 5.078,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 22,
+              "predictedValue": 9.568,
+              "reservationValue": 9.543,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 5.338,
+              "reservationValue": 5.078,
+              "actualGain": 10.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.5,
+      "riskPenalty": 0.3,
+      "trainingStabilityGain": 10.375,
+      "evaluationAverageGain": 12.1,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2187.0,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 16.0,
+          "points": 1985,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 11.569,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 9.075,
+              "reservationValue": 8.0,
+              "actualGain": 14.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 7.0,
+          "points": 2191,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 7.468,
+              "reservationValue": 6.483,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 29,
+              "predictedValue": 5.316,
+              "reservationValue": 5.192,
+              "actualGain": 10.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 16.0,
+          "points": 2142,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.208,
+              "reservationValue": 7.769,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 2,
+              "predictedValue": 6.222,
+              "reservationValue": 5.474,
+              "actualGain": 8.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 19.0,
+          "points": 2173,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 6.608,
+              "reservationValue": 5.906,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 4,
+              "predictedValue": 8.697,
+              "reservationValue": 8.606,
+              "actualGain": 16.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 6.0,
+          "points": 2225,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 7.269,
+              "reservationValue": 6.193,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 7,
+              "predictedValue": 8.717,
+              "reservationValue": 8.587,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 14.0,
+          "points": 2280,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 12,
+              "predictedValue": 8.534,
+              "reservationValue": 8.48,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 31,
+              "predictedValue": 5.121,
+              "reservationValue": 4.377,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 8.0,
+          "points": 2251,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.394,
+              "reservationValue": 8.685,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 22,
+              "predictedValue": 4.726,
+              "reservationValue": 4.701,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.051,
+              "reservationValue": 8.891,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 4.56,
+              "reservationValue": 3.33,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 10.0,
+          "points": 2288,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 3,
+              "predictedValue": 9.597,
+              "reservationValue": 8.973,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 20,
+              "predictedValue": 3.421,
+              "reservationValue": 3.399,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 19.0,
+          "points": 2050,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.704,
+              "reservationValue": 9.079,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 5.313,
+              "reservationValue": 3.613,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 22,
+              "predictedValue": 9.015,
+              "reservationValue": 8.954,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 3.862,
+              "reservationValue": 3.613,
+              "actualGain": 10.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.65,
+      "riskPenalty": 0.0,
+      "trainingStabilityGain": 7.5,
+      "evaluationAverageGain": 16.1,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2191.0,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 6.0,
+          "points": 1975,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 11.164,
+              "reservationValue": 8.0,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 13.018,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 10.0,
+          "points": 2194,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 8.771,
+              "reservationValue": 8.0,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 32,
+              "predictedValue": 8.086,
+              "reservationValue": 7.82,
+              "actualGain": 13.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 12.0,
+          "points": 2138,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.567,
+              "reservationValue": 9.801,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 7,
+              "predictedValue": 8.825,
+              "reservationValue": 8.382,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 5.0,
+          "points": 2159,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 9.406,
+              "reservationValue": 9.027,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 14,
+              "predictedValue": 9.853,
+              "reservationValue": 9.802,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 5.0,
+          "points": 2224,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 10.0,
+              "reservationValue": 9.513,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 8,
+              "predictedValue": 10.233,
+              "reservationValue": 10.057,
+              "actualGain": 1.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 18.0,
+          "points": 2284,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 10.653,
+              "reservationValue": 9.853,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 34,
+              "predictedValue": 7.627,
+              "reservationValue": 7.061,
+              "actualGain": 9.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 40.0,
+          "points": 2283,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 11.512,
+              "reservationValue": 10.26,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 8.164,
+              "reservationValue": 7.417,
+              "actualGain": 35.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 11.201,
+              "reservationValue": 10.563,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 7.644,
+              "reservationValue": 7.028,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 22.0,
+          "points": 2300,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 3,
+              "predictedValue": 10.948,
+              "reservationValue": 10.725,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 7.446,
+              "reservationValue": 6.559,
+              "actualGain": 16.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 22.0,
+          "points": 2053,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 5,
+              "predictedValue": 10.857,
+              "reservationValue": 10.26,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 7.804,
+              "reservationValue": 7.157,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 24,
+              "predictedValue": 10.372,
+              "reservationValue": 10.26,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 28,
+              "predictedValue": 7.243,
+              "reservationValue": 6.912,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.65,
+      "riskPenalty": 0.15,
+      "trainingStabilityGain": 7.5,
+      "evaluationAverageGain": 12.9,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2187.8,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 6.0,
+          "points": 1975,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 9.539,
+              "reservationValue": 8.0,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 12.294,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 10.0,
+          "points": 2194,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 8.119,
+              "reservationValue": 7.334,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 32,
+              "predictedValue": 6.671,
+              "reservationValue": 6.206,
+              "actualGain": 13.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 14.0,
+          "points": 2140,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.888,
+              "reservationValue": 9.134,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 7.438,
+              "reservationValue": 7.281,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 7.0,
+          "points": 2161,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 8.007,
+              "reservationValue": 7.625,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 7,
+              "predictedValue": 9.559,
+              "reservationValue": 9.535,
+              "actualGain": 4.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 5.0,
+          "points": 2224,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 8.635,
+              "reservationValue": 8.024,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 8,
+              "predictedValue": 9.663,
+              "reservationValue": 9.397,
+              "actualGain": 1.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 15.0,
+          "points": 2281,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 9.891,
+              "reservationValue": 9.234,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 31,
+              "predictedValue": 6.514,
+              "reservationValue": 6.409,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 16.0,
+          "points": 2259,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.953,
+              "reservationValue": 9.646,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 26,
+              "predictedValue": 6.275,
+              "reservationValue": 6.2,
+              "actualGain": 11.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.626,
+              "reservationValue": 9.902,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 6.102,
+              "reservationValue": 5.424,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 22.0,
+          "points": 2300,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 3,
+              "predictedValue": 10.273,
+              "reservationValue": 10.094,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 6.152,
+              "reservationValue": 4.978,
+              "actualGain": 16.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 19.0,
+          "points": 2050,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.266,
+              "reservationValue": 10.218,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 6.559,
+              "reservationValue": 5.676,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 24,
+              "predictedValue": 9.815,
+              "reservationValue": 9.662,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 28,
+              "predictedValue": 5.876,
+              "reservationValue": 5.421,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.65,
+      "riskPenalty": 0.3,
+      "trainingStabilityGain": 12.25,
+      "evaluationAverageGain": 11.9,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2186.8,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 16.0,
+          "points": 1985,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 11.569,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 9.075,
+              "reservationValue": 8.0,
+              "actualGain": 14.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 10.0,
+          "points": 2194,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 7.468,
+              "reservationValue": 6.723,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 32,
+              "predictedValue": 5.255,
+              "reservationValue": 4.593,
+              "actualGain": 13.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 16.0,
+          "points": 2142,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.208,
+              "reservationValue": 8.466,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 5,
+              "predictedValue": 6.101,
+              "reservationValue": 6.089,
+              "actualGain": 8.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 7.0,
+          "points": 2161,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 6.608,
+              "reservationValue": 6.212,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 7,
+              "predictedValue": 8.975,
+              "reservationValue": 8.865,
+              "actualGain": 4.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 5.0,
+          "points": 2224,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 7.269,
+              "reservationValue": 6.595,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 8,
+              "predictedValue": 9.093,
+              "reservationValue": 8.813,
+              "actualGain": 1.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 15.0,
+          "points": 2281,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 9.129,
+              "reservationValue": 8.607,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 31,
+              "predictedValue": 5.121,
+              "reservationValue": 4.87,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 16.0,
+          "points": 2259,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.394,
+              "reservationValue": 9.056,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 26,
+              "predictedValue": 4.919,
+              "reservationValue": 4.654,
+              "actualGain": 11.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.051,
+              "reservationValue": 9.246,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 4.56,
+              "reservationValue": 3.917,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 12.0,
+          "points": 2290,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 3,
+              "predictedValue": 9.597,
+              "reservationValue": 9.452,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 21,
+              "predictedValue": 3.96,
+              "reservationValue": 3.918,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 19.0,
+          "points": 2050,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.704,
+              "reservationValue": 9.61,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 5.313,
+              "reservationValue": 4.198,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 24,
+              "predictedValue": 9.259,
+              "reservationValue": 9.074,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 28,
+              "predictedValue": 4.509,
+              "reservationValue": 3.927,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.75,
+      "riskPenalty": 0.0,
+      "trainingStabilityGain": 6.375,
+      "evaluationAverageGain": 19.6,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2194.5,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 6.0,
+          "points": 1975,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 11.164,
+              "reservationValue": 8.0,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 13.018,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 7.0,
+          "points": 2191,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 8.771,
+              "reservationValue": 8.082,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 33,
+              "predictedValue": 7.975,
+              "reservationValue": 7.598,
+              "actualGain": 10.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 19.0,
+          "points": 2145,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.567,
+              "reservationValue": 10.003,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 11,
+              "predictedValue": 8.986,
+              "reservationValue": 8.395,
+              "actualGain": 11.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 16.0,
+          "points": 2170,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 9.406,
+              "reservationValue": 9.379,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 16,
+              "predictedValue": 10.176,
+              "reservationValue": 9.834,
+              "actualGain": 13.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 7.0,
+          "points": 2226,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 5,
+              "predictedValue": 9.82,
+              "reservationValue": 9.616,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 8,
+              "predictedValue": 10.233,
+              "reservationValue": 10.176,
+              "actualGain": 1.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 18.0,
+          "points": 2284,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 10.653,
+              "reservationValue": 9.995,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 34,
+              "predictedValue": 7.627,
+              "reservationValue": 7.3,
+              "actualGain": 9.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 40.0,
+          "points": 2283,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 11.512,
+              "reservationValue": 10.638,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 8.164,
+              "reservationValue": 7.781,
+              "actualGain": 35.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 11.201,
+              "reservationValue": 10.858,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 7.644,
+              "reservationValue": 7.335,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 22.0,
+          "points": 2300,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 3,
+              "predictedValue": 10.948,
+              "reservationValue": 10.944,
+              "actualGain": 6.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 7.446,
+              "reservationValue": 6.807,
+              "actualGain": 16.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 30.0,
+          "points": 2061,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 5,
+              "predictedValue": 10.857,
+              "reservationValue": 10.619,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 7.804,
+              "reservationValue": 7.62,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 26,
+              "predictedValue": 12.756,
+              "reservationValue": 10.244,
+              "actualGain": 14.0,
+              "fixtureCount": 2,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 30,
+              "predictedValue": 7.299,
+              "reservationValue": 6.731,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.75,
+      "riskPenalty": 0.15,
+      "trainingStabilityGain": 6.375,
+      "evaluationAverageGain": 18.9,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2193.8,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 6.0,
+          "points": 1975,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 9.539,
+              "reservationValue": 8.0,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 12.294,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 7.0,
+          "points": 2191,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 8.119,
+              "reservationValue": 7.507,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 33,
+              "predictedValue": 6.437,
+              "reservationValue": 5.985,
+              "actualGain": 10.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 12.0,
+          "points": 2138,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.888,
+              "reservationValue": 9.332,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 10,
+              "predictedValue": 7.434,
+              "reservationValue": 7.354,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 16.0,
+          "points": 2170,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 8.007,
+              "reservationValue": 7.953,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 16,
+              "predictedValue": 9.564,
+              "reservationValue": 9.162,
+              "actualGain": 13.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 5.0,
+          "points": 2224,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 8.635,
+              "reservationValue": 8.548,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 8,
+              "predictedValue": 9.663,
+              "reservationValue": 9.583,
+              "actualGain": 1.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 15.0,
+          "points": 2281,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 9.891,
+              "reservationValue": 9.376,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 31,
+              "predictedValue": 6.514,
+              "reservationValue": 6.446,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 40.0,
+          "points": 2283,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.953,
+              "reservationValue": 9.962,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 6.898,
+              "reservationValue": 6.238,
+              "actualGain": 35.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.626,
+              "reservationValue": 10.224,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 6.102,
+              "reservationValue": 5.822,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 31.0,
+          "points": 2309,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 9,
+              "predictedValue": 9.947,
+              "reservationValue": 9.939,
+              "actualGain": 15.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 6.152,
+              "reservationValue": 5.252,
+              "actualGain": 16.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 27.0,
+          "points": 2058,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 5,
+              "predictedValue": 10.238,
+              "reservationValue": 9.944,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 6.559,
+              "reservationValue": 6.166,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 26,
+              "predictedValue": 12.078,
+              "reservationValue": 9.635,
+              "actualGain": 14.0,
+              "fixtureCount": 2,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 28,
+              "predictedValue": 5.876,
+              "reservationValue": 5.807,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.75,
+      "riskPenalty": 0.3,
+      "trainingStabilityGain": 12.25,
+      "evaluationAverageGain": 14.6,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2189.5,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 16.0,
+          "points": 1985,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 11.569,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 9.075,
+              "reservationValue": 8.0,
+              "actualGain": 14.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 10.0,
+          "points": 2194,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 7.468,
+              "reservationValue": 6.935,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 32,
+              "predictedValue": 5.255,
+              "reservationValue": 5.192,
+              "actualGain": 13.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 12.0,
+          "points": 2138,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.208,
+              "reservationValue": 8.65,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 10,
+              "predictedValue": 6.056,
+              "reservationValue": 5.862,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 6.0,
+          "points": 2160,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 6.608,
+              "reservationValue": 6.513,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 8.61,
+              "reservationValue": 8.609,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 5.0,
+          "points": 2224,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 7.269,
+              "reservationValue": 7.022,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 8,
+              "predictedValue": 9.093,
+              "reservationValue": 8.968,
+              "actualGain": 1.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 15.0,
+          "points": 2281,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 9.129,
+              "reservationValue": 8.724,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 31,
+              "predictedValue": 5.121,
+              "reservationValue": 4.906,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 16.0,
+          "points": 2259,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.394,
+              "reservationValue": 9.298,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 26,
+              "predictedValue": 4.919,
+              "reservationValue": 4.871,
+              "actualGain": 11.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.051,
+              "reservationValue": 9.605,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 4.56,
+              "reservationValue": 4.282,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 31.0,
+          "points": 2309,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 9,
+              "predictedValue": 9.388,
+              "reservationValue": 9.295,
+              "actualGain": 15.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 4.857,
+              "reservationValue": 3.713,
+              "actualGain": 16.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 27.0,
+          "points": 2058,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 5,
+              "predictedValue": 9.619,
+              "reservationValue": 9.308,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 5.313,
+              "reservationValue": 4.759,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 26,
+              "predictedValue": 11.4,
+              "reservationValue": 9.043,
+              "actualGain": 14.0,
+              "fixtureCount": 2,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 28,
+              "predictedValue": 4.509,
+              "reservationValue": 4.37,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.85,
+      "riskPenalty": 0.0,
+      "trainingStabilityGain": 7.5,
+      "evaluationAverageGain": 22.4,
+      "evaluationMinimumGain": 5.0,
+      "evaluationAveragePoints": 2197.2,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 6.0,
+          "points": 1975,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 11.164,
+              "reservationValue": 8.0,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 13.018,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 10.0,
+          "points": 2194,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 8.771,
+              "reservationValue": 8.392,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 34,
+              "predictedValue": 11.628,
+              "reservationValue": 7.082,
+              "actualGain": 13.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 14.0,
+          "points": 2140,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.567,
+              "reservationValue": 10.158,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 13,
+              "predictedValue": 9.03,
+              "reservationValue": 8.999,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 24.0,
+          "points": 2178,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 9.368,
+              "reservationValue": 9.272,
+              "actualGain": 11.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 16,
+              "predictedValue": 10.176,
+              "reservationValue": 10.047,
+              "actualGain": 13.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 16.0,
+          "points": 2235,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 7,
+              "predictedValue": 9.883,
+              "reservationValue": 9.79,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 9,
+              "predictedValue": 10.365,
+              "reservationValue": 10.298,
+              "actualGain": 11.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 23.0,
+          "points": 2289,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 10.653,
+              "reservationValue": 10.121,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 35,
+              "predictedValue": 7.813,
+              "reservationValue": 7.004,
+              "actualGain": 14.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 40.0,
+          "points": 2283,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 11.512,
+              "reservationValue": 10.907,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 8.164,
+              "reservationValue": 7.906,
+              "actualGain": 35.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 5.0,
+          "points": 2087,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 11.201,
+              "reservationValue": 11.052,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "predictedValue": 7.644,
+              "reservationValue": 7.637,
+              "actualGain": 2.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 19.0,
+          "points": 2297,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 10,
+              "predictedValue": 11.084,
+              "reservationValue": 10.788,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 7.446,
+              "reservationValue": 7.137,
+              "actualGain": 16.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 38.0,
+          "points": 2069,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 5,
+              "predictedValue": 10.857,
+              "reservationValue": 10.846,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 12,
+              "predictedValue": 6.913,
+              "reservationValue": 6.704,
+              "actualGain": 13.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 26,
+              "predictedValue": 12.756,
+              "reservationValue": 10.485,
+              "actualGain": 14.0,
+              "fixtureCount": 2,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 30,
+              "predictedValue": 7.299,
+              "reservationValue": 7.089,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.85,
+      "riskPenalty": 0.15,
+      "trainingStabilityGain": 7.5,
+      "evaluationAverageGain": 20.9,
+      "evaluationMinimumGain": 6.0,
+      "evaluationAveragePoints": 2195.8,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 6.0,
+          "points": 1975,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 1,
+              "predictedValue": 9.539,
+              "reservationValue": 8.0,
+              "actualGain": 4.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 12.294,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 10.0,
+          "points": 2194,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 8.119,
+              "reservationValue": 7.794,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 34,
+              "predictedValue": 10.114,
+              "reservationValue": 5.47,
+              "actualGain": 13.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 14.0,
+          "points": 2140,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.888,
+              "reservationValue": 9.545,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 13,
+              "predictedValue": 7.73,
+              "reservationValue": 7.445,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 24.0,
+          "points": 2178,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 7.953,
+              "reservationValue": 7.792,
+              "actualGain": 11.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 16,
+              "predictedValue": 9.564,
+              "reservationValue": 9.399,
+              "actualGain": 13.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 16.0,
+          "points": 2235,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 7,
+              "predictedValue": 8.491,
+              "reservationValue": 8.272,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 9,
+              "predictedValue": 9.801,
+              "reservationValue": 9.666,
+              "actualGain": 11.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 18.0,
+          "points": 2284,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 9.891,
+              "reservationValue": 9.529,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 34,
+              "predictedValue": 6.152,
+              "reservationValue": 6.094,
+              "actualGain": 9.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 40.0,
+          "points": 2283,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.953,
+              "reservationValue": 10.287,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 6.898,
+              "reservationValue": 6.409,
+              "actualGain": 35.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 6.0,
+          "points": 2088,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.626,
+              "reservationValue": 10.433,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 30,
+              "predictedValue": 5.679,
+              "reservationValue": 5.043,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 19.0,
+          "points": 2297,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 10,
+              "predictedValue": 10.542,
+              "reservationValue": 10.18,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 6.152,
+              "reservationValue": 5.601,
+              "actualGain": 16.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 30.0,
+          "points": 2061,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 5,
+              "predictedValue": 10.238,
+              "reservationValue": 10.218,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 6.559,
+              "reservationValue": 6.448,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 26,
+              "predictedValue": 12.078,
+              "reservationValue": 9.889,
+              "actualGain": 14.0,
+              "fixtureCount": 2,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 30,
+              "predictedValue": 5.86,
+              "reservationValue": 5.493,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "quantile": 0.85,
+      "riskPenalty": 0.3,
+      "trainingStabilityGain": 12.25,
+      "evaluationAverageGain": 21.0,
+      "evaluationMinimumGain": 6.0,
+      "evaluationAveragePoints": 2195.9,
+      "seasons": [
+        {
+          "season": "2016/17",
+          "gain": 16.0,
+          "points": 1985,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 2,
+              "predictedValue": 11.569,
+              "reservationValue": 6.0,
+              "actualGain": 2.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 9.075,
+              "reservationValue": 8.0,
+              "actualGain": 14.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2017/18",
+          "gain": 10.0,
+          "points": 2194,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 7.468,
+              "reservationValue": 7.211,
+              "actualGain": -3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 34,
+              "predictedValue": 8.599,
+              "reservationValue": 3.857,
+              "actualGain": 13.0,
+              "fixtureCount": 5,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2018/19",
+          "gain": 14.0,
+          "points": 2140,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 9.208,
+              "reservationValue": 8.875,
+              "actualGain": 8.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 13,
+              "predictedValue": 6.431,
+              "reservationValue": 5.9,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 24.0,
+          "points": 2178,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 6.539,
+              "reservationValue": 6.439,
+              "actualGain": 11.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 16,
+              "predictedValue": 8.951,
+              "reservationValue": 8.754,
+              "actualGain": 13.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2020/21",
+          "gain": 20.0,
+          "points": 2239,
+          "choices": [
+            {
+              "chip": "Bench Boost",
+              "gw": 6,
+              "predictedValue": 7.013,
+              "reservationValue": 6.949,
+              "actualGain": 9.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 9,
+              "predictedValue": 9.238,
+              "reservationValue": 9.072,
+              "actualGain": 11.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 15.0,
+          "points": 2281,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 15,
+              "predictedValue": 9.129,
+              "reservationValue": 8.9,
+              "actualGain": 9.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 31,
+              "predictedValue": 5.121,
+              "reservationValue": 5.042,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 40.0,
+          "points": 2283,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.394,
+              "reservationValue": 9.631,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 27,
+              "predictedValue": 5.631,
+              "reservationValue": 4.897,
+              "actualGain": 35.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 6.0,
+          "points": 2088,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 1,
+              "predictedValue": 10.051,
+              "reservationValue": 9.84,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 30,
+              "predictedValue": 4.223,
+              "reservationValue": 3.52,
+              "actualGain": 3.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 19.0,
+          "points": 2297,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 10,
+              "predictedValue": 10.0,
+              "reservationValue": 9.524,
+              "actualGain": 3.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 24,
+              "predictedValue": 4.857,
+              "reservationValue": 4.1,
+              "actualGain": 16.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 30.0,
+          "points": 2061,
+          "choices": [
+            {
+              "chip": "Triple Captain",
+              "gw": 5,
+              "predictedValue": 9.619,
+              "reservationValue": 9.61,
+              "actualGain": 5.0,
+              "fixtureCount": 1,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 8,
+              "predictedValue": 5.313,
+              "reservationValue": 4.982,
+              "actualGain": 5.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 26,
+              "predictedValue": 11.4,
+              "reservationValue": 9.246,
+              "actualGain": 14.0,
+              "fixtureCount": 2,
+              "forcedByExpiry": false
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 30,
+              "predictedValue": 4.421,
+              "reservationValue": 4.048,
+              "actualGain": 6.0,
+              "fixtureCount": 4,
+              "forcedByExpiry": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

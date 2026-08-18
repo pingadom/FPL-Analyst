@@ -1,0 +1,154 @@
+{
+  "status": "causal stack-selection audit",
+  "variants": [
+    {
+      "name": "structural",
+      "trainingStability": 1831.0,
+      "evaluationAverage": 2106.5,
+      "evaluationMinimum": 1897,
+      "seasonTotals": [
+        1841,
+        1825,
+        2118,
+        2157,
+        2147,
+        2194,
+        2088,
+        2122,
+        2129,
+        1897
+      ]
+    },
+    {
+      "name": "frontier25",
+      "trainingStability": 1822.75,
+      "evaluationAverage": 2124.5,
+      "evaluationMinimum": 1902,
+      "seasonTotals": [
+        1839,
+        1813,
+        2154,
+        2170,
+        2174,
+        2211,
+        2094,
+        2132,
+        2159,
+        1902
+      ]
+    },
+    {
+      "name": "listPlan25",
+      "trainingStability": 2061.375,
+      "evaluationAverage": 2141.6,
+      "evaluationMinimum": 1970,
+      "seasonTotals": [
+        2043,
+        2092,
+        2075,
+        2107,
+        2247,
+        2179,
+        2251,
+        2001,
+        2303,
+        1970
+      ]
+    },
+    {
+      "name": "frontier25-listPlan25",
+      "trainingStability": 2059.75,
+      "evaluationAverage": 2147.6,
+      "evaluationMinimum": 1980,
+      "seasonTotals": [
+        2041,
+        2091,
+        2083,
+        2127,
+        2244,
+        2188,
+        2260,
+        1999,
+        2300,
+        1980
+      ]
+    },
+    {
+      "name": "fullStack-captain50",
+      "trainingStability": 2064.25,
+      "evaluationAverage": 2149.5,
+      "evaluationMinimum": 1999,
+      "seasonTotals": [
+        2041,
+        2103,
+        2085,
+        2112,
+        2196,
+        2198,
+        2261,
+        2055,
+        2290,
+        1999
+      ]
+    }
+  ],
+  "staticTrainingOnly": {
+    "selected": "fullStack-captain50",
+    "average": 2149.5,
+    "minimum": 1999
+  },
+  "rollingPriorSeasonsOnly": {
+    "average": 2141.1,
+    "minimum": 1999,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "selected": "fullStack-captain50",
+        "points": 2085
+      },
+      {
+        "season": "2019/20",
+        "selected": "fullStack-captain50",
+        "points": 2112
+      },
+      {
+        "season": "2020/21",
+        "selected": "fullStack-captain50",
+        "points": 2196
+      },
+      {
+        "season": "2021/22",
+        "selected": "frontier25-listPlan25",
+        "points": 2188
+      },
+      {
+        "season": "2022/23",
+        "selected": "frontier25-listPlan25",
+        "points": 2260
+      },
+      {
+        "season": "2023/24",
+        "selected": "frontier25-listPlan25",
+        "points": 1999
+      },
+      {
+        "season": "2024/25",
+        "selected": "fullStack-captain50",
+        "points": 2290
+      },
+      {
+        "season": "2025/26",
+        "selected": "fullStack-captain50",
+        "points": 1999
+      }
+    ]
+  },
+  "postExposureFullStack": {
+    "average": 2149.5,
+    "minimum": 1999
+  },
+  "variantOracleDiagnostic": {
+    "average": 2184.6,
+    "minimum": 1999
+  }
+}

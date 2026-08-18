@@ -1,0 +1,409 @@
+{
+  "status": "prospective shadow chip challenger",
+  "method": "Free Hit uses prior-season-only learned one-week value, is decided before permanent transfers, and competes with TC/BB under the one-chip-per-Gameweek constraint in a complete recursive rerun.",
+  "fitAudit": [
+    {
+      "season": "2017-18",
+      "trainingSeasons": 1,
+      "trainingRows": 38,
+      "testRows": 38,
+      "priorResidualScale": 4.0
+    },
+    {
+      "season": "2018-19",
+      "trainingSeasons": 2,
+      "trainingRows": 76,
+      "testRows": 38,
+      "priorResidualScale": 4.0
+    },
+    {
+      "season": "2019-20",
+      "trainingSeasons": 3,
+      "trainingRows": 114,
+      "testRows": 38,
+      "priorResidualScale": 8.093
+    },
+    {
+      "season": "2020-21",
+      "trainingSeasons": 4,
+      "trainingRows": 152,
+      "testRows": 38,
+      "priorResidualScale": 10.031
+    },
+    {
+      "season": "2021-22",
+      "trainingSeasons": 5,
+      "trainingRows": 190,
+      "testRows": 38,
+      "priorResidualScale": 12.53
+    },
+    {
+      "season": "2022-23",
+      "trainingSeasons": 6,
+      "trainingRows": 228,
+      "testRows": 37,
+      "priorResidualScale": 12.535
+    },
+    {
+      "season": "2023-24",
+      "trainingSeasons": 7,
+      "trainingRows": 265,
+      "testRows": 38,
+      "priorResidualScale": 12.716
+    },
+    {
+      "season": "2024-25",
+      "trainingSeasons": 8,
+      "trainingRows": 303,
+      "testRows": 38,
+      "priorResidualScale": 12.831
+    },
+    {
+      "season": "2025-26",
+      "trainingSeasons": 9,
+      "trainingRows": 341,
+      "testRows": 38,
+      "priorResidualScale": 13.258
+    }
+  ],
+  "controls": {
+    "noChipEvaluationAverage": 2174.9,
+    "tcBb": {
+      "name": "audited-tc-bb",
+      "evaluationAveragePoints": 2185.5,
+      "evaluationAverageGain": 10.6,
+      "development2018to2021AverageGain": 8.5,
+      "holdout2022to2025AverageGain": 12.8,
+      "holdoutMinimumGain": 0.0,
+      "seasonGain": [
+        {
+          "season": "2018/19",
+          "gain": 3.0,
+          "chips": [
+            {
+              "chip": "Triple Captain",
+              "gw": 32,
+              "gain": 3,
+              "signal": 20.676,
+              "threshold": 14.757,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2019/20",
+          "gain": 0.0,
+          "chips": []
+        },
+        {
+          "season": "2020/21",
+          "gain": 13.0,
+          "chips": [
+            {
+              "chip": "Bench Boost",
+              "gw": 25,
+              "gain": 7,
+              "signal": 11.213,
+              "threshold": 10.992,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 26,
+              "gain": 6,
+              "signal": 15.024,
+              "threshold": 14.982,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2021/22",
+          "gain": 18.0,
+          "chips": [
+            {
+              "chip": "Bench Boost",
+              "gw": 26,
+              "gain": 14,
+              "signal": 12.899,
+              "threshold": 10.987,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 28,
+              "gain": 4,
+              "signal": 15.253,
+              "threshold": 14.957,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2022/23",
+          "gain": 15.0,
+          "chips": [
+            {
+              "chip": "Bench Boost",
+              "gw": 20,
+              "gain": 5,
+              "signal": 12.127,
+              "threshold": 10.999,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Triple Captain",
+              "gw": 23,
+              "gain": 10,
+              "signal": 16.308,
+              "threshold": 14.995,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2023/24",
+          "gain": 7.0,
+          "chips": [
+            {
+              "chip": "Triple Captain",
+              "gw": 25,
+              "gain": 5,
+              "signal": 15.113,
+              "threshold": 14.988,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            },
+            {
+              "chip": "Bench Boost",
+              "gw": 34,
+              "gain": 2,
+              "signal": 12.166,
+              "threshold": 10.575,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2024/25",
+          "gain": 29.0,
+          "chips": [
+            {
+              "chip": "Triple Captain",
+              "gw": 24,
+              "gain": 29,
+              "signal": 15.958,
+              "threshold": 14.993,
+              "continuationValue": 0.0,
+              "reason": "signal beat option-value adjusted threshold"
+            }
+          ]
+        },
+        {
+          "season": "2025/26",
+          "gain": 0.0,
+          "chips": []
+        }
+      ]
+    }
+  },
+  "challenger": {
+    "name": "audited-tc-bb-plus-corrected-fh",
+    "evaluationAveragePoints": 2192.4,
+    "evaluationAverageGain": 17.5,
+    "development2018to2021AverageGain": 15.8,
+    "holdout2022to2025AverageGain": 19.2,
+    "holdoutMinimumGain": 0.0,
+    "seasonGain": [
+      {
+        "season": "2018/19",
+        "gain": 3.0,
+        "chips": [
+          {
+            "chip": "Triple Captain",
+            "gw": 32,
+            "gain": 3,
+            "signal": 20.676,
+            "threshold": 14.757,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ]
+      },
+      {
+        "season": "2019/20",
+        "gain": 0.0,
+        "chips": []
+      },
+      {
+        "season": "2020/21",
+        "gain": 42.0,
+        "chips": [
+          {
+            "chip": "Bench Boost",
+            "gw": 25,
+            "gain": 7,
+            "signal": 11.213,
+            "threshold": 10.992,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 26,
+            "gain": 6,
+            "signal": 15.024,
+            "threshold": 14.982,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Free Hit",
+            "gw": 34,
+            "gain": 19,
+            "signal": 3.492,
+            "threshold": 2.884,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ]
+      },
+      {
+        "season": "2021/22",
+        "gain": 18.0,
+        "chips": [
+          {
+            "chip": "Bench Boost",
+            "gw": 26,
+            "gain": 14,
+            "signal": 12.899,
+            "threshold": 10.987,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 28,
+            "gain": 4,
+            "signal": 15.253,
+            "threshold": 14.957,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ]
+      },
+      {
+        "season": "2022/23",
+        "gain": 0.0,
+        "chips": [
+          {
+            "chip": "Bench Boost",
+            "gw": 20,
+            "gain": 5,
+            "signal": 12.127,
+            "threshold": 10.999,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 23,
+            "gain": 10,
+            "signal": 16.308,
+            "threshold": 14.995,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Free Hit",
+            "gw": 29,
+            "gain": 5,
+            "signal": 3.793,
+            "threshold": 2.987,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ]
+      },
+      {
+        "season": "2023/24",
+        "gain": 7.0,
+        "chips": [
+          {
+            "chip": "Triple Captain",
+            "gw": 25,
+            "gain": 5,
+            "signal": 15.113,
+            "threshold": 14.988,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 34,
+            "gain": 2,
+            "signal": 12.166,
+            "threshold": 10.575,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ]
+      },
+      {
+        "season": "2024/25",
+        "gain": 70.0,
+        "chips": [
+          {
+            "chip": "Triple Captain",
+            "gw": 24,
+            "gain": 29,
+            "signal": 15.958,
+            "threshold": 14.993,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Free Hit",
+            "gw": 25,
+            "gain": 32,
+            "signal": 3.714,
+            "threshold": 2.998,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ]
+      },
+      {
+        "season": "2025/26",
+        "gain": 0.0,
+        "chips": []
+      }
+    ]
+  },
+  "pairedVsTcBb": {
+    "evaluationAverage": 6.9,
+    "development2018to2021Average": 7.2,
+    "holdout2022to2025Average": 6.5,
+    "holdoutMinimum": -15.0,
+    "seasonDelta": [
+      0,
+      0,
+      29,
+      0,
+      -15,
+      0,
+      41,
+      0
+    ]
+  },
+  "promotedToProspectiveShadow": true,
+  "governance": "Shadow promotion does not change the historical champion or the public site. Live activation still requires the Monte Carlo downside gate and announced blank/double structure."
+}

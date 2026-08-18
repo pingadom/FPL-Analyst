@@ -1,0 +1,162 @@
+{
+  "production": {
+    "score": 52.97343924917219,
+    "spend": 100,
+    "benchSpend": 19,
+    "benchPremium": 1.5,
+    "optimizerCaptain": "Haaland",
+    "displayedCaptain": "Gabriel",
+    "captainMatches": false,
+    "xi": [
+      "Raya",
+      "Gabriel",
+      "Guéhi",
+      "Virgil",
+      "Truffert",
+      "F.Kadıoğlu",
+      "Doku",
+      "Groß",
+      "Haaland",
+      "Watkins",
+      "Thiago"
+    ],
+    "bench": [
+      {
+        "name": "Verbruggen",
+        "price": 4.5
+      },
+      {
+        "name": "Damsgaard",
+        "price": 5.5
+      },
+      {
+        "name": "McAteer",
+        "price": 4.5
+      },
+      {
+        "name": "Crooks",
+        "price": 4.5
+      }
+    ]
+  },
+  "relaxed": {
+    "score": 53.37379506863217,
+    "spend": 99.5,
+    "benchSpend": 18,
+    "benchPremium": 1,
+    "optimizerCaptain": "Haaland",
+    "displayedCaptain": "Gabriel",
+    "captainMatches": false,
+    "xi": [
+      "Raya",
+      "Gabriel",
+      "Guéhi",
+      "Senesi",
+      "Truffert",
+      "Doku",
+      "Groß",
+      "Szoboszlai",
+      "Dewsbury-Hall",
+      "Haaland",
+      "Watkins"
+    ],
+    "bench": [
+      {
+        "name": "Verbruggen",
+        "price": 4.5
+      },
+      {
+        "name": "F.Kadıoğlu",
+        "price": 4.5
+      },
+      {
+        "name": "Walle Egeli",
+        "price": 4.5
+      },
+      {
+        "name": "McAteer",
+        "price": 4.5
+      }
+    ]
+  },
+  "relaxedReevaluatedUnderProductionRules": {
+    "score": 53.37379506863217,
+    "spend": 99.5,
+    "benchSpend": 18,
+    "benchPremium": 1,
+    "optimizerCaptain": "Haaland",
+    "displayedCaptain": "Gabriel",
+    "captainMatches": false,
+    "xi": [
+      "Raya",
+      "Gabriel",
+      "Guéhi",
+      "Senesi",
+      "Truffert",
+      "Doku",
+      "Groß",
+      "Szoboszlai",
+      "Dewsbury-Hall",
+      "Haaland",
+      "Watkins"
+    ],
+    "bench": [
+      {
+        "name": "Verbruggen",
+        "price": 4.5
+      },
+      {
+        "name": "F.Kadıoğlu",
+        "price": 4.5
+      },
+      {
+        "name": "Walle Egeli",
+        "price": 4.5
+      },
+      {
+        "name": "McAteer",
+        "price": 4.5
+      }
+    ]
+  },
+  "moderateBench": {
+    "score": 52.42994916297184,
+    "spend": 100,
+    "benchSpend": 18,
+    "benchPremium": 1.5,
+    "optimizerCaptain": "Gabriel",
+    "displayedCaptain": "Gabriel",
+    "captainMatches": true,
+    "xi": [
+      "Raya",
+      "Gabriel",
+      "Guéhi",
+      "Truffert",
+      "B.Fernandes",
+      "Doku",
+      "Cherki",
+      "Groß",
+      "Gibbs-White",
+      "Watkins",
+      "Thiago"
+    ],
+    "bench": [
+      {
+        "name": "Verbruggen",
+        "price": 4.5
+      },
+      {
+        "name": "F.Kadıoğlu",
+        "price": 4.5
+      },
+      {
+        "name": "Justin",
+        "price": 4.5
+      },
+      {
+        "name": "Walle Egeli",
+        "price": 4.5
+      }
+    ]
+  }
+}

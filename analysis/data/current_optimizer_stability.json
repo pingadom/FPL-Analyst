@@ -1,0 +1,10 @@
+{
+  "perturbation": "40 deterministic draws; shared Gaussian shock of 0.04 next-GW points, 0.18 six-week points and 0.004 live-score units per player",
+  "meanSquadOverlapOutOf15": 11.4,
+  "minimumSquadOverlapOutOf15": 8,
+  "captainDisplayMatchRate": 0.05,
+  "relaxedCandidateFeasibleTrials": 33,
+  "productionSearchBeatenTrials": 19,
+  "meanGapWhenBeaten": 0.3089365103149863,
+  "maximumSearchGap": 0.5523020490863146
+}

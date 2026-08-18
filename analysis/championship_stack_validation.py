@@ -55,10 +55,22 @@ def main() -> None:
     variants["hybridCaptain50LegacyChips"] = summarize(
         chip_totals, seasons, targets, chip_stats
     )
+    audited_chip_totals, audited_chip_stats = lens.simulate_candidate(
+        data,
+        score,
+        STRATEGY,
+        chip_policy=lens.AUDITED_CHAMPION_CHIP_POLICY,
+        plan_scores=plan,
+        captain_scores=captain_score,
+    )
+    variants["hybridCaptain50AuditedChips"] = summarize(
+        audited_chip_totals, seasons, targets, audited_chip_stats
+    )
     result = {
-        "status": "research-only; historically exposed",
-        "method": "25% causal frontier immediate rerank + 25% causal listwise six-week rerank + 50% causal captain rerank. The chip row uses the already-frozen legacy threshold policy, not the new prospective scenario engine.",
-        "promotionRule": "This stack can replace the shadow challenger before GW1 lock, but cannot replace production until frozen prospective evidence clears the promotion gate.",
+        "status": "historical champion; requires prospective shadow validation",
+        "method": "25% causal frontier immediate rerank + 25% causal listwise six-week rerank + 50% causal captain rerank. Legacy chips remain as a diagnostic; the audited row enables only the walk-forward validated Bench Boost and Triple Captain gates.",
+        "promotionRule": "Use the audited row as the historical research champion. Do not claim a rank guarantee or enable automatic Wildcard/Free Hit until frozen prospective evidence clears the promotion gate.",
+        "auditedChipPolicy": lens.AUDITED_CHAMPION_CHIP_POLICY.as_dict(),
         "variants": variants,
     }
     output = lens.ROOT / "analysis" / "data" / "championship_stack_validation.json"

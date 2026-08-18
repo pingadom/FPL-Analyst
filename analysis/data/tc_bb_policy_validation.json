@@ -1,0 +1,446 @@
+{
+  "status": "training-selected; chips are structurally restricted to confirmed doubles",
+  "baselineAverage": 2149.5,
+  "selected": {
+    "benchThreshold": 11,
+    "tripleThreshold": 15,
+    "trainingStabilityGain": 16.375,
+    "evaluationAverageGain": 14.6,
+    "evaluationMinimumGain": 0,
+    "evaluationMaximumGain": 40,
+    "seasonGain": [
+      10,
+      27,
+      12,
+      0,
+      14,
+      18,
+      16,
+      17,
+      40,
+      0
+    ],
+    "evaluationChips": [
+      [
+        {
+          "chip": "Bench Boost",
+          "gw": 32,
+          "gain": 12,
+          "signal": 12.929,
+          "threshold": 10.822,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [],
+      [
+        {
+          "chip": "Triple Captain",
+          "gw": 26,
+          "gain": 6,
+          "signal": 15.024,
+          "threshold": 14.982,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 27,
+          "gain": 8,
+          "signal": 11.833,
+          "threshold": 10.98,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [
+        {
+          "chip": "Bench Boost",
+          "gw": 26,
+          "gain": 14,
+          "signal": 12.532,
+          "threshold": 10.987,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 28,
+          "gain": 4,
+          "signal": 15.253,
+          "threshold": 14.957,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [
+        {
+          "chip": "Bench Boost",
+          "gw": 20,
+          "gain": 6,
+          "signal": 12.028,
+          "threshold": 10.999,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 23,
+          "gain": 10,
+          "signal": 16.308,
+          "threshold": 14.995,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [
+        {
+          "chip": "Triple Captain",
+          "gw": 25,
+          "gain": 5,
+          "signal": 15.113,
+          "threshold": 14.988,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 34,
+          "gain": 12,
+          "signal": 11.167,
+          "threshold": 10.575,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [
+        {
+          "chip": "Triple Captain",
+          "gw": 24,
+          "gain": 29,
+          "signal": 15.958,
+          "threshold": 14.993,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 32,
+          "gain": 11,
+          "signal": 14.27,
+          "threshold": 10.822,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      []
+    ]
+  },
+  "selectedAverage": 2164.1,
+  "experiments": [
+    {
+      "benchThreshold": 11,
+      "tripleThreshold": 15,
+      "trainingStabilityGain": 16.375,
+      "evaluationAverageGain": 14.6,
+      "evaluationMinimumGain": 0,
+      "evaluationMaximumGain": 40,
+      "seasonGain": [
+        10,
+        27,
+        12,
+        0,
+        14,
+        18,
+        16,
+        17,
+        40,
+        0
+      ],
+      "evaluationChips": [
+        [
+          {
+            "chip": "Bench Boost",
+            "gw": 32,
+            "gain": 12,
+            "signal": 12.929,
+            "threshold": 10.822,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [],
+        [
+          {
+            "chip": "Triple Captain",
+            "gw": 26,
+            "gain": 6,
+            "signal": 15.024,
+            "threshold": 14.982,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 27,
+            "gain": 8,
+            "signal": 11.833,
+            "threshold": 10.98,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [
+          {
+            "chip": "Bench Boost",
+            "gw": 26,
+            "gain": 14,
+            "signal": 12.532,
+            "threshold": 10.987,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 28,
+            "gain": 4,
+            "signal": 15.253,
+            "threshold": 14.957,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [
+          {
+            "chip": "Bench Boost",
+            "gw": 20,
+            "gain": 6,
+            "signal": 12.028,
+            "threshold": 10.999,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 23,
+            "gain": 10,
+            "signal": 16.308,
+            "threshold": 14.995,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [
+          {
+            "chip": "Triple Captain",
+            "gw": 25,
+            "gain": 5,
+            "signal": 15.113,
+            "threshold": 14.988,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 34,
+            "gain": 12,
+            "signal": 11.167,
+            "threshold": 10.575,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [
+          {
+            "chip": "Triple Captain",
+            "gw": 24,
+            "gain": 29,
+            "signal": 15.958,
+            "threshold": 14.993,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Bench Boost",
+            "gw": 32,
+            "gain": 11,
+            "signal": 14.27,
+            "threshold": 10.822,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        []
+      ]
+    },
+    {
+      "benchThreshold": 14,
+      "tripleThreshold": 18,
+      "trainingStabilityGain": 10.125,
+      "evaluationAverageGain": 10.9,
+      "evaluationMinimumGain": 0,
+      "evaluationMaximumGain": 35,
+      "seasonGain": [
+        0,
+        27,
+        17,
+        0,
+        13,
+        7,
+        35,
+        4,
+        11,
+        0
+      ],
+      "evaluationChips": [
+        [
+          {
+            "chip": "Bench Boost",
+            "gw": 35,
+            "gain": 17,
+            "signal": 13.281,
+            "threshold": 13.164,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [],
+        [
+          {
+            "chip": "Triple Captain",
+            "gw": 35,
+            "gain": 13,
+            "signal": 17.054,
+            "threshold": 16.925,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [
+          {
+            "chip": "Bench Boost",
+            "gw": 36,
+            "gain": 7,
+            "signal": 14.171,
+            "threshold": 12.709,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [
+          {
+            "chip": "Bench Boost",
+            "gw": 29,
+            "gain": 19,
+            "signal": 17.21,
+            "threshold": 13.938,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          },
+          {
+            "chip": "Triple Captain",
+            "gw": 34,
+            "gain": 16,
+            "signal": 17.469,
+            "threshold": 17.304,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [
+          {
+            "chip": "Triple Captain",
+            "gw": 37,
+            "gain": 4,
+            "signal": 16.774,
+            "threshold": 15.436,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [
+          {
+            "chip": "Bench Boost",
+            "gw": 32,
+            "gain": 11,
+            "signal": 14.27,
+            "threshold": 13.773,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        []
+      ]
+    },
+    {
+      "benchThreshold": 16,
+      "tripleThreshold": 21,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 2.4,
+      "evaluationMinimumGain": 0,
+      "evaluationMaximumGain": 19,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        19,
+        0,
+        0,
+        0
+      ],
+      "evaluationChips": [
+        [],
+        [],
+        [],
+        [],
+        [
+          {
+            "chip": "Bench Boost",
+            "gw": 29,
+            "gain": 19,
+            "signal": 17.21,
+            "threshold": 15.93,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "benchThreshold": 18,
+      "tripleThreshold": 24,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0,
+      "evaluationMaximumGain": 0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChips": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    }
+  ]
+}

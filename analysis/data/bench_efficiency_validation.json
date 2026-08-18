@@ -1,0 +1,503 @@
+{
+  "status": "research-only; historically exposed",
+  "comparison": "Same causal forecasts, captain model, prices, transfer rules and realised points; only initial/wildcard spend discipline and bench-premium valuation change.",
+  "before": {
+    "average": 2149.5,
+    "minimum": 1999,
+    "total": 17196,
+    "averageInitialSpend": 99.12,
+    "averageInitialBenchSpend": 20.56,
+    "averageBenchSpend": 21.96,
+    "salah": {
+      "initialSquadSeasons": 3,
+      "majoritySquadSeasons": 2,
+      "majorityXiSeasons": 2,
+      "overallSquadRate": 24.2,
+      "overallXiRate": 24.2,
+      "overallCaptainRate": 15.8
+    },
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2085,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 21.0,
+        "initialBenchPremium": 4.0,
+        "averageBenchSpend": 21.16,
+        "averageBenchPremium": 5.1,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 38,
+          "squadWeeks": 6,
+          "xiWeeks": 6,
+          "captainWeeks": 6,
+          "initialSquad": true,
+          "initialXi": true,
+          "initialCaptain": true,
+          "squadRate": 15.8,
+          "xiRate": 15.8,
+          "captainRate": 15.8
+        }
+      },
+      {
+        "season": "2019/20",
+        "points": 2112,
+        "initialSpend": 99.0,
+        "initialBank": 1.0,
+        "initialBenchSpend": 20.0,
+        "initialBenchPremium": 3.0,
+        "averageBenchSpend": 22.08,
+        "averageBenchPremium": 5.79,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 37,
+          "squadWeeks": 0,
+          "xiWeeks": 0,
+          "captainWeeks": 0,
+          "initialSquad": false,
+          "initialXi": false,
+          "initialCaptain": false,
+          "squadRate": 0.0,
+          "xiRate": 0.0,
+          "captainRate": 0.0
+        }
+      },
+      {
+        "season": "2020/21",
+        "points": 2196,
+        "initialSpend": 99.0,
+        "initialBank": 1.0,
+        "initialBenchSpend": 19.0,
+        "initialBenchPremium": 2.5,
+        "averageBenchSpend": 21.41,
+        "averageBenchPremium": 5.25,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 35,
+          "squadWeeks": 14,
+          "xiWeeks": 14,
+          "captainWeeks": 7,
+          "initialSquad": true,
+          "initialXi": true,
+          "initialCaptain": false,
+          "squadRate": 40.0,
+          "xiRate": 40.0,
+          "captainRate": 20.0
+        }
+      },
+      {
+        "season": "2021/22",
+        "points": 2198,
+        "initialSpend": 98.0,
+        "initialBank": 2.0,
+        "initialBenchSpend": 20.0,
+        "initialBenchPremium": 3.5,
+        "averageBenchSpend": 22.28,
+        "averageBenchPremium": 5.78,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 30,
+          "squadWeeks": 18,
+          "xiWeeks": 18,
+          "captainWeeks": 13,
+          "initialSquad": true,
+          "initialXi": true,
+          "initialCaptain": true,
+          "squadRate": 60.0,
+          "xiRate": 60.0,
+          "captainRate": 43.3
+        }
+      },
+      {
+        "season": "2022/23",
+        "points": 2261,
+        "initialSpend": 98.5,
+        "initialBank": 1.5,
+        "initialBenchSpend": 18.5,
+        "initialBenchPremium": 2.0,
+        "averageBenchSpend": 20.45,
+        "averageBenchPremium": 4.71,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 35,
+          "squadWeeks": 0,
+          "xiWeeks": 0,
+          "captainWeeks": 0,
+          "initialSquad": false,
+          "initialXi": false,
+          "initialCaptain": false,
+          "squadRate": 0.0,
+          "xiRate": 0.0,
+          "captainRate": 0.0
+        }
+      },
+      {
+        "season": "2023/24",
+        "points": 2055,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 21.5,
+        "initialBenchPremium": 5.0,
+        "averageBenchSpend": 22.63,
+        "averageBenchPremium": 6.84,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 31,
+          "squadWeeks": 2,
+          "xiWeeks": 2,
+          "captainWeeks": 1,
+          "initialSquad": false,
+          "initialXi": false,
+          "initialCaptain": false,
+          "squadRate": 6.5,
+          "xiRate": 6.5,
+          "captainRate": 3.2
+        }
+      },
+      {
+        "season": "2024/25",
+        "points": 2290,
+        "initialSpend": 99.5,
+        "initialBank": 0.5,
+        "initialBenchSpend": 22.0,
+        "initialBenchPremium": 5.5,
+        "averageBenchSpend": 22.27,
+        "averageBenchPremium": 6.19,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 36,
+          "squadWeeks": 26,
+          "xiWeeks": 26,
+          "captainWeeks": 16,
+          "initialSquad": false,
+          "initialXi": false,
+          "initialCaptain": false,
+          "squadRate": 72.2,
+          "xiRate": 72.2,
+          "captainRate": 44.4
+        }
+      },
+      {
+        "season": "2025/26",
+        "points": 1999,
+        "initialSpend": 99.0,
+        "initialBank": 1.0,
+        "initialBenchSpend": 22.5,
+        "initialBenchPremium": 6.0,
+        "averageBenchSpend": 23.43,
+        "averageBenchPremium": 7.58,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 31,
+          "squadWeeks": 0,
+          "xiWeeks": 0,
+          "captainWeeks": 0,
+          "initialSquad": false,
+          "initialXi": false,
+          "initialCaptain": false,
+          "squadRate": 0.0,
+          "xiRate": 0.0,
+          "captainRate": 0.0
+        }
+      }
+    ]
+  },
+  "after": {
+    "average": 2066.2,
+    "minimum": 1887,
+    "total": 16530,
+    "averageInitialSpend": 99.94,
+    "averageInitialBenchSpend": 17.31,
+    "averageBenchSpend": 19.54,
+    "salah": {
+      "initialSquadSeasons": 5,
+      "majoritySquadSeasons": 2,
+      "majorityXiSeasons": 2,
+      "overallSquadRate": 47.3,
+      "overallXiRate": 47.3,
+      "overallCaptainRate": 27.1
+    },
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2046,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 16.5,
+        "initialBenchPremium": 0.0,
+        "averageBenchSpend": 18.24,
+        "averageBenchPremium": 2.31,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 38,
+          "squadWeeks": 27,
+          "xiWeeks": 27,
+          "captainWeeks": 16,
+          "initialSquad": true,
+          "initialXi": true,
+          "initialCaptain": true,
+          "squadRate": 71.1,
+          "xiRate": 71.1,
+          "captainRate": 42.1
+        }
+      },
+      {
+        "season": "2019/20",
+        "points": 2079,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 17.0,
+        "initialBenchPremium": 0.5,
+        "averageBenchSpend": 18.57,
+        "averageBenchPremium": 2.21,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 37,
+          "squadWeeks": 16,
+          "xiWeeks": 16,
+          "captainWeeks": 11,
+          "initialSquad": true,
+          "initialXi": true,
+          "initialCaptain": true,
+          "squadRate": 43.2,
+          "xiRate": 43.2,
+          "captainRate": 29.7
+        }
+      },
+      {
+        "season": "2020/21",
+        "points": 2030,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 17.0,
+        "initialBenchPremium": 0.5,
+        "averageBenchSpend": 20.41,
+        "averageBenchPremium": 4.42,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 35,
+          "squadWeeks": 8,
+          "xiWeeks": 8,
+          "captainWeeks": 5,
+          "initialSquad": true,
+          "initialXi": true,
+          "initialCaptain": false,
+          "squadRate": 22.9,
+          "xiRate": 22.9,
+          "captainRate": 14.3
+        }
+      },
+      {
+        "season": "2021/22",
+        "points": 2268,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 18.5,
+        "initialBenchPremium": 1.5,
+        "averageBenchSpend": 22.11,
+        "averageBenchPremium": 5.57,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 30,
+          "squadWeeks": 11,
+          "xiWeeks": 11,
+          "captainWeeks": 3,
+          "initialSquad": false,
+          "initialXi": false,
+          "initialCaptain": false,
+          "squadRate": 36.7,
+          "xiRate": 36.7,
+          "captainRate": 10.0
+        }
+      },
+      {
+        "season": "2022/23",
+        "points": 2030,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 17.0,
+        "initialBenchPremium": 0.5,
+        "averageBenchSpend": 18.93,
+        "averageBenchPremium": 3.21,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 35,
+          "squadWeeks": 11,
+          "xiWeeks": 11,
+          "captainWeeks": 7,
+          "initialSquad": false,
+          "initialXi": false,
+          "initialCaptain": false,
+          "squadRate": 31.4,
+          "xiRate": 31.4,
+          "captainRate": 20.0
+        }
+      },
+      {
+        "season": "2023/24",
+        "points": 2017,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 17.0,
+        "initialBenchPremium": 0.5,
+        "averageBenchSpend": 19.11,
+        "averageBenchPremium": 3.35,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 31,
+          "squadWeeks": 9,
+          "xiWeeks": 9,
+          "captainWeeks": 6,
+          "initialSquad": true,
+          "initialXi": true,
+          "initialCaptain": true,
+          "squadRate": 29.0,
+          "xiRate": 29.0,
+          "captainRate": 19.4
+        }
+      },
+      {
+        "season": "2024/25",
+        "points": 2173,
+        "initialSpend": 99.5,
+        "initialBank": 0.5,
+        "initialBenchSpend": 18.5,
+        "initialBenchPremium": 2.0,
+        "averageBenchSpend": 20.11,
+        "averageBenchPremium": 3.95,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 36,
+          "squadWeeks": 32,
+          "xiWeeks": 32,
+          "captainWeeks": 22,
+          "initialSquad": false,
+          "initialXi": false,
+          "initialCaptain": false,
+          "squadRate": 88.9,
+          "xiRate": 88.9,
+          "captainRate": 61.1
+        }
+      },
+      {
+        "season": "2025/26",
+        "points": 1887,
+        "initialSpend": 100.0,
+        "initialBank": 0.0,
+        "initialBenchSpend": 17.0,
+        "initialBenchPremium": 0.5,
+        "averageBenchSpend": 18.85,
+        "averageBenchPremium": 3.12,
+        "salah": {
+          "name": "Salah",
+          "eligibleWeeks": 31,
+          "squadWeeks": 15,
+          "xiWeeks": 15,
+          "captainWeeks": 4,
+          "initialSquad": true,
+          "initialXi": true,
+          "initialCaptain": true,
+          "squadRate": 48.4,
+          "xiRate": 48.4,
+          "captainRate": 12.9
+        }
+      }
+    ]
+  },
+  "lift": {
+    "average": -83.3,
+    "totalAcrossEightSeasons": -666,
+    "improvedSeasons": 1,
+    "unchangedSeasons": 0,
+    "worseSeasons": 7
+  },
+  "pairedSeasons": [
+    {
+      "season": "2018/19",
+      "before": 2085,
+      "after": 2046,
+      "delta": -39,
+      "salahSquadRateBefore": 15.8,
+      "salahSquadRateAfter": 71.1,
+      "salahXiRateAfter": 71.1,
+      "salahCaptainRateAfter": 42.1
+    },
+    {
+      "season": "2019/20",
+      "before": 2112,
+      "after": 2079,
+      "delta": -33,
+      "salahSquadRateBefore": 0.0,
+      "salahSquadRateAfter": 43.2,
+      "salahXiRateAfter": 43.2,
+      "salahCaptainRateAfter": 29.7
+    },
+    {
+      "season": "2020/21",
+      "before": 2196,
+      "after": 2030,
+      "delta": -166,
+      "salahSquadRateBefore": 40.0,
+      "salahSquadRateAfter": 22.9,
+      "salahXiRateAfter": 22.9,
+      "salahCaptainRateAfter": 14.3
+    },
+    {
+      "season": "2021/22",
+      "before": 2198,
+      "after": 2268,
+      "delta": 70,
+      "salahSquadRateBefore": 60.0,
+      "salahSquadRateAfter": 36.7,
+      "salahXiRateAfter": 36.7,
+      "salahCaptainRateAfter": 10.0
+    },
+    {
+      "season": "2022/23",
+      "before": 2261,
+      "after": 2030,
+      "delta": -231,
+      "salahSquadRateBefore": 0.0,
+      "salahSquadRateAfter": 31.4,
+      "salahXiRateAfter": 31.4,
+      "salahCaptainRateAfter": 20.0
+    },
+    {
+      "season": "2023/24",
+      "before": 2055,
+      "after": 2017,
+      "delta": -38,
+      "salahSquadRateBefore": 6.5,
+      "salahSquadRateAfter": 29.0,
+      "salahXiRateAfter": 29.0,
+      "salahCaptainRateAfter": 19.4
+    },
+    {
+      "season": "2024/25",
+      "before": 2290,
+      "after": 2173,
+      "delta": -117,
+      "salahSquadRateBefore": 72.2,
+      "salahSquadRateAfter": 88.9,
+      "salahXiRateAfter": 88.9,
+      "salahCaptainRateAfter": 61.1
+    },
+    {
+      "season": "2025/26",
+      "before": 1999,
+      "after": 1887,
+      "delta": -112,
+      "salahSquadRateBefore": 0.0,
+      "salahSquadRateAfter": 48.4,
+      "salahXiRateAfter": 48.4,
+      "salahCaptainRateAfter": 12.9
+    }
+  ],
+  "policy": {
+    "minimumFreshSpend": "available budget minus \u00a30.5m",
+    "maximumBenchPremium": "\u00a32.0m above positional minimums",
+    "benchPremiumPenalty": "0.022 planning-score units per \u00a30.1m",
+    "captain": "Separate causal captain rank; captain must be in the XI"
+  }
+}

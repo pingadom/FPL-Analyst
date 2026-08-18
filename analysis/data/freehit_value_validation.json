@@ -1,0 +1,441 @@
+{
+  "status": "rejected causal Free Hit value challenger",
+  "method": "Prior-season-only Ridge/XGBoost predicts realised one-week FH gain. A prior-residual penalty creates a conservative value signal; each threshold is then tested in a complete recursive season simulation.",
+  "fitAudit": [
+    {
+      "season": "2017-18",
+      "trainingSeasons": 1,
+      "trainingRows": 38,
+      "testRows": 38,
+      "priorResidualScale": 4.0
+    },
+    {
+      "season": "2018-19",
+      "trainingSeasons": 2,
+      "trainingRows": 76,
+      "testRows": 38,
+      "priorResidualScale": 4.0
+    },
+    {
+      "season": "2019-20",
+      "trainingSeasons": 3,
+      "trainingRows": 114,
+      "testRows": 38,
+      "priorResidualScale": 8.093
+    },
+    {
+      "season": "2020-21",
+      "trainingSeasons": 4,
+      "trainingRows": 152,
+      "testRows": 38,
+      "priorResidualScale": 10.031
+    },
+    {
+      "season": "2021-22",
+      "trainingSeasons": 5,
+      "trainingRows": 190,
+      "testRows": 38,
+      "priorResidualScale": 12.53
+    },
+    {
+      "season": "2022-23",
+      "trainingSeasons": 6,
+      "trainingRows": 228,
+      "testRows": 37,
+      "priorResidualScale": 12.535
+    },
+    {
+      "season": "2023-24",
+      "trainingSeasons": 7,
+      "trainingRows": 265,
+      "testRows": 38,
+      "priorResidualScale": 12.716
+    },
+    {
+      "season": "2024-25",
+      "trainingSeasons": 8,
+      "trainingRows": 303,
+      "testRows": 38,
+      "priorResidualScale": 12.831
+    },
+    {
+      "season": "2025-26",
+      "trainingSeasons": 9,
+      "trainingRows": 341,
+      "testRows": 38,
+      "priorResidualScale": 13.258
+    }
+  ],
+  "forecastAudit": {
+    "evaluationRows": 303,
+    "rawCorrelation": 0.166,
+    "learnedCorrelation": 0.231,
+    "rawMae": 13.94,
+    "learnedMae": 13.41
+  },
+  "baselineEvaluationAverage": 2174.9,
+  "promotionRule": "Training stability > 0, evaluation mean > 0 and evaluation minimum not below -12; otherwise Free Hit remains manually supervised.",
+  "promoted": false,
+  "selected": {
+    "threshold": 3.0,
+    "riskPenalty": 0.0,
+    "trainingStabilityGain": 0.0,
+    "evaluationAverageGain": 6.9,
+    "evaluationMinimumGain": -15.0,
+    "evaluationMaximumGain": 41.0,
+    "seasonGain": [
+      0,
+      0,
+      0,
+      0,
+      29,
+      0,
+      -15,
+      0,
+      41,
+      0
+    ],
+    "evaluationChoices": [
+      [],
+      [],
+      [
+        {
+          "chip": "Free Hit",
+          "gw": 34,
+          "gain": 19,
+          "signal": 3.492,
+          "threshold": 2.884,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [],
+      [
+        {
+          "chip": "Free Hit",
+          "gw": 29,
+          "gain": 5,
+          "signal": 3.793,
+          "threshold": 2.987,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      [],
+      [
+        {
+          "chip": "Free Hit",
+          "gw": 25,
+          "gain": 32,
+          "signal": 3.714,
+          "threshold": 2.998,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      []
+    ]
+  },
+  "experiments": [
+    {
+      "threshold": 3.0,
+      "riskPenalty": 0.0,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 6.9,
+      "evaluationMinimumGain": -15.0,
+      "evaluationMaximumGain": 41.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        29,
+        0,
+        -15,
+        0,
+        41,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [
+          {
+            "chip": "Free Hit",
+            "gw": 34,
+            "gain": 19,
+            "signal": 3.492,
+            "threshold": 2.884,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [],
+        [
+          {
+            "chip": "Free Hit",
+            "gw": 29,
+            "gain": 5,
+            "signal": 3.793,
+            "threshold": 2.987,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        [],
+        [
+          {
+            "chip": "Free Hit",
+            "gw": 25,
+            "gain": 32,
+            "signal": 3.714,
+            "threshold": 2.998,
+            "continuationValue": 0.0,
+            "reason": "signal beat option-value adjusted threshold"
+          }
+        ],
+        []
+      ]
+    },
+    {
+      "threshold": 6.0,
+      "riskPenalty": 0.0,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0.0,
+      "evaluationMaximumGain": 0.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "threshold": 9.0,
+      "riskPenalty": 0.0,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0.0,
+      "evaluationMaximumGain": 0.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "threshold": 3.0,
+      "riskPenalty": 0.35,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0.0,
+      "evaluationMaximumGain": 0.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "threshold": 6.0,
+      "riskPenalty": 0.35,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0.0,
+      "evaluationMaximumGain": 0.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "threshold": 9.0,
+      "riskPenalty": 0.35,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0.0,
+      "evaluationMaximumGain": 0.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "threshold": 3.0,
+      "riskPenalty": 0.7,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0.0,
+      "evaluationMaximumGain": 0.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "threshold": 6.0,
+      "riskPenalty": 0.7,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0.0,
+      "evaluationMaximumGain": 0.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "threshold": 9.0,
+      "riskPenalty": 0.7,
+      "trainingStabilityGain": 0.0,
+      "evaluationAverageGain": 0.0,
+      "evaluationMinimumGain": 0.0,
+      "evaluationMaximumGain": 0.0,
+      "seasonGain": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "evaluationChoices": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    }
+  ]
+}

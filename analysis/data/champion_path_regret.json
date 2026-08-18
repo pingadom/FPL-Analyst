@@ -1,0 +1,99 @@
+{
+  "method": "Regret on the champion's actual recursive path. Oracles are diagnostic upper bounds, not achievable claims. Transfer gain is raw six-week incoming-minus-outgoing points and ignores wider squad opportunity cost.",
+  "average": {
+    "captainOracleRegret": 235.6,
+    "lineupCaptainOracleRegret": 392.2,
+    "freshModelSquadActualGap": 123.9,
+    "averageSixWeekTransferRawGain": 9.9
+  },
+  "seasons": [
+    {
+      "season": "2018/19",
+      "points": 2085,
+      "captainOracleRegret": 233,
+      "lineupCaptainOracleRegret": 388,
+      "freshModelSquadActualGap": 69,
+      "transfers": 17,
+      "positiveSixWeekTransfers": 11,
+      "negativeSixWeekTransfers": 6,
+      "averageSixWeekTransferRawGain": 0.82
+    },
+    {
+      "season": "2019/20",
+      "points": 2112,
+      "captainOracleRegret": 245,
+      "lineupCaptainOracleRegret": 401,
+      "freshModelSquadActualGap": 62,
+      "transfers": 13,
+      "positiveSixWeekTransfers": 8,
+      "negativeSixWeekTransfers": 4,
+      "averageSixWeekTransferRawGain": 7.92
+    },
+    {
+      "season": "2020/21",
+      "points": 2196,
+      "captainOracleRegret": 254,
+      "lineupCaptainOracleRegret": 371,
+      "freshModelSquadActualGap": 6,
+      "transfers": 17,
+      "positiveSixWeekTransfers": 14,
+      "negativeSixWeekTransfers": 2,
+      "averageSixWeekTransferRawGain": 14.88
+    },
+    {
+      "season": "2021/22",
+      "points": 2198,
+      "captainOracleRegret": 199,
+      "lineupCaptainOracleRegret": 286,
+      "freshModelSquadActualGap": 99,
+      "transfers": 19,
+      "positiveSixWeekTransfers": 14,
+      "negativeSixWeekTransfers": 4,
+      "averageSixWeekTransferRawGain": 12.21
+    },
+    {
+      "season": "2022/23",
+      "points": 2261,
+      "captainOracleRegret": 192,
+      "lineupCaptainOracleRegret": 327,
+      "freshModelSquadActualGap": 103,
+      "transfers": 17,
+      "positiveSixWeekTransfers": 13,
+      "negativeSixWeekTransfers": 4,
+      "averageSixWeekTransferRawGain": 12.24
+    },
+    {
+      "season": "2023/24",
+      "points": 2055,
+      "captainOracleRegret": 309,
+      "lineupCaptainOracleRegret": 382,
+      "freshModelSquadActualGap": 335,
+      "transfers": 17,
+      "positiveSixWeekTransfers": 10,
+      "negativeSixWeekTransfers": 7,
+      "averageSixWeekTransferRawGain": 13.0
+    },
+    {
+      "season": "2024/25",
+      "points": 2290,
+      "captainOracleRegret": 197,
+      "lineupCaptainOracleRegret": 465,
+      "freshModelSquadActualGap": 9,
+      "transfers": 17,
+      "positiveSixWeekTransfers": 11,
+      "negativeSixWeekTransfers": 6,
+      "averageSixWeekTransferRawGain": 7.47
+    },
+    {
+      "season": "2025/26",
+      "points": 1999,
+      "captainOracleRegret": 256,
+      "lineupCaptainOracleRegret": 518,
+      "freshModelSquadActualGap": 308,
+      "transfers": 18,
+      "positiveSixWeekTransfers": 10,
+      "negativeSixWeekTransfers": 8,
+      "averageSixWeekTransferRawGain": 10.78
+    }
+  ]
+}

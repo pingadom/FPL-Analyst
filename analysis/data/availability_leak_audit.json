@@ -1,0 +1,683 @@
+{
+  "status": "availability audit of the effective, points-scoring XI",
+  "baseline": {
+    "average": 2190.6,
+    "minimum": 2032,
+    "developmentAverage": 2197.3,
+    "holdoutAverage": 2170.5,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2129
+      },
+      {
+        "season": "2019/20",
+        "points": 2156
+      },
+      {
+        "season": "2020/21",
+        "points": 2238
+      },
+      {
+        "season": "2021/22",
+        "points": 2305
+      },
+      {
+        "season": "2022/23",
+        "points": 2258
+      },
+      {
+        "season": "2023/24",
+        "points": 2098
+      },
+      {
+        "season": "2024/25",
+        "points": 2309
+      },
+      {
+        "season": "2025/26",
+        "points": 2032
+      }
+    ]
+  },
+  "seasons": [
+    {
+      "season": "2018-19",
+      "points": 2129,
+      "starterNoShows": 23,
+      "weeksWithNoShow": 17,
+      "autosubsRecovered": 20,
+      "unfilledStarterSlots": 3,
+      "twoPointAppearanceFloor": 6,
+      "typicalStarterReplacementEstimate": 13.9,
+      "meanPlayingStarterPoints": 4.618,
+      "medianPlayingStarterPoints": 2.0,
+      "chips": [
+        {
+          "chip": "Triple Captain",
+          "gw": 32,
+          "gain": 3,
+          "signal": 20.676,
+          "threshold": 14.757,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      "unfilledDetail": [
+        {
+          "gw": 24,
+          "slots": 1,
+          "originalNoShows": [
+            "Alonso",
+            "Walcott",
+            "Kane"
+          ],
+          "playingBench": [
+            "Etheridge",
+            "Neves",
+            "P\u00c3\u00a9rez"
+          ]
+        },
+        {
+          "gw": 31,
+          "slots": 2,
+          "originalNoShows": [
+            "Milivojevic",
+            "Neves"
+          ],
+          "playingBench": []
+        }
+      ]
+    },
+    {
+      "season": "2019-20",
+      "points": 2156,
+      "starterNoShows": 23,
+      "weeksWithNoShow": 18,
+      "autosubsRecovered": 20,
+      "unfilledStarterSlots": 3,
+      "twoPointAppearanceFloor": 6,
+      "typicalStarterReplacementEstimate": 13.9,
+      "meanPlayingStarterPoints": 4.623,
+      "medianPlayingStarterPoints": 3.0,
+      "chips": [],
+      "unfilledDetail": [
+        {
+          "gw": 12,
+          "slots": 1,
+          "originalNoShows": [
+            "Azpilicueta",
+            "Ederson",
+            "David Silva"
+          ],
+          "playingBench": [
+            "van Dijk",
+            "Zaha"
+          ]
+        },
+        {
+          "gw": 20,
+          "slots": 1,
+          "originalNoShows": [
+            "Vardy",
+            "Lundstram",
+            "Tielemans"
+          ],
+          "playingBench": [
+            "Fabianski",
+            "P\u00c3\u00a9rez",
+            "Azpilicueta"
+          ]
+        },
+        {
+          "gw": 28,
+          "slots": 1,
+          "originalNoShows": [
+            "Vardy"
+          ],
+          "playingBench": [
+            "Fabianski"
+          ]
+        }
+      ]
+    },
+    {
+      "season": "2020-21",
+      "points": 2238,
+      "starterNoShows": 41,
+      "weeksWithNoShow": 21,
+      "autosubsRecovered": 22,
+      "unfilledStarterSlots": 19,
+      "twoPointAppearanceFloor": 38,
+      "typicalStarterReplacementEstimate": 96.0,
+      "meanPlayingStarterPoints": 5.05,
+      "medianPlayingStarterPoints": 3.0,
+      "chips": [
+        {
+          "chip": "Triple Captain",
+          "gw": 19,
+          "gain": 8,
+          "signal": 15.066,
+          "threshold": 14.999,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 25,
+          "gain": 7,
+          "signal": 11.213,
+          "threshold": 10.992,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      "unfilledDetail": [
+        {
+          "gw": 11,
+          "slots": 2,
+          "originalNoShows": [
+            "Walker",
+            "Jim\u00c3\u00a9nez"
+          ],
+          "playingBench": []
+        },
+        {
+          "gw": 16,
+          "slots": 3,
+          "originalNoShows": [
+            "Mings",
+            "Zouma",
+            "Gabriel"
+          ],
+          "playingBench": [
+            "McCarthy"
+          ]
+        },
+        {
+          "gw": 18,
+          "slots": 8,
+          "originalNoShows": [
+            "Klich",
+            "Robertson",
+            "Walker",
+            "McCarthy",
+            "Livermore",
+            "Soucek",
+            "Gabriel",
+            "Watkins"
+          ],
+          "playingBench": []
+        },
+        {
+          "gw": 29,
+          "slots": 2,
+          "originalNoShows": [
+            "Fernandes",
+            "Livermore"
+          ],
+          "playingBench": []
+        },
+        {
+          "gw": 34,
+          "slots": 2,
+          "originalNoShows": [
+            "Mahrez",
+            "Dias"
+          ],
+          "playingBench": [
+            "McCarthy"
+          ]
+        },
+        {
+          "gw": 36,
+          "slots": 2,
+          "originalNoShows": [
+            "Dunk",
+            "Jota",
+            "Dias"
+          ],
+          "playingBench": [
+            "McCarthy",
+            "Cresswell"
+          ]
+        }
+      ]
+    },
+    {
+      "season": "2021-22",
+      "points": 2305,
+      "starterNoShows": 41,
+      "weeksWithNoShow": 23,
+      "autosubsRecovered": 24,
+      "unfilledStarterSlots": 17,
+      "twoPointAppearanceFloor": 34,
+      "typicalStarterReplacementEstimate": 82.7,
+      "meanPlayingStarterPoints": 4.867,
+      "medianPlayingStarterPoints": 3.0,
+      "chips": [
+        {
+          "chip": "Bench Boost",
+          "gw": 26,
+          "gain": 14,
+          "signal": 12.899,
+          "threshold": 10.987,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 28,
+          "gain": 4,
+          "signal": 15.253,
+          "threshold": 14.957,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      "unfilledDetail": [
+        {
+          "gw": 5,
+          "slots": 1,
+          "originalNoShows": [
+            "Alexander-Arnold",
+            "Harrison",
+            "Antonio"
+          ],
+          "playingBench": [
+            "Digne",
+            "Lingard"
+          ]
+        },
+        {
+          "gw": 8,
+          "slots": 1,
+          "originalNoShows": [
+            "Alisson"
+          ],
+          "playingBench": [
+            "Digne",
+            "Lingard"
+          ]
+        },
+        {
+          "gw": 18,
+          "slots": 4,
+          "originalNoShows": [
+            "Gallagher",
+            "Sarr",
+            "Townsend",
+            "Hwang"
+          ],
+          "playingBench": [
+            "Dubravka"
+          ]
+        },
+        {
+          "gw": 19,
+          "slots": 2,
+          "originalNoShows": [
+            "Sarr",
+            "Tomiyasu"
+          ],
+          "playingBench": []
+        },
+        {
+          "gw": 20,
+          "slots": 2,
+          "originalNoShows": [
+            "Gallagher",
+            "Pukki"
+          ],
+          "playingBench": []
+        },
+        {
+          "gw": 21,
+          "slots": 2,
+          "originalNoShows": [
+            "James",
+            "Gallagher",
+            "Alisson"
+          ],
+          "playingBench": [
+            "Pukki"
+          ]
+        },
+        {
+          "gw": 25,
+          "slots": 1,
+          "originalNoShows": [
+            "Cancelo",
+            "Laporte"
+          ],
+          "playingBench": [
+            "Alisson",
+            "Pukki",
+            "Hwang"
+          ]
+        },
+        {
+          "gw": 30,
+          "slots": 4,
+          "originalNoShows": [
+            "Alisson",
+            "Alexander-Arnold",
+            "Ward-Prowse",
+            "Bowen"
+          ],
+          "playingBench": []
+        }
+      ]
+    },
+    {
+      "season": "2022-23",
+      "points": 2258,
+      "starterNoShows": 32,
+      "weeksWithNoShow": 18,
+      "autosubsRecovered": 20,
+      "unfilledStarterSlots": 12,
+      "twoPointAppearanceFloor": 24,
+      "typicalStarterReplacementEstimate": 60.5,
+      "meanPlayingStarterPoints": 5.043,
+      "medianPlayingStarterPoints": 3.0,
+      "chips": [
+        {
+          "chip": "Bench Boost",
+          "gw": 20,
+          "gain": 5,
+          "signal": 12.127,
+          "threshold": 10.999,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Triple Captain",
+          "gw": 23,
+          "gain": 10,
+          "signal": 16.308,
+          "threshold": 14.995,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      "unfilledDetail": [
+        {
+          "gw": 4,
+          "slots": 1,
+          "originalNoShows": [
+            "Zaha",
+            "Maddison",
+            "Matip"
+          ],
+          "playingBench": [
+            "Meslier",
+            "Cucurella",
+            "Andersen"
+          ]
+        },
+        {
+          "gw": 8,
+          "slots": 1,
+          "originalNoShows": [
+            "\u00c3\u0098degaard"
+          ],
+          "playingBench": []
+        },
+        {
+          "gw": 12,
+          "slots": 4,
+          "originalNoShows": [
+            "Martinelli",
+            "Maddison",
+            "Targett",
+            "Plange"
+          ],
+          "playingBench": [
+            "S\u00c3\u00a1nchez"
+          ]
+        },
+        {
+          "gw": 25,
+          "slots": 2,
+          "originalNoShows": [
+            "Almir\u00c3\u00b3n",
+            "Eriksen"
+          ],
+          "playingBench": [
+            "Ederson"
+          ]
+        },
+        {
+          "gw": 28,
+          "slots": 4,
+          "originalNoShows": [
+            "March",
+            "Alisson",
+            "Shaw",
+            "Almir\u00c3\u00b3n"
+          ],
+          "playingBench": []
+        }
+      ]
+    },
+    {
+      "season": "2023-24",
+      "points": 2098,
+      "starterNoShows": 59,
+      "weeksWithNoShow": 31,
+      "autosubsRecovered": 45,
+      "unfilledStarterSlots": 14,
+      "twoPointAppearanceFloor": 28,
+      "typicalStarterReplacementEstimate": 66.7,
+      "meanPlayingStarterPoints": 4.766,
+      "medianPlayingStarterPoints": 3.0,
+      "chips": [
+        {
+          "chip": "Triple Captain",
+          "gw": 25,
+          "gain": 5,
+          "signal": 15.113,
+          "threshold": 14.988,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        },
+        {
+          "chip": "Bench Boost",
+          "gw": 34,
+          "gain": 2,
+          "signal": 12.166,
+          "threshold": 10.575,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      "unfilledDetail": [
+        {
+          "gw": 10,
+          "slots": 1,
+          "originalNoShows": [
+            "Botman",
+            "Udogie"
+          ],
+          "playingBench": [
+            "Raya",
+            "Gross",
+            "Pinnock"
+          ]
+        },
+        {
+          "gw": 12,
+          "slots": 1,
+          "originalNoShows": [
+            "White"
+          ],
+          "playingBench": [
+            "Raya",
+            "Gross"
+          ]
+        },
+        {
+          "gw": 17,
+          "slots": 5,
+          "originalNoShows": [
+            "Douglas Luiz",
+            "Mbeumo",
+            "Mykolenko",
+            "Haaland",
+            "B.Fernandes",
+            "Trippier"
+          ],
+          "playingBench": [
+            "White"
+          ]
+        },
+        {
+          "gw": 29,
+          "slots": 5,
+          "originalNoShows": [
+            "Saka",
+            "White",
+            "Mykolenko",
+            "Foden",
+            "Trippier"
+          ],
+          "playingBench": []
+        },
+        {
+          "gw": 30,
+          "slots": 1,
+          "originalNoShows": [
+            "Trippier"
+          ],
+          "playingBench": [
+            "Pickford",
+            "Richarlison"
+          ]
+        },
+        {
+          "gw": 31,
+          "slots": 1,
+          "originalNoShows": [
+            "Saka",
+            "Watkins",
+            "Trippier"
+          ],
+          "playingBench": [
+            "Pickford",
+            "Douglas Luiz",
+            "Mykolenko"
+          ]
+        }
+      ]
+    },
+    {
+      "season": "2024-25",
+      "points": 2309,
+      "starterNoShows": 32,
+      "weeksWithNoShow": 18,
+      "autosubsRecovered": 28,
+      "unfilledStarterSlots": 4,
+      "twoPointAppearanceFloor": 8,
+      "typicalStarterReplacementEstimate": 19.4,
+      "meanPlayingStarterPoints": 4.847,
+      "medianPlayingStarterPoints": 3.0,
+      "chips": [
+        {
+          "chip": "Triple Captain",
+          "gw": 24,
+          "gain": 29,
+          "signal": 15.958,
+          "threshold": 14.993,
+          "continuationValue": 0.0,
+          "reason": "signal beat option-value adjusted threshold"
+        }
+      ],
+      "unfilledDetail": [
+        {
+          "gw": 29,
+          "slots": 3,
+          "originalNoShows": [
+            "Mitchell",
+            "Isak",
+            "J.Murphy"
+          ],
+          "playingBench": [
+            "Onana"
+          ]
+        },
+        {
+          "gw": 34,
+          "slots": 1,
+          "originalNoShows": [
+            "Tarkowski"
+          ],
+          "playingBench": [
+            "Onana"
+          ]
+        }
+      ]
+    },
+    {
+      "season": "2025-26",
+      "points": 2032,
+      "starterNoShows": 39,
+      "weeksWithNoShow": 25,
+      "autosubsRecovered": 33,
+      "unfilledStarterSlots": 6,
+      "twoPointAppearanceFloor": 12,
+      "typicalStarterReplacementEstimate": 26.8,
+      "meanPlayingStarterPoints": 4.47,
+      "medianPlayingStarterPoints": 3.0,
+      "chips": [],
+      "unfilledDetail": [
+        {
+          "gw": 29,
+          "slots": 1,
+          "originalNoShows": [
+            "O'Reilly"
+          ],
+          "playingBench": [
+            "Raya",
+            "Thiago"
+          ]
+        },
+        {
+          "gw": 31,
+          "slots": 2,
+          "originalNoShows": [
+            "Rice",
+            "Mukiele"
+          ],
+          "playingBench": []
+        },
+        {
+          "gw": 34,
+          "slots": 2,
+          "originalNoShows": [
+            "Enzo",
+            "Cunha"
+          ],
+          "playingBench": [
+            "Pickford"
+          ]
+        },
+        {
+          "gw": 38,
+          "slots": 1,
+          "originalNoShows": [
+            "Raya",
+            "Saliba",
+            "Gu\u00c3\u00a9hi",
+            "O'Reilly"
+          ],
+          "playingBench": [
+            "Pickford",
+            "Bowen",
+            "Thiago",
+            "Enzo"
+          ]
+        }
+      ]
+    }
+  ]
+}

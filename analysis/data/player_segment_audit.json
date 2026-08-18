@@ -1,0 +1,306 @@
+{
+  "method": "Evaluation seasons only; positive bias means the causal forecast overpredicts realised FPL points.",
+  "overall": {
+    "rows": 199522,
+    "forecast": 1.531,
+    "actual": 1.271,
+    "bias": 0.26,
+    "mae": 1.35,
+    "returnRate": 0.098,
+    "blankRate": 0.858
+  },
+  "position": [
+    {
+      "position": "GK",
+      "rows": 22126,
+      "forecast": 1.393,
+      "actual": 0.971,
+      "bias": 0.423,
+      "mae": 1.14,
+      "returnRate": 0.08,
+      "blankRate": 0.87
+    },
+    {
+      "position": "DEF",
+      "rows": 67543,
+      "forecast": 1.45,
+      "actual": 1.211,
+      "bias": 0.238,
+      "mae": 1.441,
+      "returnRate": 0.116,
+      "blankRate": 0.867
+    },
+    {
+      "position": "MID",
+      "rows": 84877,
+      "forecast": 1.592,
+      "actual": 1.347,
+      "bias": 0.245,
+      "mae": 1.302,
+      "returnRate": 0.083,
+      "blankRate": 0.845
+    },
+    {
+      "position": "FWD",
+      "rows": 24976,
+      "forecast": 1.667,
+      "actual": 1.442,
+      "bias": 0.225,
+      "mae": 1.451,
+      "returnRate": 0.116,
+      "blankRate": 0.87
+    }
+  ],
+  "seasonPhase": [
+    {
+      "seasonPhase": "GW1-6",
+      "rows": 29017,
+      "forecast": 1.679,
+      "actual": 1.359,
+      "bias": 0.32,
+      "mae": 1.476,
+      "returnRate": 0.103,
+      "blankRate": 0.851
+    },
+    {
+      "seasonPhase": "GW7-19",
+      "rows": 65114,
+      "forecast": 1.533,
+      "actual": 1.291,
+      "bias": 0.242,
+      "mae": 1.349,
+      "returnRate": 0.1,
+      "blankRate": 0.857
+    },
+    {
+      "seasonPhase": "GW20-30",
+      "rows": 59130,
+      "forecast": 1.495,
+      "actual": 1.239,
+      "bias": 0.256,
+      "mae": 1.326,
+      "returnRate": 0.096,
+      "blankRate": 0.86
+    },
+    {
+      "seasonPhase": "GW31+",
+      "rows": 46261,
+      "forecast": 1.483,
+      "actual": 1.23,
+      "bias": 0.253,
+      "mae": 1.302,
+      "returnRate": 0.095,
+      "blankRate": 0.863
+    }
+  ],
+  "minutesTier": [
+    {
+      "minutesTier": "uncertain",
+      "rows": 48174,
+      "forecast": 1.964,
+      "actual": 1.832,
+      "bias": 0.132,
+      "mae": 1.797,
+      "returnRate": 0.137,
+      "blankRate": 0.795
+    },
+    {
+      "minutesTier": "likely",
+      "rows": 22983,
+      "forecast": 3.122,
+      "actual": 2.888,
+      "bias": 0.233,
+      "mae": 2.393,
+      "returnRate": 0.238,
+      "blankRate": 0.669
+    },
+    {
+      "minutesTier": "nailed",
+      "rows": 14739,
+      "forecast": 3.681,
+      "actual": 3.277,
+      "bias": 0.404,
+      "mae": 2.532,
+      "returnRate": 0.276,
+      "blankRate": 0.615
+    },
+    {
+      "minutesTier": "rotation",
+      "rows": 113626,
+      "forecast": 0.747,
+      "actual": 0.446,
+      "bias": 0.301,
+      "mae": 0.796,
+      "returnRate": 0.03,
+      "blankRate": 0.955
+    }
+  ],
+  "priceTier": [
+    {
+      "priceTier": "non-premium",
+      "rows": 190528,
+      "forecast": 1.429,
+      "actual": 1.166,
+      "bias": 0.263,
+      "mae": 1.274,
+      "returnRate": 0.087,
+      "blankRate": 0.87
+    },
+    {
+      "priceTier": "premium",
+      "rows": 8994,
+      "forecast": 3.699,
+      "actual": 3.502,
+      "bias": 0.197,
+      "mae": 2.967,
+      "returnRate": 0.333,
+      "blankRate": 0.609
+    }
+  ],
+  "popularityTier": [
+    {
+      "popularityTier": "popular",
+      "rows": 49880,
+      "forecast": 1.535,
+      "actual": 1.331,
+      "bias": 0.203,
+      "mae": 1.396,
+      "returnRate": 0.098,
+      "blankRate": 0.851
+    },
+    {
+      "popularityTier": "elite-owned",
+      "rows": 49881,
+      "forecast": 2.922,
+      "actual": 2.772,
+      "bias": 0.15,
+      "mae": 2.363,
+      "returnRate": 0.237,
+      "blankRate": 0.682
+    },
+    {
+      "popularityTier": "medium",
+      "rows": 49880,
+      "forecast": 1.015,
+      "actual": 0.73,
+      "bias": 0.285,
+      "mae": 0.976,
+      "returnRate": 0.045,
+      "blankRate": 0.923
+    },
+    {
+      "popularityTier": "low",
+      "rows": 49881,
+      "forecast": 0.653,
+      "actual": 0.25,
+      "bias": 0.402,
+      "mae": 0.664,
+      "returnRate": 0.012,
+      "blankRate": 0.977
+    }
+  ],
+  "defenderTeamStrength": [
+    {
+      "teamDefenceTier": "Q3",
+      "rows": 13402,
+      "forecast": 1.413,
+      "actual": 1.201,
+      "bias": 0.212,
+      "mae": 1.417,
+      "returnRate": 0.115,
+      "blankRate": 0.865
+    },
+    {
+      "teamDefenceTier": "Q2",
+      "rows": 13401,
+      "forecast": 1.239,
+      "actual": 1.091,
+      "bias": 0.149,
+      "mae": 1.308,
+      "returnRate": 0.102,
+      "blankRate": 0.878
+    },
+    {
+      "teamDefenceTier": "Q1",
+      "rows": 13350,
+      "forecast": 1.004,
+      "actual": 0.874,
+      "bias": 0.13,
+      "mae": 1.102,
+      "returnRate": 0.073,
+      "blankRate": 0.908
+    },
+    {
+      "teamDefenceTier": "Q5",
+      "rows": 13818,
+      "forecast": 1.976,
+      "actual": 1.549,
+      "bias": 0.426,
+      "mae": 1.805,
+      "returnRate": 0.159,
+      "blankRate": 0.826
+    },
+    {
+      "teamDefenceTier": "Q4",
+      "rows": 13572,
+      "forecast": 1.595,
+      "actual": 1.328,
+      "bias": 0.268,
+      "mae": 1.559,
+      "returnRate": 0.126,
+      "blankRate": 0.857
+    }
+  ],
+  "attackerTeamStrength": [
+    {
+      "teamAttackTier": "Q3",
+      "rows": 22101,
+      "forecast": 1.563,
+      "actual": 1.321,
+      "bias": 0.241,
+      "mae": 1.303,
+      "returnRate": 0.087,
+      "blankRate": 0.857
+    },
+    {
+      "teamAttackTier": "Q1",
+      "rows": 22055,
+      "forecast": 1.401,
+      "actual": 1.239,
+      "bias": 0.162,
+      "mae": 1.201,
+      "returnRate": 0.076,
+      "blankRate": 0.871
+    },
+    {
+      "teamAttackTier": "Q5",
+      "rows": 21626,
+      "forecast": 1.972,
+      "actual": 1.622,
+      "bias": 0.35,
+      "mae": 1.577,
+      "returnRate": 0.114,
+      "blankRate": 0.82
+    },
+    {
+      "teamAttackTier": "Q2",
+      "rows": 22145,
+      "forecast": 1.442,
+      "actual": 1.271,
+      "bias": 0.171,
+      "mae": 1.239,
+      "returnRate": 0.083,
+      "blankRate": 0.862
+    },
+    {
+      "teamAttackTier": "Q4",
+      "rows": 21926,
+      "forecast": 1.677,
+      "actual": 1.394,
+      "bias": 0.283,
+      "mae": 1.367,
+      "returnRate": 0.094,
+      "blankRate": 0.844
+    }
+  ]
+}

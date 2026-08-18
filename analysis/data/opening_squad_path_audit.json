@@ -1,0 +1,1362 @@
+{
+  "status": "research-only; diagnostic",
+  "method": "Opening squads are held fixed for six Gameweeks; weekly XI and captain are reselected causally. This removes transfer-path effects.",
+  "seasons": [
+    {
+      "season": "2018/19",
+      "variants": {
+        "heuristic": {
+          "spend": 100.0,
+          "benchSpend": 21.0,
+          "benchPremium": 4.0,
+          "predictedGw1": 62.8,
+          "planXi": 247.22,
+          "fixedSquadFirstSixActual": 287.0,
+          "fixedSquadWeeklyActual": [
+            62.0,
+            49.0,
+            48.0,
+            31.0,
+            49.0,
+            48.0
+          ],
+          "initialBenchStartsGw2To6": 16,
+          "initialBenchPointsGw2To6": 57.0,
+          "captain": "Salah",
+          "xi": [
+            "Dubravka",
+            "Smalling",
+            "van Aanholt",
+            "C\u00c3\u00a9dric",
+            "Bertrand",
+            "Salah",
+            "Pogba",
+            "Shaqiri",
+            "Aubameyang",
+            "P\u00c3\u00a9rez",
+            "Zaha"
+          ],
+          "bench": [
+            {
+              "name": "Foster",
+              "price": 4.5,
+              "playProbability": 90.0
+            },
+            {
+              "name": "van Dijk",
+              "price": 6.0,
+              "playProbability": 90.4
+            },
+            {
+              "name": "Fraser",
+              "price": 5.5,
+              "playProbability": 70.0
+            },
+            {
+              "name": "McArthur",
+              "price": 5.0,
+              "playProbability": 92.5
+            }
+          ]
+        },
+        "exactNoRules": {
+          "spend": 100.0,
+          "benchSpend": 19.5,
+          "benchPremium": 2.5,
+          "predictedGw1": 63.03,
+          "planXi": 247.55,
+          "fixedSquadFirstSixActual": 276.0,
+          "fixedSquadWeeklyActual": [
+            49.0,
+            37.0,
+            50.0,
+            43.0,
+            52.0,
+            45.0
+          ],
+          "initialBenchStartsGw2To6": 14,
+          "initialBenchPointsGw2To6": 53.0,
+          "captain": "Salah",
+          "xi": [
+            "Dubravka",
+            "Smalling",
+            "van Aanholt",
+            "C\u00c3\u00a9dric",
+            "Bertrand",
+            "Salah",
+            "Eriksen",
+            "Shaqiri",
+            "Aubameyang",
+            "P\u00c3\u00a9rez",
+            "Zaha"
+          ],
+          "bench": [
+            {
+              "name": "Foster",
+              "price": 4.5,
+              "playProbability": 90.0
+            },
+            {
+              "name": "Zanka",
+              "price": 4.5,
+              "playProbability": 89.3
+            },
+            {
+              "name": "Fraser",
+              "price": 5.5,
+              "playProbability": 70.0
+            },
+            {
+              "name": "McArthur",
+              "price": 5.0,
+              "playProbability": 92.5
+            }
+          ]
+        },
+        "exactHardRules": {
+          "spend": 100.0,
+          "benchSpend": 17.5,
+          "benchPremium": 1.0,
+          "predictedGw1": 63.38,
+          "planXi": 249.27,
+          "fixedSquadFirstSixActual": 273.0,
+          "fixedSquadWeeklyActual": [
+            58.0,
+            39.0,
+            49.0,
+            41.0,
+            35.0,
+            51.0
+          ],
+          "initialBenchStartsGw2To6": 6,
+          "initialBenchPointsGw2To6": 15.0,
+          "captain": "Salah",
+          "xi": [
+            "Dubravka",
+            "van Aanholt",
+            "C\u00c3\u00a9dric",
+            "Bertrand",
+            "Salah",
+            "Eriksen",
+            "Pogba",
+            "Shaqiri",
+            "Aubameyang",
+            "P\u00c3\u00a9rez",
+            "Zaha"
+          ],
+          "bench": [
+            {
+              "name": "Foster",
+              "price": 4.5,
+              "playProbability": 90.0
+            },
+            {
+              "name": "Zanka",
+              "price": 4.5,
+              "playProbability": 89.3
+            },
+            {
+              "name": "Guendouzi",
+              "price": 4.5,
+              "playProbability": 72.8
+            },
+            {
+              "name": "Bednarek",
+              "price": 4.0,
+              "playProbability": 54.9
+            }
+          ]
+        }
+      }
+    },
+    {
+      "season": "2019/20",
+      "variants": {
+        "heuristic": {
+          "spend": 99.0,
+          "benchSpend": 20.0,
+          "benchPremium": 3.0,
+          "predictedGw1": 73.44,
+          "planXi": 293.25,
+          "fixedSquadFirstSixActual": 305.0,
+          "fixedSquadWeeklyActual": [
+            39.0,
+            42.0,
+            43.0,
+            83.0,
+            47.0,
+            51.0
+          ],
+          "initialBenchStartsGw2To6": 7,
+          "initialBenchPointsGw2To6": 27.0,
+          "captain": "Man\u00c3\u00a9",
+          "xi": [
+            "Ederson",
+            "Alexander-Arnold",
+            "van Dijk",
+            "Laporte",
+            "Azpilicueta",
+            "Man\u00c3\u00a9",
+            "P\u00c3\u00a9rez",
+            "Tielemans",
+            "Zaha",
+            "Vardy",
+            "Wood"
+          ],
+          "bench": [
+            {
+              "name": "Fabianski",
+              "price": 5.0,
+              "playProbability": 90.0
+            },
+            {
+              "name": "Ritchie",
+              "price": 5.5,
+              "playProbability": 90.1
+            },
+            {
+              "name": "Noble",
+              "price": 5.0,
+              "playProbability": 84.5
+            },
+            {
+              "name": "Parrott",
+              "price": 4.5,
+              "playProbability": 73.6
+            }
+          ]
+        },
+        "exactNoRules": {
+          "spend": 100.0,
+          "benchSpend": 19.5,
+          "benchPremium": 2.5,
+          "predictedGw1": 74.8,
+          "planXi": 297.79,
+          "fixedSquadFirstSixActual": 346.0,
+          "fixedSquadWeeklyActual": [
+            58.0,
+            27.0,
+            68.0,
+            87.0,
+            55.0,
+            51.0
+          ],
+          "initialBenchStartsGw2To6": 5,
+          "initialBenchPointsGw2To6": 17.0,
+          "captain": "Salah",
+          "xi": [
+            "Fabianski",
+            "Alexander-Arnold",
+            "van Dijk",
+            "Laporte",
+            "Azpilicueta",
+            "Salah",
+            "P\u00c3\u00a9rez",
+            "Tielemans",
+            "Zaha",
+            "Vardy",
+            "Callum Wilson"
+          ],
+          "bench": [
+            {
+              "name": "Travers",
+              "price": 4.5,
+              "playProbability": 78.0
+            },
+            {
+              "name": "Ritchie",
+              "price": 5.5,
+              "playProbability": 90.1
+            },
+            {
+              "name": "Noble",
+              "price": 5.0,
+              "playProbability": 84.5
+            },
+            {
+              "name": "Parrott",
+              "price": 4.5,
+              "playProbability": 73.6
+            }
+          ]
+        },
+        "exactHardRules": {
+          "spend": 100.0,
+          "benchSpend": 17.5,
+          "benchPremium": 1.0,
+          "predictedGw1": 75.4,
+          "planXi": 296.97,
+          "fixedSquadFirstSixActual": 333.0,
+          "fixedSquadWeeklyActual": [
+            66.0,
+            26.0,
+            61.0,
+            86.0,
+            45.0,
+            49.0
+          ],
+          "initialBenchStartsGw2To6": 1,
+          "initialBenchPointsGw2To6": 2.0,
+          "captain": "Salah",
+          "xi": [
+            "Ederson",
+            "Alexander-Arnold",
+            "van Dijk",
+            "Laporte",
+            "Salah",
+            "P\u00c3\u00a9rez",
+            "Tielemans",
+            "Zaha",
+            "Milivojevic",
+            "Vardy",
+            "Callum Wilson"
+          ],
+          "bench": [
+            {
+              "name": "Travers",
+              "price": 4.5,
+              "playProbability": 78.0
+            },
+            {
+              "name": "Lascelles",
+              "price": 4.5,
+              "playProbability": 74.7
+            },
+            {
+              "name": "Parrott",
+              "price": 4.5,
+              "playProbability": 73.6
+            },
+            {
+              "name": "Kelly",
+              "price": 4.0,
+              "playProbability": 71.4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "season": "2020/21",
+      "variants": {
+        "heuristic": {
+          "spend": 99.0,
+          "benchSpend": 19.0,
+          "benchPremium": 2.5,
+          "predictedGw1": 63.15,
+          "planXi": 254.21,
+          "fixedSquadFirstSixActual": 348.0,
+          "fixedSquadWeeklyActual": [
+            48.0,
+            71.0,
+            40.0,
+            68.0,
+            68.0,
+            53.0
+          ],
+          "initialBenchStartsGw2To6": 6,
+          "initialBenchPointsGw2To6": 19.0,
+          "captain": "Kane",
+          "xi": [
+            "Ramsdale",
+            "Doherty",
+            "Robertson",
+            "Stevens",
+            "Salah",
+            "Son",
+            "Soucek",
+            "Livermore",
+            "Kane",
+            "Antonio",
+            "Jim\u00c3\u00a9nez"
+          ],
+          "bench": [
+            {
+              "name": "McCarthy",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Rice",
+              "price": 5.0,
+              "playProbability": 92.1
+            },
+            {
+              "name": "Egan",
+              "price": 5.0,
+              "playProbability": 83.8
+            },
+            {
+              "name": "Hegazi",
+              "price": 4.5,
+              "playProbability": 90.9
+            }
+          ]
+        },
+        "exactNoRules": {
+          "spend": 100.0,
+          "benchSpend": 18.5,
+          "benchPremium": 2.0,
+          "predictedGw1": 64.4,
+          "planXi": 254.46,
+          "fixedSquadFirstSixActual": 327.0,
+          "fixedSquadWeeklyActual": [
+            56.0,
+            64.0,
+            58.0,
+            42.0,
+            57.0,
+            50.0
+          ],
+          "initialBenchStartsGw2To6": 3,
+          "initialBenchPointsGw2To6": 8.0,
+          "captain": "Kane",
+          "xi": [
+            "Lloris",
+            "Doherty",
+            "Robertson",
+            "Alexander-Arnold",
+            "Salah",
+            "Willian",
+            "Soucek",
+            "Livermore",
+            "Kane",
+            "Antonio",
+            "Ings"
+          ],
+          "bench": [
+            {
+              "name": "McCarthy",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Rice",
+              "price": 5.0,
+              "playProbability": 92.1
+            },
+            {
+              "name": "Hegazi",
+              "price": 4.5,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Gibbs",
+              "price": 4.5,
+              "playProbability": 90.9
+            }
+          ]
+        },
+        "exactHardRules": {
+          "spend": 100.0,
+          "benchSpend": 18.5,
+          "benchPremium": 2.0,
+          "predictedGw1": 64.4,
+          "planXi": 254.46,
+          "fixedSquadFirstSixActual": 327.0,
+          "fixedSquadWeeklyActual": [
+            56.0,
+            64.0,
+            58.0,
+            42.0,
+            57.0,
+            50.0
+          ],
+          "initialBenchStartsGw2To6": 3,
+          "initialBenchPointsGw2To6": 8.0,
+          "captain": "Kane",
+          "xi": [
+            "Lloris",
+            "Doherty",
+            "Robertson",
+            "Alexander-Arnold",
+            "Salah",
+            "Willian",
+            "Soucek",
+            "Livermore",
+            "Kane",
+            "Antonio",
+            "Ings"
+          ],
+          "bench": [
+            {
+              "name": "McCarthy",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Rice",
+              "price": 5.0,
+              "playProbability": 92.1
+            },
+            {
+              "name": "Hegazi",
+              "price": 4.5,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Gibbs",
+              "price": 4.5,
+              "playProbability": 90.9
+            }
+          ]
+        }
+      }
+    },
+    {
+      "season": "2021/22",
+      "variants": {
+        "heuristic": {
+          "spend": 98.0,
+          "benchSpend": 20.0,
+          "benchPremium": 3.5,
+          "predictedGw1": 60.86,
+          "planXi": 244.57,
+          "fixedSquadFirstSixActual": 321.0,
+          "fixedSquadWeeklyActual": [
+            69.0,
+            48.0,
+            55.0,
+            64.0,
+            45.0,
+            40.0
+          ],
+          "initialBenchStartsGw2To6": 9,
+          "initialBenchPointsGw2To6": 16.0,
+          "captain": "Salah",
+          "xi": [
+            "Alisson",
+            "Alexander-Arnold",
+            "Chilwell",
+            "Digne",
+            "Salah",
+            "Dallas",
+            "Harrison",
+            "Greenwood",
+            "Lingard",
+            "Iheanacho",
+            "Wood"
+          ],
+          "bench": [
+            {
+              "name": "Dubravka",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Coufal",
+              "price": 5.0,
+              "playProbability": 91.1
+            },
+            {
+              "name": "Deeney",
+              "price": 5.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Godfrey",
+              "price": 5.0,
+              "playProbability": 89.1
+            }
+          ]
+        },
+        "exactNoRules": {
+          "spend": 100.0,
+          "benchSpend": 20.0,
+          "benchPremium": 3.0,
+          "predictedGw1": 62.66,
+          "planXi": 251.08,
+          "fixedSquadFirstSixActual": 262.0,
+          "fixedSquadWeeklyActual": [
+            77.0,
+            38.0,
+            40.0,
+            61.0,
+            20.0,
+            26.0
+          ],
+          "initialBenchStartsGw2To6": 10,
+          "initialBenchPointsGw2To6": 23.0,
+          "captain": "Fernandes",
+          "xi": [
+            "Alisson",
+            "Alexander-Arnold",
+            "Robertson",
+            "Chilwell",
+            "Digne",
+            "Fernandes",
+            "Son",
+            "Dallas",
+            "Harrison",
+            "Iheanacho",
+            "Wood"
+          ],
+          "bench": [
+            {
+              "name": "Dubravka",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Coufal",
+              "price": 5.0,
+              "playProbability": 91.1
+            },
+            {
+              "name": "Deeney",
+              "price": 5.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "H\u00c3\u00b8jbjerg",
+              "price": 5.0,
+              "playProbability": 90.4
+            }
+          ]
+        },
+        "exactHardRules": {
+          "spend": 100.0,
+          "benchSpend": 18.5,
+          "benchPremium": 1.5,
+          "predictedGw1": 62.94,
+          "planXi": 252.34,
+          "fixedSquadFirstSixActual": 269.0,
+          "fixedSquadWeeklyActual": [
+            82.0,
+            34.0,
+            43.0,
+            59.0,
+            24.0,
+            27.0
+          ],
+          "initialBenchStartsGw2To6": 9,
+          "initialBenchPointsGw2To6": 6.0,
+          "captain": "Fernandes",
+          "xi": [
+            "Alisson",
+            "Alexander-Arnold",
+            "Robertson",
+            "Chilwell",
+            "Digne",
+            "Fernandes",
+            "Son",
+            "P\u00c3\u00a9p\u00c3\u00a9",
+            "Dallas",
+            "Iheanacho",
+            "Wood"
+          ],
+          "bench": [
+            {
+              "name": "Foster",
+              "price": 4.0,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Deeney",
+              "price": 5.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Ayling",
+              "price": 4.5,
+              "playProbability": 91.1
+            },
+            {
+              "name": "Brownhill",
+              "price": 4.5,
+              "playProbability": 92.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "season": "2022/23",
+      "variants": {
+        "heuristic": {
+          "spend": 98.5,
+          "benchSpend": 18.5,
+          "benchPremium": 2.0,
+          "predictedGw1": 73.72,
+          "planXi": 288.65,
+          "fixedSquadFirstSixActual": 275.0,
+          "fixedSquadWeeklyActual": [
+            41.0,
+            56.0,
+            59.0,
+            52.0,
+            31.0,
+            36.0
+          ],
+          "initialBenchStartsGw2To6": 7,
+          "initialBenchPointsGw2To6": 25.0,
+          "captain": "Son",
+          "xi": [
+            "Meslier",
+            "Matip",
+            "Andersen",
+            "Cucurella",
+            "Son",
+            "Kulusevski",
+            "Maddison",
+            "Bruno Guimar\u00c3\u00a3es",
+            "Zaha",
+            "Kane",
+            "Watkins"
+          ],
+          "bench": [
+            {
+              "name": "Dubravka",
+              "price": 4.5,
+              "playProbability": 88.7
+            },
+            {
+              "name": "Veltman",
+              "price": 4.5,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Targett",
+              "price": 5.0,
+              "playProbability": 90.4
+            },
+            {
+              "name": "Plange",
+              "price": 4.5,
+              "playProbability": 73.1
+            }
+          ]
+        },
+        "exactNoRules": {
+          "spend": 100.0,
+          "benchSpend": 18.0,
+          "benchPremium": 1.5,
+          "predictedGw1": 74.33,
+          "planXi": 289.89,
+          "fixedSquadFirstSixActual": 274.0,
+          "fixedSquadWeeklyActual": [
+            46.0,
+            46.0,
+            52.0,
+            59.0,
+            30.0,
+            41.0
+          ],
+          "initialBenchStartsGw2To6": 7,
+          "initialBenchPointsGw2To6": 26.0,
+          "captain": "Son",
+          "xi": [
+            "Alisson",
+            "Matip",
+            "Robertson",
+            "Andersen",
+            "Son",
+            "Kulusevski",
+            "Maddison",
+            "Bruno Guimar\u00c3\u00a3es",
+            "Zaha",
+            "Kane",
+            "Welbeck"
+          ],
+          "bench": [
+            {
+              "name": "Meslier",
+              "price": 4.5,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Veltman",
+              "price": 4.5,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Castagne",
+              "price": 4.5,
+              "playProbability": 79.1
+            },
+            {
+              "name": "Plange",
+              "price": 4.5,
+              "playProbability": 73.1
+            }
+          ]
+        },
+        "exactHardRules": {
+          "spend": 100.0,
+          "benchSpend": 18.0,
+          "benchPremium": 1.5,
+          "predictedGw1": 74.33,
+          "planXi": 289.89,
+          "fixedSquadFirstSixActual": 274.0,
+          "fixedSquadWeeklyActual": [
+            46.0,
+            46.0,
+            52.0,
+            59.0,
+            30.0,
+            41.0
+          ],
+          "initialBenchStartsGw2To6": 7,
+          "initialBenchPointsGw2To6": 26.0,
+          "captain": "Son",
+          "xi": [
+            "Alisson",
+            "Matip",
+            "Robertson",
+            "Andersen",
+            "Son",
+            "Kulusevski",
+            "Maddison",
+            "Bruno Guimar\u00c3\u00a3es",
+            "Zaha",
+            "Kane",
+            "Welbeck"
+          ],
+          "bench": [
+            {
+              "name": "Meslier",
+              "price": 4.5,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Veltman",
+              "price": 4.5,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Castagne",
+              "price": 4.5,
+              "playProbability": 79.1
+            },
+            {
+              "name": "Plange",
+              "price": 4.5,
+              "playProbability": 73.1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "season": "2023/24",
+      "variants": {
+        "heuristic": {
+          "spend": 100.0,
+          "benchSpend": 21.5,
+          "benchPremium": 5.0,
+          "predictedGw1": 64.85,
+          "planXi": 261.49,
+          "fixedSquadFirstSixActual": 323.0,
+          "fixedSquadWeeklyActual": [
+            44.0,
+            60.0,
+            46.0,
+            47.0,
+            52.0,
+            74.0
+          ],
+          "initialBenchStartsGw2To6": 13,
+          "initialBenchPointsGw2To6": 46.0,
+          "captain": "B.Fernandes",
+          "xi": [
+            "Raya",
+            "Estupi\u00c3\u00b1an",
+            "Pinnock",
+            "Trippier",
+            "B.Fernandes",
+            "\u00c3\u0098degaard",
+            "Mbeumo",
+            "McNeil",
+            "Kane",
+            "Wilson",
+            "G.Jesus"
+          ],
+          "bench": [
+            {
+              "name": "Ramsdale",
+              "price": 5.0,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Gross",
+              "price": 6.5,
+              "playProbability": 85.8
+            },
+            {
+              "name": "Botman",
+              "price": 4.5,
+              "playProbability": 91.8
+            },
+            {
+              "name": "Shaw",
+              "price": 5.5,
+              "playProbability": 71.3
+            }
+          ]
+        },
+        "exactNoRules": {
+          "spend": 100.0,
+          "benchSpend": 18.5,
+          "benchPremium": 2.0,
+          "predictedGw1": 65.72,
+          "planXi": 265.42,
+          "fixedSquadFirstSixActual": 308.0,
+          "fixedSquadWeeklyActual": [
+            43.0,
+            65.0,
+            34.0,
+            46.0,
+            50.0,
+            70.0
+          ],
+          "initialBenchStartsGw2To6": 5,
+          "initialBenchPointsGw2To6": 24.0,
+          "captain": "Salah",
+          "xi": [
+            "Ramsdale",
+            "Estupi\u00c3\u00b1an",
+            "Pinnock",
+            "Mee",
+            "B.Fernandes",
+            "Salah",
+            "\u00c3\u0098degaard",
+            "Mbeumo",
+            "McNeil",
+            "Kane",
+            "Wilson"
+          ],
+          "bench": [
+            {
+              "name": "Pickford",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Botman",
+              "price": 4.5,
+              "playProbability": 91.8
+            },
+            {
+              "name": "Lindelof",
+              "price": 4.5,
+              "playProbability": 83.3
+            },
+            {
+              "name": "Jebbison",
+              "price": 5.0,
+              "playProbability": 83.0
+            }
+          ]
+        },
+        "exactHardRules": {
+          "spend": 100.0,
+          "benchSpend": 17.0,
+          "benchPremium": 0.5,
+          "predictedGw1": 65.97,
+          "planXi": 268.32,
+          "fixedSquadFirstSixActual": 299.0,
+          "fixedSquadWeeklyActual": [
+            41.0,
+            59.0,
+            33.0,
+            46.0,
+            48.0,
+            72.0
+          ],
+          "initialBenchStartsGw2To6": 5,
+          "initialBenchPointsGw2To6": 7.0,
+          "captain": "Salah",
+          "xi": [
+            "Raya",
+            "Estupi\u00c3\u00b1an",
+            "Pinnock",
+            "Trippier",
+            "B.Fernandes",
+            "Salah",
+            "\u00c3\u0098degaard",
+            "Mbeumo",
+            "McNeil",
+            "Kane",
+            "Wilson"
+          ],
+          "bench": [
+            {
+              "name": "Pickford",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Taylor",
+              "price": 4.0,
+              "playProbability": 89.8
+            },
+            {
+              "name": "Baldock",
+              "price": 4.0,
+              "playProbability": 80.1
+            },
+            {
+              "name": "Marsh",
+              "price": 4.5,
+              "playProbability": 72.2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "season": "2024/25",
+      "variants": {
+        "heuristic": {
+          "spend": 99.5,
+          "benchSpend": 22.0,
+          "benchPremium": 5.5,
+          "predictedGw1": 70.28,
+          "planXi": 287.07,
+          "fixedSquadFirstSixActual": 274.0,
+          "fixedSquadWeeklyActual": [
+            54.0,
+            34.0,
+            54.0,
+            40.0,
+            49.0,
+            43.0
+          ],
+          "initialBenchStartsGw2To6": 10,
+          "initialBenchPointsGw2To6": 49.0,
+          "captain": "Isak",
+          "xi": [
+            "Pickford",
+            "White",
+            "Gvardiol",
+            "Mu\u00c3\u00b1oz",
+            "\u00c3\u0098degaard",
+            "Bruno G.",
+            "B.Fernandes",
+            "Gordon",
+            "Isak",
+            "Havertz",
+            "N.Jackson"
+          ],
+          "bench": [
+            {
+              "name": "Onana",
+              "price": 5.0,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Eze",
+              "price": 7.0,
+              "playProbability": 84.4
+            },
+            {
+              "name": "Mitchell",
+              "price": 5.0,
+              "playProbability": 89.8
+            },
+            {
+              "name": "Tarkowski",
+              "price": 5.0,
+              "playProbability": 90.3
+            }
+          ]
+        },
+        "exactNoRules": {
+          "spend": 100.0,
+          "benchSpend": 19.0,
+          "benchPremium": 2.5,
+          "predictedGw1": 72.57,
+          "planXi": 297.82,
+          "fixedSquadFirstSixActual": 318.0,
+          "fixedSquadWeeklyActual": [
+            44.0,
+            54.0,
+            41.0,
+            53.0,
+            48.0,
+            78.0
+          ],
+          "initialBenchStartsGw2To6": 7,
+          "initialBenchPointsGw2To6": 30.0,
+          "captain": "Isak",
+          "xi": [
+            "Pickford",
+            "White",
+            "Gvardiol",
+            "Saliba",
+            "Palmer",
+            "\u00c3\u0098degaard",
+            "Bruno G.",
+            "B.Fernandes",
+            "Isak",
+            "Mateta",
+            "N.Jackson"
+          ],
+          "bench": [
+            {
+              "name": "Onana",
+              "price": 5.0,
+              "playProbability": 90.9
+            },
+            {
+              "name": "J.Murphy",
+              "price": 5.5,
+              "playProbability": 91.7
+            },
+            {
+              "name": "Andersen",
+              "price": 4.5,
+              "playProbability": 89.8
+            },
+            {
+              "name": "Faes",
+              "price": 4.0,
+              "playProbability": 91.9
+            }
+          ]
+        },
+        "exactHardRules": {
+          "spend": 99.5,
+          "benchSpend": 18.5,
+          "benchPremium": 2.0,
+          "predictedGw1": 72.57,
+          "planXi": 297.82,
+          "fixedSquadFirstSixActual": 326.0,
+          "fixedSquadWeeklyActual": [
+            44.0,
+            54.0,
+            42.0,
+            55.0,
+            53.0,
+            78.0
+          ],
+          "initialBenchStartsGw2To6": 6,
+          "initialBenchPointsGw2To6": 30.0,
+          "captain": "Isak",
+          "xi": [
+            "Pickford",
+            "White",
+            "Gvardiol",
+            "Saliba",
+            "Palmer",
+            "\u00c3\u0098degaard",
+            "Bruno G.",
+            "B.Fernandes",
+            "Isak",
+            "Mateta",
+            "N.Jackson"
+          ],
+          "bench": [
+            {
+              "name": "Onana",
+              "price": 5.0,
+              "playProbability": 90.9
+            },
+            {
+              "name": "Caicedo",
+              "price": 5.0,
+              "playProbability": 91.0
+            },
+            {
+              "name": "Andersen",
+              "price": 4.5,
+              "playProbability": 89.8
+            },
+            {
+              "name": "Faes",
+              "price": 4.0,
+              "playProbability": 91.9
+            }
+          ]
+        }
+      }
+    },
+    {
+      "season": "2025/26",
+      "variants": {
+        "heuristic": {
+          "spend": 99.0,
+          "benchSpend": 22.5,
+          "benchPremium": 6.0,
+          "predictedGw1": 59.44,
+          "planXi": 233.19,
+          "fixedSquadFirstSixActual": 245.0,
+          "fixedSquadWeeklyActual": [
+            42.0,
+            31.0,
+            61.0,
+            40.0,
+            27.0,
+            44.0
+          ],
+          "initialBenchStartsGw2To6": 13,
+          "initialBenchPointsGw2To6": 53.0,
+          "captain": "Mbeumo",
+          "xi": [
+            "S\u00c3\u00a1nchez",
+            "Cucurella",
+            "Gvardiol",
+            "R\u00c3\u00baben",
+            "Mbeumo",
+            "Eze",
+            "Trossard",
+            "Rogers",
+            "Bowen",
+            "Watkins",
+            "Wissa"
+          ],
+          "bench": [
+            {
+              "name": "Pickford",
+              "price": 5.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Enzo",
+              "price": 6.5,
+              "playProbability": 91.5
+            },
+            {
+              "name": "Konsa",
+              "price": 4.5,
+              "playProbability": 87.5
+            },
+            {
+              "name": "Kerkez",
+              "price": 6.0,
+              "playProbability": 90.9
+            }
+          ]
+        },
+        "exactNoRules": {
+          "spend": 100.0,
+          "benchSpend": 18.0,
+          "benchPremium": 1.5,
+          "predictedGw1": 60.73,
+          "planXi": 238.6,
+          "fixedSquadFirstSixActual": 247.0,
+          "fixedSquadWeeklyActual": [
+            51.0,
+            27.0,
+            50.0,
+            54.0,
+            34.0,
+            31.0
+          ],
+          "initialBenchStartsGw2To6": 7,
+          "initialBenchPointsGw2To6": 15.0,
+          "captain": "M.Salah",
+          "xi": [
+            "S\u00c3\u00a1nchez",
+            "Cucurella",
+            "Gvardiol",
+            "R\u00c3\u00baben",
+            "M.Salah",
+            "Mbeumo",
+            "Eze",
+            "Trossard",
+            "Rogers",
+            "Bowen",
+            "Wissa"
+          ],
+          "bench": [
+            {
+              "name": "Verbruggen",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Konsa",
+              "price": 4.5,
+              "playProbability": 87.5
+            },
+            {
+              "name": "Agbadou",
+              "price": 4.5,
+              "playProbability": 91.6
+            },
+            {
+              "name": "Redmond",
+              "price": 4.5,
+              "playProbability": 73.6
+            }
+          ]
+        },
+        "exactHardRules": {
+          "spend": 100.0,
+          "benchSpend": 18.0,
+          "benchPremium": 1.5,
+          "predictedGw1": 60.73,
+          "planXi": 238.6,
+          "fixedSquadFirstSixActual": 247.0,
+          "fixedSquadWeeklyActual": [
+            51.0,
+            27.0,
+            50.0,
+            54.0,
+            34.0,
+            31.0
+          ],
+          "initialBenchStartsGw2To6": 7,
+          "initialBenchPointsGw2To6": 15.0,
+          "captain": "M.Salah",
+          "xi": [
+            "S\u00c3\u00a1nchez",
+            "Cucurella",
+            "Gvardiol",
+            "R\u00c3\u00baben",
+            "M.Salah",
+            "Mbeumo",
+            "Eze",
+            "Trossard",
+            "Rogers",
+            "Bowen",
+            "Wissa"
+          ],
+          "bench": [
+            {
+              "name": "Verbruggen",
+              "price": 4.5,
+              "playProbability": 91.3
+            },
+            {
+              "name": "Konsa",
+              "price": 4.5,
+              "playProbability": 87.5
+            },
+            {
+              "name": "Agbadou",
+              "price": 4.5,
+              "playProbability": 91.6
+            },
+            {
+              "name": "Redmond",
+              "price": 4.5,
+              "playProbability": 73.6
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "averages": {
+    "heuristic": {
+      "spend": 99.12,
+      "benchSpend": 20.56,
+      "predictedGw1": 66.07,
+      "fixedSquadFirstSixActual": 297.25
+    },
+    "exactNoRules": {
+      "spend": 100.0,
+      "benchSpend": 18.88,
+      "predictedGw1": 67.28,
+      "fixedSquadFirstSixActual": 294.75
+    },
+    "exactHardRules": {
+      "spend": 99.94,
+      "benchSpend": 17.94,
+      "predictedGw1": 67.47,
+      "fixedSquadFirstSixActual": 293.5
+    }
+  }
+}
