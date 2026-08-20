@@ -1,0 +1,196 @@
+{
+  "status": "research-only causal dynamic match ensemble",
+  "provenance": "Structural inputs are deadline-causal. Historical first-market odds have unknown capture times and cannot qualify production promotion.",
+  "coverage": {
+    "evaluationSingleTeamWeeks": 5643,
+    "coveredTeamWeeks": 5643,
+    "coverage": 1.0
+  },
+  "metrics": {
+    "teamMatches": 5643,
+    "structural": {
+      "goalsForMae": 0.9607,
+      "goalsForPoissonDeviance": 1.2546,
+      "goalsAgainstMae": 0.9729,
+      "cleanSheetBrier": 0.23587
+    },
+    "market": {
+      "goalsForMae": 0.9055,
+      "goalsForPoissonDeviance": 1.108,
+      "goalsAgainstMae": 0.9141,
+      "cleanSheetBrier": 0.22495
+    },
+    "dynamic": {
+      "goalsForMae": 0.9065,
+      "goalsForPoissonDeviance": 1.1172,
+      "goalsAgainstMae": 0.9161,
+      "cleanSheetBrier": 0.22564
+    }
+  },
+  "weights": [
+    {
+      "season": "2018-19",
+      "priorTeamMatches": 0,
+      "attackMarketWeight": 0.5,
+      "defenceMarketWeight": 0.5,
+      "cleanMarketWeight": 0.5,
+      "testTeamMatches": 716
+    },
+    {
+      "season": "2019-20",
+      "priorTeamMatches": 716,
+      "attackMarketWeight": 0.8266,
+      "defenceMarketWeight": 0.8266,
+      "cleanMarketWeight": 0.8266,
+      "testTeamMatches": 746
+    },
+    {
+      "season": "2020-21",
+      "priorTeamMatches": 1462,
+      "attackMarketWeight": 0.8969,
+      "defenceMarketWeight": 0.8969,
+      "cleanMarketWeight": 0.8175,
+      "testTeamMatches": 673
+    },
+    {
+      "season": "2021-22",
+      "priorTeamMatches": 2135,
+      "attackMarketWeight": 0.9245,
+      "defenceMarketWeight": 0.9245,
+      "cleanMarketWeight": 0.8396,
+      "testTeamMatches": 638
+    },
+    {
+      "season": "2022-23",
+      "priorTeamMatches": 2773,
+      "attackMarketWeight": 0.9397,
+      "defenceMarketWeight": 0.9397,
+      "cleanMarketWeight": 0.8078,
+      "testTeamMatches": 676
+    },
+    {
+      "season": "2023-24",
+      "priorTeamMatches": 3449,
+      "attackMarketWeight": 0.9504,
+      "defenceMarketWeight": 0.9504,
+      "cleanMarketWeight": 0.9053,
+      "testTeamMatches": 714
+    },
+    {
+      "season": "2024-25",
+      "priorTeamMatches": 4163,
+      "attackMarketWeight": 0.9582,
+      "defenceMarketWeight": 0.9582,
+      "cleanMarketWeight": 0.9124,
+      "testTeamMatches": 740
+    },
+    {
+      "season": "2025-26",
+      "priorTeamMatches": 4903,
+      "attackMarketWeight": 0.9176,
+      "defenceMarketWeight": 0.964,
+      "cleanMarketWeight": 0.9176,
+      "testTeamMatches": 740
+    }
+  ],
+  "marketSources": [
+    {
+      "season": "2012-13",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/1213/E0.csv",
+      "sha256": "1df561d34a9b79ff8cb1fccd4fd279d183e74cd871063a307ecf18f01e0d622f",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2013-14",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/1314/E0.csv",
+      "sha256": "3cf16078fde2e0e6c6cb07ebdb20ca98d1a755c9508a18bbeb4ad6837fad2b42",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2014-15",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/1415/E0.csv",
+      "sha256": "76b7858051ff6b17f46f49f26fdc70c1f29537270492606f5cc63d67fad5d149",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2015-16",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/1516/E0.csv",
+      "sha256": "bd3502a18c38a1597fd9af62e2366b4015006d3528dd4d18b311bd6237bbc085",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2016-17",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/1617/E0.csv",
+      "sha256": "9625a7652b5f98fbd3e2e4d378c851fc246693f3343e34a72428d5b6e864d3e0",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2017-18",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/1718/E0.csv",
+      "sha256": "4f3389365ef3f7ac966764ed8ba67cf3b79f5aebed18dd224099c4b2c98bc67b",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2018-19",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/1819/E0.csv",
+      "sha256": "7c096b3c2ecd54c6993d22eeea73450c2bde11e3457238b226b8f43c62dfc35e",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2019-20",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/1920/E0.csv",
+      "sha256": "100037618b94f94057400bb02bf6bac4ef74ddaa58cde4b38370839c39caee61",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2020-21",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/2021/E0.csv",
+      "sha256": "5afe63f69401457b8354eaacee24f9a3e520b3c3af6329564a9783e20d789c62",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2021-22",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/2122/E0.csv",
+      "sha256": "335afcbabeb2939fa10ab39ba3e8215072d0b577cb8d0705c1e44c56e934e703",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2022-23",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/2223/E0.csv",
+      "sha256": "8442792d3b614c94ea3cf381bd2736805889cc1713169035368fff19c3d02380",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2023-24",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/2324/E0.csv",
+      "sha256": "b2e057b0ed959f198b0f63d2391c01239f3608e6de5db68edab3f88e04d07ff3",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2024-25",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/2425/E0.csv",
+      "sha256": "d0c8ce4a96d886cf60cf101f570f4a3893844226f91c7bd769eb568c49edbfa4",
+      "oddsTiming": "first non-closing market set only"
+    },
+    {
+      "season": "2025-26",
+      "matches": 380,
+      "source": "https://www.football-data.co.uk/mmz4281/2526/E0.csv",
+      "sha256": "3e3a8352f9ada6789c508d6ca184424421fed56a30400904a4a327c583407e62",
+      "oddsTiming": "first non-closing market set only"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "status": "prospective DR evaluator implemented; historical inference blocked honestly",
+  "requiredShadowLogColumns": [
+    "action",
+    "behaviourPropensity",
+    "qLogged",
+    "qTarget",
+    "reward",
+    "targetProbability"
+  ],
+  "historicalSupport": {
+    "rows": 70247,
+    "sourcePolicies": [
+      "Audited stable joint planner",
+      "Broader legal beam",
+      "Fieldability boundary",
+      "Higher transfer hurdle",
+      "Lower transfer hurdle"
+    ],
+    "availableColumns": [
+      "baseSignature",
+      "event",
+      "goalkeeperPackage",
+      "gw",
+      "incoming",
+      "maturity",
+      "moves",
+      "outgoing",
+      "predictedGain",
+      "season",
+      "seasonOrder",
+      "sourcePolicy",
+      "targetGain",
+      "targetResidual"
+    ],
+    "missingColumns": [
+      "action",
+      "behaviourPropensity",
+      "qLogged",
+      "qTarget",
+      "reward",
+      "targetProbability"
+    ],
+    "overlapIdentified": false,
+    "validDoublyRobustEstimate": false,
+    "reason": "Candidate actions and modelled horizon gains are present, but the chosen action reward and behaviour propensity were not logged. A doubly-robust estimate would therefore be unidentified."
+  },
+  "promotionRule": "Use paired recursive replay for historical selection. Use DR only after prospective shadow policies log actions, rewards, target probabilities and non-zero behaviour propensities."
+}

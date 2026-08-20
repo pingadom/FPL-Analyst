@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "status": "action-specific causal value surfaces available to challengers",
+  "profiles": [
+    {
+      "action": "captain",
+      "horizon": "h1",
+      "replacement_cost": 0.0,
+      "description": "Only the next scoring event matters."
+    },
+    {
+      "action": "starting_xi",
+      "horizon": "h1",
+      "replacement_cost": 0.0,
+      "description": "Line-up choice is reset next deadline."
+    },
+    {
+      "action": "free_hit",
+      "horizon": "h1",
+      "replacement_cost": 0.0,
+      "description": "The temporary squad lasts one event."
+    },
+    {
+      "action": "bench",
+      "horizon": "h3",
+      "replacement_cost": 0.0,
+      "description": "Short cover value without premium overinvestment."
+    },
+    {
+      "action": "transfer",
+      "horizon": "player-specific-1/3/6/10",
+      "replacement_cost": 3.0,
+      "description": "Tenure follows durability and charges a future replacement."
+    },
+    {
+      "action": "wildcard",
+      "horizon": "h10",
+      "replacement_cost": 0.0,
+      "description": "Durable squad structure receives the longest audited horizon."
+    }
+  ],
+  "positionTenure": [
+    {
+      "position": 1,
+      "rows": 27627,
+      "meanExpectedTenure": 6.313,
+      "meanHorizonWeights": {
+        "h1": 0.0,
+        "h3": 0.1039,
+        "h6": 0.7401,
+        "h10": 0.156
+      }
+    },
+    {
+      "position": 2,
+      "rows": 84873,
+      "meanExpectedTenure": 6.447,
+      "meanHorizonWeights": {
+        "h1": 0.0,
+        "h3": 0.0786,
+        "h6": 0.7507,
+        "h10": 0.1706
+      }
+    },
+    {
+      "position": 3,
+      "rows": 107218,
+      "meanExpectedTenure": 6.441,
+      "meanHorizonWeights": {
+        "h1": 0.0,
+        "h3": 0.0695,
+        "h6": 0.7681,
+        "h10": 0.1624
+      }
+    },
+    {
+      "position": 4,
+      "rows": 32619,
+      "meanExpectedTenure": 6.356,
+      "meanHorizonWeights": {
+        "h1": 0.0,
+        "h3": 0.0741,
+        "h6": 0.7813,
+        "h10": 0.1446
+      }
+    }
+  ],
+  "staticFits": 36,
+  "onlineFits": 216,
+  "maturityRule": "Each horizon model uses prior seasons plus only same-season labels whose full target horizon ended before the update checkpoint.",
+  "promotion": "Surfaces are not automatically substituted into the recursive champion. Each action boundary requires a paired replay."
+}
