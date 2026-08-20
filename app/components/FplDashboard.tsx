@@ -1042,8 +1042,8 @@ export default function FplDashboard() {
             </div>
             <div className="frontier-comparison">
               <div><span>PAIRED CONTROL</span><strong>{performanceProgress.controlAverage}</strong><small>recursive average</small></div>
-              <div><span>HYBRID</span><strong>{performanceProgress.hybridAverage}</strong><small>+{(performanceProgress.hybridAverage - performanceProgress.controlAverage).toFixed(1)} points</small></div>
-              <div><span>+ CAPTAIN</span><strong>{performanceProgress.captainStackAverage}</strong><small>{performanceProgress.targetHits}/8 cutoff hits</small></div>
+              <div><span>PREVIOUS V2</span><strong>{performanceProgress.hybridAverage}</strong><small>+{(performanceProgress.hybridAverage - performanceProgress.controlAverage).toFixed(1)} points</small></div>
+              <div><span>INTEGRATED V3</span><strong>{performanceProgress.captainStackAverage}</strong><small>{performanceProgress.targetHits}/8 cutoff hits</small></div>
             </div>
           </div>
 
@@ -1055,7 +1055,7 @@ export default function FplDashboard() {
             <div className="ladder-track">
               {[
                 ["Control", performanceProgress.controlAverage],
-                ["Hybrid stack", performanceProgress.captainStackAverage],
+                ["Integrated v3", performanceProgress.captainStackAverage],
                 ["Weekly rebuild ceiling", performanceProgress.weeklyRebuildCeiling],
                 ["Top-500k pace", performanceProgress.top500Pace],
               ].map(([label, value]) => (

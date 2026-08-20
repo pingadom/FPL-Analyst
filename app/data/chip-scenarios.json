@@ -92,16 +92,16 @@
     },
     {
       "chip": "Wildcard",
-      "meanGain": 18.6,
-      "p10Gain": 5.2,
-      "medianGain": 18.4,
-      "p90Gain": 32.2,
-      "probabilityPositive": 96.2,
+      "meanGain": 3.3,
+      "p10Gain": -13.0,
+      "medianGain": 3.6,
+      "p90Gain": 19.6,
+      "probabilityPositive": 60.4,
       "gatePassed": false,
       "available": false,
       "reservationValue": 21.4,
-      "riskAdjustedGain": 14.6,
-      "netOfReservation": -6.8,
+      "riskAdjustedGain": -1.6,
+      "netOfReservation": -23.0,
       "learnedExpectedGain": null,
       "permanentTransferValueForegone": null,
       "manualReviewTriggered": false
@@ -151,13 +151,13 @@
       55,
       124,
       109,
-      61,
-      368,
-      67,
-      356,
+      480,
       113,
-      321,
-      192
+      236,
+      423,
+      465,
+      332,
+      102
     ]
   },
   "captains": {
@@ -166,6 +166,7 @@
     "wildcard": "Haaland"
   },
   "availableBudget": 100.0,
+  "policyProfile": "default causal reservation policy",
   "sequencePlan": {
     "status": "diagnostic; current one-week gate remains authoritative",
     "halfEnd": 19,
@@ -269,16 +270,16 @@
         },
         {
           "chip": "Wildcard",
-          "meanGain": 17.3,
-          "p10Gain": 6.8,
-          "medianGain": 17.2,
-          "p90Gain": 27.8,
-          "probabilityPositive": 98.6,
+          "meanGain": -0.6,
+          "p10Gain": -6.6,
+          "medianGain": -0.6,
+          "p90Gain": 5.4,
+          "probabilityPositive": 44.6,
           "gatePassed": false,
           "available": false,
           "reservationValue": 21.4,
-          "riskAdjustedGain": 14.2,
-          "netOfReservation": -7.3,
+          "riskAdjustedGain": -2.4,
+          "netOfReservation": -23.8,
           "learnedExpectedGain": null,
           "permanentTransferValueForegone": null,
           "manualReviewTriggered": false
@@ -328,13 +329,13 @@
           55,
           124,
           109,
-          61,
-          368,
-          67,
-          356,
+          480,
           113,
-          321,
-          192
+          236,
+          423,
+          465,
+          332,
+          102
         ]
       },
       "captains": {
@@ -343,6 +344,7 @@
         "wildcard": "Haaland"
       },
       "availableBudget": 100.0,
+      "policyProfile": "default causal reservation policy",
       "sequencePlan": {
         "status": "diagnostic; current one-week gate remains authoritative",
         "halfEnd": 19,
@@ -446,16 +448,16 @@
         },
         {
           "chip": "Wildcard",
-          "meanGain": 17.3,
-          "p10Gain": 6.8,
-          "medianGain": 17.2,
-          "p90Gain": 27.8,
-          "probabilityPositive": 98.6,
+          "meanGain": -0.6,
+          "p10Gain": -6.6,
+          "medianGain": -0.6,
+          "p90Gain": 5.4,
+          "probabilityPositive": 44.6,
           "gatePassed": false,
           "available": false,
           "reservationValue": 21.4,
-          "riskAdjustedGain": 14.2,
-          "netOfReservation": -7.3,
+          "riskAdjustedGain": -2.4,
+          "netOfReservation": -23.8,
           "learnedExpectedGain": null,
           "permanentTransferValueForegone": null,
           "manualReviewTriggered": false
@@ -505,13 +507,13 @@
           55,
           124,
           109,
-          61,
-          368,
-          67,
-          356,
+          480,
           113,
-          321,
-          192
+          236,
+          423,
+          465,
+          332,
+          102
         ]
       },
       "captains": {
@@ -520,6 +522,7 @@
         "wildcard": "Haaland"
       },
       "availableBudget": 100.0,
+      "policyProfile": "default causal reservation policy",
       "sequencePlan": {
         "status": "diagnostic; current one-week gate remains authoritative",
         "halfEnd": 19,
@@ -575,17 +578,17 @@
         },
         {
           "chip": "Free Hit",
-          "meanGain": -0.2,
-          "p10Gain": -18.2,
-          "medianGain": -0.4,
-          "p90Gain": 18.0,
-          "probabilityPositive": 48.6,
+          "meanGain": -0.8,
+          "p10Gain": -16.2,
+          "medianGain": -0.8,
+          "p90Gain": 13.9,
+          "probabilityPositive": 47.1,
           "gatePassed": false,
           "available": false,
           "reservationValue": 8.5,
-          "riskAdjustedGain": -5.6,
-          "netOfReservation": -14.1,
-          "learnedExpectedGain": -8.4,
+          "riskAdjustedGain": -5.4,
+          "netOfReservation": -13.9,
+          "learnedExpectedGain": -8.1,
           "permanentTransferValueForegone": 0.0,
           "manualReviewTriggered": false
         },
@@ -623,16 +626,16 @@
         },
         {
           "chip": "Wildcard",
-          "meanGain": 17.3,
-          "p10Gain": 6.8,
-          "medianGain": 17.2,
-          "p90Gain": 27.8,
-          "probabilityPositive": 98.6,
+          "meanGain": -0.7,
+          "p10Gain": -6.0,
+          "medianGain": -0.7,
+          "p90Gain": 4.8,
+          "probabilityPositive": 43.6,
           "gatePassed": false,
           "available": false,
           "reservationValue": 21.4,
-          "riskAdjustedGain": 14.2,
-          "netOfReservation": -7.3,
+          "riskAdjustedGain": -2.3,
+          "netOfReservation": -23.7,
           "learnedExpectedGain": null,
           "permanentTransferValueForegone": null,
           "manualReviewTriggered": false
@@ -667,8 +670,8 @@
           113,
           236,
           123,
-          465,
-          171,
+          346,
+          497,
           272,
           556,
           508
@@ -682,13 +685,13 @@
           55,
           124,
           109,
-          61,
-          368,
-          67,
-          356,
+          480,
           113,
-          321,
-          192
+          236,
+          423,
+          346,
+          332,
+          102
         ]
       },
       "captains": {
@@ -697,6 +700,7 @@
         "wildcard": "Haaland"
       },
       "availableBudget": 100.0,
+      "policyProfile": "default causal reservation policy",
       "sequencePlan": {
         "status": "diagnostic; current one-week gate remains authoritative",
         "halfEnd": 19,
@@ -752,17 +756,17 @@
         },
         {
           "chip": "Free Hit",
-          "meanGain": -0.2,
-          "p10Gain": -18.2,
-          "medianGain": -0.4,
-          "p90Gain": 18.0,
-          "probabilityPositive": 48.6,
+          "meanGain": 0.2,
+          "p10Gain": -16.5,
+          "medianGain": -0.2,
+          "p90Gain": 16.3,
+          "probabilityPositive": 49.2,
           "gatePassed": false,
           "available": false,
           "reservationValue": 8.5,
-          "riskAdjustedGain": -5.6,
-          "netOfReservation": -14.1,
-          "learnedExpectedGain": -8.4,
+          "riskAdjustedGain": -4.8,
+          "netOfReservation": -13.3,
+          "learnedExpectedGain": -8.1,
           "permanentTransferValueForegone": 0.0,
           "manualReviewTriggered": false
         },
@@ -800,16 +804,16 @@
         },
         {
           "chip": "Wildcard",
-          "meanGain": 17.3,
-          "p10Gain": 6.8,
-          "medianGain": 17.2,
-          "p90Gain": 27.8,
-          "probabilityPositive": 98.6,
+          "meanGain": 0.0,
+          "p10Gain": -0.0,
+          "medianGain": 0.0,
+          "p90Gain": 0.0,
+          "probabilityPositive": 25.2,
           "gatePassed": false,
           "available": false,
           "reservationValue": 21.4,
-          "riskAdjustedGain": 14.2,
-          "netOfReservation": -7.3,
+          "riskAdjustedGain": 0.0,
+          "netOfReservation": -21.4,
           "learnedExpectedGain": null,
           "permanentTransferValueForegone": null,
           "manualReviewTriggered": false
@@ -844,10 +848,10 @@
           113,
           236,
           123,
-          465,
-          171,
+          346,
+          302,
+          308,
           272,
-          556,
           508
         ],
         "wildcard": [
@@ -859,13 +863,13 @@
           55,
           124,
           109,
-          61,
-          368,
-          67,
-          356,
+          480,
           113,
-          321,
-          192
+          236,
+          423,
+          346,
+          332,
+          102
         ]
       },
       "captains": {
@@ -874,6 +878,7 @@
         "wildcard": "Haaland"
       },
       "availableBudget": 100.0,
+      "policyProfile": "default causal reservation policy",
       "sequencePlan": {
         "status": "diagnostic; current one-week gate remains authoritative",
         "halfEnd": 19,
@@ -929,17 +934,17 @@
         },
         {
           "chip": "Free Hit",
-          "meanGain": -0.2,
-          "p10Gain": -18.2,
-          "medianGain": -0.4,
-          "p90Gain": 18.0,
-          "probabilityPositive": 48.6,
+          "meanGain": 0.2,
+          "p10Gain": -16.5,
+          "medianGain": -0.2,
+          "p90Gain": 16.3,
+          "probabilityPositive": 49.2,
           "gatePassed": false,
           "available": false,
           "reservationValue": 8.5,
-          "riskAdjustedGain": -5.6,
-          "netOfReservation": -14.1,
-          "learnedExpectedGain": -8.4,
+          "riskAdjustedGain": -4.8,
+          "netOfReservation": -13.3,
+          "learnedExpectedGain": -8.1,
           "permanentTransferValueForegone": 0.0,
           "manualReviewTriggered": false
         },
@@ -977,16 +982,16 @@
         },
         {
           "chip": "Wildcard",
-          "meanGain": 17.3,
-          "p10Gain": 6.8,
-          "medianGain": 17.2,
-          "p90Gain": 27.8,
-          "probabilityPositive": 98.6,
+          "meanGain": 0.0,
+          "p10Gain": -0.0,
+          "medianGain": 0.0,
+          "p90Gain": 0.0,
+          "probabilityPositive": 25.2,
           "gatePassed": false,
           "available": false,
           "reservationValue": 21.4,
-          "riskAdjustedGain": 14.2,
-          "netOfReservation": -7.3,
+          "riskAdjustedGain": 0.0,
+          "netOfReservation": -21.4,
           "learnedExpectedGain": null,
           "permanentTransferValueForegone": null,
           "manualReviewTriggered": false
@@ -1021,10 +1026,10 @@
           113,
           236,
           123,
-          465,
-          171,
+          346,
+          302,
+          308,
           272,
-          556,
           508
         ],
         "wildcard": [
@@ -1036,13 +1041,13 @@
           55,
           124,
           109,
-          61,
-          368,
-          67,
-          356,
+          480,
           113,
-          321,
-          192
+          236,
+          423,
+          346,
+          332,
+          102
         ]
       },
       "captains": {
@@ -1051,6 +1056,7 @@
         "wildcard": "Haaland"
       },
       "availableBudget": 100.0,
+      "policyProfile": "default causal reservation policy",
       "sequencePlan": {
         "status": "diagnostic; current one-week gate remains authoritative",
         "halfEnd": 19,
@@ -1062,6 +1068,179 @@
             "action": "Bench Boost"
           }
         ],
+        "terminalState": "current",
+        "method": "Current paired scenarios plus announced blank/double structural opportunities above past-only reservation values; unknown later fixtures retain option value and are not fabricated."
+      }
+    },
+    "forecast-breakthrough-v2": {
+      "recommendation": "Hold",
+      "chipSet": 1,
+      "chipsRemaining": [
+        "Wildcard",
+        "Free Hit",
+        "Bench Boost",
+        "Triple Captain"
+      ],
+      "weeksUntilSetExpiry": 19,
+      "forcedByExpiryCollision": false,
+      "currentStructure": {
+        "blankPlayers": 0,
+        "doublePlayers": 0,
+        "benchDoublePlayers": 0,
+        "captainHasDouble": false,
+        "captainIsStrongPremiumSingle": false,
+        "benchExpectedMinutes": 284.0,
+        "benchMeanPlayProbability": 89.8,
+        "benchMinimumPlayProbability": 89.0
+      },
+      "scenarios": [
+        {
+          "chip": "Hold",
+          "meanGain": 0.0,
+          "p10Gain": 0.0,
+          "medianGain": 0.0,
+          "p90Gain": 0.0,
+          "probabilityPositive": 0.0,
+          "gatePassed": true,
+          "available": true,
+          "reservationValue": 0.0,
+          "riskAdjustedGain": 0.0,
+          "netOfReservation": 0.0,
+          "learnedExpectedGain": null,
+          "permanentTransferValueForegone": null,
+          "manualReviewTriggered": false
+        },
+        {
+          "chip": "Free Hit",
+          "meanGain": 0.2,
+          "p10Gain": -16.5,
+          "medianGain": -0.2,
+          "p90Gain": 16.3,
+          "probabilityPositive": 49.2,
+          "gatePassed": false,
+          "available": false,
+          "reservationValue": 3.0,
+          "riskAdjustedGain": -4.8,
+          "netOfReservation": -7.8,
+          "learnedExpectedGain": -8.1,
+          "permanentTransferValueForegone": 0.0,
+          "manualReviewTriggered": false
+        },
+        {
+          "chip": "Bench Boost",
+          "meanGain": 8.0,
+          "p10Gain": 0.7,
+          "medianGain": 5.9,
+          "p90Gain": 18.2,
+          "probabilityPositive": 97.2,
+          "gatePassed": false,
+          "available": true,
+          "reservationValue": 9.0,
+          "riskAdjustedGain": 5.8,
+          "netOfReservation": -3.2,
+          "learnedExpectedGain": null,
+          "permanentTransferValueForegone": null,
+          "manualReviewTriggered": false
+        },
+        {
+          "chip": "Triple Captain",
+          "meanGain": 7.3,
+          "p10Gain": 1.5,
+          "medianGain": 5.9,
+          "p90Gain": 14.9,
+          "probabilityPositive": 97.7,
+          "gatePassed": false,
+          "available": true,
+          "reservationValue": 10.0,
+          "riskAdjustedGain": 5.6,
+          "netOfReservation": -4.4,
+          "learnedExpectedGain": null,
+          "permanentTransferValueForegone": null,
+          "manualReviewTriggered": false
+        },
+        {
+          "chip": "Wildcard",
+          "meanGain": 0.0,
+          "p10Gain": -0.0,
+          "medianGain": 0.0,
+          "p90Gain": 0.0,
+          "probabilityPositive": 25.2,
+          "gatePassed": false,
+          "available": false,
+          "reservationValue": 21.4,
+          "riskAdjustedGain": 0.0,
+          "netOfReservation": -21.4,
+          "learnedExpectedGain": null,
+          "permanentTransferValueForegone": null,
+          "manualReviewTriggered": false
+        }
+      ],
+      "squads": {
+        "current": [
+          411,
+          4,
+          388,
+          1,
+          399,
+          55,
+          124,
+          109,
+          480,
+          113,
+          236,
+          423,
+          346,
+          332,
+          102
+        ],
+        "freeHit": [
+          411,
+          426,
+          4,
+          388,
+          1,
+          399,
+          124,
+          113,
+          236,
+          123,
+          346,
+          302,
+          308,
+          272,
+          508
+        ],
+        "wildcard": [
+          411,
+          4,
+          388,
+          1,
+          399,
+          55,
+          124,
+          109,
+          480,
+          113,
+          236,
+          423,
+          346,
+          332,
+          102
+        ]
+      },
+      "captains": {
+        "current": "Haaland",
+        "freeHit": "Haaland",
+        "wildcard": "Haaland"
+      },
+      "availableBudget": 100.0,
+      "policyProfile": "forecast-v2 756-policy recursive winner",
+      "sequencePlan": {
+        "status": "diagnostic; current one-week gate remains authoritative",
+        "halfEnd": 19,
+        "planningHorizonEnd": 8,
+        "expectedSequenceValue": 0.0,
+        "uses": [],
         "terminalState": "current",
         "method": "Current paired scenarios plus announced blank/double structural opportunities above past-only reservation values; unknown later fixtures retain option value and are not fabricated."
       }
@@ -1136,5 +1315,5 @@
     }
   },
   "method": "Paired 5,000-draw two-part Monte Carlo with explicit no-shows, autosubs, captain-to-vice fallback, club shocks, manager-specific selling budgets and chip-specific reservation values. TC/BB are marginal gains; FH is temporary; WC is valued over the horizon.",
-  "warning": "Historical TC/BB reservation values are causal but modestly stable. Wildcard and Free Hit retain conservative gates until their paired recursive challengers beat the no-chip control out of sample."
+  "warning": "The forecast-v2 manager uses the 756-policy recursive BB/TC/FH winner; every evaluation season improved. Automatic Wildcards remain disabled because all six recursive Wildcard variants failed."
 }

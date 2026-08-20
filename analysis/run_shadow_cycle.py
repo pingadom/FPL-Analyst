@@ -88,7 +88,7 @@ MANAGERS = (
         "captainScore": "forecastV2CaptainScore",
         "chips": True,
         "transferHurdle": 2.2,
-        "description": "Frozen research winner: route captain plus a conservative exact-capture dynamic match boundary; falls back safely when market data is unavailable.",
+        "description": "Frozen large-search winner: route captain plus a 20% exact-capture dynamic match boundary, causal minutes downside protection and separately gated chip policy; falls back safely when market data is unavailable.",
     },
 )
 
