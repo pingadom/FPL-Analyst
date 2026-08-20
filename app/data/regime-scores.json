@@ -1,0 +1,1964 @@
+{
+  "generatedAt": "2026-08-20T11:39:27.707419+00:00",
+  "status": "diagnostic-only",
+  "trainingRows": 244425,
+  "trainingBreakouts": 6931,
+  "walkForwardAuc": 0.89508,
+  "players": [
+    {
+      "id": 411,
+      "name": "Haaland",
+      "probability": 0.009026
+    },
+    {
+      "id": 426,
+      "name": "B.Fernandes",
+      "probability": 0.011248
+    },
+    {
+      "id": 4,
+      "name": "Gabriel",
+      "probability": 0.013707
+    },
+    {
+      "id": 388,
+      "name": "Gu\u00e9hi",
+      "probability": 0.014146
+    },
+    {
+      "id": 1,
+      "name": "Raya",
+      "probability": 0.017026
+    },
+    {
+      "id": 384,
+      "name": "Donnarumma",
+      "probability": 0.014033
+    },
+    {
+      "id": 399,
+      "name": "Cherki",
+      "probability": 0.015322
+    },
+    {
+      "id": 400,
+      "name": "Doku",
+      "probability": 0.01641
+    },
+    {
+      "id": 397,
+      "name": "Semenyo",
+      "probability": 0.023553
+    },
+    {
+      "id": 55,
+      "name": "Watkins",
+      "probability": 0.009027
+    },
+    {
+      "id": 124,
+      "name": "Gro\u00df",
+      "probability": 0.013322
+    },
+    {
+      "id": 387,
+      "name": "O'Reilly",
+      "probability": 0.027033
+    },
+    {
+      "id": 481,
+      "name": "Anderson",
+      "probability": 0.020009
+    },
+    {
+      "id": 109,
+      "name": "Verbruggen",
+      "probability": 0.020229
+    },
+    {
+      "id": 61,
+      "name": "Truffert",
+      "probability": 0.008942
+    },
+    {
+      "id": 368,
+      "name": "Szoboszlai",
+      "probability": 0.015994
+    },
+    {
+      "id": 67,
+      "name": "Rayan",
+      "probability": 0.009287
+    },
+    {
+      "id": 428,
+      "name": "Cunha",
+      "probability": 0.036566
+    },
+    {
+      "id": 12,
+      "name": "Saka",
+      "probability": 0.038574
+    },
+    {
+      "id": 13,
+      "name": "Rice",
+      "probability": 0.06805
+    },
+    {
+      "id": 498,
+      "name": "Senesi",
+      "probability": 0.014452
+    },
+    {
+      "id": 412,
+      "name": "Lammens",
+      "probability": 0.066904
+    },
+    {
+      "id": 480,
+      "name": "Gibbs-White",
+      "probability": 0.018267
+    },
+    {
+      "id": 106,
+      "name": "Thiago",
+      "probability": 0.072218
+    },
+    {
+      "id": 356,
+      "name": "Virgil",
+      "probability": 0.011695
+    },
+    {
+      "id": 113,
+      "name": "F.Kad\u0131o\u011flu",
+      "probability": 0.025435
+    },
+    {
+      "id": 40,
+      "name": "Rogers",
+      "probability": 0.016579
+    },
+    {
+      "id": 389,
+      "name": "Matheus N.",
+      "probability": 0.020891
+    },
+    {
+      "id": 542,
+      "name": "E.Le F\u00e9e",
+      "probability": 0.019714
+    },
+    {
+      "id": 427,
+      "name": "Mbeumo",
+      "probability": 0.094462
+    },
+    {
+      "id": 95,
+      "name": "O.Dango",
+      "probability": 0.034619
+    },
+    {
+      "id": 14,
+      "name": "Eze",
+      "probability": 0.161252
+    },
+    {
+      "id": 69,
+      "name": "Scott",
+      "probability": 0.023849
+    },
+    {
+      "id": 491,
+      "name": "Igor Jesus",
+      "probability": 0.032489
+    },
+    {
+      "id": 236,
+      "name": "Dewsbury-Hall",
+      "probability": 0.023283
+    },
+    {
+      "id": 25,
+      "name": "Gy\u00f6keres",
+      "probability": 0.104432
+    },
+    {
+      "id": 123,
+      "name": "Hinshelwood",
+      "probability": 0.020709
+    },
+    {
+      "id": 68,
+      "name": "Tavernier",
+      "probability": 0.077176
+    },
+    {
+      "id": 367,
+      "name": "Gakpo",
+      "probability": 0.052671
+    },
+    {
+      "id": 155,
+      "name": "Enzo",
+      "probability": 0.023265
+    },
+    {
+      "id": 499,
+      "name": "Pedro Porro",
+      "probability": 0.051181
+    },
+    {
+      "id": 250,
+      "name": "Leno",
+      "probability": 0.025931
+    },
+    {
+      "id": 112,
+      "name": "Van Hecke",
+      "probability": 0.021244
+    },
+    {
+      "id": 229,
+      "name": "Tarkowski",
+      "probability": 0.034257
+    },
+    {
+      "id": 79,
+      "name": "Evanilson",
+      "probability": 0.119718
+    },
+    {
+      "id": 423,
+      "name": "Shaw",
+      "probability": 0.036699
+    },
+    {
+      "id": 346,
+      "name": "Calvert-Lewin",
+      "probability": 0.01269
+    },
+    {
+      "id": 122,
+      "name": "Minteh",
+      "probability": 0.089073
+    },
+    {
+      "id": 393,
+      "name": "Khusanov",
+      "probability": 0.033748
+    },
+    {
+      "id": 96,
+      "name": "Damsgaard",
+      "probability": 0.06912
+    },
+    {
+      "id": 57,
+      "name": "Petrovi\u0107",
+      "probability": 0.14506
+    },
+    {
+      "id": 527,
+      "name": "Richarlison",
+      "probability": 0.063371
+    },
+    {
+      "id": 200,
+      "name": "Lacroix",
+      "probability": 0.034422
+    },
+    {
+      "id": 467,
+      "name": "Sels",
+      "probability": 0.077863
+    },
+    {
+      "id": 465,
+      "name": "Osula",
+      "probability": 0.075485
+    },
+    {
+      "id": 97,
+      "name": "Jensen",
+      "probability": 0.051686
+    },
+    {
+      "id": 525,
+      "name": "Fernandes",
+      "probability": 0.271107
+    },
+    {
+      "id": 60,
+      "name": "Hill",
+      "probability": 0.159191
+    },
+    {
+      "id": 529,
+      "name": "Roefs",
+      "probability": 0.136436
+    },
+    {
+      "id": 248,
+      "name": "Beto",
+      "probability": 0.040562
+    },
+    {
+      "id": 26,
+      "name": "Havertz",
+      "probability": 0.146055
+    },
+    {
+      "id": 533,
+      "name": "Mukiele",
+      "probability": 0.035618
+    },
+    {
+      "id": 82,
+      "name": "Kelleher",
+      "probability": 0.356704
+    },
+    {
+      "id": 208,
+      "name": "Sarr",
+      "probability": 0.090818
+    },
+    {
+      "id": 94,
+      "name": "Schade",
+      "probability": 0.30321
+    },
+    {
+      "id": 84,
+      "name": "Collins",
+      "probability": 0.11033
+    },
+    {
+      "id": 544,
+      "name": "Xhaka",
+      "probability": 0.049526
+    },
+    {
+      "id": 28,
+      "name": "Martinez",
+      "probability": 0.327586
+    },
+    {
+      "id": 201,
+      "name": "Mu\u00f1oz",
+      "probability": 0.042683
+    },
+    {
+      "id": 88,
+      "name": "Kayode",
+      "probability": 0.294717
+    },
+    {
+      "id": 445,
+      "name": "Thiaw",
+      "probability": 0.490136
+    },
+    {
+      "id": 418,
+      "name": "Maguire",
+      "probability": 0.192709
+    },
+    {
+      "id": 452,
+      "name": "Bruno G.",
+      "probability": 0.129023
+    },
+    {
+      "id": 453,
+      "name": "Barnes",
+      "probability": 0.078447
+    },
+    {
+      "id": 86,
+      "name": "Lewis-Potter",
+      "probability": 0.188011
+    },
+    {
+      "id": 366,
+      "name": "Wirtz",
+      "probability": 0.404417
+    },
+    {
+      "id": 130,
+      "name": "Wieffer",
+      "probability": 0.185383
+    },
+    {
+      "id": 398,
+      "name": "Foden",
+      "probability": 0.192373
+    },
+    {
+      "id": 327,
+      "name": "Bijol",
+      "probability": 0.022185
+    },
+    {
+      "id": 432,
+      "name": "Mainoo",
+      "probability": 0.120012
+    },
+    {
+      "id": 45,
+      "name": "McGinn",
+      "probability": 0.280649
+    },
+    {
+      "id": 136,
+      "name": "Welbeck",
+      "probability": 0.099031
+    },
+    {
+      "id": 332,
+      "name": "Justin",
+      "probability": 0.01506
+    },
+    {
+      "id": 372,
+      "name": "Mac Allister",
+      "probability": 0.101237
+    },
+    {
+      "id": 54,
+      "name": "Gomes",
+      "probability": 0.328599
+    },
+    {
+      "id": 237,
+      "name": "Ndiaye",
+      "probability": 0.544744
+    },
+    {
+      "id": 154,
+      "name": "Palmer",
+      "probability": 0.540006
+    },
+    {
+      "id": 447,
+      "name": "Botman",
+      "probability": 0.337031
+    },
+    {
+      "id": 115,
+      "name": "De Cuyper",
+      "probability": 0.082475
+    },
+    {
+      "id": 226,
+      "name": "Pickford",
+      "probability": 0.376435
+    },
+    {
+      "id": 328,
+      "name": "Struijk",
+      "probability": 0.460282
+    },
+    {
+      "id": 19,
+      "name": "Zubimendi",
+      "probability": 0.327922
+    },
+    {
+      "id": 535,
+      "name": "Alderete",
+      "probability": 0.196258
+    },
+    {
+      "id": 102,
+      "name": "Yarmoliuk",
+      "probability": 0.106589
+    },
+    {
+      "id": 338,
+      "name": "Ampadu",
+      "probability": 0.107275
+    },
+    {
+      "id": 336,
+      "name": "Okafor",
+      "probability": 0.027312
+    },
+    {
+      "id": 105,
+      "name": "Anthony",
+      "probability": 0.203301
+    },
+    {
+      "id": 514,
+      "name": "Tel",
+      "probability": 0.430597
+    },
+    {
+      "id": 552,
+      "name": "Brobbey",
+      "probability": 0.61333
+    },
+    {
+      "id": 9,
+      "name": "Hincapie",
+      "probability": 0.697269
+    },
+    {
+      "id": 439,
+      "name": "\u0160e\u0161ko",
+      "probability": 0.510467
+    },
+    {
+      "id": 257,
+      "name": "Bassey",
+      "probability": 0.128299
+    },
+    {
+      "id": 471,
+      "name": "Milenkovi\u0107",
+      "probability": 0.216731
+    },
+    {
+      "id": 469,
+      "name": "N.Williams",
+      "probability": 0.2078
+    },
+    {
+      "id": 85,
+      "name": "Van den Berg",
+      "probability": 0.517915
+    },
+    {
+      "id": 203,
+      "name": "Canvot",
+      "probability": 0.125789
+    },
+    {
+      "id": 325,
+      "name": "Darlow",
+      "probability": 0.160415
+    },
+    {
+      "id": 204,
+      "name": "Mitchell",
+      "probability": 0.102214
+    },
+    {
+      "id": 371,
+      "name": "Gravenberch",
+      "probability": 0.236679
+    },
+    {
+      "id": 165,
+      "name": "Jo\u00e3o Pedro",
+      "probability": 0.445069
+    },
+    {
+      "id": 448,
+      "name": "Burn",
+      "probability": 0.429843
+    },
+    {
+      "id": 392,
+      "name": "A\u00eft-Nouri",
+      "probability": 0.35331
+    },
+    {
+      "id": 545,
+      "name": "Sadiki",
+      "probability": 0.412638
+    },
+    {
+      "id": 254,
+      "name": "Robinson",
+      "probability": 0.251049
+    },
+    {
+      "id": 519,
+      "name": "Gallagher",
+      "probability": 0.152576
+    },
+    {
+      "id": 15,
+      "name": "\u00d8degaard",
+      "probability": 0.328256
+    },
+    {
+      "id": 534,
+      "name": "Hume",
+      "probability": 0.598634
+    },
+    {
+      "id": 8,
+      "name": "Calafiori",
+      "probability": 0.611431
+    },
+    {
+      "id": 198,
+      "name": "Henderson",
+      "probability": 0.359848
+    },
+    {
+      "id": 223,
+      "name": "Mateta",
+      "probability": 0.149286
+    },
+    {
+      "id": 337,
+      "name": "Aaronson",
+      "probability": 0.372579
+    },
+    {
+      "id": 369,
+      "name": "Ngumoha",
+      "probability": 0.55862
+    },
+    {
+      "id": 401,
+      "name": "Marmoush",
+      "probability": 0.527432
+    },
+    {
+      "id": 116,
+      "name": "Dunk",
+      "probability": 0.2596
+    },
+    {
+      "id": 43,
+      "name": "Tielemans",
+      "probability": 0.338463
+    },
+    {
+      "id": 557,
+      "name": "Tzolis",
+      "probability": 0.644742
+    },
+    {
+      "id": 335,
+      "name": "Stach",
+      "probability": 0.221696
+    },
+    {
+      "id": 41,
+      "name": "Buend\u00eda",
+      "probability": 0.563997
+    },
+    {
+      "id": 159,
+      "name": "Caicedo",
+      "probability": 0.381959
+    },
+    {
+      "id": 10,
+      "name": "White",
+      "probability": 0.426618
+    },
+    {
+      "id": 210,
+      "name": "Wharton",
+      "probability": 0.267553
+    },
+    {
+      "id": 567,
+      "name": "Horn\u00ed\u010dek",
+      "probability": 0.637804
+    },
+    {
+      "id": 46,
+      "name": "Barkley",
+      "probability": 0.465729
+    },
+    {
+      "id": 497,
+      "name": "Dubravka",
+      "probability": 0.678985
+    },
+    {
+      "id": 258,
+      "name": "Castagne",
+      "probability": 0.216553
+    },
+    {
+      "id": 153,
+      "name": "Disasi",
+      "probability": 0.167852
+    },
+    {
+      "id": 32,
+      "name": "Cash",
+      "probability": 0.656222
+    },
+    {
+      "id": 463,
+      "name": "Woltemade",
+      "probability": 0.524013
+    },
+    {
+      "id": 417,
+      "name": "Dalot",
+      "probability": 0.581693
+    },
+    {
+      "id": 232,
+      "name": "O'Brien",
+      "probability": 0.568967
+    },
+    {
+      "id": 456,
+      "name": "J.Ramsey",
+      "probability": 0.279013
+    },
+    {
+      "id": 373,
+      "name": "C.Jones",
+      "probability": 0.475646
+    },
+    {
+      "id": 140,
+      "name": "S\u00e1nchez",
+      "probability": 0.655561
+    },
+    {
+      "id": 403,
+      "name": "Savinho",
+      "probability": 0.589922
+    },
+    {
+      "id": 202,
+      "name": "Richards",
+      "probability": 0.613499
+    },
+    {
+      "id": 442,
+      "name": "Pope",
+      "probability": 0.614391
+    },
+    {
+      "id": 492,
+      "name": "Awoniyi",
+      "probability": 0.273623
+    },
+    {
+      "id": 431,
+      "name": "Amad",
+      "probability": 0.685815
+    },
+    {
+      "id": 233,
+      "name": "Mykolenko",
+      "probability": 0.541371
+    },
+    {
+      "id": 379,
+      "name": "Isak",
+      "probability": 0.415575
+    },
+    {
+      "id": 490,
+      "name": "Wood",
+      "probability": 0.352863
+    },
+    {
+      "id": 231,
+      "name": "Keane",
+      "probability": 0.676145
+    },
+    {
+      "id": 53,
+      "name": "Manzambi",
+      "probability": 0.650619
+    },
+    {
+      "id": 260,
+      "name": "Wilson",
+      "probability": 0.636869
+    },
+    {
+      "id": 501,
+      "name": "Danso",
+      "probability": 0.635673
+    },
+    {
+      "id": 543,
+      "name": "Diarra",
+      "probability": 0.678235
+    },
+    {
+      "id": 249,
+      "name": "Barry",
+      "probability": 0.523469
+    },
+    {
+      "id": 330,
+      "name": "Bogle",
+      "probability": 0.302139
+    },
+    {
+      "id": 209,
+      "name": "Johnson",
+      "probability": 0.479111
+    },
+    {
+      "id": 457,
+      "name": "J.Murphy",
+      "probability": 0.478947
+    },
+    {
+      "id": 156,
+      "name": "Neto",
+      "probability": 0.487019
+    },
+    {
+      "id": 502,
+      "name": "Robertson",
+      "probability": 0.178342
+    },
+    {
+      "id": 377,
+      "name": "Munoz",
+      "probability": 0.644742
+    },
+    {
+      "id": 565,
+      "name": "Sangar\u00e9",
+      "probability": 0.708426
+    },
+    {
+      "id": 503,
+      "name": "Van de Ven",
+      "probability": 0.680453
+    },
+    {
+      "id": 571,
+      "name": "Florentino",
+      "probability": 0.594166
+    },
+    {
+      "id": 269,
+      "name": "Sessegnon",
+      "probability": 0.616613
+    },
+    {
+      "id": 125,
+      "name": "Georginio",
+      "probability": 0.491366
+    },
+    {
+      "id": 222,
+      "name": "Strand Larsen",
+      "probability": 0.590232
+    },
+    {
+      "id": 114,
+      "name": "Boscagli",
+      "probability": 0.542419
+    },
+    {
+      "id": 300,
+      "name": "Walton",
+      "probability": 0.712108
+    },
+    {
+      "id": 455,
+      "name": "Tonali",
+      "probability": 0.689649
+    },
+    {
+      "id": 357,
+      "name": "Frimpong",
+      "probability": 0.69688
+    },
+    {
+      "id": 536,
+      "name": "Reinildo",
+      "probability": 0.603414
+    },
+    {
+      "id": 569,
+      "name": "Garc\u00eda",
+      "probability": 0.708426
+    },
+    {
+      "id": 562,
+      "name": "Maeda",
+      "probability": 0.708426
+    },
+    {
+      "id": 267,
+      "name": "Luki\u0107",
+      "probability": 0.59775
+    },
+    {
+      "id": 73,
+      "name": "Adams",
+      "probability": 0.69026
+    },
+    {
+      "id": 262,
+      "name": "Smith Rowe",
+      "probability": 0.655888
+    },
+    {
+      "id": 190,
+      "name": "Tchaouna",
+      "probability": 0.613766
+    },
+    {
+      "id": 484,
+      "name": "Hutchinson",
+      "probability": 0.651626
+    },
+    {
+      "id": 422,
+      "name": "Mazraoui",
+      "probability": 0.557701
+    },
+    {
+      "id": 345,
+      "name": "Tanaka",
+      "probability": 0.51085
+    },
+    {
+      "id": 449,
+      "name": "Hall",
+      "probability": 0.689624
+    },
+    {
+      "id": 579,
+      "name": "Araujo",
+      "probability": 0.637136
+    },
+    {
+      "id": 162,
+      "name": "Andrey Santos",
+      "probability": 0.65649
+    },
+    {
+      "id": 496,
+      "name": "Kinsky",
+      "probability": 0.691022
+    },
+    {
+      "id": 152,
+      "name": "Palestra",
+      "probability": 0.637136
+    },
+    {
+      "id": 160,
+      "name": "Garnacho",
+      "probability": 0.678207
+    },
+    {
+      "id": 516,
+      "name": "Bentancur",
+      "probability": 0.501809
+    },
+    {
+      "id": 129,
+      "name": "Ayari",
+      "probability": 0.642966
+    },
+    {
+      "id": 351,
+      "name": "Mamardashvili",
+      "probability": 0.685408
+    },
+    {
+      "id": 172,
+      "name": "Wilson",
+      "probability": 0.712108
+    },
+    {
+      "id": 582,
+      "name": "Madjo",
+      "probability": 0.711515
+    },
+    {
+      "id": 11,
+      "name": "Mosquera",
+      "probability": 0.69531
+    },
+    {
+      "id": 31,
+      "name": "Konsa",
+      "probability": 0.679077
+    },
+    {
+      "id": 362,
+      "name": "Jacquet",
+      "probability": 0.644408
+    },
+    {
+      "id": 214,
+      "name": "Kamada",
+      "probability": 0.64908
+    },
+    {
+      "id": 193,
+      "name": "Wright",
+      "probability": 0.711515
+    },
+    {
+      "id": 526,
+      "name": "Solanke",
+      "probability": 0.678985
+    },
+    {
+      "id": 127,
+      "name": "Gomez",
+      "probability": 0.693904
+    },
+    {
+      "id": 271,
+      "name": "Muniz",
+      "probability": 0.687217
+    },
+    {
+      "id": 16,
+      "name": "Madueke",
+      "probability": 0.689649
+    },
+    {
+      "id": 64,
+      "name": "Smith",
+      "probability": 0.350457
+    },
+    {
+      "id": 473,
+      "name": "Aina",
+      "probability": 0.575035
+    },
+    {
+      "id": 261,
+      "name": "Iwobi",
+      "probability": 0.676145
+    },
+    {
+      "id": 358,
+      "name": "Kerkez",
+      "probability": 0.681287
+    },
+    {
+      "id": 87,
+      "name": "Ajer",
+      "probability": 0.684413
+    },
+    {
+      "id": 581,
+      "name": "Diomande",
+      "probability": 0.637345
+    },
+    {
+      "id": 18,
+      "name": "Martinelli",
+      "probability": 0.680279
+    },
+    {
+      "id": 329,
+      "name": "Rodon",
+      "probability": 0.717186
+    },
+    {
+      "id": 241,
+      "name": "McNeil",
+      "probability": 0.671214
+    },
+    {
+      "id": 144,
+      "name": "Gusto",
+      "probability": 0.689649
+    },
+    {
+      "id": 553,
+      "name": "Isidor",
+      "probability": 0.638243
+    },
+    {
+      "id": 334,
+      "name": "Muharemovi\u0107",
+      "probability": 0.644408
+    },
+    {
+      "id": 74,
+      "name": "Brooks",
+      "probability": 0.630886
+    },
+    {
+      "id": 7,
+      "name": "Lewis-Skelly",
+      "probability": 0.650967
+    },
+    {
+      "id": 108,
+      "name": "Wilson",
+      "probability": 0.649917
+    },
+    {
+      "id": 488,
+      "name": "Sangar\u00e9",
+      "probability": 0.688254
+    },
+    {
+      "id": 301,
+      "name": "Palmer",
+      "probability": 0.697774
+    },
+    {
+      "id": 470,
+      "name": "Morato",
+      "probability": 0.689985
+    },
+    {
+      "id": 532,
+      "name": "Ballard",
+      "probability": 0.655074
+    },
+    {
+      "id": 295,
+      "name": "McBurnie",
+      "probability": 0.711515
+    },
+    {
+      "id": 549,
+      "name": "Talbi",
+      "probability": 0.697379
+    },
+    {
+      "id": 265,
+      "name": "Berge",
+      "probability": 0.681506
+    },
+    {
+      "id": 264,
+      "name": "Bobb",
+      "probability": 0.700422
+    },
+    {
+      "id": 36,
+      "name": "Maatsen",
+      "probability": 0.689932
+    },
+    {
+      "id": 548,
+      "name": "Rigg",
+      "probability": 0.714865
+    },
+    {
+      "id": 211,
+      "name": "Yeremy",
+      "probability": 0.697379
+    },
+    {
+      "id": 320,
+      "name": "Akpom",
+      "probability": 0.712
+    },
+    {
+      "id": 464,
+      "name": "Wissa",
+      "probability": 0.535812
+    },
+    {
+      "id": 286,
+      "name": "Belloumi",
+      "probability": 0.712
+    },
+    {
+      "id": 273,
+      "name": "Phillips",
+      "probability": 0.697774
+    },
+    {
+      "id": 350,
+      "name": "A.Becker",
+      "probability": 0.49942
+    },
+    {
+      "id": 458,
+      "name": "Joelinton",
+      "probability": 0.675987
+    },
+    {
+      "id": 487,
+      "name": "Dominguez",
+      "probability": 0.689619
+    },
+    {
+      "id": 302,
+      "name": "Button",
+      "probability": 0.697774
+    },
+    {
+      "id": 541,
+      "name": "Meunier",
+      "probability": 0.712
+    },
+    {
+      "id": 213,
+      "name": "Lerma",
+      "probability": 0.678783
+    },
+    {
+      "id": 56,
+      "name": "Abraham",
+      "probability": 0.679778
+    },
+    {
+      "id": 472,
+      "name": "Murillo",
+      "probability": 0.684592
+    },
+    {
+      "id": 194,
+      "name": "Thomas-Asante",
+      "probability": 0.712
+    },
+    {
+      "id": 34,
+      "name": "Pau",
+      "probability": 0.68501
+    },
+    {
+      "id": 391,
+      "name": "Gvardiol",
+      "probability": 0.558054
+    },
+    {
+      "id": 518,
+      "name": "P.M.Sarr",
+      "probability": 0.684413
+    },
+    {
+      "id": 454,
+      "name": "Elanga",
+      "probability": 0.678207
+    },
+    {
+      "id": 339,
+      "name": "Longstaff",
+      "probability": 0.624387
+    },
+    {
+      "id": 171,
+      "name": "Dovin",
+      "probability": 0.697774
+    },
+    {
+      "id": 505,
+      "name": "Spence",
+      "probability": 0.682466
+    },
+    {
+      "id": 420,
+      "name": "Yoro",
+      "probability": 0.693797
+    },
+    {
+      "id": 321,
+      "name": "Walle Egeli",
+      "probability": 0.704732
+    },
+    {
+      "id": 195,
+      "name": "Simms",
+      "probability": 0.712
+    },
+    {
+      "id": 421,
+      "name": "Heaven",
+      "probability": 0.662581
+    },
+    {
+      "id": 148,
+      "name": "Hato",
+      "probability": 0.683305
+    },
+    {
+      "id": 482,
+      "name": "Hudson-Odoi",
+      "probability": 0.678345
+    },
+    {
+      "id": 246,
+      "name": "R\u00f6hl",
+      "probability": 0.634768
+    },
+    {
+      "id": 489,
+      "name": "Yates",
+      "probability": 0.676817
+    },
+    {
+      "id": 323,
+      "name": "McAteer",
+      "probability": 0.704732
+    },
+    {
+      "id": 230,
+      "name": "Branthwaite",
+      "probability": 0.685191
+    },
+    {
+      "id": 500,
+      "name": "Romero",
+      "probability": 0.609702
+    },
+    {
+      "id": 460,
+      "name": "Willock",
+      "probability": 0.679298
+    },
+    {
+      "id": 520,
+      "name": "Bergvall",
+      "probability": 0.683779
+    },
+    {
+      "id": 268,
+      "name": "King",
+      "probability": 0.677903
+    },
+    {
+      "id": 430,
+      "name": "Mount",
+      "probability": 0.668076
+    },
+    {
+      "id": 506,
+      "name": "Udogie",
+      "probability": 0.685191
+    },
+    {
+      "id": 305,
+      "name": "Davis",
+      "probability": 0.704732
+    },
+    {
+      "id": 405,
+      "name": "N.Gonzalez",
+      "probability": 0.677398
+    },
+    {
+      "id": 539,
+      "name": "O'Nien",
+      "probability": 0.682701
+    },
+    {
+      "id": 167,
+      "name": "Delap",
+      "probability": 0.681282
+    },
+    {
+      "id": 290,
+      "name": "Slater",
+      "probability": 0.704732
+    },
+    {
+      "id": 304,
+      "name": "O'Shea",
+      "probability": 0.704732
+    },
+    {
+      "id": 44,
+      "name": "Bailey",
+      "probability": 0.676849
+    },
+    {
+      "id": 77,
+      "name": "Adli",
+      "probability": 0.689922
+    },
+    {
+      "id": 485,
+      "name": "Bakwa",
+      "probability": 0.682545
+    },
+    {
+      "id": 404,
+      "name": "Reijnders",
+      "probability": 0.698141
+    },
+    {
+      "id": 142,
+      "name": "James",
+      "probability": 0.660453
+    },
+    {
+      "id": 347,
+      "name": "Nmecha",
+      "probability": 0.697379
+    },
+    {
+      "id": 289,
+      "name": "Crooks",
+      "probability": 0.704732
+    },
+    {
+      "id": 390,
+      "name": "R\u00faben",
+      "probability": 0.565101
+    },
+    {
+      "id": 515,
+      "name": "Maddison",
+      "probability": 0.536066
+    },
+    {
+      "id": 27,
+      "name": "G.Jesus",
+      "probability": 0.606488
+    },
+    {
+      "id": 494,
+      "name": "Vicario",
+      "probability": 0.659595
+    },
+    {
+      "id": 440,
+      "name": "Zirkzee",
+      "probability": 0.688303
+    },
+    {
+      "id": 288,
+      "name": "Dowell",
+      "probability": 0.704732
+    },
+    {
+      "id": 259,
+      "name": "Diop",
+      "probability": 0.659934
+    },
+    {
+      "id": 33,
+      "name": "Mings",
+      "probability": 0.674577
+    },
+    {
+      "id": 306,
+      "name": "Greaves",
+      "probability": 0.704732
+    },
+    {
+      "id": 192,
+      "name": "Andrews",
+      "probability": 0.704732
+    },
+    {
+      "id": 522,
+      "name": "Gray",
+      "probability": 0.680889
+    },
+    {
+      "id": 415,
+      "name": "Dorgu",
+      "probability": 0.693838
+    },
+    {
+      "id": 303,
+      "name": "Kipr\u00e9",
+      "probability": 0.704732
+    },
+    {
+      "id": 277,
+      "name": "Egan",
+      "probability": 0.704732
+    },
+    {
+      "id": 240,
+      "name": "Iroegbunam",
+      "probability": 0.684817
+    },
+    {
+      "id": 175,
+      "name": "van Ewijk",
+      "probability": 0.704732
+    },
+    {
+      "id": 308,
+      "name": "Furlong",
+      "probability": 0.704732
+    },
+    {
+      "id": 419,
+      "name": "Martinez",
+      "probability": 0.596681
+    },
+    {
+      "id": 282,
+      "name": "Giles",
+      "probability": 0.704732
+    },
+    {
+      "id": 212,
+      "name": "Hughes",
+      "probability": 0.679298
+    },
+    {
+      "id": 173,
+      "name": "Thomas",
+      "probability": 0.704732
+    },
+    {
+      "id": 37,
+      "name": "Lindel\u00f6f",
+      "probability": 0.645393
+    },
+    {
+      "id": 341,
+      "name": "Gnonto",
+      "probability": 0.611029
+    },
+    {
+      "id": 298,
+      "name": "Destan",
+      "probability": 0.704732
+    },
+    {
+      "id": 80,
+      "name": "Enes \u00dcnal",
+      "probability": 0.527949
+    },
+    {
+      "id": 39,
+      "name": "Nedeljkovic",
+      "probability": 0.704732
+    },
+    {
+      "id": 279,
+      "name": "Ajayi",
+      "probability": 0.704732
+    },
+    {
+      "id": 149,
+      "name": "Colwill",
+      "probability": 0.596715
+    },
+    {
+      "id": 157,
+      "name": "Est\u00eav\u00e3o",
+      "probability": 0.70868
+    },
+    {
+      "id": 280,
+      "name": "Coyle",
+      "probability": 0.704732
+    },
+    {
+      "id": 266,
+      "name": "Cairney",
+      "probability": 0.680121
+    },
+    {
+      "id": 429,
+      "name": "Rashford",
+      "probability": 0.347531
+    },
+    {
+      "id": 98,
+      "name": "Janelt",
+      "probability": 0.609702
+    },
+    {
+      "id": 70,
+      "name": "Kluivert",
+      "probability": 0.61228
+    },
+    {
+      "id": 352,
+      "name": "Woodman",
+      "probability": 0.46806
+    },
+    {
+      "id": 474,
+      "name": "Jair Cunha",
+      "probability": 0.693043
+    },
+    {
+      "id": 242,
+      "name": "George",
+      "probability": 0.500247
+    },
+    {
+      "id": 3,
+      "name": "Meslier",
+      "probability": 0.427469
+    },
+    {
+      "id": 176,
+      "name": "Dasilva",
+      "probability": 0.704732
+    },
+    {
+      "id": 450,
+      "name": "Livramento",
+      "probability": 0.614607
+    },
+    {
+      "id": 182,
+      "name": "Amenda",
+      "probability": 0.704732
+    },
+    {
+      "id": 2,
+      "name": "Arrizabalaga",
+      "probability": 0.405315
+    },
+    {
+      "id": 29,
+      "name": "M.Bizot",
+      "probability": 0.39529
+    },
+    {
+      "id": 478,
+      "name": "Netz",
+      "probability": 0.687539
+    },
+    {
+      "id": 17,
+      "name": "Merino",
+      "probability": 0.419128
+    },
+    {
+      "id": 174,
+      "name": "Kitching",
+      "probability": 0.704732
+    },
+    {
+      "id": 138,
+      "name": "Kostoulas",
+      "probability": 0.507456
+    },
+    {
+      "id": 161,
+      "name": "Lavia",
+      "probability": 0.667208
+    },
+    {
+      "id": 147,
+      "name": "Tosin",
+      "probability": 0.66005
+    },
+    {
+      "id": 343,
+      "name": "James",
+      "probability": 0.681506
+    },
+    {
+      "id": 486,
+      "name": "McAtee",
+      "probability": 0.67433
+    },
+    {
+      "id": 238,
+      "name": "Grealish",
+      "probability": 0.422924
+    },
+    {
+      "id": 370,
+      "name": "Chiesa",
+      "probability": 0.479149
+    },
+    {
+      "id": 483,
+      "name": "Ndoye",
+      "probability": 0.576462
+    },
+    {
+      "id": 531,
+      "name": "Ellborg",
+      "probability": 0.667185
+    },
+    {
+      "id": 263,
+      "name": "Kevin",
+      "probability": 0.601673
+    },
+    {
+      "id": 270,
+      "name": "Reed",
+      "probability": 0.573778
+    },
+    {
+      "id": 551,
+      "name": "Angulo",
+      "probability": 0.64627
+    },
+    {
+      "id": 126,
+      "name": "O'Riley",
+      "probability": 0.422794
+    },
+    {
+      "id": 151,
+      "name": "Acheampong",
+      "probability": 0.629812
+    },
+    {
+      "id": 35,
+      "name": "Bogarde",
+      "probability": 0.646378
+    },
+    {
+      "id": 101,
+      "name": "Henderson",
+      "probability": 0.67283
+    },
+    {
+      "id": 71,
+      "name": "Cook",
+      "probability": 0.544284
+    },
+    {
+      "id": 333,
+      "name": "Bornauw",
+      "probability": 0.574398
+    },
+    {
+      "id": 272,
+      "name": "Kusi-Asare",
+      "probability": 0.458819
+    },
+    {
+      "id": 385,
+      "name": "Trafford",
+      "probability": 0.35677
+    },
+    {
+      "id": 256,
+      "name": "Tete",
+      "probability": 0.640753
+    },
+    {
+      "id": 446,
+      "name": "Sch\u00e4r",
+      "probability": 0.415937
+    },
+    {
+      "id": 90,
+      "name": "Hickey",
+      "probability": 0.564368
+    },
+    {
+      "id": 89,
+      "name": "Henry",
+      "probability": 0.588663
+    },
+    {
+      "id": 111,
+      "name": "Steele",
+      "probability": 0.365199
+    },
+    {
+      "id": 395,
+      "name": "Lewis",
+      "probability": 0.405067
+    },
+    {
+      "id": 512,
+      "name": "Kudus",
+      "probability": 0.426412
+    },
+    {
+      "id": 255,
+      "name": "J.Cuenca",
+      "probability": 0.536532
+    },
+    {
+      "id": 58,
+      "name": "Forster",
+      "probability": 0.350237
+    },
+    {
+      "id": 47,
+      "name": "Kamara",
+      "probability": 0.415153
+    },
+    {
+      "id": 504,
+      "name": "Vuskovic",
+      "probability": 0.280411
+    },
+    {
+      "id": 42,
+      "name": "Guessand",
+      "probability": 0.673011
+    },
+    {
+      "id": 344,
+      "name": "Gruev",
+      "probability": 0.684284
+    },
+    {
+      "id": 38,
+      "name": "A.Garc\u00eda",
+      "probability": 0.425831
+    },
+    {
+      "id": 21,
+      "name": "N\u00f8rgaard",
+      "probability": 0.605343
+    },
+    {
+      "id": 215,
+      "name": "Devenny",
+      "probability": 0.564033
+    },
+    {
+      "id": 243,
+      "name": "Alcaraz",
+      "probability": 0.570257
+    },
+    {
+      "id": 62,
+      "name": "Diakit\u00e9",
+      "probability": 0.465447
+    },
+    {
+      "id": 206,
+      "name": "Chadi Riad",
+      "probability": 0.638447
+    },
+    {
+      "id": 326,
+      "name": "Perri",
+      "probability": 0.359382
+    },
+    {
+      "id": 546,
+      "name": "Adingra",
+      "probability": 0.415153
+    },
+    {
+      "id": 91,
+      "name": "Pinnock",
+      "probability": 0.611165
+    },
+    {
+      "id": 110,
+      "name": "Rushworth",
+      "probability": 0.284334
+    },
+    {
+      "id": 227,
+      "name": "Travers",
+      "probability": 0.362024
+    },
+    {
+      "id": 168,
+      "name": "Marc Guiu",
+      "probability": 0.458819
+    },
+    {
+      "id": 556,
+      "name": "Targett",
+      "probability": 0.321245
+    },
+    {
+      "id": 117,
+      "name": "Coppola",
+      "probability": 0.428479
+    },
+    {
+      "id": 50,
+      "name": "Burrowes",
+      "probability": 0.273942
+    },
+    {
+      "id": 508,
+      "name": "Davies",
+      "probability": 0.417807
+    },
+    {
+      "id": 158,
+      "name": "Gittens",
+      "probability": 0.271392
+    },
+    {
+      "id": 348,
+      "name": "Piroe",
+      "probability": 0.462685
+    },
+    {
+      "id": 245,
+      "name": "Dibling",
+      "probability": 0.494908
+    },
+    {
+      "id": 251,
+      "name": "Lecomte",
+      "probability": 0.258146
+    },
+    {
+      "id": 107,
+      "name": "Furo",
+      "probability": 0.39902
+    },
+    {
+      "id": 224,
+      "name": "Nketiah",
+      "probability": 0.293309
+    },
+    {
+      "id": 244,
+      "name": "Armstrong",
+      "probability": 0.406331
+    },
+    {
+      "id": 441,
+      "name": "Obi",
+      "probability": 0.284067
+    },
+    {
+      "id": 524,
+      "name": "Olusesi",
+      "probability": 0.386414
+    },
+    {
+      "id": 234,
+      "name": "Patterson",
+      "probability": 0.542159
+    },
+    {
+      "id": 66,
+      "name": "Soler",
+      "probability": 0.354428
+    },
+    {
+      "id": 468,
+      "name": "John",
+      "probability": 0.365197
+    },
+    {
+      "id": 555,
+      "name": "Matthews",
+      "probability": 0.258146
+    },
+    {
+      "id": 547,
+      "name": "Mundle",
+      "probability": 0.268324
+    },
+    {
+      "id": 495,
+      "name": "Austin",
+      "probability": 0.258146
+    },
+    {
+      "id": 528,
+      "name": "Scarlett",
+      "probability": 0.283078
+    },
+    {
+      "id": 466,
+      "name": "Neave",
+      "probability": 0.273942
+    },
+    {
+      "id": 146,
+      "name": "B.Badiashile",
+      "probability": 0.290543
+    }
+  ]
+}

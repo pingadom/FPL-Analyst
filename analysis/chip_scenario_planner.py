@@ -14,6 +14,12 @@ from collections import Counter, defaultdict
 
 import numpy as np
 
+from breakthrough_engine import (
+    ChipState,
+    ChipTransition,
+    optimise_chip_sequence,
+)
+
 from prospective_common import (
     APP_DATA,
     ROOT,
@@ -723,6 +729,106 @@ def evaluate_squad(
     }
 
 
+def sequence_plan(
+    plan: dict,
+    gameweek: int,
+    future_events: list[dict],
+    calibration: dict,
+) -> dict:
+    """Enumerate the remaining half-season chip sequence as a diagnostic.
+
+    Current-week values use the paired scenario engine. Future weeks use only
+    announced blank/double structure and reservation values, so this does not
+    fabricate precise future player points. The ordinary one-week gate remains
+    authoritative until prospective sequence evidence exists.
+    """
+    half_end = 19 if chip_set_for_gameweek(gameweek) == 1 else 38
+    horizon_end = min(
+        half_end,
+        max([gameweek, *[int(row["gameweek"]) for row in future_events]]),
+    )
+    current = {row["chip"]: row for row in plan["scenarios"]}
+    schedule = {int(row["gameweek"]): row for row in future_events}
+    remaining = frozenset(str(chip) for chip in plan["chipsRemaining"])
+
+    def provider(state: ChipState) -> list[ChipTransition]:
+        rows = [ChipTransition("Hold", 0.0, state.permanent_state)]
+        event = schedule.get(state.week, {"blankTeams": [], "doubleTeams": []})
+        blanks = len(event.get("blankTeams", []))
+        doubles = len(event.get("doubleTeams", []))
+        for chip in sorted(state.available):
+            if (
+                state.week == gameweek
+                and chip in current
+                and not bool(current[chip].get("available", False))
+            ):
+                continue
+            if state.week == gameweek and chip in current:
+                if not bool(current[chip].get("gatePassed", False)):
+                    continue
+                value = max(0.0, float(current[chip].get("netOfReservation", 0.0)))
+            elif chip == "Free Hit":
+                raw_value = max(0.0, 1.8 * max(0, blanks - 2) + 0.6 * doubles)
+                if raw_value < 3.0:
+                    continue
+                value = raw_value - 3.0
+            elif chip == "Bench Boost":
+                raw_value = max(0.0, 1.0 + 2.0 * doubles)
+                reservation = float(calibration.get(chip, {}).get("q65", 5.8))
+                if raw_value < reservation:
+                    continue
+                value = raw_value - reservation
+            elif chip == "Triple Captain":
+                raw_value = max(0.0, 6.0 + 4.5 * min(1, doubles))
+                reservation = float(calibration.get(chip, {}).get("q65", 9.8))
+                if raw_value < reservation:
+                    continue
+                value = raw_value - reservation
+            else:  # Wildcard: schedule structure triggers review, not a free gain.
+                if blanks < 5 or blanks + doubles < 7:
+                    continue
+                value = 0.5 * (blanks + doubles - 6)
+            rows.append(
+                ChipTransition(
+                    action=chip,
+                    immediate_value=value,
+                    next_permanent_state=(
+                        f"wildcard-gw{state.week}"
+                        if chip == "Wildcard"
+                        else state.permanent_state
+                    ),
+                    setup_cost=1.5 if chip == "Wildcard" else 0.0,
+                    consumes_chip=chip,
+                    preserves_permanent_state=chip == "Free Hit",
+                )
+            )
+        return rows
+
+    optimised = optimise_chip_sequence(
+        ChipState(
+            week=gameweek,
+            end_week=horizon_end,
+            available=remaining,
+            permanent_state="current",
+        ),
+        provider,
+    )
+    uses = [
+        {"gameweek": week, "action": action}
+        for week, action in optimised.actions
+        if action != "Hold"
+    ]
+    return {
+        "status": "diagnostic; current one-week gate remains authoritative",
+        "halfEnd": half_end,
+        "planningHorizonEnd": horizon_end,
+        "expectedSequenceValue": round(optimised.total_value, 2),
+        "uses": uses,
+        "terminalState": optimised.terminal_state,
+        "method": "Current paired scenarios plus announced blank/double structural opportunities above past-only reservation values; unknown later fixtures retain option value and are not fabricated.",
+    }
+
+
 def main() -> None:
     status = json.loads((APP_DATA / "deadline-status.json").read_text(encoding="utf-8"))
     snapshot = json.loads((ROOT / status["snapshotPath"]).read_text(encoding="utf-8"))
@@ -826,21 +932,40 @@ def main() -> None:
 
     manager_plans = {}
     season_state_root = SHADOW_ROOT / status["season"]
+    latest_decisions: dict[str, dict] = {}
+    shadow_status_path = APP_DATA / "shadow-status.json"
+    if shadow_status_path.exists():
+        shadow_status = json.loads(shadow_status_path.read_text(encoding="utf-8"))
+        if shadow_status.get("snapshotHash") == status["snapshotHash"]:
+            decision_path = ROOT / str(shadow_status.get("decisionPath", ""))
+            if decision_path.exists():
+                latest_decisions = {
+                    str(row["id"]): row
+                    for row in json.loads(
+                        decision_path.read_text(encoding="utf-8")
+                    ).get("managers", [])
+                }
     for manager_id in (
         "structural-control",
         "structural-scenarios",
         "frontier-challenger",
         "captain-route-consensus",
+        "breakthrough-decision",
     ):
         state_path = season_state_root / manager_id / "state.json"
-        if not state_path.exists():
-            continue
-        state = json.loads(state_path.read_text(encoding="utf-8"))
-        squad = [
-            id_to_index[player_id]
-            for player_id in state["squadIds"]
-            if player_id in id_to_index
-        ]
+        state = (
+            json.loads(state_path.read_text(encoding="utf-8"))
+            if state_path.exists()
+            else None
+        )
+        if state is not None:
+            squad_ids = state["squadIds"]
+        else:
+            squad_ids = [
+                int(player["id"])
+                for player in latest_decisions.get(manager_id, {}).get("squad", [])
+            ]
+        squad = [id_to_index[player_id] for player_id in squad_ids if player_id in id_to_index]
         if len(squad) == 15:
             manager_plans[manager_id] = evaluate_squad(
                 players,
@@ -855,6 +980,12 @@ def main() -> None:
                 calibration,
                 free_hit_model,
             )
+
+    plan["sequencePlan"] = sequence_plan(plan, gameweek, future_events, calibration)
+    for manager_plan in manager_plans.values():
+        manager_plan["sequencePlan"] = sequence_plan(
+            manager_plan, gameweek, future_events, calibration
+        )
 
     output = {
         "schemaVersion": 2,

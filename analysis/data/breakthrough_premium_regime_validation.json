@@ -1,0 +1,96 @@
+{
+  "status": "regime and premium-access diagnostics implemented",
+  "method": "Bayesian-shrunk role/minutes/underlying/team change probability, evaluated against previously under-ranked three-event top-decile returns. Premium failures require a strong forecast rank but low recursive ownership; no named-player bonus is introduced.",
+  "regime": {
+    "rows": 199522,
+    "breakoutRate": 0.02713,
+    "baselineAuc": 0.55039,
+    "regimeSignalAuc": 0.3086,
+    "aucDelta": -0.24179,
+    "causalLearnedAuc": 0.89508,
+    "causalLearnedAucDelta": 0.34469,
+    "featureNames": [
+      "recentLongUnderlyingDelta",
+      "expectedMinutesDelta",
+      "teamRegimeShift",
+      "roleChanged",
+      "startProbability",
+      "playProbability",
+      "transferPressure",
+      "priceRiseProbability",
+      "recentPoints",
+      "longPoints",
+      "observations"
+    ],
+    "fitAudit": [
+      {
+        "seasonOrder": 2,
+        "trainingRows": 44903,
+        "trainingBreakouts": 1518,
+        "testRows": 21134
+      },
+      {
+        "seasonOrder": 3,
+        "trainingRows": 66037,
+        "trainingBreakouts": 2201,
+        "testRows": 22313
+      },
+      {
+        "seasonOrder": 4,
+        "trainingRows": 88350,
+        "trainingBreakouts": 2904,
+        "testRows": 22889
+      },
+      {
+        "seasonOrder": 5,
+        "trainingRows": 111239,
+        "trainingBreakouts": 3565,
+        "testRows": 23230
+      },
+      {
+        "seasonOrder": 6,
+        "trainingRows": 134469,
+        "trainingBreakouts": 4214,
+        "testRows": 24957
+      },
+      {
+        "seasonOrder": 7,
+        "trainingRows": 159426,
+        "trainingBreakouts": 4883,
+        "testRows": 28742
+      },
+      {
+        "seasonOrder": 8,
+        "trainingRows": 188168,
+        "trainingBreakouts": 5562,
+        "testRows": 26919
+      },
+      {
+        "seasonOrder": 9,
+        "trainingRows": 215087,
+        "trainingBreakouts": 6194,
+        "testRows": 29338
+      }
+    ],
+    "passedDiagnosticGate": true
+  },
+  "premiumAccessFailures": [
+    {
+      "season": "2019/20",
+      "asset": "Salah",
+      "forecastRank": 2.9,
+      "squadRate": 0.0,
+      "seasonPoints": 233
+    },
+    {
+      "season": "2025/26",
+      "asset": "Haaland",
+      "forecastRank": 2.6,
+      "squadRate": 0.0,
+      "seasonPoints": 239
+    }
+  ],
+  "premiumAccessFailureCount": 2,
+  "decision": "Expose only the causal learned probability and package-level captaincy option to the action model. The hand-built regime score is rejected and must not be added directly to player points.",
+  "productionPromotion": false
+}

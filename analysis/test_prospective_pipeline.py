@@ -103,8 +103,8 @@ class ProspectivePipelineTests(unittest.TestCase):
         self.assertEqual(self.decision["snapshotHash"], self.deadline["snapshotHash"])
         self.assertEqual(self.chips["snapshotHash"], self.deadline["snapshotHash"])
 
-    def test_four_legal_shadow_squads(self) -> None:
-        self.assertEqual(len(self.decision["managers"]), 4)
+    def test_five_legal_shadow_squads(self) -> None:
+        self.assertEqual(len(self.decision["managers"]), 5)
         for manager in self.decision["managers"]:
             squad = manager["squad"]
             self.assertEqual(len(squad), 15)
@@ -160,6 +160,10 @@ class ProspectivePipelineTests(unittest.TestCase):
         self.assertEqual(captain_route["status"], "prospective captain shadow")
         self.assertIn(
             "captain-route-consensus",
+            {manager["id"] for manager in self.decision["managers"]},
+        )
+        self.assertIn(
+            "breakthrough-decision",
             {manager["id"] for manager in self.decision["managers"]},
         )
         self.assertEqual(self.performance["targetHits"], 0)

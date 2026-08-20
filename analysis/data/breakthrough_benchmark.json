@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-20T11:45:28.531510+00:00",
+  "git": {
+    "commit": "9bd44acb0f2765ee1fec0cfb917891d885d0f985",
+    "branch": "codex/breakthrough-roadmap",
+    "dirty": true
+  },
+  "control": {
+    "name": "Leak-free route captain plus audited TC/BB",
+    "average": 2190.6,
+    "minimum": 2032,
+    "top500Pace": 2296.8,
+    "averageGap": -106.2,
+    "top500Hits": 0,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2129,
+        "top500Target": 2151,
+        "margin": -22
+      },
+      {
+        "season": "2019/20",
+        "points": 2156,
+        "top500Target": 2160,
+        "margin": -4
+      },
+      {
+        "season": "2020/21",
+        "points": 2238,
+        "top500Target": 2270,
+        "margin": -32
+      },
+      {
+        "season": "2021/22",
+        "points": 2305,
+        "top500Target": 2340,
+        "margin": -35
+      },
+      {
+        "season": "2022/23",
+        "points": 2258,
+        "top500Target": 2425,
+        "margin": -167
+      },
+      {
+        "season": "2023/24",
+        "points": 2098,
+        "top500Target": 2373,
+        "margin": -275
+      },
+      {
+        "season": "2024/25",
+        "points": 2309,
+        "top500Target": 2411,
+        "margin": -102
+      },
+      {
+        "season": "2025/26",
+        "points": 2032,
+        "top500Target": 2244,
+        "margin": -212
+      }
+    ],
+    "firstFourAverageGap": -23.2,
+    "lastFourAverageGap": -189.0
+  },
+  "structuralLoss": {
+    "starterNoShows": 290,
+    "autosubsRecovered": 212,
+    "unfilledStarterSlots": 78,
+    "twoPointFloorPerSeason": 19.5
+  },
+  "forecastCeilings": {
+    "currentWeeklyRebuildAverage": 2242.9,
+    "weeklyRebuildGapToPace": -53.9,
+    "informationTournament": [
+      {
+        "name": "perfectTotalPoints",
+        "averageDelta": 996.0,
+        "minimumSeasonDelta": 819,
+        "attainability": "pure hindsight ceiling only"
+      },
+      {
+        "name": "perfectPlayerInvolvement",
+        "averageDelta": 604.2,
+        "minimumSeasonDelta": 414,
+        "attainability": "mostly football variance; not a realistic forecast target"
+      },
+      {
+        "name": "perfectMinutesAndTeam",
+        "averageDelta": 305.4,
+        "minimumSeasonDelta": 119,
+        "attainability": "upper bound for the proposed market-plus-lineup layer"
+      },
+      {
+        "name": "perfectTeamOutcome",
+        "averageDelta": 177.4,
+        "minimumSeasonDelta": -52,
+        "attainability": "partly reducible with market-calibrated team probabilities"
+      },
+      {
+        "name": "perfectMinutes",
+        "averageDelta": 49.5,
+        "minimumSeasonDelta": -70,
+        "attainability": "partly attainable from better deadline team news"
+      }
+    ],
+    "warning": "Ceilings overlap and are not additive; the weekly rebuild was refreshed on 2026-08-20 against the frozen current forecast stack."
+  },
+  "recentAdaptation": {
+    "topFiveSquadRate2023_24": 32.6,
+    "topFiveSquadRate2025_26": 25.3
+  },
+  "promotionGates": {
+    "historicalEngineering": {
+      "averagePoints": 2300,
+      "minimumPositiveSeasons": 6,
+      "maximumWorstSeasonDelta": -10,
+      "knownBlankXiSlots": 0,
+      "illegalStates": 0
+    },
+    "governance": "All 2018/19-2025/26 seasons are research-exposed. Historical gates reject weak ideas but cannot prove production performance."
+  },
+  "inputHashes": {
+    "analysis/data/availability_leak_audit.json": "0005dde1f1558b80a14612c69d2933832360dcba73fc1af08cd635c5f3c709b1",
+    "analysis/data/information_ceiling_tournament.json": "ea125b2a93a3f8c2f6430762db41dab7413ee681f513c111a7ad76b7a29277ae",
+    "analysis/data/decision_regret_audit.json": "6983b99c13a871e3a8191fa68865ce3bd6f9dc806d5b9b9f5909dc1071c47083",
+    "analysis/data/premium_asset_audit.json": "6db95efef2be77bd19136defe0039463eef78f18b8d51d43491937908e86a2a1",
+    "app/data/model-results.json": "057aea414b0b5b01705f02091ea2123b48e05bf2cf64d768974643dc940556f3"
+  }
+}
