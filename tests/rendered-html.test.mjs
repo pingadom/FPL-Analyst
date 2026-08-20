@@ -72,8 +72,12 @@ test("serves the frozen prospective research audit", async () => {
   assert.equal(payload.chips.simulationCount, 5000);
   assert.equal(payload.frontier.status, "shadow challenger");
   assert.equal(payload.listwise.status, "shadow challenger");
-  assert.equal(payload.performance.stackLift, 43);
-  assert.equal(payload.performance.targetHits, 0);
+  assert.equal(payload.performance.stackLift, 21.4);
+  assert.equal(payload.performance.targetHits, 2);
+  assert.equal(
+    payload.chips.managerPlans["forecast-breakthrough-v2"].policyProfile,
+    "forecast-v2 756-policy recursive winner",
+  );
 });
 
 test("serves public Lens 7 projections with CORS", async () => {

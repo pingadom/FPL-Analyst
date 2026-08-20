@@ -23,10 +23,12 @@ from live_action_feature_ablation import (
 )
 from listwise_ranker_validation import fitted_ranker
 from multiscale_horizon_validation import add_targets
+from forecast_layer_v2 import minutes_mixture
 from probabilistic_component_challenger import (
     causal_route_predictions,
     terminal_live_route_predictions,
 )
+from probabilistic_minutes_validation import terminal_live_predictions
 from transfer_action_ranker_validation import SHIFTS, model as action_model, query_order
 from wildcard_freehit_ablation import champion_forecasts
 
@@ -142,6 +144,7 @@ def map_local_rank(raw: np.ndarray, reference: np.ndarray) -> np.ndarray:
 def forecast_v2_captain_scores(
     current: list[dict],
     route_captain: np.ndarray,
+    live_minutes: dict[str, np.ndarray],
 ) -> tuple[np.ndarray, dict]:
     """Apply the historically selected match boundary when exact odds exist."""
     market_path = lens.ROOT / "app" / "data" / "market-scores-v2.json"
@@ -184,18 +187,31 @@ def forecast_v2_captain_scores(
             * (float(row["expectedMinutes"]) / 90.0)
             * (row["position"] in {"GK", "DEF"})
         )
-        dynamic[index] += 0.30 * (attack_delta + clean_delta + conceded_delta)
+        dynamic[index] += 0.70 * (attack_delta + clean_delta + conceded_delta)
     if covered == 0:
         return route_captain.copy(), {
             "status": artifact.get("status", "no matching market fixtures"),
             "coveredPlayers": 0,
         }
+    mixture = minutes_mixture(live_minutes)
+    old_play = np.asarray(
+        [float(row["minutesModel"]["playProbability"]) / 100 for row in current]
+    )
+    old_sixty = np.asarray(
+        [float(row["minutesModel"]["sixtyProbability"]) / 100 for row in current]
+    )
+    new_reliability = 0.45 * (1.0 - mixture.no_show) + 0.55 * mixture.sixty_plus
+    old_reliability = 0.45 * old_play + 0.55 * old_sixty
+    downside = np.minimum(new_reliability - old_reliability, 0.0)
+    multiplier = 1.0 + 0.50 * downside * (0.75 + 0.25 * mixture.entropy)
+    dynamic *= np.clip(multiplier, 0.55, 1.0)
     market_rank = pd.Series(dynamic).rank(method="average", pct=True).to_numpy(float) * 100
-    return 0.90 * route_captain + 0.10 * market_rank, {
+    return 0.80 * route_captain + 0.20 * market_rank, {
         "status": "exact-capture prospective shadow",
         "coveredPlayers": covered,
         "marketSnapshotHash": artifact.get("sourceSnapshotHash"),
-        "historicalSelection": "dynamicCaptain0.30",
+        "historicalSelection": "dynamicCaptain0.70-share0.20-minuteDownside0.50",
+        "minutesModel": "terminal causal probabilistic challenger",
     }
 
 
@@ -322,8 +338,9 @@ def main() -> None:
         + SELECTED_SHARE * route_rank_mean
         - position_adjustment
     )
+    live_minutes = terminal_live_predictions(data, live)
     forecast_v2_captain, forecast_v2_audit = forecast_v2_captain_scores(
-        current, route_captain
+        current, route_captain, live_minutes
     )
     # The former action-transfer challenger failed its leak-free revalidation.
     # Keep compatibility fields inert so no stale consumer can activate it.
@@ -381,8 +398,8 @@ def main() -> None:
         },
         "forecastV2Challenger": {
             **forecast_v2_audit,
-            "policy": "90% route-consensus captain rank + 10% dynamic-match rank at 0.30 route strength",
-            "historicalValidation": "analysis/data/forecast_breakthrough_tournament_v2.json",
+            "policy": "80% route-consensus captain rank + 20% dynamic-match rank at 0.70 route strength with 0.50 new-minutes-downside protection",
+            "historicalValidation": "analysis/data/captain_surface_search_v2.json",
         },
         "players": players,
     }

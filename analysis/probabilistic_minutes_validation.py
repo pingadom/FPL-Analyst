@@ -130,7 +130,11 @@ def feature_frame(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def matrix(frame: pd.DataFrame, medians: pd.Series | None = None) -> tuple[np.ndarray, pd.Series]:
-    values = frame[FEATURES].replace([np.inf, -np.inf], np.nan).copy()
+    complete = frame.copy()
+    for feature in FEATURES:
+        if feature not in complete:
+            complete[feature] = np.nan
+    values = complete[FEATURES].replace([np.inf, -np.inf], np.nan).copy()
     values["position_id"] = values["position_id"].astype(float)
     values["price"] = values["price"] / 10.0
     values["GW"] = values["GW"] / 38.0
@@ -203,6 +207,60 @@ def causal_predictions(data: pd.DataFrame) -> dict[str, np.ndarray]:
     output["sixty"] = np.minimum(output["sixty"], output["start"])
     output["minutes"] = np.minimum(output["minutes"], 90 * output["play"] + 8 * (1 - output["play"]))
     np.savez_compressed(cache_path, **output)
+    return output
+
+
+def terminal_live_predictions(
+    historical: pd.DataFrame,
+    live: pd.DataFrame,
+) -> dict[str, np.ndarray]:
+    """Fit the frozen causal minutes challenger through the latest completed data.
+
+    This is the prospective counterpart of ``causal_predictions``. Historical
+    targets are completed fixtures only; the current live rows supply inputs and
+    never supply outcomes.
+    """
+    train = feature_frame(historical)
+    observed = train["fixture_count"].to_numpy(int) > 0
+    fitted = train.loc[observed]
+    current = live.copy()
+    current["log_selected"] = np.log1p(current.get("selected", 0).clip(lower=0))
+    transfer_balance = current.get(
+        "transfers_balance", pd.Series(0.0, index=current.index)
+    )
+    current["log_transfer_balance"] = np.sign(transfer_balance) * np.log1p(
+        np.abs(transfer_balance)
+    )
+    train_x, medians = matrix(fitted)
+    live_x, _ = matrix(current, medians)
+    output: dict[str, np.ndarray] = {}
+    terminal_order = int(train["season_order"].max()) + 1
+    sample_age = terminal_order - fitted["season_order"].to_numpy(int)
+    sample_weight = np.power(0.84, np.maximum(sample_age - 1, 0))
+    sample_weight *= np.where(
+        fitted["observations"].to_numpy(float) >= 3, 1.15, 0.80
+    )
+    sample_weight /= sample_weight.mean()
+    for offset, (name, target) in enumerate(
+        [*PROBABILITY_TARGETS.items(), ("minutes", "minute_rate_target")]
+    ):
+        estimator = model(260814 + 10 * terminal_order + offset, minutes=name == "minutes")
+        estimator.fit(
+            train_x,
+            fitted[target].to_numpy(float),
+            sample_weight=sample_weight,
+        )
+        prediction = estimator.predict(live_x)
+        output[name] = np.clip(
+            prediction,
+            0 if name == "minutes" else 0.005,
+            90 if name == "minutes" else 0.995,
+        )
+    output["start"] = np.minimum(output["start"], output["play"])
+    output["sixty"] = np.minimum(output["sixty"], output["start"])
+    output["minutes"] = np.minimum(
+        output["minutes"], 90 * output["play"] + 8 * (1 - output["play"])
+    )
     return output
 
 

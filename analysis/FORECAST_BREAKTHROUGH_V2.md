@@ -1,5 +1,10 @@
 # Forecast breakthrough v2 — 20 August 2026
 
+> Superseded later on 20 August 2026 by `FULL_PROGRAMME_AUDIT_V3.md`.
+> The statement below that the programme was implemented end to end was too
+> strong: action-specific recursive tests, a large captain surface, chip
+> retuning and the final integrated replay had not yet been completed.
+
 ## Outcome
 
 The forecast programme is implemented end to end. The frozen recursive control

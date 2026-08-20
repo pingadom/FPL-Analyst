@@ -1,0 +1,540 @@
+{
+  "schemaVersion": 1,
+  "modelId": "forecast-v2-dynamic-captain-070-share-020-minutes-050",
+  "status": "fully integrated recursive research winner",
+  "selectionProtocol": "Captain and chip hyperparameters were selected by first-six-season development stability; 2024/25 and 2025/26 were used only for gates.",
+  "automaticWildcard": "rejected after all six exact recursive variants failed",
+  "stages": {
+    "originalRouteControl": {
+      "average": 2190.6,
+      "minimum": 2032,
+      "developmentAverage": 2197.3,
+      "holdoutAverage": 2170.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2156
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2098
+        },
+        {
+          "season": "2024/25",
+          "points": 2309
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "top500Pace": 2296.8,
+      "averageTop500Margin": -106.1,
+      "top500Hits": 0,
+      "top500SeasonMargins": [
+        -22,
+        -4,
+        -32,
+        -35,
+        -167,
+        -275,
+        -102,
+        -212
+      ]
+    },
+    "previousForecastV2": {
+      "average": 2194.2,
+      "minimum": 2032,
+      "developmentAverage": 2200.7,
+      "holdoutAverage": 2175.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2166
+        },
+        {
+          "season": "2020/21",
+          "points": 2247
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2095
+        },
+        {
+          "season": "2024/25",
+          "points": 2318
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "top500Pace": 2296.8,
+      "averageTop500Margin": -102.5,
+      "top500Hits": 1,
+      "top500SeasonMargins": [
+        -22,
+        6,
+        -23,
+        -35,
+        -163,
+        -278,
+        -93,
+        -212
+      ]
+    },
+    "newCaptainOldChips": {
+      "average": 2197.8,
+      "minimum": 2031,
+      "developmentAverage": 2204.0,
+      "holdoutAverage": 2179.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2135
+        },
+        {
+          "season": "2019/20",
+          "points": 2166
+        },
+        {
+          "season": "2020/21",
+          "points": 2242
+        },
+        {
+          "season": "2021/22",
+          "points": 2300
+        },
+        {
+          "season": "2022/23",
+          "points": 2273
+        },
+        {
+          "season": "2023/24",
+          "points": 2108
+        },
+        {
+          "season": "2024/25",
+          "points": 2327
+        },
+        {
+          "season": "2025/26",
+          "points": 2031
+        }
+      ],
+      "top500Pace": 2296.8,
+      "averageTop500Margin": -99.0,
+      "top500Hits": 1,
+      "top500SeasonMargins": [
+        -16,
+        6,
+        -28,
+        -40,
+        -152,
+        -265,
+        -84,
+        -213
+      ]
+    },
+    "newCaptainNoChips": {
+      "average": 2186.9,
+      "minimum": 2031,
+      "developmentAverage": 2194.3,
+      "holdoutAverage": 2164.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2132
+        },
+        {
+          "season": "2019/20",
+          "points": 2166
+        },
+        {
+          "season": "2020/21",
+          "points": 2227
+        },
+        {
+          "season": "2021/22",
+          "points": 2282
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2101
+        },
+        {
+          "season": "2024/25",
+          "points": 2298
+        },
+        {
+          "season": "2025/26",
+          "points": 2031
+        }
+      ],
+      "top500Pace": 2296.8,
+      "averageTop500Margin": -109.9,
+      "top500Hits": 1,
+      "top500SeasonMargins": [
+        -19,
+        6,
+        -43,
+        -58,
+        -167,
+        -272,
+        -113,
+        -213
+      ]
+    },
+    "fullyIntegrated": {
+      "average": 2212.0,
+      "minimum": 2045,
+      "developmentAverage": 2214.3,
+      "holdoutAverage": 2205.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2135
+        },
+        {
+          "season": "2019/20",
+          "points": 2186
+        },
+        {
+          "season": "2020/21",
+          "points": 2271
+        },
+        {
+          "season": "2021/22",
+          "points": 2312
+        },
+        {
+          "season": "2022/23",
+          "points": 2274
+        },
+        {
+          "season": "2023/24",
+          "points": 2108
+        },
+        {
+          "season": "2024/25",
+          "points": 2365
+        },
+        {
+          "season": "2025/26",
+          "points": 2045
+        }
+      ],
+      "top500Pace": 2296.8,
+      "averageTop500Margin": -84.8,
+      "top500Hits": 2,
+      "top500SeasonMargins": [
+        -16,
+        26,
+        1,
+        -28,
+        -151,
+        -265,
+        -46,
+        -199
+      ]
+    }
+  },
+  "integratedVsOriginal": {
+    "averageDelta": 21.4,
+    "developmentDelta": 17.0,
+    "holdoutDelta": 34.5,
+    "minimumDelta": 6,
+    "seasonDeltas": [
+      6,
+      30,
+      33,
+      7,
+      16,
+      10,
+      56,
+      13
+    ]
+  },
+  "integratedVsPreviousV2": {
+    "averageDelta": 17.8,
+    "seasonDeltas": [
+      6,
+      20,
+      24,
+      7,
+      12,
+      13,
+      47,
+      13
+    ]
+  },
+  "chipChoices": [
+    [
+      {
+        "chip": "Triple Captain",
+        "gw": 32,
+        "gain": 3,
+        "signal": 20.676,
+        "threshold": 9.838,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      }
+    ],
+    [
+      {
+        "chip": "Bench Boost",
+        "gw": 24,
+        "gain": 5,
+        "signal": 10.04,
+        "threshold": 9.0,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      },
+      {
+        "chip": "Triple Captain",
+        "gw": 39,
+        "gain": 15,
+        "signal": 13.517,
+        "threshold": 9.932,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      }
+    ],
+    [
+      {
+        "chip": "Triple Captain",
+        "gw": 19,
+        "gain": 8,
+        "signal": 15.066,
+        "threshold": 9.999,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      },
+      {
+        "chip": "Bench Boost",
+        "gw": 25,
+        "gain": 7,
+        "signal": 11.213,
+        "threshold": 8.993,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      },
+      {
+        "chip": "Free Hit",
+        "gw": 34,
+        "gain": 19,
+        "signal": 3.596,
+        "threshold": 2.884,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      }
+    ],
+    [
+      {
+        "chip": "Triple Captain",
+        "gw": 26,
+        "gain": 11,
+        "signal": 15.808,
+        "threshold": 9.988,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      },
+      {
+        "chip": "Bench Boost",
+        "gw": 28,
+        "gain": 19,
+        "signal": 14.388,
+        "threshold": 8.974,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      }
+    ],
+    [
+      {
+        "chip": "Bench Boost",
+        "gw": 20,
+        "gain": 5,
+        "signal": 12.127,
+        "threshold": 8.999,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      },
+      {
+        "chip": "Triple Captain",
+        "gw": 22,
+        "gain": 20,
+        "signal": 14.452,
+        "threshold": 9.998,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      },
+      {
+        "chip": "Free Hit",
+        "gw": 29,
+        "gain": 11,
+        "signal": 3.081,
+        "threshold": 2.987,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      }
+    ],
+    [
+      {
+        "chip": "Triple Captain",
+        "gw": 25,
+        "gain": 5,
+        "signal": 15.113,
+        "threshold": 9.992,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      },
+      {
+        "chip": "Bench Boost",
+        "gw": 34,
+        "gain": 2,
+        "signal": 12.166,
+        "threshold": 8.652,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      }
+    ],
+    [
+      {
+        "chip": "Triple Captain",
+        "gw": 24,
+        "gain": 29,
+        "signal": 15.958,
+        "threshold": 9.995,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      },
+      {
+        "chip": "Free Hit",
+        "gw": 25,
+        "gain": 25,
+        "signal": 3.222,
+        "threshold": 2.998,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      }
+    ],
+    [
+      {
+        "chip": "Triple Captain",
+        "gw": 26,
+        "gain": 14,
+        "signal": 11.191,
+        "threshold": 9.988,
+        "continuationValue": 0.0,
+        "reason": "signal beat option-value adjusted threshold"
+      }
+    ]
+  ],
+  "freeHitFitAudit": [
+    {
+      "season": "2017-18",
+      "trainingSeasons": 1,
+      "trainingRows": 38,
+      "testRows": 38,
+      "priorResidualScale": 4.0
+    },
+    {
+      "season": "2018-19",
+      "trainingSeasons": 2,
+      "trainingRows": 76,
+      "testRows": 38,
+      "priorResidualScale": 4.0
+    },
+    {
+      "season": "2019-20",
+      "trainingSeasons": 3,
+      "trainingRows": 114,
+      "testRows": 38,
+      "priorResidualScale": 8.073
+    },
+    {
+      "season": "2020-21",
+      "trainingSeasons": 4,
+      "trainingRows": 152,
+      "testRows": 38,
+      "priorResidualScale": 10.322
+    },
+    {
+      "season": "2021-22",
+      "trainingSeasons": 5,
+      "trainingRows": 190,
+      "testRows": 38,
+      "priorResidualScale": 12.38
+    },
+    {
+      "season": "2022-23",
+      "trainingSeasons": 6,
+      "trainingRows": 228,
+      "testRows": 37,
+      "priorResidualScale": 12.41
+    },
+    {
+      "season": "2023-24",
+      "trainingSeasons": 7,
+      "trainingRows": 265,
+      "testRows": 38,
+      "priorResidualScale": 12.559
+    },
+    {
+      "season": "2024-25",
+      "trainingSeasons": 8,
+      "trainingRows": 303,
+      "testRows": 38,
+      "priorResidualScale": 12.897
+    },
+    {
+      "season": "2025-26",
+      "trainingSeasons": 9,
+      "trainingRows": 341,
+      "testRows": 38,
+      "priorResidualScale": 13.059
+    }
+  ],
+  "gate": {
+    "beatsOriginalAverage": true,
+    "beatsPreviousV2Average": true,
+    "developmentPositive": true,
+    "holdoutPositive": true,
+    "noNegativeSeasonVsOriginal": true,
+    "chipPolicyImprovesEverySeasonVsNoChip": true
+  },
+  "passed": true,
+  "promotionStatus": "research shadow only: historical odds vintage is not promotion eligible and the model clears only 2/8 reconstructed top-500k cutoffs"
+}

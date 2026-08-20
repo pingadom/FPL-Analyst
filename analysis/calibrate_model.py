@@ -3641,6 +3641,7 @@ def simulate_candidate(
     risk_scores: np.ndarray | None = None,
     chip_value_overrides: dict[tuple[str, int, str], float] | None = None,
     package_action_adjustment: Callable[[dict], float] | None = None,
+    initial_squads: dict[tuple[str, int], list[int]] | None = None,
 ) -> tuple[np.ndarray, list[dict]]:
     """Carry one legal squad through each season and make deadline-only transfers."""
     if plan_scores is None:
@@ -3897,22 +3898,31 @@ def simulate_candidate(
                     dtype=int,
                 )
             if week_number == 0:
-                initial_indices = initial_squad(
-                    frame,
-                    fresh_squad_scores,
-                    excluded_elements=excluded_elements,
-                    captain_weight=strategy.squad_captain_weight,
-                    bench_weight=strategy.squad_bench_weight,
-                    minimum_spend_gap=strategy.initial_spend_gap,
-                    bench_premium_limit=strategy.bench_premium_limit,
-                    bench_premium_penalty=strategy.bench_premium_penalty,
-                    exact_optimiser=strategy.exact_initial_optimiser,
-                    lineup_scores=fresh_objective_lineup_scores,
-                    captain_utility_scores=fresh_objective_captain_scores,
-                    bench_utility_scores=fresh_bench_scores,
-                    risk_scores=risk_scores,
-                    risk_aversion=strategy.squad_risk_aversion,
-                    defence_correlation=strategy.defence_residual_correlation,
+                supplied_initial = (
+                    initial_squads.get((season, gw))
+                    if initial_squads is not None
+                    else None
+                )
+                initial_indices = (
+                    list(supplied_initial)
+                    if supplied_initial is not None
+                    else initial_squad(
+                        frame,
+                        fresh_squad_scores,
+                        excluded_elements=excluded_elements,
+                        captain_weight=strategy.squad_captain_weight,
+                        bench_weight=strategy.squad_bench_weight,
+                        minimum_spend_gap=strategy.initial_spend_gap,
+                        bench_premium_limit=strategy.bench_premium_limit,
+                        bench_premium_penalty=strategy.bench_premium_penalty,
+                        exact_optimiser=strategy.exact_initial_optimiser,
+                        lineup_scores=fresh_objective_lineup_scores,
+                        captain_utility_scores=fresh_objective_captain_scores,
+                        bench_utility_scores=fresh_bench_scores,
+                        risk_scores=risk_scores,
+                        risk_aversion=strategy.squad_risk_aversion,
+                        defence_correlation=strategy.defence_residual_correlation,
+                    )
                 )
                 for index in initial_indices:
                     squad[int(element_values[index])] = {

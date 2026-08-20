@@ -1096,8 +1096,8 @@
   "forecastV2Challenger": {
     "status": "unavailable; forecast-v2 captain falls back to route consensus",
     "coveredPlayers": 0,
-    "policy": "90% route-consensus captain rank + 10% dynamic-match rank at 0.30 route strength",
-    "historicalValidation": "analysis/data/forecast_breakthrough_tournament_v2.json"
+    "policy": "80% route-consensus captain rank + 20% dynamic-match rank at 0.70 route strength with 0.50 new-minutes-downside protection",
+    "historicalValidation": "analysis/data/captain_surface_search_v2.json"
   },
   "players": [
     {

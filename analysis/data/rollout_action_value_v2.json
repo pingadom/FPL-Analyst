@@ -1,0 +1,725 @@
+{
+  "schemaVersion": 1,
+  "status": "realised fixed-squad rollout action challenger",
+  "trainingStates": 70247,
+  "label": {
+    "method": "Realised legal 1/3/6/10-event base-vs-transfer rollouts with autosubs, captain fallback, hit costs and player-specific tenure interpolation.",
+    "meanTenure": 8.282,
+    "meanAdaptiveGain": 0.829,
+    "positiveRate": 0.5155
+  },
+  "candidateMetrics": {
+    "rows": 47337,
+    "structuralMae": 13.042,
+    "correctedMae": 10.46,
+    "structuralPositiveAccuracy": 0.5489,
+    "correctedPositiveAccuracy": 0.555,
+    "structuralCorrelation": 0.159,
+    "correctedCorrelation": 0.1792,
+    "actionRate": 0.5324,
+    "actionBrier": 0.2572,
+    "actionAccuracy50": 0.5508
+  },
+  "fitAudit": [
+    {
+      "seasonOrder": 1,
+      "checkpoint": 1,
+      "trainingRows": 4861,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1892
+    },
+    {
+      "seasonOrder": 1,
+      "checkpoint": 13,
+      "trainingRows": 5012,
+      "maturedCurrentSeasonRows": 151,
+      "testRows": 2581
+    },
+    {
+      "seasonOrder": 1,
+      "checkpoint": 25,
+      "trainingRows": 6847,
+      "maturedCurrentSeasonRows": 1986,
+      "testRows": 3588
+    },
+    {
+      "seasonOrder": 2,
+      "checkpoint": 1,
+      "trainingRows": 11187,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1530
+    },
+    {
+      "seasonOrder": 2,
+      "checkpoint": 13,
+      "trainingRows": 11283,
+      "maturedCurrentSeasonRows": 96,
+      "testRows": 2354
+    },
+    {
+      "seasonOrder": 2,
+      "checkpoint": 25,
+      "trainingRows": 12902,
+      "maturedCurrentSeasonRows": 1715,
+      "testRows": 3539
+    },
+    {
+      "seasonOrder": 3,
+      "checkpoint": 1,
+      "trainingRows": 17405,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1606
+    },
+    {
+      "seasonOrder": 3,
+      "checkpoint": 13,
+      "trainingRows": 17581,
+      "maturedCurrentSeasonRows": 176,
+      "testRows": 2476
+    },
+    {
+      "seasonOrder": 3,
+      "checkpoint": 25,
+      "trainingRows": 19057,
+      "maturedCurrentSeasonRows": 1652,
+      "testRows": 3076
+    },
+    {
+      "seasonOrder": 4,
+      "checkpoint": 1,
+      "trainingRows": 22530,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1380
+    },
+    {
+      "seasonOrder": 4,
+      "checkpoint": 13,
+      "trainingRows": 22621,
+      "maturedCurrentSeasonRows": 91,
+      "testRows": 2321
+    },
+    {
+      "seasonOrder": 4,
+      "checkpoint": 25,
+      "trainingRows": 24269,
+      "maturedCurrentSeasonRows": 1739,
+      "testRows": 3057
+    },
+    {
+      "seasonOrder": 5,
+      "checkpoint": 1,
+      "trainingRows": 28408,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 864
+    },
+    {
+      "seasonOrder": 5,
+      "checkpoint": 13,
+      "trainingRows": 28511,
+      "maturedCurrentSeasonRows": 103,
+      "testRows": 1718
+    },
+    {
+      "seasonOrder": 5,
+      "checkpoint": 25,
+      "trainingRows": 29451,
+      "maturedCurrentSeasonRows": 1043,
+      "testRows": 2894
+    },
+    {
+      "seasonOrder": 6,
+      "checkpoint": 1,
+      "trainingRows": 33073,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1801
+    },
+    {
+      "seasonOrder": 6,
+      "checkpoint": 13,
+      "trainingRows": 33118,
+      "maturedCurrentSeasonRows": 45,
+      "testRows": 2278
+    },
+    {
+      "seasonOrder": 6,
+      "checkpoint": 25,
+      "trainingRows": 34988,
+      "maturedCurrentSeasonRows": 1915,
+      "testRows": 3059
+    },
+    {
+      "seasonOrder": 7,
+      "checkpoint": 1,
+      "trainingRows": 38872,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1272
+    },
+    {
+      "seasonOrder": 7,
+      "checkpoint": 13,
+      "trainingRows": 38935,
+      "maturedCurrentSeasonRows": 63,
+      "testRows": 2617
+    },
+    {
+      "seasonOrder": 7,
+      "checkpoint": 25,
+      "trainingRows": 40395,
+      "maturedCurrentSeasonRows": 1523,
+      "testRows": 3488
+    },
+    {
+      "seasonOrder": 8,
+      "checkpoint": 1,
+      "trainingRows": 45220,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1256
+    },
+    {
+      "seasonOrder": 8,
+      "checkpoint": 13,
+      "trainingRows": 45342,
+      "maturedCurrentSeasonRows": 122,
+      "testRows": 2217
+    },
+    {
+      "seasonOrder": 8,
+      "checkpoint": 25,
+      "trainingRows": 46798,
+      "maturedCurrentSeasonRows": 1578,
+      "testRows": 3158
+    },
+    {
+      "seasonOrder": 9,
+      "checkpoint": 1,
+      "trainingRows": 50990,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1638
+    },
+    {
+      "seasonOrder": 9,
+      "checkpoint": 13,
+      "trainingRows": 51096,
+      "maturedCurrentSeasonRows": 106,
+      "testRows": 2866
+    },
+    {
+      "seasonOrder": 9,
+      "checkpoint": 25,
+      "trainingRows": 52849,
+      "maturedCurrentSeasonRows": 1859,
+      "testRows": 3967
+    }
+  ],
+  "baseline": {
+    "average": 2190.6,
+    "minimum": 2032,
+    "developmentAverage": 2197.3,
+    "holdoutAverage": 2170.5,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2129
+      },
+      {
+        "season": "2019/20",
+        "points": 2156
+      },
+      {
+        "season": "2020/21",
+        "points": 2238
+      },
+      {
+        "season": "2021/22",
+        "points": 2305
+      },
+      {
+        "season": "2022/23",
+        "points": 2258
+      },
+      {
+        "season": "2023/24",
+        "points": 2098
+      },
+      {
+        "season": "2024/25",
+        "points": 2309
+      },
+      {
+        "season": "2025/26",
+        "points": 2032
+      }
+    ]
+  },
+  "selectedByDevelopmentOnly": {
+    "name": "Rollout action p0.60 b0.00",
+    "probabilityGate": 0.6,
+    "residualBlend": 0.0,
+    "average": 2177.5,
+    "minimum": 2021,
+    "developmentAverage": 2193.0,
+    "holdoutAverage": 2131.0,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2241
+      },
+      {
+        "season": "2019/20",
+        "points": 2153
+      },
+      {
+        "season": "2020/21",
+        "points": 2206
+      },
+      {
+        "season": "2021/22",
+        "points": 2302
+      },
+      {
+        "season": "2022/23",
+        "points": 2235
+      },
+      {
+        "season": "2023/24",
+        "points": 2021
+      },
+      {
+        "season": "2024/25",
+        "points": 2230
+      },
+      {
+        "season": "2025/26",
+        "points": 2032
+      }
+    ],
+    "averageDelta": -13.1,
+    "developmentDelta": -4.3,
+    "holdoutDelta": -39.5,
+    "worstSeasonDelta": -79,
+    "positiveSeasons": 1,
+    "negativeSeasons": 6,
+    "seasonDeltas": [
+      112,
+      -3,
+      -32,
+      -3,
+      -23,
+      -77,
+      -79,
+      0
+    ],
+    "policyAudit": {
+      "calls": 17298,
+      "noFit": 1255,
+      "vetoes": 6184,
+      "corrections": 0,
+      "abstentionRate": 0.6425
+    }
+  },
+  "gate": {
+    "developmentPositive": false,
+    "holdoutNonNegative": false,
+    "worstSeasonAtLeastMinusTen": false,
+    "positiveSeasonsAtLeastFive": false
+  },
+  "passed": false,
+  "experiments": [
+    {
+      "name": "Rollout action p0.52 b0.00",
+      "probabilityGate": 0.52,
+      "residualBlend": 0.0,
+      "average": 2152.0,
+      "minimum": 2004,
+      "developmentAverage": 2171.8,
+      "holdoutAverage": 2092.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2198
+        },
+        {
+          "season": "2019/20",
+          "points": 2120
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2236
+        },
+        {
+          "season": "2022/23",
+          "points": 2235
+        },
+        {
+          "season": "2023/24",
+          "points": 2004
+        },
+        {
+          "season": "2024/25",
+          "points": 2167
+        },
+        {
+          "season": "2025/26",
+          "points": 2018
+        }
+      ],
+      "averageDelta": -38.6,
+      "developmentDelta": -25.5,
+      "holdoutDelta": -78.0,
+      "worstSeasonDelta": -142,
+      "positiveSeasons": 1,
+      "negativeSeasons": 6,
+      "seasonDeltas": [
+        69,
+        -36,
+        0,
+        -69,
+        -23,
+        -94,
+        -142,
+        -14
+      ],
+      "policyAudit": {
+        "calls": 17604,
+        "noFit": 1255,
+        "vetoes": 7023,
+        "corrections": 0,
+        "abstentionRate": 0.6011
+      }
+    },
+    {
+      "name": "Rollout action p0.56 b0.00",
+      "probabilityGate": 0.56,
+      "residualBlend": 0.0,
+      "average": 2175.9,
+      "minimum": 2018,
+      "developmentAverage": 2191.0,
+      "holdoutAverage": 2130.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2229
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2206
+        },
+        {
+          "season": "2021/22",
+          "points": 2302
+        },
+        {
+          "season": "2022/23",
+          "points": 2235
+        },
+        {
+          "season": "2023/24",
+          "points": 2021
+        },
+        {
+          "season": "2024/25",
+          "points": 2243
+        },
+        {
+          "season": "2025/26",
+          "points": 2018
+        }
+      ],
+      "averageDelta": -14.8,
+      "developmentDelta": -6.3,
+      "holdoutDelta": -40.0,
+      "worstSeasonDelta": -77,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        100,
+        -3,
+        -32,
+        -3,
+        -23,
+        -77,
+        -66,
+        -14
+      ],
+      "policyAudit": {
+        "calls": 17303,
+        "noFit": 1255,
+        "vetoes": 6399,
+        "corrections": 0,
+        "abstentionRate": 0.6302
+      }
+    },
+    {
+      "name": "Rollout action p0.60 b0.00",
+      "probabilityGate": 0.6,
+      "residualBlend": 0.0,
+      "average": 2177.5,
+      "minimum": 2021,
+      "developmentAverage": 2193.0,
+      "holdoutAverage": 2131.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2241
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2206
+        },
+        {
+          "season": "2021/22",
+          "points": 2302
+        },
+        {
+          "season": "2022/23",
+          "points": 2235
+        },
+        {
+          "season": "2023/24",
+          "points": 2021
+        },
+        {
+          "season": "2024/25",
+          "points": 2230
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": -13.1,
+      "developmentDelta": -4.3,
+      "holdoutDelta": -39.5,
+      "worstSeasonDelta": -79,
+      "positiveSeasons": 1,
+      "negativeSeasons": 6,
+      "seasonDeltas": [
+        112,
+        -3,
+        -32,
+        -3,
+        -23,
+        -77,
+        -79,
+        0
+      ],
+      "policyAudit": {
+        "calls": 17298,
+        "noFit": 1255,
+        "vetoes": 6184,
+        "corrections": 0,
+        "abstentionRate": 0.6425
+      }
+    },
+    {
+      "name": "Rollout action p0.58 b0.02",
+      "probabilityGate": 0.58,
+      "residualBlend": 0.02,
+      "average": 2164.4,
+      "minimum": 2003,
+      "developmentAverage": 2179.3,
+      "holdoutAverage": 2119.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2241
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2078
+        },
+        {
+          "season": "2021/22",
+          "points": 2262
+        },
+        {
+          "season": "2022/23",
+          "points": 2235
+        },
+        {
+          "season": "2023/24",
+          "points": 2107
+        },
+        {
+          "season": "2024/25",
+          "points": 2236
+        },
+        {
+          "season": "2025/26",
+          "points": 2003
+        }
+      ],
+      "averageDelta": -26.2,
+      "developmentDelta": -18.0,
+      "holdoutDelta": -51.0,
+      "worstSeasonDelta": -160,
+      "positiveSeasons": 2,
+      "negativeSeasons": 6,
+      "seasonDeltas": [
+        112,
+        -3,
+        -160,
+        -43,
+        -23,
+        9,
+        -73,
+        -29
+      ],
+      "policyAudit": {
+        "calls": 17267,
+        "noFit": 1255,
+        "vetoes": 5900,
+        "corrections": 3283,
+        "abstentionRate": 0.4682
+      }
+    },
+    {
+      "name": "Rollout action p0.58 b0.05",
+      "probabilityGate": 0.58,
+      "residualBlend": 0.05,
+      "average": 2149.5,
+      "minimum": 2024,
+      "developmentAverage": 2150.3,
+      "holdoutAverage": 2147.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2141
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2087
+        },
+        {
+          "season": "2021/22",
+          "points": 2262
+        },
+        {
+          "season": "2022/23",
+          "points": 2235
+        },
+        {
+          "season": "2023/24",
+          "points": 2024
+        },
+        {
+          "season": "2024/25",
+          "points": 2220
+        },
+        {
+          "season": "2025/26",
+          "points": 2074
+        }
+      ],
+      "averageDelta": -41.1,
+      "developmentDelta": -47.0,
+      "holdoutDelta": -23.5,
+      "worstSeasonDelta": -151,
+      "positiveSeasons": 2,
+      "negativeSeasons": 6,
+      "seasonDeltas": [
+        12,
+        -3,
+        -151,
+        -43,
+        -23,
+        -74,
+        -89,
+        42
+      ],
+      "policyAudit": {
+        "calls": 17477,
+        "noFit": 1255,
+        "vetoes": 5880,
+        "corrections": 2952,
+        "abstentionRate": 0.4947
+      }
+    },
+    {
+      "name": "Rollout action p0.62 b0.05",
+      "probabilityGate": 0.62,
+      "residualBlend": 0.05,
+      "average": 2117.5,
+      "minimum": 1813,
+      "developmentAverage": 2149.5,
+      "holdoutAverage": 2021.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2123
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2115
+        },
+        {
+          "season": "2021/22",
+          "points": 2302
+        },
+        {
+          "season": "2022/23",
+          "points": 2235
+        },
+        {
+          "season": "2023/24",
+          "points": 1969
+        },
+        {
+          "season": "2024/25",
+          "points": 2230
+        },
+        {
+          "season": "2025/26",
+          "points": 1813
+        }
+      ],
+      "averageDelta": -73.1,
+      "developmentDelta": -47.8,
+      "holdoutDelta": -149.0,
+      "worstSeasonDelta": -219,
+      "positiveSeasons": 0,
+      "negativeSeasons": 8,
+      "seasonDeltas": [
+        -6,
+        -3,
+        -123,
+        -3,
+        -23,
+        -129,
+        -79,
+        -219
+      ],
+      "policyAudit": {
+        "calls": 17264,
+        "noFit": 1255,
+        "vetoes": 5634,
+        "corrections": 2457,
+        "abstentionRate": 0.5313
+      }
+    }
+  ]
+}

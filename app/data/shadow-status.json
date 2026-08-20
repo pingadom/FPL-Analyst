@@ -1281,8 +1281,8 @@
       "captainScore": "forecastV2CaptainScore",
       "chips": true,
       "transferHurdle": 2.2,
-      "description": "Frozen research winner: route captain plus a conservative exact-capture dynamic match boundary; falls back safely when market data is unavailable.",
-      "chip": "Bench Boost",
+      "description": "Frozen large-search winner: route captain plus a 20% exact-capture dynamic match boundary, causal minutes downside protection and separately gated chip policy; falls back safely when market data is unavailable.",
+      "chip": "Hold",
       "bank": 0.0,
       "freeTransfersNext": 1,
       "transfers": [],
@@ -1528,8 +1528,8 @@
     }
   ],
   "protocol": "All managers receive the same immutable deadline snapshot. Only locked decisions update recursive state; no post-deadline edit is permitted.",
-  "decisionHash": "5e16f84588ef30519a4a80d57ada9c285a77ed4d80634ae249e317c0998d3515",
-  "decisionPath": "analysis/shadow/2026-27/gw-01/1be44aa9a995-5e16f84588ef.json",
+  "decisionHash": "76a91f5d54b48e08cf2fbd1c96c1c7af4f5784f44d79e8cc1b7d9b130475393e",
+  "decisionPath": "analysis/shadow/2026-27/gw-01/1be44aa9a995-76a91f5d54b4.json",
   "completedGameweeks": 0,
   "cumulative": {
     "structural-control": 0,

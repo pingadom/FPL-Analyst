@@ -170,9 +170,20 @@ class ProspectivePipelineTests(unittest.TestCase):
             "forecast-breakthrough-v2",
             {manager["id"] for manager in self.decision["managers"]},
         )
-        self.assertEqual(self.performance["targetHits"], 0)
+        self.assertEqual(self.performance["targetHits"], 2)
+        self.assertLess(self.performance["targetHits"], 6)
         self.assertGreater(self.performance["stackLift"], 0)
         self.assertIn("cannot promote", self.performance["governance"].lower())
+        forecast_chip = self.chips["managerPlans"]["forecast-breakthrough-v2"]
+        self.assertEqual(
+            forecast_chip["policyProfile"],
+            "forecast-v2 756-policy recursive winner",
+        )
+        self.assertFalse(
+            next(
+                row for row in forecast_chip["scenarios"] if row["chip"] == "Wildcard"
+            )["gatePassed"]
+        )
 
     def test_live_action_feature_bridge_is_complete(self) -> None:
         required = set(lens.LIVE_ACTION_FEATURES + lens.LIVE_ROUTE_FEATURES)

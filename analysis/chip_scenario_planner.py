@@ -38,6 +38,11 @@ from prospective_common import (
 DRAWS = 5_000
 SEED = 271828
 CHIPS = ("Wildcard", "Free Hit", "Bench Boost", "Triple Captain")
+FORECAST_V2_THRESHOLDS = {
+    "Bench Boost": 9.0,
+    "Triple Captain": 10.0,
+    "Free Hit": 3.0,
+}
 
 
 def summary(values: np.ndarray) -> dict:
@@ -51,7 +56,10 @@ def summary(values: np.ndarray) -> dict:
 
 
 def best_lineup(
-    players: list[dict], squad: list[int], score_key: str
+    players: list[dict],
+    squad: list[int],
+    score_key: str,
+    captain_score_key: str | None = None,
 ) -> tuple[list[int], int, int]:
     options = [
         {
@@ -87,10 +95,11 @@ def best_lineup(
         if len(selection) == 11
         else -1e9,
     )
-    captain = max(xi, key=lambda index: float(players[index][score_key]))
+    captain_key = captain_score_key or score_key
+    captain = max(xi, key=lambda index: float(players[index][captain_key]))
     vice = max(
         (index for index in xi if index != captain),
-        key=lambda index: float(players[index][score_key]),
+        key=lambda index: float(players[index][captain_key]),
     )
     return xi, captain, vice
 
@@ -411,12 +420,18 @@ def currently_available_chips(
 
 
 def build_alternative_squads(
-    players: list[dict], budget: float
+    players: list[dict],
+    budget: float,
+    plan_score_key: str = "horizonScore",
+    lineup_score_key: str = "structuralScore",
+    captain_score_key: str = "structuralScore",
 ) -> tuple[list[int], list[int], int, list[int], list[int], int]:
     minimum_spend = max(0.0, budget - 0.5)
     free_hit, free_hit_xi, free_hit_captain, _ = optimise_squad(
         players,
-        "structuralScore",
+        plan_score_key,
+        lineup_score_key=lineup_score_key,
+        captain_score_key=captain_score_key,
         bench_weight=0.0,
         captain_weight=1.0,
         bench_premium_limit=0.8,
@@ -425,7 +440,9 @@ def build_alternative_squads(
     )
     wildcard, wildcard_xi, wildcard_captain, _ = optimise_squad(
         players,
-        "horizonScore",
+        plan_score_key,
+        lineup_score_key=lineup_score_key,
+        captain_score_key=captain_score_key,
         minimum_spend=minimum_spend,
         budget_limit=budget,
     )
@@ -451,8 +468,14 @@ def evaluate_squad(
     name_to_team: dict[str, int],
     calibration: dict[str, dict[str, float]],
     free_hit_model: dict | None,
+    plan_score_key: str = "horizonScore",
+    lineup_score_key: str = "structuralScore",
+    captain_score_key: str = "structuralScore",
+    threshold_profile: dict[str, float] | None = None,
 ) -> dict:
-    xi, captain, vice = best_lineup(players, squad, "structuralScore")
+    xi, captain, vice = best_lineup(
+        players, squad, lineup_score_key, captain_score_key
+    )
     budget = available_squad_budget(players, state)
     (
         free_hit,
@@ -461,12 +484,18 @@ def evaluate_squad(
         wildcard,
         wildcard_xi,
         wildcard_captain,
-    ) = build_alternative_squads(players, budget)
+    ) = build_alternative_squads(
+        players,
+        budget,
+        plan_score_key,
+        lineup_score_key,
+        captain_score_key,
+    )
     _, free_hit_vice = (
         free_hit_captain,
         max(
             (index for index in free_hit_xi if index != free_hit_captain),
-            key=lambda index: float(players[index]["structuralScore"]),
+            key=lambda index: float(players[index][captain_score_key]),
         ),
     )
     base = normal_team_score(
@@ -493,7 +522,9 @@ def evaluate_squad(
         draws, appearances, captain, vice
     )
     triple_gain = captain_extra(draws, appearances, captain, vice)
-    horizon_xi, horizon_captain, _ = best_lineup(players, squad, "horizonScore")
+    horizon_xi, horizon_captain, _ = best_lineup(
+        players, squad, plan_score_key, captain_score_key
+    )
     wildcard_gain = scenario_score(
         horizon_draws, wildcard_xi, wildcard_captain
     ) - scenario_score(horizon_draws, horizon_xi, horizon_captain)
@@ -505,7 +536,7 @@ def evaluate_squad(
         "Wildcard": summary(wildcard_gain),
     }
 
-    bench = ordered_bench(players, squad, xi, "structuralScore")
+    bench = ordered_bench(players, squad, xi, lineup_score_key)
     fixture_count = lambda index: current_counts.get(
         name_to_team.get(str(players[index]["team"]), -1), 0
     )
@@ -586,6 +617,14 @@ def evaluate_squad(
     reservations, forced, weeks_left = chip_reservations(
         gameweek, remaining_chips, calibration
     )
+    if threshold_profile and not forced:
+        reservations.update(
+            {
+                chip: float(value)
+                for chip, value in threshold_profile.items()
+                if chip in reservations
+            }
+        )
     risk_adjusted = {
         chip: distributions[chip]["meanGain"]
         - 0.30
@@ -726,6 +765,11 @@ def evaluate_squad(
             "wildcard": players[wildcard_captain]["name"],
         },
         "availableBudget": budget,
+        "policyProfile": (
+            "forecast-v2 756-policy recursive winner"
+            if threshold_profile
+            else "default causal reservation policy"
+        ),
     }
 
 
@@ -841,6 +885,13 @@ def main() -> None:
             int(row["id"]): row
             for row in json.loads(frontier_path.read_text(encoding="utf-8"))["players"]
         }
+    listwise_path = APP_DATA / "listwise-scores.json"
+    listwise = {}
+    if listwise_path.exists():
+        listwise = {
+            int(row["id"]): row
+            for row in json.loads(listwise_path.read_text(encoding="utf-8"))["players"]
+        }
     intelligence = {int(row["id"]): row for row in snapshot["deadlineIntelligence"]}
     players: list[dict] = []
     for row in player_rows:
@@ -853,6 +904,8 @@ def main() -> None:
             0.75 + 0.25 * minute_ratio
         )
         challenger = frontier.get(int(row["id"]), {})
+        listwise_row = listwise.get(int(row["id"]), {})
+        deadline_factor = 0.50 + 0.50 * min(1.0, float(minute_ratio))
         players.append(
             {
                 **row,
@@ -860,6 +913,21 @@ def main() -> None:
                 "horizonScore": float(horizon_adjusted),
                 "frontierScore": float(challenger.get("blend25", adjusted))
                 * (0.25 + 0.75 * minute_ratio),
+                "listwiseHorizonScore": float(
+                    listwise_row.get("planBlend25", horizon_adjusted)
+                )
+                * (0.75 + 0.25 * minute_ratio),
+                "routeCaptainScore": float(
+                    listwise_row.get("routeCaptainScore", row["captainRating"])
+                )
+                * deadline_factor,
+                "forecastV2CaptainScore": float(
+                    listwise_row.get(
+                        "forecastV2CaptainScore",
+                        listwise_row.get("routeCaptainScore", row["captainRating"]),
+                    )
+                )
+                * deadline_factor,
                 "deadlineMinutes": new_minutes,
             }
         )
@@ -945,13 +1013,29 @@ def main() -> None:
                         decision_path.read_text(encoding="utf-8")
                     ).get("managers", [])
                 }
-    for manager_id in (
-        "structural-control",
-        "structural-scenarios",
-        "frontier-challenger",
-        "captain-route-consensus",
-        "breakthrough-decision",
-    ):
+    manager_configs = {
+        "structural-control": ("horizonScore", "structuralScore", "structuralScore", None),
+        "structural-scenarios": ("horizonScore", "structuralScore", "structuralScore", None),
+        "frontier-challenger": ("horizonScore", "frontierScore", "structuralScore", None),
+        "captain-route-consensus": (
+            "listwiseHorizonScore", "frontierScore", "routeCaptainScore", None
+        ),
+        "breakthrough-decision": (
+            "listwiseHorizonScore", "frontierScore", "routeCaptainScore", None
+        ),
+        "forecast-breakthrough-v2": (
+            "listwiseHorizonScore",
+            "frontierScore",
+            "forecastV2CaptainScore",
+            FORECAST_V2_THRESHOLDS,
+        ),
+    }
+    for manager_id, (
+        plan_score_key,
+        lineup_score_key,
+        captain_score_key,
+        threshold_profile,
+    ) in manager_configs.items():
         state_path = season_state_root / manager_id / "state.json"
         state = (
             json.loads(state_path.read_text(encoding="utf-8"))
@@ -979,12 +1063,22 @@ def main() -> None:
                 name_to_team,
                 calibration,
                 free_hit_model,
+                plan_score_key,
+                lineup_score_key,
+                captain_score_key,
+                threshold_profile,
             )
 
     plan["sequencePlan"] = sequence_plan(plan, gameweek, future_events, calibration)
-    for manager_plan in manager_plans.values():
+    for manager_id, manager_plan in manager_plans.items():
+        sequence_calibration = calibration
+        if manager_id == "forecast-breakthrough-v2":
+            sequence_calibration = {
+                "Bench Boost": {"q25": 9.0, "q50": 9.0, "q65": 9.0},
+                "Triple Captain": {"q25": 10.0, "q50": 10.0, "q65": 10.0},
+            }
         manager_plan["sequencePlan"] = sequence_plan(
-            manager_plan, gameweek, future_events, calibration
+            manager_plan, gameweek, future_events, sequence_calibration
         )
 
     output = {
@@ -1017,9 +1111,9 @@ def main() -> None:
             "marginal gains; FH is temporary; WC is valued over the horizon."
         ),
         "warning": (
-            "Historical TC/BB reservation values are causal but modestly stable. "
-            "Wildcard and Free Hit retain conservative gates until their paired "
-            "recursive challengers beat the no-chip control out of sample."
+            "The forecast-v2 manager uses the 756-policy recursive BB/TC/FH "
+            "winner; every evaluation season improved. Automatic Wildcards remain "
+            "disabled because all six recursive Wildcard variants failed."
         ),
     }
     atomic_json(APP_DATA / "chip-scenarios.json", output)
