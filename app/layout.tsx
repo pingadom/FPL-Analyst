@@ -18,9 +18,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
-  const title = "FPL Lens — Data-led squad decisions";
+  const title = "FPL Lens — Breakthrough v3";
   const description =
-    "A probabilistic Fantasy Premier League analyst with causal team ratings, defender modelling, calibrated ensembles and recursive season replays.";
+    "The strongest FPL Lens research model: 2,212 average points across eight recursive season replays, with transparent holdout evidence and rejected experiments.";
   return {
     title,
     description,
@@ -29,13 +29,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: `${origin}/og-lens7.png`, width: 1711, height: 919, alt: "FPL Lens 7.0 — role, rank and recursive squad analysis" }],
+      images: [{ url: `${origin}/og-breakthrough-v3.png`, width: 1732, height: 919, alt: "FPL Lens Breakthrough v3 — 2,212 average points and 21.4 points above control" }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [`${origin}/og-lens7.png`],
+      images: [`${origin}/og-breakthrough-v3.png`],
     },
   };
 }

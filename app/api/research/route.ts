@@ -1,3 +1,4 @@
+import breakthrough from "../../data/breakthrough-v3.json";
 import chipScenarios from "../../data/chip-scenarios.json";
 import deadlineStatus from "../../data/deadline-status.json";
 import frontierScores from "../../data/frontier-scores.json";
@@ -9,6 +10,7 @@ export async function GET() {
   return Response.json(
     {
       deadline: deadlineStatus,
+      breakthrough,
       chips: chipScenarios,
       shadows: shadowStatus,
       performance: performanceProgress,

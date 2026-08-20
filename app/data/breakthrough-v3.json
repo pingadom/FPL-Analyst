@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "modelId": "forecast-v2-dynamic-captain-070-share-020-minutes-050",
+  "status": "research shadow",
+  "headline": {
+    "averagePoints": 2212.0,
+    "controlAverage": 2190.6,
+    "averageLift": 21.4,
+    "developmentLift": 17.0,
+    "holdoutLift": 34.5,
+    "minimumSeasonLift": 6,
+    "top500Pace": 2296.8,
+    "remainingGap": 84.8,
+    "top500Hits": 2,
+    "evaluationSeasons": 8
+  },
+  "search": {
+    "captainConfigurations": 1655,
+    "exactCaptainFinalists": 12,
+    "chipPolicies": 756,
+    "exactChipFinalists": 8,
+    "rolloutPackages": 70247,
+    "wildcardVariants": 6
+  },
+  "seasons": [
+    { "season": "2018/19", "control": 2129, "model": 2135, "lift": 6, "top500Target": 2151, "margin": -16, "hit": false },
+    { "season": "2019/20", "control": 2156, "model": 2186, "lift": 30, "top500Target": 2160, "margin": 26, "hit": true },
+    { "season": "2020/21", "control": 2238, "model": 2271, "lift": 33, "top500Target": 2270, "margin": 1, "hit": true },
+    { "season": "2021/22", "control": 2305, "model": 2312, "lift": 7, "top500Target": 2340, "margin": -28, "hit": false },
+    { "season": "2022/23", "control": 2258, "model": 2274, "lift": 16, "top500Target": 2425, "margin": -151, "hit": false },
+    { "season": "2023/24", "control": 2098, "model": 2108, "lift": 10, "top500Target": 2373, "margin": -265, "hit": false },
+    { "season": "2024/25", "control": 2309, "model": 2365, "lift": 56, "top500Target": 2411, "margin": -46, "hit": false },
+    { "season": "2025/26", "control": 2032, "model": 2045, "lift": 13, "top500Target": 2244, "margin": -199, "hit": false }
+  ],
+  "accepted": [
+    {
+      "name": "Captain surface",
+      "result": "+7.1 pts",
+      "detail": "80% scoring-route consensus plus 20% dynamic match rank at 0.70 strength, with downside-only minutes protection."
+    },
+    {
+      "name": "Recursive chips",
+      "result": "+25.1 pts",
+      "detail": "Bench Boost 9, Triple Captain 10 and learned Free Hit net 3 improved every no-chip evaluation season."
+    }
+  ],
+  "rejected": [
+    {
+      "name": "Automatic Wildcard",
+      "result": "-15.8 pts",
+      "detail": "All six h10 recursive variants failed; the worst single-season damage reached 85 points."
+    },
+    {
+      "name": "Rollout action learner",
+      "result": "-13.1 pts",
+      "detail": "Prediction error improved across 70,247 rollout packages, but recursive decisions became worse."
+    },
+    {
+      "name": "Universal horizon replacement",
+      "result": "-11.8 pts",
+      "detail": "Action-specific h1/h3/h6/h10 transfer surfaces failed the development gate and were not promoted."
+    }
+  ],
+  "promotionNote": "The strongest historical model is frozen in the shadow manager. Production promotion still requires locked prospective evidence and deadline-vintage market inputs."
+}

@@ -269,6 +269,154 @@ a {
   margin-right: 5vw;
 }
 
+.breakthrough-section {
+  background: #151612;
+  border-bottom: 1px solid var(--ink);
+  color: var(--paper);
+  display: grid;
+  grid-template-columns: minmax(330px, 0.68fr) minmax(650px, 1.32fr);
+  min-height: 780px;
+  scroll-margin-top: 72px;
+}
+
+.breakthrough-lead {
+  background-image:
+    linear-gradient(rgba(185, 255, 54, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(185, 255, 54, 0.07) 1px, transparent 1px);
+  background-size: 42px 42px;
+  border-right: 1px solid #44463e;
+  display: flex;
+  flex-direction: column;
+  padding: 66px 3vw 48px;
+}
+
+.section-label.light { color: #a9aa9f; }
+.section-label.light > span { background: var(--acid); color: var(--ink); width: 30px; }
+
+.breakthrough-kicker,
+.breakthrough-heading span,
+.breakthrough-heading strong,
+.breakthrough-scoreboard span,
+.breakthrough-scoreboard small,
+.breakthrough-seasons span,
+.breakthrough-seasons small,
+.breakthrough-seasons em,
+.ledger-label,
+.breakthrough-status span,
+.breakthrough-status small {
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.breakthrough-kicker {
+  color: var(--acid);
+  font-size: 9px;
+  margin: 92px 0 18px;
+}
+
+.breakthrough-lead h2 {
+  font-size: clamp(48px, 5.3vw, 86px);
+  letter-spacing: -0.073em;
+  line-height: 0.86;
+  margin: 0 0 30px;
+  max-width: 760px;
+}
+
+.breakthrough-lead > p:not(.breakthrough-kicker) {
+  color: #c8c9bf;
+  font-size: 13px;
+  margin: 0;
+  max-width: 560px;
+}
+
+.breakthrough-status {
+  border-left: 3px solid var(--acid);
+  margin-top: auto;
+  padding: 14px 0 0 16px;
+}
+
+.breakthrough-status span,
+.breakthrough-status small { color: #95978e; display: block; font-size: 8px; }
+.breakthrough-status strong { color: var(--acid); display: block; font-size: 19px; margin: 5px 0 8px; text-transform: uppercase; }
+.breakthrough-status small { line-height: 1.55; max-width: 510px; text-transform: none; }
+
+.breakthrough-evidence { padding: 46px 3vw 54px; }
+
+.breakthrough-scoreboard {
+  border-left: 1px solid #45473f;
+  border-top: 1px solid #45473f;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.breakthrough-scoreboard article {
+  border-bottom: 1px solid #45473f;
+  border-right: 1px solid #45473f;
+  display: flex;
+  flex-direction: column;
+  min-height: 145px;
+  padding: 15px;
+}
+
+.breakthrough-scoreboard span,
+.breakthrough-scoreboard small { color: #96988f; font-size: 8px; }
+.breakthrough-scoreboard strong { color: var(--acid); font-size: clamp(30px, 3vw, 50px); letter-spacing: -0.06em; margin: auto 0 4px; }
+
+.breakthrough-heading {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  margin: 38px 0 13px;
+}
+
+.breakthrough-heading span { color: var(--acid); font-size: 9px; }
+.breakthrough-heading p { color: #a7a99f; font-size: 9px; margin: 5px 0 0; max-width: 560px; }
+.breakthrough-heading strong { color: #a7a99f; font-size: 8px; text-align: right; }
+
+.breakthrough-seasons {
+  border-left: 1px solid #45473f;
+  border-top: 1px solid #45473f;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.breakthrough-seasons article {
+  border-bottom: 1px solid #45473f;
+  border-right: 1px solid #45473f;
+  display: flex;
+  flex-direction: column;
+  min-height: 142px;
+  padding: 11px;
+  position: relative;
+}
+
+.breakthrough-seasons article::before { background: #ff775f; content: ""; height: 4px; inset: 0 0 auto; position: absolute; }
+.breakthrough-seasons article.pace-hit::before { background: var(--acid); }
+.breakthrough-seasons span { color: #979990; font-size: 8px; }
+.breakthrough-seasons strong { font-size: 23px; letter-spacing: -0.04em; margin: auto 0 4px; }
+.breakthrough-seasons small { color: var(--acid); font-size: 7px; }
+.breakthrough-seasons em { color: #a6a89e; font-size: 7px; font-style: normal; margin-top: 6px; }
+.breakthrough-seasons .pace-hit em { color: var(--acid); }
+
+.breakthrough-ledger {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 28px;
+}
+
+.breakthrough-ledger > div { border-top: 1px solid #45473f; padding-top: 10px; }
+.ledger-label { display: block; font-size: 8px; margin-bottom: 8px; }
+.accepted-label { color: var(--acid); }
+.rejected-label { color: #ff8b74; }
+.breakthrough-ledger article { border-bottom: 1px solid #34362f; padding: 12px 0; }
+.breakthrough-ledger article > div { align-items: baseline; display: flex; gap: 18px; justify-content: space-between; }
+.breakthrough-ledger article strong { font-size: 12px; }
+.breakthrough-ledger article em { color: var(--acid); font: 11px var(--font-mono), monospace; font-style: normal; white-space: nowrap; }
+.breakthrough-ledger > div:last-child article em { color: #ff8b74; }
+.breakthrough-ledger p { color: #989a91; font-size: 9px; margin: 6px 0 0; }
+
 .governance-banner {
   align-items: center;
   background: #141511;
@@ -2063,6 +2211,9 @@ footer > span {
   .hero-metrics > div {
     min-height: 120px;
   }
+  .breakthrough-section { grid-template-columns: 1fr; }
+  .breakthrough-lead { border-bottom: 1px solid #44463e; border-right: 0; min-height: 590px; }
+  .breakthrough-seasons { grid-template-columns: repeat(4, 1fr); }
   .decision-grid {
     grid-template-columns: 300px 1fr;
   }
@@ -2164,6 +2315,18 @@ footer > span {
   .ticker span + span::before {
     margin-right: 35px;
   }
+  .breakthrough-section { display: block; scroll-margin-top: 62px; }
+  .breakthrough-lead { min-height: 560px; padding: 48px 20px 34px; }
+  .breakthrough-kicker { margin-top: 68px; }
+  .breakthrough-lead h2 { font-size: clamp(48px, 14vw, 68px); }
+  .breakthrough-evidence { padding: 34px 20px 46px; }
+  .breakthrough-scoreboard { grid-template-columns: 1fr 1fr; }
+  .breakthrough-scoreboard article { min-height: 120px; }
+  .breakthrough-heading { align-items: flex-start; display: block; }
+  .breakthrough-heading strong { display: block; margin-top: 10px; text-align: left; }
+  .breakthrough-seasons { grid-template-columns: 1fr 1fr; }
+  .breakthrough-seasons article { min-height: 116px; }
+  .breakthrough-ledger { grid-template-columns: 1fr; }
   .governance-banner { display: block; padding: 24px 20px; }
   .governance-metrics { margin: 20px 0 14px; }
   .decision-grid {
