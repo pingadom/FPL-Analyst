@@ -1,55 +1,48 @@
 {
   "schemaVersion": 1,
   "status": "research-only",
-  "controlAverage": 2106.5,
-  "hybridAverage": 2147.6,
-  "captainStackAverage": 2149.5,
-  "legacyChipStackAverage": 2132.5,
+  "controlAverage": 2190.6,
+  "hybridAverage": 2194.2,
+  "captainStackAverage": 2212.0,
+  "legacyChipStackAverage": 2186.9,
   "weeklyRebuildCeiling": 2242.9,
   "top500Pace": 2296.8,
-  "stackLift": 43.0,
-  "remainingGap": 147.3,
-  "gapClosedPercent": 22.6,
-  "controlMinimum": 1897,
-  "hybridMinimum": 1980,
-  "targetHits": 0,
+  "stackLift": 21.4,
+  "remainingGap": 84.8,
+  "gapClosedPercent": 20.2,
+  "controlMinimum": 2032,
+  "hybridMinimum": 2032,
+  "targetHits": 2,
   "experiments": [
     {
-      "name": "Listwise transfer horizon",
+      "name": "Large captain surface",
       "decision": "shadow",
-      "average": 2141.6,
-      "delta": 35.1,
-      "detail": "Largest standalone gain; prioritises persistent six-week ordering."
+      "average": 2197.8,
+      "delta": 7.2,
+      "detail": "1,655 screened configurations and 12 exact recursive finalists selected the 80/20 dynamic captain."
     },
     {
-      "name": "Immediate + horizon fusion",
+      "name": "Recursive chip retuning",
       "decision": "shadow",
-      "average": 2147.6,
-      "delta": 41.1,
-      "detail": "Frontier next-GW ordering and listwise transfer planning are complementary."
+      "average": 2212.0,
+      "delta": 25.1,
+      "detail": "The 756-policy BB/TC/FH winner improved every evaluation season."
     },
     {
-      "name": "Captain listwise rank",
-      "decision": "shadow",
-      "average": 2149.5,
-      "delta": 1.9,
-      "detail": "Captain-only rerank; does not alter the transfer model."
-    },
-    {
-      "name": "Extra big-team defender boost",
+      "name": "Automatic Wildcard",
       "decision": "rejected",
       "average": null,
-      "delta": 0,
-      "detail": "The highest clean-sheet quintile is already calibrated within roughly two-tenths of a point and is slightly overpredicted, so another big-team bonus would double-count defence strength."
+      "delta": -15.8,
+      "detail": "All six exact h10 Wildcard variants failed; the best lost 15.8 points per season."
     },
     {
-      "name": "Percentile relevance labels",
+      "name": "Rollout action-value learner",
       "decision": "rejected",
-      "average": 2128.5,
-      "delta": 22.0,
-      "detail": "Helped immediate ordering but destroyed the six-week planning gain."
+      "average": 2177.5,
+      "delta": -13.1,
+      "detail": "70,247 realised rollout packages improved prediction error but worsened recursive decisions."
     }
   ],
-  "bottleneck": "The carried-squad transfer path remains the largest attainable loss. Unlimited weekly rebuilds nearly reach the pace line, while legal recursive management cannot instantly reach each fresh optimum.",
+  "bottleneck": "The carried-squad forecast and transfer path remains the largest loss. Recent-season regime changes and unavailable exact deadline-vintage market data account for most of the remaining 84.8-point gap.",
   "governance": "All new results have been exposed to the historical evaluation seasons. They may change the pre-GW1 shadow challenger, but cannot promote the production model."
 }
