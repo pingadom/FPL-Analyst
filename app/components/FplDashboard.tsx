@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import breakthrough from "../data/breakthrough-v3.json";
 import chipScenarios from "../data/chip-scenarios.json";
 import deadlineStatus from "../data/deadline-status.json";
 import frontierScores from "../data/frontier-scores.json";
@@ -493,6 +494,7 @@ export default function FplDashboard() {
         </a>
         <nav aria-label="Primary navigation">
           <a href="#squad">Squad</a>
+          <a href="#breakthrough">V3</a>
           <a href="#my-team">My Team</a>
           <a href="#player-lab">Player Lab</a>
           <a href="#chips">Chips</a>
@@ -523,6 +525,7 @@ export default function FplDashboard() {
       </section>
 
       <div className="ticker" aria-label="Model status">
+        <span>BREAKTHROUGH V3 · +{breakthrough.headline.averageLift} PTS</span>
         <span>MODEL {results.model.version}</span>
         <span>{results.model.recursiveTrials} RECURSIVE FINALISTS</span>
         <span>{results.chipStrategy.policyTrials} CHIP POLICIES</span>
@@ -533,6 +536,69 @@ export default function FplDashboard() {
         <span>{results.headline.scenario.simulations.toLocaleString()} CORRELATED SQUAD SCENARIOS</span>
         <span>LAST REFRESH {new Date(results.generatedAt).toLocaleDateString("en-GB")}</span>
       </div>
+
+      <section className="breakthrough-section" id="breakthrough" aria-labelledby="breakthrough-title">
+        <div className="breakthrough-lead">
+          <div className="section-label light"><span>V3</span> RECURSIVE BREAKTHROUGH</div>
+          <p className="breakthrough-kicker">STRONGEST RESEARCH RESULT · EVERY EVALUATION SEASON IMPROVED</p>
+          <h2 id="breakthrough-title">21.4 points found.<br />No hindsight shortcuts.</h2>
+          <p>
+            Captain and chip decisions were selected on development stability, then replayed
+            through legal squads, transfers, autosubs and two untouched recent holdouts.
+            The result is promoted to the shadow manager—not presented as a top-500k guarantee.
+          </p>
+          <div className="breakthrough-status">
+            <span>STATUS</span>
+            <strong>{breakthrough.status}</strong>
+            <small>{breakthrough.promotionNote}</small>
+          </div>
+        </div>
+
+        <div className="breakthrough-evidence">
+          <div className="breakthrough-scoreboard">
+            <article><span>V3 AVERAGE</span><strong>{breakthrough.headline.averagePoints.toLocaleString()}</strong><small>points / season</small></article>
+            <article><span>VS CONTROL</span><strong>+{breakthrough.headline.averageLift}</strong><small>minimum +{breakthrough.headline.minimumSeasonLift}</small></article>
+            <article><span>RECENT HOLDOUT</span><strong>+{breakthrough.headline.holdoutLift}</strong><small>two untouched seasons</small></article>
+            <article><span>TOP-500K TEST</span><strong>{breakthrough.headline.top500Hits}/{breakthrough.headline.evaluationSeasons}</strong><small>{breakthrough.headline.remainingGap} pts remain</small></article>
+          </div>
+
+          <div className="breakthrough-heading">
+            <div><span>SEASON-BY-SEASON REPLAY</span><p>Model lift is relative to the identical route control. Margin is relative to reconstructed top-500k pace.</p></div>
+            <strong>{breakthrough.search.captainConfigurations.toLocaleString()} captain configs · {breakthrough.search.chipPolicies} chip policies</strong>
+          </div>
+          <div className="breakthrough-seasons">
+            {breakthrough.seasons.map((season) => (
+              <article className={season.hit ? "pace-hit" : "pace-miss"} key={season.season}>
+                <span>{season.season}</span>
+                <strong>{season.model.toLocaleString()}</strong>
+                <small>+{season.lift} vs control</small>
+                <em>{season.margin >= 0 ? "+" : ""}{season.margin} to pace</em>
+              </article>
+            ))}
+          </div>
+
+          <div className="breakthrough-ledger">
+            <div>
+              <span className="ledger-label accepted-label">ACCEPTED</span>
+              {breakthrough.accepted.map((item) => (
+                <article key={item.name}>
+                  <div><strong>{item.name}</strong><em>{item.result}</em></div>
+                  <p>{item.detail}</p>
+                </article>
+              ))}
+            </div>
+            <div>
+              <span className="ledger-label rejected-label">REJECTED</span>
+              {breakthrough.rejected.map((item) => (
+                <article key={item.name}>
+                  <div><strong>{item.name}</strong><em>{item.result}</em></div>
+                  <p>{item.detail}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className={`governance-banner ${results.championGovernance.decisionPromoted ? "promoted" : "held"}`} aria-label="Model promotion decision">
         <div>

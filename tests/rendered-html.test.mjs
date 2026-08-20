@@ -20,7 +20,7 @@ test("server-renders the FPL Lens decision room", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>FPL Lens — Data-led squad decisions<\/title>/i);
+  assert.match(html, /<title>FPL Lens — Breakthrough v3<\/title>/i);
   assert.match(html, /Build a squad/);
   assert.match(html, /2,400(?:<!-- -->)? candidate mixes/i);
   assert.match(html, /20(?:<!-- -->)? recursive finalists/i);
@@ -56,6 +56,9 @@ test("server-renders the FPL Lens decision room", async () => {
   assert.match(html, /Championship stack challenger/i);
   assert.match(html, /Performance ladder/i);
   assert.match(html, /Experiment ledger/i);
+  assert.match(html, /21\.4 points found/i);
+  assert.match(html, /Season-by-season replay/i);
+  assert.match(html, /Automatic Wildcard/i);
   assert.match(html, /Hybrid challenger/i);
   assert.match(html, /provisional/i);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/i);
@@ -74,6 +77,10 @@ test("serves the frozen prospective research audit", async () => {
   assert.equal(payload.listwise.status, "shadow challenger");
   assert.equal(payload.performance.stackLift, 21.4);
   assert.equal(payload.performance.targetHits, 2);
+  assert.equal(payload.breakthrough.headline.averagePoints, 2212);
+  assert.equal(payload.breakthrough.headline.holdoutLift, 34.5);
+  assert.equal(payload.breakthrough.seasons.length, 8);
+  assert.equal(payload.breakthrough.seasons.filter((season) => season.hit).length, 2);
   assert.equal(
     payload.chips.managerPlans["forecast-breakthrough-v2"].policyProfile,
     "forecast-v2 756-policy recursive winner",
