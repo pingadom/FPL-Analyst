@@ -1,0 +1,3719 @@
+{
+  "status": "retrospective explanation only\u2014not a forecast input",
+  "source": "withqwerty/availability-data (Transfermarkt-derived)",
+  "sourceUrl": "https://github.com/withqwerty/availability-data",
+  "methodWarning": "Matchday statuses were scraped after the event. They explain absences but must never enter a deadline-causal historical replay.",
+  "droughtsWithAvailabilityCause": 24,
+  "totalDroughts": 107,
+  "statusCounts": {
+    "starting": 396,
+    "suspended": 1,
+    "injured": 42,
+    "sub_in": 22,
+    "bench": 10,
+    "absent": 2,
+    "not_in_squad": 11
+  },
+  "rows": [
+    {
+      "season": "2025/26",
+      "player": "Enzo",
+      "team": "Chelsea",
+      "startGw": 25,
+      "endGw": 32,
+      "matchedPlayer": "Enzo Fern\u00e1ndez",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "suspended",
+          "detail": "Suspended \u2013 cross-competition \u2013 until 13/04/2026"
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Pukki",
+      "team": "Norwich",
+      "startGw": 6,
+      "endGw": 12,
+      "matchedPlayer": "Teemu Pukki",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Rodr\u00c3\u00adguez",
+      "team": "Everton",
+      "startGw": 5,
+      "endGw": 11,
+      "matchedPlayer": "James Rodr\u00edguez",
+      "matchConfidence": 0.796,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "injured",
+          "detail": "Groin injury - Return expected on 06/11/2020"
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Foden",
+      "team": "Man City",
+      "startGw": 17,
+      "endGw": 23,
+      "matchedPlayer": "Phil Foden",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 22,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 23,
+          "status": "sub_in",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Roefs",
+      "team": "Sunderland",
+      "startGw": 9,
+      "endGw": 15,
+      "matchedPlayer": "Robin Roefs",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Dallas",
+      "team": "Leeds",
+      "startGw": 5,
+      "endGw": 11,
+      "matchedPlayer": "Stuart Dallas",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "B.Fernandes",
+      "team": "Man Utd",
+      "startGw": 30,
+      "endGw": 35,
+      "matchedPlayer": "Bruno Fernandes",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 33,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 34,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 35,
+          "status": "bench",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Alexander-Arnold",
+      "team": "Liverpool",
+      "startGw": 20,
+      "endGw": 25,
+      "matchedPlayer": "Trent Alexander-Arnold",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "injured",
+          "detail": "Torn lateral knee ligament - Return expected on 28/01/2024"
+        },
+        {
+          "round": 22,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 23,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 24,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 25,
+          "status": "injured",
+          "detail": "Torn lateral knee ligament - Return expected on 08/04/2024"
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Neves",
+      "team": "Wolves",
+      "startGw": 2,
+      "endGw": 7,
+      "matchedPlayer": "R\u00faben Neves",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 2,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Saka",
+      "team": "Arsenal",
+      "startGw": 20,
+      "endGw": 25,
+      "matchedPlayer": "Bukayo Saka",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 20,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 22,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 23,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 24,
+          "status": "injured",
+          "detail": "Hip injury - Return expected on 11/02/2026"
+        },
+        {
+          "round": 25,
+          "status": "injured",
+          "detail": "Hip injury - Return expected on 11/02/2026"
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Gabriel",
+      "team": "Arsenal",
+      "startGw": 6,
+      "endGw": 11,
+      "matchedPlayer": "Gabriel",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Milenkovi\u00c4\u0087",
+      "team": "Nott'm Forest",
+      "startGw": 31,
+      "endGw": 36,
+      "matchedPlayer": "Nikola Milenkovi\u0107",
+      "matchConfidence": 0.792,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 33,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 34,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 35,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 36,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Pickford",
+      "team": "Everton",
+      "startGw": 23,
+      "endGw": 28,
+      "matchedPlayer": "Jordan Pickford",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 23,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 24,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Wood",
+      "team": "Burnley",
+      "startGw": 4,
+      "endGw": 9,
+      "matchedPlayer": "Ashley Westwood",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Valery",
+      "team": "Southampton",
+      "startGw": 33,
+      "endGw": 38,
+      "matchedPlayer": "Yan Valery",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 33,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 34,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 35,
+          "status": "injured",
+          "detail": "Knock - Return expected on 22/04/2019"
+        },
+        {
+          "round": 36,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 37,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 38,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Fraser",
+      "team": "Bournemouth",
+      "startGw": 22,
+      "endGw": 27,
+      "matchedPlayer": "Ryan Fraser",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 22,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 23,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 24,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Doherty",
+      "team": "Wolves",
+      "startGw": 9,
+      "endGw": 13,
+      "matchedPlayer": "Matt Doherty",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "player": "Son",
+      "team": "Spurs",
+      "startGw": 2,
+      "endGw": 6,
+      "matchedPlayer": "Davinson S\u00e1nchez",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 2,
+          "status": "bench",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "bench",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Wood",
+      "team": "Nott'm Forest",
+      "startGw": 27,
+      "endGw": 31,
+      "matchedPlayer": "Chris Wood",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "injured",
+          "detail": "Hip problems - Return expected on 11/04/2025"
+        },
+        {
+          "round": 31,
+          "status": "injured",
+          "detail": "Hip problems - Return expected on 11/04/2025"
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "M.Salah",
+      "team": "Liverpool",
+      "startGw": 11,
+      "endGw": 15,
+      "matchedPlayer": "Mohamed Salah",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "bench",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "bench",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "B.Fernandes",
+      "team": "Man Utd",
+      "startGw": 14,
+      "endGw": 18,
+      "matchedPlayer": "Bruno Fernandes",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "absent",
+          "detail": "Yellow card suspension \u2013 Premier League \u2013 until 18/12/2023"
+        },
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Gabriel",
+      "team": "Arsenal",
+      "startGw": 2,
+      "endGw": 6,
+      "matchedPlayer": "Gabriel",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 2,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "bench",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "P\u00c3\u00a9rez",
+      "team": "Leicester",
+      "startGw": 1,
+      "endGw": 5,
+      "matchedPlayer": null,
+      "matchConfidence": 0.633,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": []
+    },
+    {
+      "season": "2018/19",
+      "player": "Felipe Anderson",
+      "team": "West Ham",
+      "startGw": 20,
+      "endGw": 24,
+      "matchedPlayer": "Felipe Anderson",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 22,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 23,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 24,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Callum Wilson",
+      "team": "Bournemouth",
+      "startGw": 8,
+      "endGw": 12,
+      "matchedPlayer": "Callum Wilson",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Lundstram",
+      "team": "Sheffield Utd",
+      "startGw": 12,
+      "endGw": 16,
+      "matchedPlayer": "John Lundstram",
+      "matchConfidence": 0.94,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "player": "Trossard",
+      "team": "Brighton",
+      "startGw": 16,
+      "endGw": 20,
+      "matchedPlayer": "Leandro Trossard",
+      "matchConfidence": 0.94,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 19,
+          "status": "bench",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "not_in_squad",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Rogers",
+      "team": "Aston Villa",
+      "startGw": 26,
+      "endGw": 30,
+      "matchedPlayer": "Morgan Rogers",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Harrison",
+      "team": "Leeds",
+      "startGw": 1,
+      "endGw": 5,
+      "matchedPlayer": "Jack Harrison",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 1,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 2,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "not_in_squad",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Jansson",
+      "team": "Brentford",
+      "startGw": 8,
+      "endGw": 12,
+      "matchedPlayer": "Pontus Jansson",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Sarr",
+      "team": "Watford",
+      "startGw": 7,
+      "endGw": 11,
+      "matchedPlayer": "Isma\u00efla Sarr",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Robertson",
+      "team": "Liverpool",
+      "startGw": 6,
+      "endGw": 10,
+      "matchedPlayer": "Andrew Robertson",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "bench",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Ward-Prowse",
+      "team": "Southampton",
+      "startGw": 25,
+      "endGw": 29,
+      "matchedPlayer": "James Ward-Prowse",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "player": "Almir\u00c3\u00b3n",
+      "team": "Newcastle",
+      "startGw": 18,
+      "endGw": 22,
+      "matchedPlayer": null,
+      "matchConfidence": 0.671,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": []
+    },
+    {
+      "season": "2024/25",
+      "player": "McNeil",
+      "team": "Everton",
+      "startGw": 9,
+      "endGw": 13,
+      "matchedPlayer": "Dwight McNeil",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "not_in_squad",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "player": "\u00c3\u0081lex Moreno",
+      "team": "Aston Villa",
+      "startGw": 34,
+      "endGw": 38,
+      "matchedPlayer": "\u00c1lex Moreno",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 34,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 35,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 36,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 37,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 38,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 15/09/2023"
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Ward-Prowse",
+      "team": "Southampton",
+      "startGw": 12,
+      "endGw": 16,
+      "matchedPlayer": "James Ward-Prowse",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Lloris",
+      "team": "Spurs",
+      "startGw": 1,
+      "endGw": 5,
+      "matchedPlayer": "Hugo Lloris",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 1,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 2,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Hwang",
+      "team": "Wolves",
+      "startGw": 13,
+      "endGw": 17,
+      "matchedPlayer": "Hee-chan Hwang",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Felipe Anderson",
+      "team": "West Ham",
+      "startGw": 26,
+      "endGw": 30,
+      "matchedPlayer": "Felipe Anderson",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Leno",
+      "team": "Fulham",
+      "startGw": 7,
+      "endGw": 11,
+      "matchedPlayer": "Bernd Leno",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Pukki",
+      "team": "Norwich",
+      "startGw": 25,
+      "endGw": 29,
+      "matchedPlayer": "Teemu Pukki",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Virgil",
+      "team": "Liverpool",
+      "startGw": 30,
+      "endGw": 34,
+      "matchedPlayer": "Virgil van Dijk",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 33,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 34,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "player": "Saka",
+      "team": "Arsenal",
+      "startGw": 33,
+      "endGw": 37,
+      "matchedPlayer": "Bukayo Saka",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 33,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 34,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 35,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 36,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 37,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Sarr",
+      "team": "Crystal Palace",
+      "startGw": 8,
+      "endGw": 12,
+      "matchedPlayer": "Isma\u00efla Sarr",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "B.Fernandes",
+      "team": "Man Utd",
+      "startGw": 17,
+      "endGw": 20,
+      "matchedPlayer": "Bruno Fernandes",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 18,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 05/01/2026"
+        },
+        {
+          "round": 19,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 05/01/2026"
+        },
+        {
+          "round": 20,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 05/01/2026"
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Son",
+      "team": "Spurs",
+      "startGw": 18,
+      "endGw": 21,
+      "matchedPlayer": "Davinson S\u00e1nchez",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "bench",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Watkins",
+      "team": "Aston Villa",
+      "startGw": 28,
+      "endGw": 31,
+      "matchedPlayer": "Ollie Watkins",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "not_in_squad",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Gabriel",
+      "team": "Arsenal",
+      "startGw": 11,
+      "endGw": 14,
+      "matchedPlayer": "Gabriel",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 27/12/2025"
+        },
+        {
+          "round": 13,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 27/12/2025"
+        },
+        {
+          "round": 14,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 27/12/2025"
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Jo\u00c3\u00a3o Pedro",
+      "team": "Chelsea",
+      "startGw": 30,
+      "endGw": 33,
+      "matchedPlayer": "Jo\u00e3o Pedro",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 33,
+          "status": "injured",
+          "detail": "Thigh problems - Return expected on 24/04/2026"
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Cunha",
+      "team": "Wolves",
+      "startGw": 24,
+      "endGw": 27,
+      "matchedPlayer": "Matheus Cunha",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 24,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 25,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 30/03/2024"
+        },
+        {
+          "round": 26,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 30/03/2024"
+        },
+        {
+          "round": 27,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 30/03/2024"
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Etheridge",
+      "team": "Cardiff",
+      "startGw": 4,
+      "endGw": 7,
+      "matchedPlayer": "Neil Etheridge",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Cash",
+      "team": "Aston Villa",
+      "startGw": 29,
+      "endGw": 32,
+      "matchedPlayer": "Matty Cash",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Gvardiol",
+      "team": "Man City",
+      "startGw": 2,
+      "endGw": 5,
+      "matchedPlayer": "Josko Gvardiol",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 2,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Vardy",
+      "team": "Leicester",
+      "startGw": 9,
+      "endGw": 12,
+      "matchedPlayer": "Jamie Vardy",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Rashford",
+      "team": "Man Utd",
+      "startGw": 23,
+      "endGw": 26,
+      "matchedPlayer": "Marcus Rashford",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 23,
+          "status": "injured",
+          "detail": "Back injury - Return expected on 05/06/2020"
+        },
+        {
+          "round": 24,
+          "status": "injured",
+          "detail": "Back injury - Return expected on 05/06/2020"
+        },
+        {
+          "round": 25,
+          "status": "injured",
+          "detail": "Back injury - Return expected on 05/06/2020"
+        },
+        {
+          "round": 26,
+          "status": "injured",
+          "detail": "Back injury - Return expected on 05/06/2020"
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Kane",
+      "team": "Spurs",
+      "startGw": 1,
+      "endGw": 4,
+      "matchedPlayer": "Harry Kane",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 1,
+          "status": "not_in_squad",
+          "detail": ""
+        },
+        {
+          "round": 2,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "King",
+      "team": "Bournemouth",
+      "startGw": 9,
+      "endGw": 12,
+      "matchedPlayer": "Joshua King",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "injured",
+          "detail": "Ankle injury - Return expected on 24/11/2018"
+        },
+        {
+          "round": 11,
+          "status": "injured",
+          "detail": "Ankle injury - Return expected on 24/11/2018"
+        },
+        {
+          "round": 12,
+          "status": "injured",
+          "detail": "Ankle injury - Return expected on 24/11/2018"
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Mbeumo",
+      "team": "Brentford",
+      "startGw": 5,
+      "endGw": 8,
+      "matchedPlayer": "Bryan Mbeumo",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Maddison",
+      "team": "Leicester",
+      "startGw": 10,
+      "endGw": 13,
+      "matchedPlayer": "James Maddison",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "injured",
+          "detail": "Knee injury - Return expected on 23/11/2018"
+        },
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Bernardo",
+      "team": "Man City",
+      "startGw": 17,
+      "endGw": 20,
+      "matchedPlayer": "Bernardo Silva",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Raphinha",
+      "team": "Leeds",
+      "startGw": 31,
+      "endGw": 34,
+      "matchedPlayer": "Raphinha",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "not_in_squad",
+          "detail": ""
+        },
+        {
+          "round": 33,
+          "status": "not_in_squad",
+          "detail": ""
+        },
+        {
+          "round": 34,
+          "status": "not_in_squad",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "van Dijk",
+      "team": "Liverpool",
+      "startGw": 30,
+      "endGw": 33,
+      "matchedPlayer": "Virgil van Dijk",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 33,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Pereira",
+      "team": "Leicester",
+      "startGw": 16,
+      "endGw": 19,
+      "matchedPlayer": "Ricardo Pereira",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Wirtz",
+      "team": "Liverpool",
+      "startGw": 25,
+      "endGw": 28,
+      "matchedPlayer": "Florian Wirtz",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "injured",
+          "detail": "Back problems - Return expected on 04/03/2026"
+        },
+        {
+          "round": 28,
+          "status": "injured",
+          "detail": "Back problems - Return expected on 04/03/2026"
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Trippier",
+      "team": "Newcastle",
+      "startGw": 15,
+      "endGw": 18,
+      "matchedPlayer": "Kieran Trippier",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "absent",
+          "detail": "Yellow card suspension \u2013 Premier League \u2013 until 17/12/2023"
+        },
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Areola",
+      "team": "Fulham",
+      "startGw": 28,
+      "endGw": 31,
+      "matchedPlayer": "Alphonse Areola",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Eze",
+      "team": "Arsenal",
+      "startGw": 13,
+      "endGw": 16,
+      "matchedPlayer": "Eberechi Eze",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "player": "Kulusevski",
+      "team": "Spurs",
+      "startGw": 9,
+      "endGw": 12,
+      "matchedPlayer": "Dejan Kulusevski",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 9,
+          "status": "injured",
+          "detail": "Thigh problems - Return expected on 05/11/2022"
+        },
+        {
+          "round": 10,
+          "status": "injured",
+          "detail": "Thigh problems - Return expected on 05/11/2022"
+        },
+        {
+          "round": 11,
+          "status": "injured",
+          "detail": "Thigh problems - Return expected on 05/11/2022"
+        },
+        {
+          "round": 12,
+          "status": "injured",
+          "detail": "Thigh problems - Return expected on 05/11/2022"
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Chilwell",
+      "team": "Leicester",
+      "startGw": 14,
+      "endGw": 17,
+      "matchedPlayer": "Ben Chilwell",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "injured",
+          "detail": "Groin injury - Return expected on 09/12/2019"
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Mount",
+      "team": "Chelsea",
+      "startGw": 11,
+      "endGw": 14,
+      "matchedPlayer": "Mason Mount",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "\u00c3\u0098degaard",
+      "team": "Arsenal",
+      "startGw": 1,
+      "endGw": 4,
+      "matchedPlayer": "Martin \u00d8degaard",
+      "matchConfidence": 0.862,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 1,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 2,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "injured",
+          "detail": "Ankle sprain - Return expected on 04/11/2024"
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Azpilicueta",
+      "team": "Chelsea",
+      "startGw": 25,
+      "endGw": 28,
+      "matchedPlayer": "C\u00e9sar Azpilicueta",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Awoniyi",
+      "team": "Nott'm Forest",
+      "startGw": 6,
+      "endGw": 9,
+      "matchedPlayer": "Taiwo Awoniyi",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "not_in_squad",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "not_in_squad",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Ronaldo",
+      "team": "Man Utd",
+      "startGw": 21,
+      "endGw": 24,
+      "matchedPlayer": "Cristiano Ronaldo",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 21,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 22,
+          "status": "not_in_squad",
+          "detail": ""
+        },
+        {
+          "round": 23,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 24,
+          "status": "sub_in",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Tielemans",
+      "team": "Leicester",
+      "startGw": 13,
+      "endGw": 16,
+      "matchedPlayer": "Youri Tielemans",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Adams",
+      "team": "Southampton",
+      "startGw": 14,
+      "endGw": 17,
+      "matchedPlayer": "Ch\u00e9 Adams",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "injured",
+          "detail": "Head injury - Return expected on 15/01/2021"
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "O.Dango",
+      "team": "Bournemouth",
+      "startGw": 26,
+      "endGw": 29,
+      "matchedPlayer": null,
+      "matchConfidence": 0.667,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": []
+    },
+    {
+      "season": "2025/26",
+      "player": "Kroupi.Jr",
+      "team": "Bournemouth",
+      "startGw": 11,
+      "endGw": 14,
+      "matchedPlayer": "Junior Kroupi",
+      "matchConfidence": 0.7,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 11,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Pau",
+      "team": "Aston Villa",
+      "startGw": 18,
+      "endGw": 21,
+      "matchedPlayer": "Pau Torres",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 18,
+          "status": "injured",
+          "detail": "unknown injury - Return expected on 23/12/2023"
+        },
+        {
+          "round": 19,
+          "status": "bench",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "injured",
+          "detail": "Ankle injury - Return expected on 04/02/2024"
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Watkins",
+      "team": "Aston Villa",
+      "startGw": 24,
+      "endGw": 27,
+      "matchedPlayer": "Ollie Watkins",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 24,
+          "status": "injured",
+          "detail": "Muscle injury - Return expected on 06/02/2026"
+        },
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Mukiele",
+      "team": "Sunderland",
+      "startGw": 25,
+      "endGw": 28,
+      "matchedPlayer": "Nordi Mukiele",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 26,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 27,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 28,
+          "status": "injured",
+          "detail": "Calf injury - Return expected on 16/03/2026"
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Pukki",
+      "team": "Norwich",
+      "startGw": 18,
+      "endGw": 21,
+      "matchedPlayer": "Teemu Pukki",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Pickford",
+      "team": "Everton",
+      "startGw": 1,
+      "endGw": 4,
+      "matchedPlayer": "Jordan Pickford",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 1,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 2,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Thiago",
+      "team": "Brentford",
+      "startGw": 14,
+      "endGw": 17,
+      "matchedPlayer": "Igor Thiago",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 14,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Pereyra",
+      "team": "Watford",
+      "startGw": 11,
+      "endGw": 14,
+      "matchedPlayer": "Roberto Pereyra",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Mykolenko",
+      "team": "Everton",
+      "startGw": 17,
+      "endGw": 20,
+      "matchedPlayer": "Vitaliy Mykolenko",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 17,
+          "status": "injured",
+          "detail": "Groin injury - Return expected on 22/12/2023"
+        },
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "P\u00c3\u00a9rez",
+      "team": "Newcastle",
+      "startGw": 1,
+      "endGw": 4,
+      "matchedPlayer": null,
+      "matchConfidence": 0.633,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": []
+    },
+    {
+      "season": "2024/25",
+      "player": "Saliba",
+      "team": "Arsenal",
+      "startGw": 19,
+      "endGw": 22,
+      "matchedPlayer": "William Saliba",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": true,
+      "statuses": [
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 22,
+          "status": "injured",
+          "detail": "Hamstring injury - Return expected on 24/01/2025"
+        }
+      ]
+    },
+    {
+      "season": "2023/24",
+      "player": "Pinnock",
+      "team": "Brentford",
+      "startGw": 3,
+      "endGw": 6,
+      "matchedPlayer": "Ethan Pinnock",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "player": "Solanke",
+      "team": "Bournemouth",
+      "startGw": 35,
+      "endGw": 38,
+      "matchedPlayer": "Dominic Solanke",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 35,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 36,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 37,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 38,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Lacroix",
+      "team": "Crystal Palace",
+      "startGw": 15,
+      "endGw": 18,
+      "matchedPlayer": "Maxence Lacroix",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2022/23",
+      "player": "Firmino",
+      "team": "Liverpool",
+      "startGw": 12,
+      "endGw": 15,
+      "matchedPlayer": "Roberto Firmino",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 13,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Fornals",
+      "team": "West Ham",
+      "startGw": 6,
+      "endGw": 9,
+      "matchedPlayer": "Pablo Fornals",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Wesley",
+      "team": "Aston Villa",
+      "startGw": 9,
+      "endGw": 12,
+      "matchedPlayer": "Wesley Moraes",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 9,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 10,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 11,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 12,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Hall",
+      "team": "Newcastle",
+      "startGw": 22,
+      "endGw": 25,
+      "matchedPlayer": "Lewis Hall",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 22,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 23,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 24,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Neto",
+      "team": "Wolves",
+      "startGw": 18,
+      "endGw": 21,
+      "matchedPlayer": "Pedro Neto",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 18,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Tielemans",
+      "team": "Leicester",
+      "startGw": 5,
+      "endGw": 8,
+      "matchedPlayer": "Youri Tielemans",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Bruno G.",
+      "team": "Newcastle",
+      "startGw": 5,
+      "endGw": 8,
+      "matchedPlayer": "Bruno Guimar\u00e3es",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 8,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "Townsend",
+      "team": "Crystal Palace",
+      "startGw": 19,
+      "endGw": 22,
+      "matchedPlayer": "Andros Townsend",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 19,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 20,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 21,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 22,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2025/26",
+      "player": "Dalot",
+      "team": "Man Utd",
+      "startGw": 28,
+      "endGw": 31,
+      "matchedPlayer": "Diogo Dalot",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 28,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 29,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Johnson",
+      "team": "Spurs",
+      "startGw": 14,
+      "endGw": 17,
+      "matchedPlayer": "Brennan Johnson",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 14,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 15,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 16,
+          "status": "sub_in",
+          "detail": ""
+        },
+        {
+          "round": 17,
+          "status": "sub_in",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2018/19",
+      "player": "McArthur",
+      "team": "Crystal Palace",
+      "startGw": 1,
+      "endGw": 4,
+      "matchedPlayer": "James McArthur",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 1,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 2,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 3,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2024/25",
+      "player": "Pickford",
+      "team": "Everton",
+      "startGw": 33,
+      "endGw": 36,
+      "matchedPlayer": "Jordan Pickford",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 33,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 34,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 35,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 36,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2019/20",
+      "player": "Grealish",
+      "team": "Aston Villa",
+      "startGw": 29,
+      "endGw": 41,
+      "matchedPlayer": "Jack Grealish",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 29,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 30,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 31,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 32,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 33,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 34,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 35,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 36,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 37,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 38,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2021/22",
+      "player": "Bernardo",
+      "team": "Man City",
+      "startGw": 22,
+      "endGw": 25,
+      "matchedPlayer": "Bernardo Silva",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 22,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 23,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 24,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 25,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "season": "2020/21",
+      "player": "Soucek",
+      "team": "West Ham",
+      "startGw": 4,
+      "endGw": 7,
+      "matchedPlayer": "Tom\u00e1\u0161 Sou\u010dek",
+      "matchConfidence": 1.0,
+      "retrospectiveAvailabilityCause": false,
+      "statuses": [
+        {
+          "round": 4,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 5,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 6,
+          "status": "starting",
+          "detail": ""
+        },
+        {
+          "round": 7,
+          "status": "starting",
+          "detail": ""
+        }
+      ]
+    }
+  ]
+}

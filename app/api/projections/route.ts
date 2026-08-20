@@ -9,6 +9,21 @@ type BootstrapElement = {
   selected_by_percent: string;
 };
 
+const STATUS_DEFAULT_CHANCE: Record<string, number> = {
+  a: 100,
+  d: 75,
+  i: 0,
+  s: 0,
+  u: 0,
+  n: 0,
+};
+
+function resolvedOfficialChance(player: BootstrapElement) {
+  return player.chance_of_playing_next_round
+    ?? STATUS_DEFAULT_CHANCE[player.status.toLowerCase()]
+    ?? 0;
+}
+
 async function deadlineAvailabilityOverlay() {
   const players = structuredClone(currentPlayers);
   try {
@@ -26,10 +41,10 @@ async function deadlineAvailabilityOverlay() {
         1,
         Number(player.minutesModel.availabilityEvidence.chance ?? 100),
       );
-      const chance = Number(
-        latest.chance_of_playing_next_round ?? (latest.status === "a" ? 100 : previousChance),
-      );
+      const chance = Number(resolvedOfficialChance(latest));
       const availabilityRatio = Math.max(0, Math.min(1.25, chance / previousChance));
+      const previousProjection = player.projected;
+      const previousExpectedMinutes = Math.max(1, player.expectedMinutes);
       player.ownership = Number(latest.selected_by_percent || player.ownership);
       player.minutesModel.startProbability = Math.round(
         Math.min(98, player.minutesModel.startProbability * availabilityRatio),
@@ -40,6 +55,75 @@ async function deadlineAvailabilityOverlay() {
       player.minutesModel.sixtyProbability = Math.round(
         Math.min(98, player.minutesModel.sixtyProbability * availabilityRatio),
       );
+      player.expectedMinutes = Math.round(previousExpectedMinutes * availabilityRatio);
+      player.minutesModel.scenarios = [
+        {
+          ...player.minutesModel.scenarios[0],
+          probability: player.minutesModel.startProbability,
+        },
+        {
+          ...player.minutesModel.scenarios[1],
+          probability: Math.max(
+            0,
+            player.minutesModel.playProbability - player.minutesModel.startProbability,
+          ),
+        },
+        {
+          ...player.minutesModel.scenarios[2],
+          probability: Math.max(0, 100 - player.minutesModel.playProbability),
+        },
+      ];
+      const projectionRatio = Math.max(
+        0,
+        Math.min(1.25, player.expectedMinutes / previousExpectedMinutes),
+      );
+      player.projected = Number((previousProjection * projectionRatio).toFixed(1));
+      player.sixWeekProjected = Number(
+        Math.max(0, player.sixWeekProjected - previousProjection + player.projected).toFixed(1),
+      );
+      player.valueProjected = Number(
+        Math.max(0, player.sixWeekProjected / Math.max(0.1, player.price)).toFixed(2),
+      );
+      player.captainRating = Math.round(player.captainRating * projectionRatio);
+      player.score = Math.round(player.score * projectionRatio);
+      player.confidence = Math.round(player.confidence * Math.min(1, projectionRatio));
+      player.features.minutes = Number(
+        Math.max(0, player.features.minutes * projectionRatio).toFixed(4),
+      );
+      player.researchFeatures.expected_minutes = player.expectedMinutes;
+      player.researchFeatures.play_probability = player.minutesModel.playProbability / 100;
+      player.researchFeatures.start_probability = player.minutesModel.startProbability / 100;
+      player.researchFeatures.sixty_probability = player.minutesModel.sixtyProbability / 100;
+      player.researchFeatures.component_xpts = player.projected;
+      for (const key of Object.keys(player.components) as Array<keyof typeof player.components>) {
+        player.components[key] = Number((player.components[key] * projectionRatio).toFixed(2));
+      }
+      player.distribution.p10 = Number((player.distribution.p10 * projectionRatio).toFixed(1));
+      player.distribution.median = player.projected;
+      player.distribution.p90 = Number((player.distribution.p90 * projectionRatio).toFixed(1));
+      player.distribution.standardDeviation = Number(
+        (player.distribution.standardDeviation * projectionRatio).toFixed(2),
+      );
+      player.distribution.return5Probability = Math.round(
+        Math.min(100, player.distribution.return5Probability * projectionRatio),
+      );
+      player.distribution.haul8Probability = Math.round(
+        Math.min(100, player.distribution.haul8Probability * projectionRatio),
+      );
+      player.distribution.blankProbability = Math.round(
+        Math.max(
+          0,
+          Math.min(
+            100,
+            100 - (100 - player.distribution.blankProbability) * projectionRatio,
+          ),
+        ),
+      );
+      for (const key of Object.keys(player.strategyScores) as Array<keyof typeof player.strategyScores>) {
+        player.strategyScores[key] = Number(
+          (player.strategyScores[key] * projectionRatio).toFixed(4),
+        );
+      }
       player.minutesModel.availabilityEvidence = {
         status: latest.status,
         chance,

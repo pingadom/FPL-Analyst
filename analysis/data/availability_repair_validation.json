@@ -1,0 +1,43 @@
+{
+  "status": "fixed-final-policy causal repair ablation",
+  "preRepairAveragePoints": 2096.6,
+  "warning": "This fixed-policy diagnostic is not the published season-by-season walk-forward score.",
+  "rejectedBroadSignalRun": [
+    {"variant": "broad xP-zero availability evidence", "averagePoints": 2066.8},
+    {"variant": "broad evidence + 78% weekly XI floor", "averagePoints": 2050.5},
+    {"variant": "broad evidence + penalised transfer hurdle", "averagePoints": 2073.6},
+    {"variant": "broad evidence + both overcorrections", "averagePoints": 2057.2}
+  ],
+  "variants": [
+    {
+      "variant": "selected high-precision availability repair",
+      "averagePoints": 2103.4,
+      "seasonPoints": [
+        2092,
+        2017,
+        2088,
+        2195,
+        2198,
+        2177,
+        2208,
+        1852
+      ],
+      "averageTransfers": 33.25
+    },
+    {
+      "variant": "rejected high-precision + penalised transfer hurdle",
+      "averagePoints": 2077.0,
+      "seasonPoints": [
+        2078,
+        2013,
+        2075,
+        2167,
+        2170,
+        2164,
+        2136,
+        1813
+      ],
+      "averageTransfers": 34.0
+    }
+  ]
+}
