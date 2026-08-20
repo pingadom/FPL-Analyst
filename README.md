@@ -36,6 +36,8 @@ legacy review and Lens 8 acceptance gate are in
 [`docs/DECISION_AUDIT_LENS8.md`](docs/DECISION_AUDIT_LENS8.md).
 The fair Lens 7/Lens 8/causal-shadow comparison and the stale-cache root cause
 are in [`docs/PERFORMANCE_AUDIT_LENS8.md`](docs/PERFORMANCE_AUDIT_LENS8.md).
+The causal injury-source, no-show and long-held-player review is in
+[`docs/AVAILABILITY_AND_HELD_PLAYER_AUDIT.md`](docs/AVAILABILITY_AND_HELD_PLAYER_AUDIT.md).
 
 ## Data
 

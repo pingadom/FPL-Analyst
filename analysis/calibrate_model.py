@@ -35,7 +35,7 @@ from live_external_signals import (
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "work" / "fpl-data"
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens8-repair-v1.pkl"
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens8-availability-v3.pkl"
 OUTPUT = ROOT / "app" / "data" / "model-results.json"
 PLAYERS_OUTPUT = ROOT / "app" / "data" / "current-players.json"
 TRAINING_SEASONS = ["2016-17", "2017-18"]
@@ -149,6 +149,31 @@ _SIMULATION_CONTEXT_CACHE: dict[tuple[int, int], dict] = {}
 def sigmoid(values: pd.Series | np.ndarray | float) -> pd.Series | np.ndarray | float:
     clipped = np.clip(values, -18, 18)
     return 1 / (1 + np.exp(-clipped))
+
+
+OFFICIAL_STATUS_DEFAULT_CHANCE = {
+    "a": 100.0,
+    "d": 75.0,
+    "i": 0.0,
+    "s": 0.0,
+    "u": 0.0,
+    "n": 0.0,
+}
+
+
+def official_availability_chance(
+    chance: pd.Series, status: pd.Series
+) -> pd.Series:
+    """Resolve nullable FPL chance fields without resurrecting absences."""
+    numeric = pd.to_numeric(chance, errors="coerce")
+    fallback = (
+        status.fillna("a")
+        .astype(str)
+        .str.lower()
+        .map(OFFICIAL_STATUS_DEFAULT_CHANCE)
+        .fillna(0.0)
+    )
+    return numeric.fillna(fallback).clip(0, 100)
 
 
 def frame_fingerprint(
@@ -789,6 +814,10 @@ def build_season(
         "expected_assists",
         "expected_goals_conceded",
         "defensive_contribution",
+        # Official FPL's deadline-vintage expected-points field is not used as
+        # a points forecast.  A trustworthy zero is retained only as an
+        # availability signal (injury, suspension, transfer or severe doubt).
+        "xP",
     ]
     raw = gw[[column for column in wanted if column in gw.columns]].copy()
     raw = raw.merge(meta, on="element", how="left")
@@ -827,10 +856,12 @@ def build_season(
         "expected_assists",
         "expected_goals_conceded",
         "defensive_contribution",
+        "xP",
     ]:
         if column not in raw:
             raw[column] = 0
         raw[column] = pd.to_numeric(raw[column], errors="coerce").fillna(0)
+    raw["official_xp"] = pd.to_numeric(raw.get("xP"), errors="coerce")
     raw["GW"] = pd.to_numeric(raw["GW"], errors="coerce")
     raw = raw.dropna(subset=["GW", "element", "position_id"]).copy()
     raw["GW"] = raw["GW"].astype(int)
@@ -1145,6 +1176,7 @@ def build_season(
             expected_assists=("expected_assists", "sum"),
             expected_goals_conceded=("expected_goals_conceded", "sum"),
             defensive_actions=("defensive_actions_counterfactual", "sum"),
+            official_xp=("official_xp", "max"),
         )
         .sort_values(["element", "GW"])
     )
@@ -1226,6 +1258,25 @@ def build_season(
     weekly["defensive_exact"] = weekly["defensive_exact"].fillna(
         float(defensive_exact_available)
     )
+    # Some archive scrapes contain an all-zero xP cross-section.  Detect that
+    # corruption from deadline-known ownership and xP alone, per event, so the
+    # player-level availability adjustment is disabled without looking at the
+    # subsequent teamsheets or points.
+    popular_xp = weekly[
+        weekly["selected"].ge(100_000)
+        & weekly["fixture_count"].gt(0)
+        & weekly["official_xp"].notna()
+    ]
+    xp_feed_quality = popular_xp.groupby("GW")["official_xp"].agg(
+        sample="size", zero_share=lambda values: float(values.le(0).mean())
+    )
+    trusted_xp_weeks = set(
+        xp_feed_quality[
+            xp_feed_quality["sample"].ge(20)
+            & xp_feed_quality["zero_share"].le(0.65)
+        ].index.astype(int)
+    )
+    weekly["official_xp_feed_trusted"] = weekly["GW"].isin(trusted_xp_weeks)
     weekly["was_home"] = weekly["was_home"].fillna(False).astype(bool)
     weekly.sort_values(["element", "GW"], inplace=True, kind="stable")
     weekly = weekly.merge(team_weeks, on=["team_id", "GW"], how="left")
@@ -1762,6 +1813,36 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ["player_key", "season_order", "GW"], inplace=True, kind="stable"
     )
     by_player = data.groupby("player_key", sort=False)
+    previous_minutes_observed = by_player["minutes"].shift(1)
+    previous_official_xp = by_player["official_xp"].shift(1)
+    previous_xp_trusted = by_player["official_xp_feed_trusted"].shift(1).fillna(False)
+    official_zero_signal = (
+        data["fixture_count"].gt(0)
+        & data["official_xp_feed_trusted"].fillna(False)
+        & data["official_xp"].le(0)
+    )
+    consecutive_official_zero = (
+        official_zero_signal
+        & previous_xp_trusted
+        & previous_official_xp.le(0)
+        & previous_minutes_observed.fillna(0).le(0)
+    )
+    market_availability_warning = (
+        data["fixture_count"].gt(0)
+        & data["transfer_pressure_raw"].le(-0.90)
+        & previous_minutes_observed.notna()
+        & previous_minutes_observed.lt(60)
+    )
+    severe_official_warning = official_zero_signal & data[
+        "transfer_pressure_raw"
+    ].le(-0.75)
+    data["official_zero_availability_signal"] = official_zero_signal
+    data["market_availability_warning"] = market_availability_warning
+    data["severe_availability_warning"] = (
+        severe_official_warning
+        | consecutive_official_zero
+        | market_availability_warning
+    )
     data["observations"] = by_player["fixture_count"].transform(
         lambda values: values.cumsum().shift(1)
     ).fillna(0)
@@ -1858,6 +1939,31 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         0.045 * data["competition_pressure"] * (0.35 + data["rotation_volatility"])
     ).clip(0, 0.10)
     data["start_probability"] *= 1 - rest_penalty - rotation_penalty - competition_penalty
+    # The historical archive does not carry a complete weekly injury field, but
+    # from 2020/21 it does retain official FPL xP captured around the deadline.
+    # A zero xP field alone is not enough to suppress a player: genuine doubts
+    # frequently recover in time. It becomes actionable only when combined with
+    # an extreme market exit, a prior zero/no-show, or a curtailed appearance.
+    # The high-precision warning affects minutes/availability—not scoring rate—
+    # and is disabled for all-zero or otherwise corrupted xP feeds.
+    start_availability_multiplier = np.select(
+        [
+            data["severe_availability_warning"],
+            data["official_zero_availability_signal"],
+        ],
+        [0.05, 1.0],
+        default=1.0,
+    )
+    sub_availability_multiplier = np.select(
+        [
+            data["severe_availability_warning"],
+            data["official_zero_availability_signal"],
+        ],
+        [0.15, 1.0],
+        default=1.0,
+    )
+    data["start_probability"] *= start_availability_multiplier
+    data["sub_probability_given_bench"] *= sub_availability_multiplier
     data["start_probability"] = data["start_probability"].clip(0.02, 0.98)
     data["play_probability"] = (
         data["start_probability"]
@@ -2565,6 +2671,8 @@ class SimulationStrategy:
     additional_move_hurdle: float = 1.15
     enforce_fieldability: bool = False
     fieldability_penalty: float = 0.0
+    enforce_weekly_xi_floor: bool = False
+    consistent_transfer_objective: bool = False
 
 
 EXPERT_STRATEGY = SimulationStrategy(
@@ -2584,6 +2692,8 @@ WEEKLY_CHASE_STRATEGY = SimulationStrategy(
     exact_initial_optimiser=True,
     enforce_fieldability=True,
     fieldability_penalty=4.0,
+    enforce_weekly_xi_floor=False,
+    consistent_transfer_objective=False,
 )
 JOINT_OPTION_STRATEGY = SimulationStrategy(
     name="Joint transfer-chip tree + hold value",
@@ -2605,6 +2715,8 @@ JOINT_OPTION_STRATEGY = SimulationStrategy(
     exact_initial_optimiser=True,
     enforce_fieldability=True,
     fieldability_penalty=4.0,
+    enforce_weekly_xi_floor=False,
+    consistent_transfer_objective=False,
 )
 ELITE_TARGET_STRATEGY = SimulationStrategy(
     name="Elite target: batched patience + attacker captain",
@@ -2768,6 +2880,7 @@ def initial_squad(
     player_clubs = frame["team_id"].to_numpy(int)
     if exact_requested:
         from scipy.optimize import Bounds, LinearConstraint, milp
+        from scipy.sparse import csr_matrix
 
         count = len(frame)
         local_scores = scores[frame_indices].astype(float)
@@ -2937,6 +3050,12 @@ def initial_squad(
                 allowed_xi.astype(float),
             ]
         )
+        # This matrix has thousands of columns but only a handful of non-zero
+        # coefficients per row. Reusing one CSR representation avoids repeated
+        # dense 20-50 MB allocations across the feasibility, spend-frontier and
+        # objective solves.
+        constraint_matrix = csr_matrix(np.vstack(rows))
+        rows.clear()
         if effective_spend_gap is not None and exclusion_share >= 0.20:
             # A persistent rebuild still wants to spend its available value, but
             # a reduced slate plus XI/bench constraints can make the normal floor
@@ -2949,7 +3068,7 @@ def initial_squad(
                 integrality=np.ones(3 * count),
                 bounds=Bounds(np.zeros(3 * count), variable_upper),
                 constraints=LinearConstraint(
-                    np.vstack(rows), probe_lower, np.asarray(upper)
+                    constraint_matrix, probe_lower, np.asarray(upper)
                 ),
                 options={"time_limit": 20.0},
             )
@@ -2966,10 +3085,44 @@ def initial_squad(
                 variable_upper,
             ),
             constraints=LinearConstraint(
-                np.vstack(rows), np.asarray(lower), np.asarray(upper)
+                constraint_matrix, np.asarray(lower), np.asarray(upper)
             ),
             options={"time_limit": 20.0},
         )
+        if (
+            (not result.success or result.x is None)
+            and "infeasible" in str(result.message).lower()
+            and effective_spend_gap is not None
+        ):
+            # Availability/XI and cheap-bench constraints can lower the exact
+            # maximum legal spend even without a blank-heavy slate. Prove that
+            # frontier with a separate MILP, then relax only the impossible
+            # lower-bound amount; never fall back to a greedy squad.
+            probe_lower = np.asarray(lower, dtype=float).copy()
+            probe_lower[0] = 0
+            spend_probe = milp(
+                c=-np.concatenate([prices, np.zeros(2 * count)]),
+                integrality=np.ones(3 * count),
+                bounds=Bounds(np.zeros(3 * count), variable_upper),
+                constraints=LinearConstraint(
+                    constraint_matrix, probe_lower, np.asarray(upper)
+                ),
+                options={"time_limit": 20.0},
+            )
+            if spend_probe.success and spend_probe.x is not None:
+                lower[0] = min(
+                    lower[0],
+                    int(round(float(np.dot(prices, spend_probe.x[:count])))),
+                )
+                result = milp(
+                    c=objective,
+                    integrality=np.ones(3 * count),
+                    bounds=Bounds(np.zeros(3 * count), variable_upper),
+                    constraints=LinearConstraint(
+                        constraint_matrix, np.asarray(lower), np.asarray(upper)
+                    ),
+                    options={"time_limit": 20.0},
+                )
         if not result.success and "infeasible" in str(result.message).lower():
             # HiGHS presolve can occasionally report the identical historical
             # constraint matrix infeasible for one finite objective and optimal
@@ -2984,7 +3137,7 @@ def initial_squad(
                     variable_upper,
                 ),
                 constraints=LinearConstraint(
-                    np.vstack(rows), np.asarray(lower), np.asarray(upper)
+                    constraint_matrix, np.asarray(lower), np.asarray(upper)
                 ),
                 options={"time_limit": 60.0, "presolve": False},
             )
@@ -3850,6 +4003,7 @@ def simulate_candidate(
     price_values = data["price"].to_numpy(int)
     fixture_counts = data["fixture_count"].to_numpy(int)
     uncertainty_values = data["prediction_uncertainty"].to_numpy(float)
+    component_xpts_values = data["component_xpts"].to_numpy(float)
     if risk_scores is None:
         risk_scores = np.zeros(len(data), dtype=float)
     play_probability_values = data["play_probability"].to_numpy(float)
@@ -3930,6 +4084,9 @@ def simulate_candidate(
         fresh_lineup_scores = fresh_lineup_scores - availability_penalty
         bench_utility_scores = bench_utility_scores - 0.35 * availability_penalty
     consistent_decision_objective = strategy.decision_immediate_share is not None
+    transfer_gain_scores = (
+        decision_scores if strategy.consistent_transfer_objective else plan_scores
+    )
     fresh_squad_scores = (
         decision_scores if consistent_decision_objective else plan_scores
     )
@@ -4037,6 +4194,56 @@ def simulate_candidate(
                     int(element_values[index])
                     for index in frame_indices
                     if int(fixture_counts[index]) <= 0
+                )
+            lineup_excluded_elements = set(excluded_elements)
+            if strategy.enforce_fieldability:
+                # A narrow safety floor removes only severe non-appearance risk
+                # from the preferred XI. Unlike the rejected 78% hard floor, it
+                # does not bench ordinary rotation risks or playable doubts.
+                lineup_excluded_elements.update(
+                    int(element_values[index])
+                    for index in frame_indices
+                    if play_probability_values[index] < 0.60
+                )
+            if strategy.enforce_weekly_xi_floor:
+                # Research-only strict floor. The selected policy leaves this
+                # disabled after the negative ablation, but keeping the branch
+                # makes that decision reproducible.
+                historical_play_floor = min(
+                    0.78, 0.68 + 0.025 * max(0, int(gw) - 1)
+                )
+                active_indices = np.asarray(
+                    [
+                        int(index)
+                        for index in frame_indices
+                        if int(element_values[index]) not in excluded_elements
+                    ],
+                    dtype=int,
+                )
+                exception_element: int | None = None
+                if len(active_indices):
+                    exception_threshold = float(
+                        np.quantile(component_xpts_values[active_indices], 0.95)
+                    )
+                    exception_candidates = [
+                        int(index)
+                        for index in active_indices
+                        if historical_play_floor - 0.10
+                        <= play_probability_values[index]
+                        < historical_play_floor
+                        and component_xpts_values[index] >= exception_threshold
+                    ]
+                    if exception_candidates:
+                        best_exception = max(
+                            exception_candidates,
+                            key=lambda index: component_xpts_values[index],
+                        )
+                        exception_element = int(element_values[best_exception])
+                lineup_excluded_elements.update(
+                    int(element_values[index])
+                    for index in active_indices
+                    if play_probability_values[index] < historical_play_floor
+                    and int(element_values[index]) != exception_element
                 )
             afcon_risk_elements = {
                 int(element_values[index])
@@ -4255,7 +4462,7 @@ def simulate_candidate(
                     # later chip gate said Hold.  That contaminated full-season
                     # chip deltas with weeks where neither action was taken.
                     pre_xi, _ = choose_xi(
-                        squad, row_by_element, scores, excluded_elements
+                        squad, row_by_element, scores, lineup_excluded_elements
                     )
                     pre_captain_metric = (
                         captain_scores if captain_scores is not None else scores
@@ -4266,7 +4473,7 @@ def simulate_candidate(
                             row_by_element[element]
                         ]
                         if element in row_by_element
-                        and element not in excluded_elements
+                        and element not in lineup_excluded_elements
                         else -1.0,
                     )
                     pre_free_indices = (
@@ -4313,7 +4520,7 @@ def simulate_candidate(
                         pre_free_state,
                         row_by_element,
                         scores,
-                        excluded_elements,
+                        lineup_excluded_elements,
                     )
                     pre_free_captain = max(
                         pre_free_xi,
@@ -4321,7 +4528,7 @@ def simulate_candidate(
                             row_by_element[element]
                         ]
                         if element in row_by_element
-                        and element not in excluded_elements
+                        and element not in lineup_excluded_elements
                         else -1.0,
                     )
 
@@ -4574,7 +4781,7 @@ def simulate_candidate(
                             continue
                         out_index = row_by_element.get(outgoing)
                         out_score = (
-                            plan_scores[out_index]
+                            transfer_gain_scores[out_index]
                             if out_index is not None and outgoing not in excluded_elements
                             else -0.30
                         )
@@ -4614,7 +4821,9 @@ def simulate_candidate(
                                 >= incoming_limit
                             ):
                                 continue
-                            gain = float(plan_scores[int(incoming_index)] - out_score)
+                            gain = float(
+                                transfer_gain_scores[int(incoming_index)] - out_score
+                            )
                             if strategy.early_price_weight > 0 and gw <= 19:
                                 outgoing_price_option = (
                                     price_rise_values[out_index]
@@ -4721,9 +4930,8 @@ def simulate_candidate(
                     "post-transfer",
                     allow_temporary_club_overload=changes_this_week == 0,
                 )
-
             xi, bench = choose_xi(
-                squad, row_by_element, scores, excluded_elements
+                squad, row_by_element, scores, lineup_excluded_elements
             )
             if captain_scores is not None:
                 captain_metric = captain_scores
@@ -4736,7 +4944,7 @@ def simulate_candidate(
             captain_order = sorted(
                 xi,
                 key=lambda element: captain_metric[row_by_element[element]]
-                if element in row_by_element and element not in excluded_elements
+                if element in row_by_element and element not in lineup_excluded_elements
                 else -1.0,
                 reverse=True,
             )
@@ -5030,24 +5238,24 @@ def simulate_candidate(
 
                 wildcard_state = squad_state(wildcard_indices)
                 wildcard_xi, wildcard_bench = choose_xi(
-                    wildcard_state, row_by_element, scores, excluded_elements
+                    wildcard_state, row_by_element, scores, lineup_excluded_elements
                 )
                 wildcard_captain_order = sorted(
                     wildcard_xi,
                     key=lambda element: captain_metric[row_by_element[element]]
-                    if element in row_by_element and element not in excluded_elements
+                    if element in row_by_element and element not in lineup_excluded_elements
                     else -1.0,
                     reverse=True,
                 )
                 wildcard_captain, wildcard_vice = wildcard_captain_order[:2]
                 free_hit_state = squad_state(free_hit_indices)
                 free_hit_xi, free_hit_bench = choose_xi(
-                    free_hit_state, row_by_element, scores, excluded_elements
+                    free_hit_state, row_by_element, scores, lineup_excluded_elements
                 )
                 free_hit_captain_order = sorted(
                     free_hit_xi,
                     key=lambda element: captain_metric[row_by_element[element]]
-                    if element in row_by_element and element not in excluded_elements
+                    if element in row_by_element and element not in lineup_excluded_elements
                     else -1.0,
                     reverse=True,
                 )
@@ -5061,7 +5269,7 @@ def simulate_candidate(
                             scores[row_by_element[element]]
                             for element in active_xi
                             if element in row_by_element
-                            and element not in excluded_elements
+                            and element not in lineup_excluded_elements
                         )
                         + (
                             scores[row_by_element[active_captain]]
@@ -5476,13 +5684,13 @@ def simulate_candidate(
                         )
                         assert_legal_squad(squad, bank, season, gw, "Wildcard")
                         xi, bench = choose_xi(
-                            squad, row_by_element, scores, excluded_elements
+                            squad, row_by_element, scores, lineup_excluded_elements
                         )
                         captain_order = sorted(
                             xi,
                             key=lambda element: captain_metric[row_by_element[element]]
                             if element in row_by_element
-                            and element not in excluded_elements
+                            and element not in lineup_excluded_elements
                             else -1.0,
                             reverse=True,
                         )
@@ -5536,7 +5744,7 @@ def simulate_candidate(
                             action_state, action_bank, season, gw, "Free Hit"
                         )
                         action_xi, action_bench = choose_xi(
-                            action_state, row_by_element, scores, excluded_elements
+                            action_state, row_by_element, scores, lineup_excluded_elements
                         )
                         action_captain_order = sorted(
                             action_xi,
@@ -5655,6 +5863,10 @@ def simulate_candidate(
                 selection_log.append(
                     {
                         "gw": int(gw),
+                        # Keep the persistent state separate from the one-week
+                        # scoring state. A Free Hit must not look like fifteen
+                        # permanent transfers in downstream decision audits.
+                        "permanentSquad": sorted(int(element) for element in squad),
                         "squad": sorted(
                             int(element) for element in scoring_squad
                         ),
@@ -5662,6 +5874,32 @@ def simulate_candidate(
                         "bench": [int(element) for element in scoring_bench],
                         "captain": int(scoring_captain),
                         "vice": int(scoring_vice),
+                        "bank": int(bank),
+                        "freeTransfersNext": int(free_transfers),
+                        "persistentState": [
+                            {
+                                "element": int(element),
+                                "position": int(state["position"]),
+                                "team": int(state["team"]),
+                                "purchase": int(state["purchase"]),
+                                "lastPrice": int(
+                                    price_values[row_by_element[element]]
+                                    if element in row_by_element
+                                    else state["last_price"]
+                                ),
+                                "salePrice": int(
+                                    selling_price(
+                                        int(state["purchase"]),
+                                        int(
+                                            price_values[row_by_element[element]]
+                                            if element in row_by_element
+                                            else state["last_price"]
+                                        ),
+                                    )
+                                ),
+                            }
+                            for element, state in sorted(squad.items())
+                        ],
                     }
                 )
 
@@ -5673,9 +5911,12 @@ def simulate_candidate(
                 )
                 for position in SQUAD_QUOTAS
             }
+            _, persistent_bench = choose_xi(
+                squad, row_by_element, scores, lineup_excluded_elements
+            )
             active_bench_spend = 0
             active_bench_premium = 0
-            for element in bench:
+            for element in persistent_bench:
                 state = squad[element]
                 index = row_by_element.get(element)
                 current_price = (
@@ -6950,9 +7191,9 @@ def current_recommendation(
     if non_match_total > 0:
         non_match_coefficients /= non_match_total
     current["model_score"] = matrix @ non_match_coefficients
-    current["availability"] = pd.to_numeric(
-        current["chance_of_playing_next_round"], errors="coerce"
-    ).fillna(100)
+    current["availability"] = official_availability_chance(
+        current["chance_of_playing_next_round"], current["status"]
+    )
     current_minutes = pd.to_numeric(current["minutes"], errors="coerce").fillna(0)
     previous_minutes = current_minutes.where(
         current_minutes > 0, current["previous_minutes"].fillna(0)
