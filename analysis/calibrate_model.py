@@ -2433,6 +2433,8 @@ class SimulationStrategy:
     staleness_hurdle_reduction: float = 0.0
     staleness_hold_reduction: float = 0.0
     additional_move_hurdle: float = 1.15
+    enforce_fieldability: bool = False
+    fieldability_penalty: float = 0.0
 
 
 EXPERT_STRATEGY = SimulationStrategy(
@@ -3351,6 +3353,22 @@ def joint_transfer_plan(
         return float(best_gain)
 
     base_utility = squad_utility(squad)
+
+    def fieldable_xi_count(active_squad: dict[int, dict]) -> int:
+        if not strategy.enforce_fieldability:
+            return 11
+        active_xi, _ = choose_xi(
+            active_squad,
+            row_by_element,
+            plan_scores,
+            excluded_elements=excluded_elements,
+        )
+        return sum(
+            element in row_by_element and element not in excluded_elements
+            for element in active_xi
+        )
+
+    base_fieldable_xi = fieldable_xi_count(squad)
     initial_team_counts: dict[int, int] = {}
     for player_state in squad.values():
         team_id = int(player_state["team"])
@@ -3553,6 +3571,16 @@ def joint_transfer_plan(
                 hurdle -= strategy.staleness_hurdle_reduction
             if forced_clubs:
                 hurdle = -math.inf
+            # A deadline-known blank is not an ordinary marginal upgrade. When
+            # a free transfer repairs a legal scoring slot, select the best
+            # repair without asking it to clear the normal multi-week hurdle.
+            # Paid hits remain outside this joint branch and are never hidden.
+            if (
+                strategy.enforce_fieldability
+                and base_fieldable_xi < 11
+                and fieldable_xi_count(candidate[2]) > base_fieldable_xi
+            ):
+                hurdle = -math.inf
             if strategy.phase_banking:
                 hurdle += (2.0 if gw <= 19 else 2.8) if free_transfers <= 1 else -0.8
             if strategy.hold_option_value > 0:
@@ -3694,6 +3722,16 @@ def simulate_candidate(
             1.0 - play_probability_values
         )
         bench_utility_scores = plan_scores * np.clip(reliability, 0.0, 1.0)
+    if strategy.enforce_fieldability:
+        # Availability changes utility rather than fabricating extra expected
+        # points. Current blanks are also hard-excluded below. The default is
+        # off, preserving the frozen champion exactly as the research control.
+        availability_penalty = strategy.fieldability_penalty * (
+            1.0 - play_probability_values
+        )
+        decision_scores = decision_scores - availability_penalty
+        fresh_lineup_scores = fresh_lineup_scores - availability_penalty
+        bench_utility_scores = bench_utility_scores - 0.35 * availability_penalty
     consistent_decision_objective = strategy.decision_immediate_share is not None
     fresh_squad_scores = (
         decision_scores if consistent_decision_objective else plan_scores
@@ -3793,6 +3831,16 @@ def simulate_candidate(
                 for index in frame_indices
                 if afcon_active and nationality_values[index] in AFCON_NATIONS
             }
+            if strategy.enforce_fieldability:
+                # A player with no current fixture may be retained in the XV,
+                # but cannot be bought or selected into the scoring XI. Passing
+                # the set into squad utility makes each missing fieldable slot
+                # visible to the transfer beam.
+                excluded_elements.update(
+                    int(element_values[index])
+                    for index in frame_indices
+                    if int(fixture_counts[index]) <= 0
+                )
             afcon_risk_elements = {
                 int(element_values[index])
                 for index in frame_indices

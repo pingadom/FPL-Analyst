@@ -1,0 +1,556 @@
+{
+  "status": "expanded action challenger implemented; promotion gate failed",
+  "method": "Complete legal packages from five distinct recursive policies, prior-season/matured-label fits, two-model probability agreement, pessimistic action value and explicit Hold abstention.",
+  "trainingStates": 70247,
+  "sourcePolicies": [
+    {
+      "policy": "Audited stable joint planner",
+      "evaluationAverage": 2179.8,
+      "newStates": 17125,
+      "cumulativeStates": 17125
+    },
+    {
+      "policy": "Fieldability boundary",
+      "evaluationAverage": 2167.1,
+      "newStates": 4335,
+      "cumulativeStates": 21460
+    },
+    {
+      "policy": "Lower transfer hurdle",
+      "evaluationAverage": 2123.0,
+      "newStates": 13418,
+      "cumulativeStates": 34878
+    },
+    {
+      "policy": "Higher transfer hurdle",
+      "evaluationAverage": 2055.8,
+      "newStates": 16088,
+      "cumulativeStates": 50966
+    },
+    {
+      "policy": "Broader legal beam",
+      "evaluationAverage": 2179.8,
+      "newStates": 19281,
+      "cumulativeStates": 70247
+    }
+  ],
+  "candidateMetrics": {
+    "rows": 47337,
+    "structuralMae": 12.086,
+    "correctedMae": 9.544,
+    "structuralPositiveAccuracy": 0.5878,
+    "correctedPositiveAccuracy": 0.577,
+    "structuralCorrelation": 0.2154,
+    "correctedCorrelation": 0.244,
+    "actionRate": 0.5708,
+    "actionBrier": 0.2465,
+    "actionAccuracy50": 0.5815
+  },
+  "fitAudit": [
+    {
+      "seasonOrder": 1,
+      "checkpoint": 1,
+      "trainingRows": 4861,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1892
+    },
+    {
+      "seasonOrder": 1,
+      "checkpoint": 13,
+      "trainingRows": 5012,
+      "maturedCurrentSeasonRows": 151,
+      "testRows": 2581
+    },
+    {
+      "seasonOrder": 1,
+      "checkpoint": 25,
+      "trainingRows": 6847,
+      "maturedCurrentSeasonRows": 1986,
+      "testRows": 3588
+    },
+    {
+      "seasonOrder": 2,
+      "checkpoint": 1,
+      "trainingRows": 11187,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1530
+    },
+    {
+      "seasonOrder": 2,
+      "checkpoint": 13,
+      "trainingRows": 11283,
+      "maturedCurrentSeasonRows": 96,
+      "testRows": 2354
+    },
+    {
+      "seasonOrder": 2,
+      "checkpoint": 25,
+      "trainingRows": 12902,
+      "maturedCurrentSeasonRows": 1715,
+      "testRows": 3539
+    },
+    {
+      "seasonOrder": 3,
+      "checkpoint": 1,
+      "trainingRows": 17405,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1606
+    },
+    {
+      "seasonOrder": 3,
+      "checkpoint": 13,
+      "trainingRows": 17581,
+      "maturedCurrentSeasonRows": 176,
+      "testRows": 2476
+    },
+    {
+      "seasonOrder": 3,
+      "checkpoint": 25,
+      "trainingRows": 19057,
+      "maturedCurrentSeasonRows": 1652,
+      "testRows": 3076
+    },
+    {
+      "seasonOrder": 4,
+      "checkpoint": 1,
+      "trainingRows": 22530,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1380
+    },
+    {
+      "seasonOrder": 4,
+      "checkpoint": 13,
+      "trainingRows": 22621,
+      "maturedCurrentSeasonRows": 91,
+      "testRows": 2321
+    },
+    {
+      "seasonOrder": 4,
+      "checkpoint": 25,
+      "trainingRows": 24269,
+      "maturedCurrentSeasonRows": 1739,
+      "testRows": 3057
+    },
+    {
+      "seasonOrder": 5,
+      "checkpoint": 1,
+      "trainingRows": 28408,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 864
+    },
+    {
+      "seasonOrder": 5,
+      "checkpoint": 13,
+      "trainingRows": 28511,
+      "maturedCurrentSeasonRows": 103,
+      "testRows": 1718
+    },
+    {
+      "seasonOrder": 5,
+      "checkpoint": 25,
+      "trainingRows": 29451,
+      "maturedCurrentSeasonRows": 1043,
+      "testRows": 2894
+    },
+    {
+      "seasonOrder": 6,
+      "checkpoint": 1,
+      "trainingRows": 33073,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1801
+    },
+    {
+      "seasonOrder": 6,
+      "checkpoint": 13,
+      "trainingRows": 33118,
+      "maturedCurrentSeasonRows": 45,
+      "testRows": 2278
+    },
+    {
+      "seasonOrder": 6,
+      "checkpoint": 25,
+      "trainingRows": 34988,
+      "maturedCurrentSeasonRows": 1915,
+      "testRows": 3059
+    },
+    {
+      "seasonOrder": 7,
+      "checkpoint": 1,
+      "trainingRows": 38872,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1272
+    },
+    {
+      "seasonOrder": 7,
+      "checkpoint": 13,
+      "trainingRows": 38935,
+      "maturedCurrentSeasonRows": 63,
+      "testRows": 2617
+    },
+    {
+      "seasonOrder": 7,
+      "checkpoint": 25,
+      "trainingRows": 40395,
+      "maturedCurrentSeasonRows": 1523,
+      "testRows": 3488
+    },
+    {
+      "seasonOrder": 8,
+      "checkpoint": 1,
+      "trainingRows": 45220,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1256
+    },
+    {
+      "seasonOrder": 8,
+      "checkpoint": 13,
+      "trainingRows": 45342,
+      "maturedCurrentSeasonRows": 122,
+      "testRows": 2217
+    },
+    {
+      "seasonOrder": 8,
+      "checkpoint": 25,
+      "trainingRows": 46798,
+      "maturedCurrentSeasonRows": 1578,
+      "testRows": 3158
+    },
+    {
+      "seasonOrder": 9,
+      "checkpoint": 1,
+      "trainingRows": 50990,
+      "maturedCurrentSeasonRows": 0,
+      "testRows": 1638
+    },
+    {
+      "seasonOrder": 9,
+      "checkpoint": 13,
+      "trainingRows": 51096,
+      "maturedCurrentSeasonRows": 106,
+      "testRows": 2866
+    },
+    {
+      "seasonOrder": 9,
+      "checkpoint": 25,
+      "trainingRows": 52849,
+      "maturedCurrentSeasonRows": 1859,
+      "testRows": 3967
+    }
+  ],
+  "control": {
+    "average": 2190.6,
+    "minimum": 2032,
+    "developmentAverage": 2197.3,
+    "holdoutAverage": 2170.5,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2129
+      },
+      {
+        "season": "2019/20",
+        "points": 2156
+      },
+      {
+        "season": "2020/21",
+        "points": 2238
+      },
+      {
+        "season": "2021/22",
+        "points": 2305
+      },
+      {
+        "season": "2022/23",
+        "points": 2258
+      },
+      {
+        "season": "2023/24",
+        "points": 2098
+      },
+      {
+        "season": "2024/25",
+        "points": 2309
+      },
+      {
+        "season": "2025/26",
+        "points": 2032
+      }
+    ]
+  },
+  "selected": {
+    "name": "Expanded action p0.58 b0.05",
+    "parameters": {
+      "probabilityGate": 0.58,
+      "residualBlend": 0.05
+    },
+    "average": 2149.5,
+    "minimum": 1939,
+    "developmentAverage": 2167.2,
+    "holdoutAverage": 2096.5,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2248
+      },
+      {
+        "season": "2019/20",
+        "points": 2014
+      },
+      {
+        "season": "2020/21",
+        "points": 2130
+      },
+      {
+        "season": "2021/22",
+        "points": 2292
+      },
+      {
+        "season": "2022/23",
+        "points": 2227
+      },
+      {
+        "season": "2023/24",
+        "points": 2092
+      },
+      {
+        "season": "2024/25",
+        "points": 2254
+      },
+      {
+        "season": "2025/26",
+        "points": 1939
+      }
+    ],
+    "paired": {
+      "averageDelta": -41.1,
+      "minimumDelta": -142,
+      "positiveSeasons": 1,
+      "negativeSeasons": 7,
+      "seasonDeltas": [
+        119,
+        -142,
+        -108,
+        -13,
+        -31,
+        -6,
+        -55,
+        -93
+      ]
+    },
+    "policyAudit": {
+      "calls": 17098,
+      "noFit": 1255,
+      "vetoes": 5400,
+      "corrections": 4076,
+      "abstentionRate": 0.4458
+    }
+  },
+  "experiments": [
+    {
+      "name": "Expanded action p0.58 b0.05",
+      "parameters": {
+        "probabilityGate": 0.58,
+        "residualBlend": 0.05
+      },
+      "average": 2149.5,
+      "minimum": 1939,
+      "developmentAverage": 2167.2,
+      "holdoutAverage": 2096.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2248
+        },
+        {
+          "season": "2019/20",
+          "points": 2014
+        },
+        {
+          "season": "2020/21",
+          "points": 2130
+        },
+        {
+          "season": "2021/22",
+          "points": 2292
+        },
+        {
+          "season": "2022/23",
+          "points": 2227
+        },
+        {
+          "season": "2023/24",
+          "points": 2092
+        },
+        {
+          "season": "2024/25",
+          "points": 2254
+        },
+        {
+          "season": "2025/26",
+          "points": 1939
+        }
+      ],
+      "paired": {
+        "averageDelta": -41.1,
+        "minimumDelta": -142,
+        "positiveSeasons": 1,
+        "negativeSeasons": 7,
+        "seasonDeltas": [
+          119,
+          -142,
+          -108,
+          -13,
+          -31,
+          -6,
+          -55,
+          -93
+        ]
+      },
+      "policyAudit": {
+        "calls": 17098,
+        "noFit": 1255,
+        "vetoes": 5400,
+        "corrections": 4076,
+        "abstentionRate": 0.4458
+      }
+    },
+    {
+      "name": "Expanded action p0.60 b0.10",
+      "parameters": {
+        "probabilityGate": 0.6,
+        "residualBlend": 0.1
+      },
+      "average": 2125.5,
+      "minimum": 2024,
+      "developmentAverage": 2118.7,
+      "holdoutAverage": 2146.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2183
+        },
+        {
+          "season": "2019/20",
+          "points": 2028
+        },
+        {
+          "season": "2020/21",
+          "points": 2136
+        },
+        {
+          "season": "2021/22",
+          "points": 2112
+        },
+        {
+          "season": "2022/23",
+          "points": 2213
+        },
+        {
+          "season": "2023/24",
+          "points": 2040
+        },
+        {
+          "season": "2024/25",
+          "points": 2268
+        },
+        {
+          "season": "2025/26",
+          "points": 2024
+        }
+      ],
+      "paired": {
+        "averageDelta": -65.1,
+        "minimumDelta": -193,
+        "positiveSeasons": 1,
+        "negativeSeasons": 7,
+        "seasonDeltas": [
+          54,
+          -128,
+          -102,
+          -193,
+          -45,
+          -58,
+          -41,
+          -8
+        ]
+      },
+      "policyAudit": {
+        "calls": 17217,
+        "noFit": 1255,
+        "vetoes": 5207,
+        "corrections": 4018,
+        "abstentionRate": 0.4642
+      }
+    },
+    {
+      "name": "Expanded action p0.62 b0.10",
+      "parameters": {
+        "probabilityGate": 0.62,
+        "residualBlend": 0.1
+      },
+      "average": 2110.1,
+      "minimum": 1901,
+      "developmentAverage": 2122.0,
+      "holdoutAverage": 2074.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2135
+        },
+        {
+          "season": "2019/20",
+          "points": 2028
+        },
+        {
+          "season": "2020/21",
+          "points": 2156
+        },
+        {
+          "season": "2021/22",
+          "points": 2085
+        },
+        {
+          "season": "2022/23",
+          "points": 2228
+        },
+        {
+          "season": "2023/24",
+          "points": 2100
+        },
+        {
+          "season": "2024/25",
+          "points": 2248
+        },
+        {
+          "season": "2025/26",
+          "points": 1901
+        }
+      ],
+      "paired": {
+        "averageDelta": -80.5,
+        "minimumDelta": -220,
+        "positiveSeasons": 2,
+        "negativeSeasons": 6,
+        "seasonDeltas": [
+          6,
+          -128,
+          -82,
+          -220,
+          -30,
+          2,
+          -61,
+          -131
+        ]
+      },
+      "policyAudit": {
+        "calls": 17061,
+        "noFit": 1255,
+        "vetoes": 5364,
+        "corrections": 3611,
+        "abstentionRate": 0.4739
+      }
+    }
+  ],
+  "passed": false,
+  "productionPromotion": false
+}

@@ -1,0 +1,16 @@
+{
+  "status": "scenario boundary validated for paired decisions",
+  "method": "Explicit appearance/60-minute draws, shared club attack shocks, shared clean-sheet outcomes and player-route residuals. The mean is audited but not substituted into the recursive transfer forecast.",
+  "rows": 206216,
+  "metrics": {
+    "basePointMae": 1.30617,
+    "scenarioMeanPointMae": 1.33594,
+    "meanAbsoluteMeanDrift": 0.1875,
+    "central80Coverage": 0.93563,
+    "baseBlankBrier": 0.09701,
+    "scenarioBlankBrier": 0.10816,
+    "meanWithinTeamGkDefCorrelation": 0.178
+  },
+  "decision": "Use for common-random-number action and chip comparisons only. Do not directly replace the frozen point mean.",
+  "passed": true
+}

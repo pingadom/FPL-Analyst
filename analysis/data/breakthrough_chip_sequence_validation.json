@@ -1,0 +1,38 @@
+{
+  "status": "joint sequential planner implemented; live diagnostic only",
+  "historicalEvidence": {
+    "tripleCaptainBenchBoostAverageGain": 10.6,
+    "correctedFreeHitIncrementalAverage": 6.9,
+    "correctedFreeHitHoldoutAverage": 6.5,
+    "correctedFreeHitHoldoutMinimum": -15.0,
+    "automaticWildcardAverageGain": -49.6,
+    "automaticWildcardMinimumGain": -140
+  },
+  "sequenceSemantics": {
+    "actions": [
+      [
+        1,
+        "Free Hit"
+      ],
+      [
+        2,
+        "Triple Captain"
+      ]
+    ],
+    "oneChipPerGameweek": true,
+    "waitedForBetterTripleCaptain": true,
+    "freeHitNonPersistenceCoveredByUnitTest": true,
+    "terminalState": "base"
+  },
+  "livePlanner": {
+    "oneChipPerGameweek": true,
+    "twoHalfSeasonInventories": true,
+    "freeHitPreservesPermanentSquad": true,
+    "wildcardChangesPermanentSquad": true,
+    "tcBbUseMarginalNotTotalPoints": true,
+    "unknownFixturesRetainOptionValue": true,
+    "usesPastOnlyReservationValues": true
+  },
+  "decision": "Keep the audited TC/BB policy and corrected Free Hit in the live shadow. Reject automatic Wildcards. The joint DP is exposed as a receding-horizon diagnostic until deadline-time fixture-announcement vintages and prospective outcomes can validate its timing choices.",
+  "productionPromotion": false
+}

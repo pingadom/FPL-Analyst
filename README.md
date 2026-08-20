@@ -25,6 +25,9 @@ python analysis/calibrate_model.py
 Historical data is cached under `work/` and is not committed. The generated
 model artifact lives at `app/data/model-results.json`.
 
+The latest full breakthrough implementation and promotion decisions are
+documented in `analysis/BREAKTHROUGH_IMPLEMENTATION_2026-08-20.md`.
+
 ## Data
 
 Historical player-gameweeks come from the public vaastav FPL dataset. Current

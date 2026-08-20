@@ -12,6 +12,12 @@ from typing import Any
 import numpy as np
 from scipy.optimize import Bounds, LinearConstraint, milp
 
+from breakthrough_engine import (
+    DEFAULT_FIELDABILITY_POLICY,
+    fieldability_vector,
+    hard_unavailable,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT_ROOT = ROOT / "analysis" / "snapshots"
@@ -127,17 +133,28 @@ def optimise_squad(
     players: list[dict],
     score_key: str,
     *,
+    lineup_score_key: str | None = None,
+    captain_score_key: str | None = None,
     bench_weight: float = 0.08,
     captain_weight: float = 0.70,
     bench_premium_limit: float = 2.0,
     bench_premium_penalty: float = 0.22,
     minimum_spend: float = 99.5,
     budget_limit: float = 100.0,
+    enforce_fieldability: bool = False,
+    minimum_expected_xi_appearances: float | None = None,
 ) -> tuple[list[int], list[int], int, int]:
     """Jointly solve the legal squad, XI and captain in one integer program."""
     positions = {"GK": 2, "DEF": 5, "MID": 5, "FWD": 3}
     count = len(players)
     scores = np.asarray([float(row[score_key]) for row in players])
+    lineup_scores = np.asarray(
+        [float(row[lineup_score_key or score_key]) for row in players]
+    )
+    captain_scores = np.asarray(
+        [float(row[captain_score_key or score_key]) for row in players]
+    )
+    availability = fieldability_vector(players)
     # x selects the XV, y the XI, and c the captain. The XI receives the full
     # forecast, the bench a small contingency value, and captaincy an extra
     # planning weight selected by the frozen policy audit.
@@ -155,8 +172,8 @@ def optimise_squad(
     objective = -np.concatenate(
         [
             bench_weight * scores - bench_premium_penalty * bench_premium,
-            (1 - bench_weight) * scores + bench_premium_penalty * bench_premium,
-            captain_weight * scores,
+            lineup_scores - bench_weight * scores + bench_premium_penalty * bench_premium,
+            captain_weight * captain_scores,
         ]
     )
     rows: list[np.ndarray] = []
@@ -191,11 +208,44 @@ def optimise_squad(
         rows.append(link_captain)
         lower.append(-np.inf)
         upper.append(0)
+        if enforce_fieldability and hard_unavailable(players[index]):
+            forbid_xi = np.zeros(3 * count)
+            forbid_xi[count + index] = 1
+            rows.append(forbid_xi)
+            lower.append(0)
+            upper.append(0)
+            forbid_captain = np.zeros(3 * count)
+            forbid_captain[2 * count + index] = 1
+            rows.append(forbid_captain)
+            lower.append(0)
+            upper.append(0)
+        if (
+            enforce_fieldability
+            and availability[index]
+            < DEFAULT_FIELDABILITY_POLICY.captain_min_play_probability
+        ):
+            forbid_fragile_captain = np.zeros(3 * count)
+            forbid_fragile_captain[2 * count + index] = 1
+            rows.append(forbid_fragile_captain)
+            lower.append(0)
+            upper.append(0)
     xi_total = np.zeros(3 * count)
     xi_total[count : 2 * count] = 1
     rows.append(xi_total)
     lower.append(11)
     upper.append(11)
+    if enforce_fieldability:
+        expected_appearances = np.zeros(3 * count)
+        expected_appearances[count : 2 * count] = availability
+        rows.append(expected_appearances)
+        lower.append(
+            float(
+                minimum_expected_xi_appearances
+                if minimum_expected_xi_appearances is not None
+                else DEFAULT_FIELDABILITY_POLICY.minimum_expected_xi_appearances
+            )
+        )
+        upper.append(11.0)
     for position, minimum, maximum in (
         ("GK", 1, 1),
         ("DEF", 3, 5),
@@ -230,7 +280,7 @@ def optimise_squad(
     captain = int(np.flatnonzero(result.x[2 * count :] > 0.5)[0])
     vice = max(
         (index for index in best_xi if index != captain),
-        key=lambda index: float(players[index][score_key]),
+        key=lambda index: float(captain_scores[index]),
     )
     return chosen, best_xi, captain, vice
 
