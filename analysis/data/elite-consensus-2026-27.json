@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "season": "2026-27",
+  "asOf": "2026-08-14T12:00:00Z",
+  "method": "Diagnostic-only consensus set assembled from current elite-manager reveals. Consensus never enters the player forecast or optimiser objective.",
+  "sources": [
+    "https://www.fantasyfootballscout.co.uk/2026/08/10/10-top-managers-reveal-their-fpl-2026-27-teams",
+    "https://www.fantasyfootballfix.com/blog-index/best-fpl-gameweek-1-team-haaland-bruno-fernandes/",
+    "https://www.premierleague.com/en/news/4681709/the-scouts-must-haves-for-start-of-202627-fpl"
+  ],
+  "players": [
+    { "name": "Haaland", "tier": "core", "position": "FWD" },
+    { "name": "B.Fernandes", "tier": "core", "position": "MID" },
+    { "name": "Mbeumo", "tier": "core", "position": "MID" },
+    { "name": "Semenyo", "tier": "core", "position": "MID" },
+    { "name": "Joao Pedro", "aliases": ["João Pedro"], "tier": "core", "position": "FWD" },
+    { "name": "Gross", "aliases": ["Groß"], "tier": "watch", "position": "MID" },
+    { "name": "Tarkowski", "tier": "watch", "position": "DEF" },
+    { "name": "Shaw", "tier": "watch", "position": "DEF" },
+    { "name": "Rodon", "tier": "watch", "position": "DEF" },
+    { "name": "N.Williams", "tier": "watch", "position": "DEF" },
+    { "name": "van Ewijk", "tier": "watch", "position": "DEF" },
+    { "name": "Calvert-Lewin", "tier": "watch", "position": "FWD" }
+  ]
+}

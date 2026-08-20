@@ -1,0 +1,440 @@
+{
+  "status": "like-for-like diagnostic; frozen shadow forecast stack replayed through Lens 8 fixture, legality and exact-MILP rules",
+  "seasons": [
+    "2018/19",
+    "2019/20",
+    "2020/21",
+    "2021/22",
+    "2022/23",
+    "2023/24",
+    "2024/25",
+    "2025/26"
+  ],
+  "recordedLegacyShadow": {
+    "average": 2212.0,
+    "points": [
+      2135,
+      2186,
+      2271,
+      2312,
+      2274,
+      2108,
+      2365,
+      2045
+    ]
+  },
+  "repairedShadow": {
+    "average": 2122.1,
+    "points": [
+      1977,
+      2298,
+      2100,
+      2126,
+      2123,
+      2078,
+      2250,
+      2025
+    ],
+    "noChipAverage": 2093.0,
+    "chipGain": 29.1,
+    "averageTransfers": 25.6,
+    "averageHits": 0.0
+  },
+  "causalRepairedShadow": {
+    "average": 2119.2,
+    "points": [
+      1975,
+      2300,
+      2107,
+      2113,
+      2112,
+      2065,
+      2250,
+      2032
+    ],
+    "noChipAverage": 2090.5,
+    "chipGain": 28.8,
+    "averageTransfers": 25.6,
+    "averageHits": 0.0
+  },
+  "lens81HybridDiagnostic": {
+    "average": 2112.2,
+    "points": [
+      1949,
+      2291,
+      2174,
+      2132,
+      1977,
+      2060,
+      2274,
+      2041
+    ],
+    "chipGain": 21.8,
+    "averageTransfers": 22.2,
+    "averageHits": 0.0,
+    "warning": "Diagnostic only: Lens 8 chip policy was selected on the broader historical search and must pass a frozen walk-forward gate before promotion."
+  },
+  "lens8": {
+    "average": 2087.0,
+    "points": [
+      2103,
+      2044,
+      2076,
+      2152,
+      2158,
+      2261,
+      1968,
+      1934
+    ]
+  },
+  "deltas": {
+    "repairedShadowVsRecordedLegacy": -89.9,
+    "lens8VsRepairedShadow": -35.1,
+    "lens8VsCausalRepairedShadow": -32.2,
+    "hybridVsLens8": 25.2,
+    "lens8VsRecordedLegacy": -125.0,
+    "lens8VsRepairedShadowBySeason": [
+      126,
+      -254,
+      -24,
+      26,
+      35,
+      183,
+      -282,
+      -91
+    ]
+  },
+  "dynamicMarketAudit": {
+    "status": "research-only causal dynamic match ensemble",
+    "provenance": "Structural inputs are deadline-causal. Historical first-market odds have unknown capture times and cannot qualify production promotion.",
+    "coverage": {
+      "evaluationSingleTeamWeeks": 5643,
+      "coveredTeamWeeks": 5643,
+      "coverage": 1.0
+    },
+    "metrics": {
+      "teamMatches": 5643,
+      "structural": {
+        "goalsForMae": 0.9606,
+        "goalsForPoissonDeviance": 1.2526,
+        "goalsAgainstMae": 0.9728,
+        "cleanSheetBrier": 0.23564
+      },
+      "market": {
+        "goalsForMae": 0.9055,
+        "goalsForPoissonDeviance": 1.108,
+        "goalsAgainstMae": 0.9141,
+        "cleanSheetBrier": 0.22495
+      },
+      "dynamic": {
+        "goalsForMae": 0.9064,
+        "goalsForPoissonDeviance": 1.1167,
+        "goalsAgainstMae": 0.916,
+        "cleanSheetBrier": 0.22559
+      }
+    },
+    "weights": [
+      {
+        "season": "2018-19",
+        "priorTeamMatches": 0,
+        "attackMarketWeight": 0.5,
+        "defenceMarketWeight": 0.5,
+        "cleanMarketWeight": 0.5,
+        "testTeamMatches": 716
+      },
+      {
+        "season": "2019-20",
+        "priorTeamMatches": 716,
+        "attackMarketWeight": 0.8266,
+        "defenceMarketWeight": 0.8266,
+        "cleanMarketWeight": 0.8266,
+        "testTeamMatches": 746
+      },
+      {
+        "season": "2020-21",
+        "priorTeamMatches": 1462,
+        "attackMarketWeight": 0.8969,
+        "defenceMarketWeight": 0.8969,
+        "cleanMarketWeight": 0.8175,
+        "testTeamMatches": 673
+      },
+      {
+        "season": "2021-22",
+        "priorTeamMatches": 2135,
+        "attackMarketWeight": 0.9245,
+        "defenceMarketWeight": 0.9245,
+        "cleanMarketWeight": 0.8396,
+        "testTeamMatches": 638
+      },
+      {
+        "season": "2022-23",
+        "priorTeamMatches": 2773,
+        "attackMarketWeight": 0.9397,
+        "defenceMarketWeight": 0.9397,
+        "cleanMarketWeight": 0.8078,
+        "testTeamMatches": 676
+      },
+      {
+        "season": "2023-24",
+        "priorTeamMatches": 3449,
+        "attackMarketWeight": 0.9504,
+        "defenceMarketWeight": 0.9504,
+        "cleanMarketWeight": 0.9053,
+        "testTeamMatches": 714
+      },
+      {
+        "season": "2024-25",
+        "priorTeamMatches": 4163,
+        "attackMarketWeight": 0.9582,
+        "defenceMarketWeight": 0.9582,
+        "cleanMarketWeight": 0.9124,
+        "testTeamMatches": 740
+      },
+      {
+        "season": "2025-26",
+        "priorTeamMatches": 4903,
+        "attackMarketWeight": 0.9176,
+        "defenceMarketWeight": 0.964,
+        "cleanMarketWeight": 0.9176,
+        "testTeamMatches": 740
+      }
+    ],
+    "marketSources": [
+      {
+        "season": "2012-13",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1213/E0.csv",
+        "sha256": "1df561d34a9b79ff8cb1fccd4fd279d183e74cd871063a307ecf18f01e0d622f",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2013-14",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1314/E0.csv",
+        "sha256": "3cf16078fde2e0e6c6cb07ebdb20ca98d1a755c9508a18bbeb4ad6837fad2b42",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2014-15",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1415/E0.csv",
+        "sha256": "76b7858051ff6b17f46f49f26fdc70c1f29537270492606f5cc63d67fad5d149",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2015-16",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1516/E0.csv",
+        "sha256": "bd3502a18c38a1597fd9af62e2366b4015006d3528dd4d18b311bd6237bbc085",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2016-17",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1617/E0.csv",
+        "sha256": "9625a7652b5f98fbd3e2e4d378c851fc246693f3343e34a72428d5b6e864d3e0",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2017-18",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1718/E0.csv",
+        "sha256": "4f3389365ef3f7ac966764ed8ba67cf3b79f5aebed18dd224099c4b2c98bc67b",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2018-19",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1819/E0.csv",
+        "sha256": "7c096b3c2ecd54c6993d22eeea73450c2bde11e3457238b226b8f43c62dfc35e",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2019-20",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/1920/E0.csv",
+        "sha256": "100037618b94f94057400bb02bf6bac4ef74ddaa58cde4b38370839c39caee61",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2020-21",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2021/E0.csv",
+        "sha256": "5afe63f69401457b8354eaacee24f9a3e520b3c3af6329564a9783e20d789c62",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2021-22",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2122/E0.csv",
+        "sha256": "335afcbabeb2939fa10ab39ba3e8215072d0b577cb8d0705c1e44c56e934e703",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2022-23",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2223/E0.csv",
+        "sha256": "8442792d3b614c94ea3cf381bd2736805889cc1713169035368fff19c3d02380",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2023-24",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2324/E0.csv",
+        "sha256": "b2e057b0ed959f198b0f63d2391c01239f3608e6de5db68edab3f88e04d07ff3",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2024-25",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2425/E0.csv",
+        "sha256": "d0c8ce4a96d886cf60cf101f570f4a3893844226f91c7bd769eb568c49edbfa4",
+        "oddsTiming": "first non-closing market set only"
+      },
+      {
+        "season": "2025-26",
+        "matches": 380,
+        "source": "https://www.football-data.co.uk/mmz4281/2526/E0.csv",
+        "sha256": "3e3a8352f9ada6789c508d6ca184424421fed56a30400904a4a327c583407e62",
+        "oddsTiming": "first non-closing market set only"
+      }
+    ]
+  },
+  "freeHitFitAudit": [
+    {
+      "season": "2017-18",
+      "trainingSeasons": 1,
+      "trainingRows": 38,
+      "testRows": 38,
+      "priorResidualScale": 4.0
+    },
+    {
+      "season": "2018-19",
+      "trainingSeasons": 2,
+      "trainingRows": 76,
+      "testRows": 38,
+      "priorResidualScale": 4.292
+    },
+    {
+      "season": "2019-20",
+      "trainingSeasons": 3,
+      "trainingRows": 114,
+      "testRows": 38,
+      "priorResidualScale": 6.64
+    },
+    {
+      "season": "2020-21",
+      "trainingSeasons": 4,
+      "trainingRows": 152,
+      "testRows": 38,
+      "priorResidualScale": 9.736
+    },
+    {
+      "season": "2021-22",
+      "trainingSeasons": 5,
+      "trainingRows": 190,
+      "testRows": 38,
+      "priorResidualScale": 11.04
+    },
+    {
+      "season": "2022-23",
+      "trainingSeasons": 6,
+      "trainingRows": 228,
+      "testRows": 37,
+      "priorResidualScale": 11.483
+    },
+    {
+      "season": "2023-24",
+      "trainingSeasons": 7,
+      "trainingRows": 265,
+      "testRows": 38,
+      "priorResidualScale": 11.725
+    },
+    {
+      "season": "2024-25",
+      "trainingSeasons": 8,
+      "trainingRows": 303,
+      "testRows": 38,
+      "priorResidualScale": 11.705
+    },
+    {
+      "season": "2025-26",
+      "trainingSeasons": 9,
+      "trainingRows": 341,
+      "testRows": 38,
+      "priorResidualScale": 12.171
+    }
+  ],
+  "fixtureIntegrity": {
+    "passed": true,
+    "teamWeekRows": 7576,
+    "playerVsClubFixtureMismatches": 0,
+    "unexplainedMassBlankRounds": 0,
+    "massBlankRounds": [
+      {
+        "season": "2016-17",
+        "gameweek": 28,
+        "activeClubs": 8,
+        "playersWithNoFixture": 398,
+        "registeredPlayers": 653,
+        "noFixtureShare": 60.9,
+        "explainedByReducedSlate": true
+      },
+      {
+        "season": "2017-18",
+        "gameweek": 31,
+        "activeClubs": 8,
+        "playersWithNoFixture": 367,
+        "registeredPlayers": 634,
+        "noFixtureShare": 57.9,
+        "explainedByReducedSlate": true
+      },
+      {
+        "season": "2018-19",
+        "gameweek": 31,
+        "activeClubs": 10,
+        "playersWithNoFixture": 302,
+        "registeredPlayers": 608,
+        "noFixtureShare": 49.7,
+        "explainedByReducedSlate": true
+      },
+      {
+        "season": "2020-21",
+        "gameweek": 29,
+        "activeClubs": 8,
+        "playersWithNoFixture": 409,
+        "registeredPlayers": 686,
+        "noFixtureShare": 59.6,
+        "explainedByReducedSlate": true
+      },
+      {
+        "season": "2021-22",
+        "gameweek": 18,
+        "activeClubs": 8,
+        "playersWithNoFixture": 399,
+        "registeredPlayers": 661,
+        "noFixtureShare": 60.4,
+        "explainedByReducedSlate": true
+      },
+      {
+        "season": "2021-22",
+        "gameweek": 30,
+        "activeClubs": 8,
+        "playersWithNoFixture": 422,
+        "registeredPlayers": 714,
+        "noFixtureShare": 59.1,
+        "explainedByReducedSlate": true
+      },
+      {
+        "season": "2023-24",
+        "gameweek": 29,
+        "activeClubs": 8,
+        "playersWithNoFixture": 494,
+        "registeredPlayers": 838,
+        "noFixtureShare": 58.9,
+        "explainedByReducedSlate": true
+      }
+    ],
+    "invariant": "Every registered player's 0/1/2 fixture count must equal the scheduled game count of their club in that event."
+  }
+}

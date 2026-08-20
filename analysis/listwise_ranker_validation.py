@@ -18,7 +18,7 @@ from frontier_ranker_validation import (
 )
 
 
-CACHE_VERSION = 1
+CACHE_VERSION = 2
 
 
 def fitted_ranker(seed: int) -> XGBRanker:
@@ -43,9 +43,18 @@ def fitted_ranker(seed: int) -> XGBRanker:
 def causal_rank_predictions(data: pd.DataFrame, target_column: str) -> np.ndarray:
     cache_path = lens.CACHE / f"listwise-{target_column}-v{CACHE_VERSION}.npz"
     baseline = data["component_xpts"].to_numpy(float)
+    fingerprint = lens.frame_fingerprint(
+        data,
+        [*FEATURES, target_column, "component_xpts"],
+        f"listwise-{target_column}-v{CACHE_VERSION}",
+    )
     if cache_path.exists():
         cached = np.load(cache_path)
-        if len(cached["prediction"]) == len(data):
+        if (
+            len(cached["prediction"]) == len(data)
+            and "fingerprint" in cached.files
+            and str(cached["fingerprint"].item()) == fingerprint
+        ):
             return cached["prediction"]
     prediction = baseline.copy()
     frontier = selectable_frontier(data)
@@ -75,7 +84,9 @@ def causal_rank_predictions(data: pd.DataFrame, target_column: str) -> np.ndarra
             prediction[test_mask] = ranker.predict(test_x)
             print(f"Listwise {target_column}: {seasons[season_order]} position {position}")
         prediction[(orders == season_order) & (data["fixture_count"].to_numpy(int) == 0)] = -1e6
-    np.savez_compressed(cache_path, prediction=prediction)
+    np.savez_compressed(
+        cache_path, prediction=prediction, fingerprint=fingerprint
+    )
     return prediction
 
 

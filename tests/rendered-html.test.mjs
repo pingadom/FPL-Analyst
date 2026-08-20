@@ -20,7 +20,7 @@ test("server-renders the FPL Lens decision room", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>FPL Lens — Breakthrough v3<\/title>/i);
+  assert.match(html, /<title>FPL Lens — Lens 8 model audit<\/title>/i);
   assert.match(html, /Build a squad/);
   assert.match(html, /2,400(?:<!-- -->)? candidate mixes/i);
   assert.match(html, /20(?:<!-- -->)? recursive finalists/i);
@@ -28,7 +28,7 @@ test("server-renders the FPL Lens decision room", async () => {
   assert.match(html, /Optimal XV/i);
   assert.match(html, /Chip desk/i);
   assert.match(html, /48(?:<!-- -->)? chip policies/i);
-  assert.match(html, /Lens 7\.0[\s\S]{0,24}\+ chips/i);
+  assert.match(html, /Lens 8\.0[\s\S]{0,24}\+ chips/i);
   assert.match(html, /AUDITED PROMOTION GATE/i);
   assert.match(html, /Frozen pre-2018 audit/i);
   assert.match(html, /RANK OUTSIDE LOCAL CALIBRATION/i);
@@ -53,11 +53,13 @@ test("server-renders the FPL Lens decision room", async () => {
   assert.match(html, /Frozen research season/i);
   assert.match(html, /6(?:<!-- -->)? pre-registered managers/i);
   assert.match(html, /Chip scenario gates/i);
-  assert.match(html, /Championship stack challenger/i);
+  assert.match(html, /Retrained causal challenger/i);
   assert.match(html, /Performance ladder/i);
   assert.match(html, /Experiment ledger/i);
-  assert.match(html, /21\.4 points found/i);
-  assert.match(html, /Season-by-season replay/i);
+  assert.match(html, /The repaired model wins/i);
+  assert.match(html, /Model governance/i);
+  assert.match(html, /Legacy replay/i);
+  assert.match(html, /not reproducible/i);
   assert.match(html, /Automatic Wildcard/i);
   assert.match(html, /Hybrid challenger/i);
   assert.match(html, /provisional/i);
@@ -76,8 +78,13 @@ test("serves the frozen prospective research audit", async () => {
   assert.equal(payload.frontier.status, "shadow challenger");
   assert.equal(payload.listwise.status, "shadow challenger");
   assert.equal(payload.performance.stackLift, 21.4);
+  assert.match(payload.performance.status, /retired legacy artifact/i);
   assert.equal(payload.performance.targetHits, 2);
   assert.equal(payload.breakthrough.headline.averagePoints, 2212);
+  assert.match(payload.breakthrough.status, /retired legacy artifact/i);
+  assert.equal(payload.modelAudit.lens8.average, 2087);
+  assert.equal(payload.modelAudit.causalChallenger.average, 2119.2);
+  assert.match(payload.modelAudit.legacyBreakthrough.status, /retired/i);
   assert.equal(payload.breakthrough.headline.holdoutLift, 34.5);
   assert.equal(payload.breakthrough.seasons.length, 8);
   assert.equal(payload.breakthrough.seasons.filter((season) => season.hit).length, 2);
@@ -87,12 +94,12 @@ test("serves the frozen prospective research audit", async () => {
   );
 });
 
-test("serves public Lens 7 projections with CORS", async () => {
+test("serves public Lens 8 projections with CORS", async () => {
   const response = await request("/api/projections?position=DEF&limit=2");
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("access-control-allow-origin"), "*");
   const payload = await response.json();
-  assert.equal(payload.model, "Lens 7.0");
+  assert.equal(payload.model, "Lens 8.0");
   assert.equal(payload.count, 2);
   assert.ok(payload.players.every((player) => player.position === "DEF"));
   assert.ok(payload.players.every((player) => typeof player.ensemble.roleChallenger === "number"));

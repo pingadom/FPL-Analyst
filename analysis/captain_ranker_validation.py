@@ -32,10 +32,19 @@ def captain_matrix(frame: pd.DataFrame, medians: pd.Series | None = None):
 
 
 def causal_captain_rank(data: pd.DataFrame, structural: np.ndarray) -> np.ndarray:
-    path = lens.CACHE / "captain-listwise-v1.npz"
+    path = lens.CACHE / "captain-listwise-v2.npz"
+    fingerprint = lens.frame_fingerprint(
+        data,
+        [*CAPTAIN_FEATURES, "points", "component_xpts"],
+        "captain-listwise-v2",
+    )
     if path.exists():
         cached = np.load(path)
-        if len(cached["prediction"]) == len(data):
+        if (
+            len(cached["prediction"]) == len(data)
+            and "fingerprint" in cached.files
+            and str(cached["fingerprint"].item()) == fingerprint
+        ):
             return cached["prediction"]
     group_rank = pd.Series(structural, index=data.index).groupby(
         [data["season"], data["GW"]]
@@ -74,7 +83,7 @@ def causal_captain_rank(data: pd.DataFrame, structural: np.ndarray) -> np.ndarra
         model.fit(train_x, relevance, qid=query)
         prediction[test_mask] = model.predict(test_x)
         print(f"Captain listwise: {seasons[season_order]}")
-    np.savez_compressed(path, prediction=prediction)
+    np.savez_compressed(path, prediction=prediction, fingerprint=fingerprint)
     return prediction
 
 

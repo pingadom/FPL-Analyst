@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import breakthrough from "../data/breakthrough-v3.json";
 import chipScenarios from "../data/chip-scenarios.json";
 import deadlineStatus from "../data/deadline-status.json";
 import frontierScores from "../data/frontier-scores.json";
-import performanceProgress from "../data/performance-progress.json";
 import results from "../data/model-results.json";
+import modelAudit from "../data/model-audit.json";
 import shadowStatus from "../data/shadow-status.json";
 import { buildOptimizedSquad } from "../lib/squad-optimizer.mjs";
 
@@ -120,6 +119,12 @@ type Player = {
     strengthRank: number;
     ratingConfidence: number;
     regimeShift: number;
+    marketWinProbability: number;
+    modelWinProbability: number;
+    marketWeight: number;
+    marketDisagreement: number;
+    optaWinProbability: number | null;
+    externalWinProbability: number;
   };
   comparison: {
     fixtureRank: number;
@@ -494,7 +499,7 @@ export default function FplDashboard() {
         </a>
         <nav aria-label="Primary navigation">
           <a href="#squad">Squad</a>
-          <a href="#breakthrough">V3</a>
+          <a href="#breakthrough">Audit</a>
           <a href="#my-team">My Team</a>
           <a href="#player-lab">Player Lab</a>
           <a href="#chips">Chips</a>
@@ -525,7 +530,8 @@ export default function FplDashboard() {
       </section>
 
       <div className="ticker" aria-label="Model status">
-        <span>BREAKTHROUGH V3 · +{breakthrough.headline.averageLift} PTS</span>
+        <span>LENS 8 · +{modelAudit.lens8.deltaVsLens7} VS PREVIOUS PRODUCTION</span>
+        <span>CAUSAL SHADOW · {modelAudit.causalChallenger.average.toLocaleString()} AVG</span>
         <span>MODEL {results.model.version}</span>
         <span>{results.model.recursiveTrials} RECURSIVE FINALISTS</span>
         <span>{results.chipStrategy.policyTrials} CHIP POLICIES</span>
@@ -539,48 +545,44 @@ export default function FplDashboard() {
 
       <section className="breakthrough-section" id="breakthrough" aria-labelledby="breakthrough-title">
         <div className="breakthrough-lead">
-          <div className="section-label light"><span>V3</span> RECURSIVE BREAKTHROUGH</div>
-          <p className="breakthrough-kicker">STRONGEST RESEARCH RESULT · EVERY EVALUATION SEASON IMPROVED</p>
-          <h2 id="breakthrough-title">21.4 points found.<br />No hindsight shortcuts.</h2>
+          <div className="section-label light"><span>08</span> REPRODUCIBILITY AUDIT</div>
+          <p className="breakthrough-kicker">CORRECTED BENCHMARK · INVALID RESULTS RETIRED</p>
+          <h2 id="breakthrough-title">The repaired model wins.<br />The old headline does not.</h2>
           <p>
-            Captain and chip decisions were selected on development stability, then replayed
-            through legal squads, transfers, autosubs and two untouched recent holdouts.
-            The result is promoted to the shadow manager—not presented as a top-500k guarantee.
+            Lens 8 adds {modelAudit.lens8.deltaVsLens7} points per season over the previous production model.
+            A freshly retrained causal shadow adds another {modelAudit.causalChallenger.deltaVsLens8}, but remains
+            research-only. The former 2,212 claim reused stale predictions and is formally retired.
           </p>
           <div className="breakthrough-status">
             <span>STATUS</span>
-            <strong>{breakthrough.status}</strong>
-            <small>{breakthrough.promotionNote}</small>
+            <strong>HONEST IMPROVEMENT, NOT A FALSE BREAKTHROUGH</strong>
+            <small>{modelAudit.status}</small>
           </div>
         </div>
 
         <div className="breakthrough-evidence">
           <div className="breakthrough-scoreboard">
-            <article><span>V3 AVERAGE</span><strong>{breakthrough.headline.averagePoints.toLocaleString()}</strong><small>points / season</small></article>
-            <article><span>VS CONTROL</span><strong>+{breakthrough.headline.averageLift}</strong><small>minimum +{breakthrough.headline.minimumSeasonLift}</small></article>
-            <article><span>RECENT HOLDOUT</span><strong>+{breakthrough.headline.holdoutLift}</strong><small>two untouched seasons</small></article>
-            <article><span>TOP-500K TEST</span><strong>{breakthrough.headline.top500Hits}/{breakthrough.headline.evaluationSeasons}</strong><small>{breakthrough.headline.remainingGap} pts remain</small></article>
+            <article><span>LENS 8 AVERAGE</span><strong>{modelAudit.lens8.average.toLocaleString()}</strong><small>+{modelAudit.lens8.deltaVsLens7} vs Lens 7</small></article>
+            <article><span>CAUSAL SHADOW</span><strong>{modelAudit.causalChallenger.average.toLocaleString()}</strong><small>+{modelAudit.causalChallenger.deltaVsLens8} vs Lens 8</small></article>
+            <article><span>LEGACY REPLAY</span><strong>{modelAudit.legacyBreakthrough.reproducedAverage.toLocaleString()}</strong><small>not the claimed {modelAudit.legacyBreakthrough.average.toLocaleString()}</small></article>
+            <article><span>TOP-500K TEST</span><strong>{modelAudit.lens8.top500Hits}/{modelAudit.lens8.seasons}</strong><small>no rank guarantee</small></article>
           </div>
 
           <div className="breakthrough-heading">
-            <div><span>SEASON-BY-SEASON REPLAY</span><p>Model lift is relative to the identical route control. Margin is relative to reconstructed top-500k pace.</p></div>
-            <strong>{breakthrough.search.captainConfigurations.toLocaleString()} captain configs · {breakthrough.search.chipPolicies} chip policies</strong>
+            <div><span>MODEL GOVERNANCE</span><p>Production, shadow research and retired evidence are deliberately kept separate.</p></div>
+            <strong>SCHEMA-FINGERPRINTED CACHES · EXACT LEGAL REPLAY</strong>
           </div>
           <div className="breakthrough-seasons">
-            {breakthrough.seasons.map((season) => (
-              <article className={season.hit ? "pace-hit" : "pace-miss"} key={season.season}>
-                <span>{season.season}</span>
-                <strong>{season.model.toLocaleString()}</strong>
-                <small>+{season.lift} vs control</small>
-                <em>{season.margin >= 0 ? "+" : ""}{season.margin} to pace</em>
-              </article>
-            ))}
+            <article className="pace-hit"><span>PREVIOUS PRODUCTION</span><strong>{modelAudit.lens7.average.toLocaleString()}</strong><small>Lens 7</small><em>valid baseline</em></article>
+            <article className="pace-hit"><span>CURRENT RESEARCH</span><strong>{modelAudit.lens8.average.toLocaleString()}</strong><small>Lens 8</small><em>+{modelAudit.lens8.deltaVsLens7}</em></article>
+            <article className="pace-miss"><span>SHADOW CHALLENGER</span><strong>{modelAudit.causalChallenger.average.toLocaleString()}</strong><small>not promoted</small><em>locked gate pending</em></article>
+            <article className="pace-miss"><span>RETIRED CLAIM</span><strong>{modelAudit.legacyBreakthrough.average.toLocaleString()}</strong><small>not reproducible</small><em>-{modelAudit.legacyBreakthrough.overstatement} corrected</em></article>
           </div>
 
           <div className="breakthrough-ledger">
             <div>
               <span className="ledger-label accepted-label">ACCEPTED</span>
-              {breakthrough.accepted.map((item) => (
+              {modelAudit.accepted.map((item) => (
                 <article key={item.name}>
                   <div><strong>{item.name}</strong><em>{item.result}</em></div>
                   <p>{item.detail}</p>
@@ -589,7 +591,7 @@ export default function FplDashboard() {
             </div>
             <div>
               <span className="ledger-label rejected-label">REJECTED</span>
-              {breakthrough.rejected.map((item) => (
+              {modelAudit.rejected.map((item) => (
                 <article key={item.name}>
                   <div><strong>{item.name}</strong><em>{item.result}</em></div>
                   <p>{item.detail}</p>
@@ -980,6 +982,11 @@ export default function FplDashboard() {
                   then add expected minutes, attacking routes, defensive contributions and bonus.
                   Team rating confidence: {analysedPlayer.teamContext.ratingConfidence}% · regime-shift signal {analysedPlayer.teamContext.regimeShift}%.
                 </p>
+                <p>
+                  Fixture win view: internal {analysedPlayer.teamContext.modelWinProbability}% · Matchbook {analysedPlayer.teamContext.marketWinProbability}%
+                  {analysedPlayer.teamContext.optaWinProbability !== null ? ` · Opta ${analysedPlayer.teamContext.optaWinProbability}%` : ""}.
+                  The external anchor carries {analysedPlayer.teamContext.marketWeight}% confidence; disagreement is {analysedPlayer.teamContext.marketDisagreement > 0 ? "+" : ""}{analysedPlayer.teamContext.marketDisagreement} points versus the internal estimate.
+                </p>
               </article>
             </div>
           </div>
@@ -1067,7 +1074,7 @@ export default function FplDashboard() {
             <div><span>DEADLINE REVIEW</span><strong>{deadlineStatus.lateNewsCount}</strong><small>minutes/news flags</small></div>
             <div><span>SHADOW GWS</span><strong>{shadowStatus.completedGameweeks}</strong><small>officially scored</small></div>
             <div><span>CHIP CALL</span><strong>{chipScenarios.recommendation}</strong><small>{chipScenarios.simulationCount.toLocaleString()} paired draws</small></div>
-            <div><span>STACK LIFT</span><strong>+{performanceProgress.stackLift.toFixed(1)}</strong><small>{performanceProgress.gapClosedPercent}% of measured gap · unpromoted</small></div>
+            <div><span>REPRODUCIBLE LIFT</span><strong>+{modelAudit.causalChallenger.deltaVsLens8.toFixed(1)}</strong><small>causal shadow vs Lens 8 · unpromoted</small></div>
           </div>
 
           <div className="research-heading">
@@ -1102,32 +1109,32 @@ export default function FplDashboard() {
 
           <div className="frontier-evidence">
             <div>
-              <span>CHAMPIONSHIP STACK CHALLENGER</span>
+              <span>RETRAINED CAUSAL CHALLENGER</span>
               <strong>Immediate + horizon + captain</strong>
-              <p>Frontier regression chooses the next-GW order, listwise six-week ranking plans transfers, and a separate armband ranker breaks captaincy ties.</p>
+              <p>Schema-fingerprinted frontier regression chooses the next-GW order, listwise ranking plans transfers, and a separate armband ranker breaks captaincy ties.</p>
             </div>
             <div className="frontier-comparison">
-              <div><span>PAIRED CONTROL</span><strong>{performanceProgress.controlAverage}</strong><small>recursive average</small></div>
-              <div><span>PREVIOUS V2</span><strong>{performanceProgress.hybridAverage}</strong><small>+{(performanceProgress.hybridAverage - performanceProgress.controlAverage).toFixed(1)} points</small></div>
-              <div><span>INTEGRATED V3</span><strong>{performanceProgress.captainStackAverage}</strong><small>{performanceProgress.targetHits}/8 cutoff hits</small></div>
+              <div><span>PREVIOUS PRODUCTION</span><strong>{modelAudit.lens7.average}</strong><small>Lens 7 recursive average</small></div>
+              <div><span>REPAIRED LENS 8</span><strong>{modelAudit.lens8.average}</strong><small>+{modelAudit.lens8.deltaVsLens7} points</small></div>
+              <div><span>CAUSAL SHADOW</span><strong>{modelAudit.causalChallenger.average}</strong><small>+{modelAudit.causalChallenger.deltaVsLens8} more · not promoted</small></div>
             </div>
           </div>
 
           <div className="performance-ladder">
             <div className="research-heading">
               <div><span>PERFORMANCE LADDER</span><p>Separating attainable model loss from the legal transfer constraint.</p></div>
-              <strong>{performanceProgress.remainingGap.toFixed(1)} pts still to close</strong>
+              <strong>{modelAudit.causalGapToPace.toFixed(1)} pts still to estimated pace</strong>
             </div>
             <div className="ladder-track">
               {[
-                ["Control", performanceProgress.controlAverage],
-                ["Integrated v3", performanceProgress.captainStackAverage],
-                ["Weekly rebuild ceiling", performanceProgress.weeklyRebuildCeiling],
-                ["Top-500k pace", performanceProgress.top500Pace],
+                ["Previous production", modelAudit.lens7.average],
+                ["Lens 8", modelAudit.lens8.average],
+                ["Causal shadow", modelAudit.causalChallenger.average],
+                ["Top-500k pace", modelAudit.top500Pace],
               ].map(([label, value]) => (
                 <div key={label}>
                   <span>{label}</span>
-                  <i style={{ width: `${Math.max(4, (Number(value) - 1900) / (performanceProgress.top500Pace - 1900) * 100)}%` }} />
+                  <i style={{ width: `${Math.max(4, (Number(value) - 1900) / (modelAudit.top500Pace - 1900) * 100)}%` }} />
                   <strong>{value}</strong>
                 </div>
               ))}
@@ -1138,15 +1145,15 @@ export default function FplDashboard() {
             <div><span>EXPERIMENT LEDGER</span><p>Winning and rejected ideas stay visible.</p></div>
           </div>
           <div className="experiment-ledger">
-            {performanceProgress.experiments.map((experiment) => (
+            {[...modelAudit.accepted.map((item) => ({ ...item, decision: "shadow" })), ...modelAudit.rejected.map((item) => ({ ...item, decision: "rejected" }))].map((experiment) => (
               <article className={experiment.decision} key={experiment.name}>
-                <div><span>{experiment.decision}</span><strong>{experiment.delta > 0 ? `+${experiment.delta}` : "—"}</strong></div>
+                <div><span>{experiment.decision}</span><strong>{experiment.result}</strong></div>
                 <h3>{experiment.name}</h3>
                 <p>{experiment.detail}</p>
               </article>
             ))}
           </div>
-          <p className="research-caveat">{performanceProgress.bottleneck} {performanceProgress.governance} {shadowStatus.protocol} {chipScenarios.warning}</p>
+          <p className="research-caveat">{modelAudit.promotionRule} {shadowStatus.protocol} {chipScenarios.warning}</p>
         </div>
       </section>
 

@@ -1,3 +1,5 @@
+import { solve } from "yalps";
+
 const POSITION_QUOTA = { GK: 2, DEF: 5, MID: 5, FWD: 3 };
 const FORMATIONS = [
   ...[3, 4, 5].flatMap((defenders) =>
@@ -13,6 +15,8 @@ const FORMATIONS = [
 ];
 
 export const BENCH_PREMIUM_LIMIT = 2.0;
+export const MIN_XI_START_PROBABILITY = 70;
+export const MIN_XI_PLAY_PROBABILITY = 84;
 
 function immediateUtility(player) {
   return (
@@ -30,6 +34,75 @@ function captainUtility(player) {
     0.18 * median +
     0.10 * (Number(player.liveScore) * 5)
   ) * (0.85 + 0.15 * startProbability);
+}
+
+function benchUtility(player) {
+  const playProbability = Number(player.minutesModel?.playProbability ?? 100) / 100;
+  return (
+    0.045 * Number(player.sixWeekProjected) / 6 +
+    0.055 * playProbability * Math.min(Number(player.projected), 4.5)
+  );
+}
+
+function exceptionalUpside(player, players) {
+  const startProbability = Number(player.minutesModel?.startProbability ?? 0);
+  const playProbability = Number(player.minutesModel?.playProbability ?? 0);
+  const immediate = Number(player.projected);
+  const sorted = players.map((candidate) => Number(candidate.projected)).sort((a, b) => a - b);
+  const threshold = sorted[Math.max(0, Math.floor(0.95 * (sorted.length - 1)))] ?? Infinity;
+  return (
+    startProbability >= 70 &&
+    playProbability >= 78 &&
+    immediate >= threshold
+  );
+}
+
+function isStandardStarter(player) {
+  const startProbability = Number(player.minutesModel?.startProbability ?? 0);
+  const playProbability = Number(player.minutesModel?.playProbability ?? 0);
+  return (
+    startProbability >= MIN_XI_START_PROBABILITY &&
+    playProbability >= MIN_XI_PLAY_PROBABILITY
+  );
+}
+
+function requiresException(player, players) {
+  return !isStandardStarter(player) && exceptionalUpside(player, players);
+}
+
+function isSafeStarter(player, players) {
+  return isStandardStarter(player) || requiresException(player, players);
+}
+
+function presolvePlayers(players) {
+  const retained = new Set();
+  const frontierSize = 8;
+  const comparators = [
+    (a, b) => immediateUtility(b) - immediateUtility(a),
+    (a, b) => captainUtility(b) - captainUtility(a),
+    (a, b) => Number(b.sixWeekProjected) - Number(a.sixWeekProjected),
+    (a, b) => Number(b.liveScore) - Number(a.liveScore),
+    (a, b) =>
+      immediateUtility(b) / Math.max(Number(b.price), 0.1) -
+      immediateUtility(a) / Math.max(Number(a.price), 0.1),
+    (a, b) => {
+      const playDifference =
+        Number(b.minutesModel?.playProbability ?? 0) -
+        Number(a.minutesModel?.playProbability ?? 0);
+      return playDifference || Number(a.price) - Number(b.price);
+    },
+    (a, b) => Number(a.price) - Number(b.price),
+  ];
+  for (const position of Object.keys(POSITION_QUOTA)) {
+    const positionPlayers = players.filter((player) => player.position === position);
+    for (const comparator of comparators) {
+      positionPlayers
+        .toSorted(comparator)
+        .slice(0, frontierSize)
+        .forEach((player) => retained.add(player.id));
+    }
+  }
+  return players.filter((player) => retained.has(player.id));
 }
 
 function absenceDistribution(players) {
@@ -86,20 +159,41 @@ function benchPremium(bench, floors) {
   );
 }
 
-function chooseLineup(squad) {
+function chooseLineup(squad, playerPool = squad) {
   let best = null;
   for (const formation of FORMATIONS) {
-    const xi = Object.entries(formation).flatMap(([position, count]) =>
-      squad
-        .filter((player) => player.position === position)
-        .sort((a, b) => immediateUtility(b) - immediateUtility(a))
-        .slice(0, count),
-    );
-    if (xi.length !== 11) continue;
-    const captain = [...xi].sort((a, b) => captainUtility(b) - captainUtility(a))[0];
-    const utility =
-      xi.reduce((sum, player) => sum + immediateUtility(player), 0) + captainUtility(captain);
-    if (!best || utility > best.utility) best = { xi, captain, utility };
+    const exceptionOptions = [
+      null,
+      ...squad.filter((player) => requiresException(player, playerPool)),
+    ];
+    for (const exception of exceptionOptions) {
+      const xi = [];
+      let valid = true;
+      for (const [position, count] of Object.entries(formation)) {
+        const exceptionSlots = exception?.position === position ? 1 : 0;
+        const standard = squad
+          .filter(
+            (player) =>
+              player.position === position &&
+              player.id !== exception?.id &&
+              isStandardStarter(player),
+          )
+          .sort((a, b) => immediateUtility(b) - immediateUtility(a))
+          .slice(0, count - exceptionSlots);
+        if (standard.length !== count - exceptionSlots) {
+          valid = false;
+          break;
+        }
+        xi.push(...standard);
+        if (exceptionSlots) xi.push(exception);
+      }
+      if (!valid || xi.length !== 11) continue;
+      const captain = [...xi].sort((a, b) => captainUtility(b) - captainUtility(a))[0];
+      const utility =
+        xi.reduce((sum, player) => sum + immediateUtility(player), 0) +
+        captainUtility(captain);
+      if (!best || utility > best.utility) best = { xi, captain, utility };
+    }
   }
   return best;
 }
@@ -109,7 +203,7 @@ export function evaluateSquad(squad, playerPool, options = {}) {
   const spend = squad.reduce((sum, player) => sum + Number(player.price), 0);
   const minimumSpend = Number(options.minimumSpend ?? 99.5);
   if (!options.allowStrategicBank && spend < minimumSpend - 1e-6) return null;
-  const lineup = chooseLineup(squad);
+  const lineup = chooseLineup(squad, playerPool);
   if (!lineup) return null;
 
   const xiIds = new Set(lineup.xi.map((player) => player.id));
@@ -148,14 +242,9 @@ export function evaluateSquad(squad, playerPool, options = {}) {
     );
   const rotationOption = options.benchBoost
     ? bench.reduce((sum, player) => sum + immediateUtility(player), 0)
-    : outfieldBench.reduce(
-        (sum, player) => sum + 0.035 * Number(player.sixWeekProjected) / 6,
-        0,
-      );
+    : bench.reduce((sum, player) => sum + benchUtility(player), 0);
   const score =
     lineup.utility +
-    autosubPoints +
-    goalkeeperAutosub +
     rotationOption -
     0.22 * premium;
 
@@ -172,131 +261,132 @@ export function evaluateSquad(squad, playerPool, options = {}) {
   };
 }
 
-function candidateShortlist(players) {
-  const chosen = new Map();
-  const add = (rows) => rows.forEach((player) => chosen.set(player.id, player));
-  for (const position of Object.keys(POSITION_QUOTA)) {
-    const pool = players.filter((player) => player.position === position);
-    add([...pool].sort((a, b) => immediateUtility(b) - immediateUtility(a)).slice(0, 14));
-    add([...pool].sort((a, b) => captainUtility(b) - captainUtility(a)).slice(0, 8));
-    add(
-      [...pool]
-        .sort(
-          (a, b) =>
-            immediateUtility(b) / Number(b.price) - immediateUtility(a) / Number(a.price),
-        )
-        .slice(0, 14),
-    );
-    add(
-      [...pool]
-        .sort((a, b) => Number(b.sixWeekProjected) - Number(a.sixWeekProjected))
-        .slice(0, 8),
-    );
-    add(
-      [...pool]
-        .filter((player) => Number(player.minutesModel?.playProbability ?? 0) >= 70)
-        .sort((a, b) => Number(a.price) - Number(b.price))
-        .slice(0, 8),
-    );
-    add([...pool].sort((a, b) => Number(a.price) - Number(b.price)).slice(0, 6));
-  }
-  return [...chosen.values()];
-}
-
-function greedySeed(players, pricePenalty, formation, floors, premiumLimit) {
-  const selected = [];
-  const positions = {};
-  const teams = {};
-  const ordered = [...players].sort((a, b) => {
-    const aSeed =
-      immediateUtility(a) + 0.14 * captainUtility(a) - pricePenalty * Number(a.price);
-    const bSeed =
-      immediateUtility(b) + 0.14 * captainUtility(b) - pricePenalty * Number(b.price);
-    return bSeed - aSeed;
-  });
-  for (const player of ordered) {
-    if ((positions[player.position] ?? 0) >= formation[player.position]) continue;
-    if ((teams[player.team] ?? 0) >= 3) continue;
-    selected.push(player);
-    positions[player.position] = (positions[player.position] ?? 0) + 1;
-    teams[player.team] = (teams[player.team] ?? 0) + 1;
-    if (selected.length === 11) break;
-  }
-  if (selected.length !== 11) return [];
-
-  let premium = 0;
-  const benchOrdered = [...players].sort((a, b) => {
-    const aBench =
-      0.18 * immediateUtility(a) +
-      0.04 * Number(a.sixWeekProjected) / 6 -
-      (0.18 + 0.35 * pricePenalty) * Number(a.price);
-    const bBench =
-      0.18 * immediateUtility(b) +
-      0.04 * Number(b.sixWeekProjected) / 6 -
-      (0.18 + 0.35 * pricePenalty) * Number(b.price);
-    return bBench - aBench;
-  });
-  for (const player of benchOrdered) {
-    if (selected.some((candidate) => candidate.id === player.id)) continue;
-    if ((positions[player.position] ?? 0) >= POSITION_QUOTA[player.position]) continue;
-    if ((teams[player.team] ?? 0) >= 3) continue;
-    const playerPremium = Math.max(0, Number(player.price) - floors[player.position]);
-    if (premium + playerPremium > premiumLimit + 1e-6) continue;
-    selected.push(player);
-    premium += playerPremium;
-    positions[player.position] = (positions[player.position] ?? 0) + 1;
-    teams[player.team] = (teams[player.team] ?? 0) + 1;
-    if (selected.length === 15) break;
-  }
-  return selected;
-}
-
-function improve(result, candidates, playerPool, options) {
-  let best = result;
-  for (let pass = 0; pass < 2; pass += 1) {
-    let improved = best;
-    const currentIds = new Set(best.squad.map((player) => player.id));
-    for (let index = 0; index < best.squad.length; index += 1) {
-      const outgoing = best.squad[index];
-      for (const incoming of candidates) {
-        if (incoming.position !== outgoing.position || currentIds.has(incoming.id)) continue;
-        const trial = [...best.squad];
-        trial[index] = incoming;
-        const evaluated = evaluateSquad(trial, playerPool, options);
-        if (evaluated && evaluated.score > improved.score + 1e-8) improved = evaluated;
-      }
-    }
-    if (improved === best) break;
-    best = improved;
-  }
-  return best;
-}
-
 export function buildOptimizedSquad(players, options = {}) {
-  const candidates = candidateShortlist(players);
-  const floors = positionalFloors(players);
+  if (!players.length) return null;
+  const referencePlayers = players;
+  const floors = positionalFloors(referencePlayers);
+  players = presolvePlayers(referencePlayers);
   const premiumLimit = Number(options.benchPremiumLimit ?? BENCH_PREMIUM_LIMIT);
-  // Let the beam traverse lower-spend intermediate squads. The final gate still
-  // requires the fresh squad to use at least £99.5m.
-  const seedOptions = { ...options, allowStrategicBank: true };
-  const seeds = new Map();
-  for (const formation of FORMATIONS) {
-    for (let step = 0; step <= 60; step += 1) {
-      const squad = greedySeed(players, step * 0.02, formation, floors, premiumLimit);
-      const evaluated = evaluateSquad(squad, players, seedOptions);
-      if (!evaluated) continue;
-      const key = squad.map((player) => player.id).sort((a, b) => a - b).join("-");
-      const existing = seeds.get(key);
-      if (!existing || evaluated.score > existing.score) seeds.set(key, evaluated);
-    }
+  const minimumSpend = options.allowStrategicBank
+    ? Number(options.minimumSpend ?? 0)
+    : Number(options.minimumSpend ?? 99.5);
+  const constraints = {
+    budget: { min: minimumSpend, max: 100 },
+    squad_total: { equal: 15 },
+    xi_total: { equal: 11 },
+    captain_total: { equal: 1 },
+    bench_premium: options.benchBoost ? { min: 0 } : { max: premiumLimit },
+    exception_xi: { max: 1 },
+    squad_GK: { equal: 2 },
+    squad_DEF: { equal: 5 },
+    squad_MID: { equal: 5 },
+    squad_FWD: { equal: 3 },
+    xi_GK: { equal: 1 },
+    xi_DEF: { min: 3, max: 5 },
+    xi_MID: { min: 2, max: 5 },
+    xi_FWD: { min: 1, max: 3 },
+  };
+  for (const player of players) {
+    constraints[`club_${player.team}`] ??= { max: 3 };
+    constraints[`xi_link_${player.id}`] = { max: 0 };
+    constraints[`captain_link_${player.id}`] = { max: 0 };
+    if (!isSafeStarter(player, referencePlayers)) constraints[`xi_allowed_${player.id}`] = { max: 0 };
   }
 
-  const finalists = [...seeds.values()].sort((a, b) => b.score - a.score).slice(0, 2);
-  if (finalists.length === 0) return null;
-  const compliant = finalists
-    .map((result) => improve(result, candidates, players, seedOptions))
-    .map((result) => evaluateSquad(result.squad, players, options))
-    .filter(Boolean)
-    .map((result) => improve(result, candidates, players, options));
-  return compliant.sort((a, b) => b.score - a.score)[0] ?? null;
+  const variables = {};
+  for (const player of players) {
+    const id = String(player.id);
+    const premium = Math.max(0, Number(player.price) - floors[player.position]);
+    const bench = options.benchBoost ? immediateUtility(player) : benchUtility(player);
+    variables[`s_${id}`] = {
+      objective: bench - 0.22 * premium,
+      budget: Number(player.price),
+      squad_total: 1,
+      [`squad_${player.position}`]: 1,
+      [`club_${player.team}`]: 1,
+      bench_premium: premium,
+      [`xi_link_${id}`]: -1,
+    };
+    variables[`x_${id}`] = {
+      objective: immediateUtility(player) - bench + 0.22 * premium,
+      xi_total: 1,
+      [`xi_${player.position}`]: 1,
+      bench_premium: -premium,
+      exception_xi: requiresException(player, referencePlayers) ? 1 : 0,
+      [`xi_link_${id}`]: 1,
+      [`captain_link_${id}`]: -1,
+      ...(!isSafeStarter(player, referencePlayers) ? { [`xi_allowed_${id}`]: 1 } : {}),
+    };
+    variables[`c_${id}`] = {
+      objective: captainUtility(player),
+      captain_total: 1,
+      [`captain_link_${id}`]: 1,
+    };
+  }
+  const solution = solve(
+    {
+      direction: "maximize",
+      objective: "objective",
+      constraints,
+      variables,
+      binaries: true,
+    },
+    {
+      tolerance: 0,
+      timeout: Number(options.timeoutMs ?? 12_000),
+      maxIterations: 100_000,
+      maxPivots: 100_000,
+    },
+  );
+  if (solution.status !== "optimal") {
+    throw new Error(`Exact squad MILP failed with status ${solution.status}`);
+  }
+  const active = new Set(
+    solution.variables.filter(([, value]) => value > 0.5).map(([key]) => key),
+  );
+  const squad = players.filter((player) => active.has(`s_${player.id}`));
+  const xi = players.filter((player) => active.has(`x_${player.id}`));
+  const captain = players.find((player) => active.has(`c_${player.id}`));
+  const xiIds = new Set(xi.map((player) => player.id));
+  const bench = squad
+    .filter((player) => !xiIds.has(player.id))
+    .sort((a, b) => {
+      if (a.position === "GK") return -1;
+      if (b.position === "GK") return 1;
+      return immediateUtility(b) - immediateUtility(a);
+    });
+  const spend = squad.reduce((sum, player) => sum + Number(player.price), 0);
+  const premium = benchPremium(bench, floors);
+  if (
+    squad.length !== 15 ||
+    xi.length !== 11 ||
+    !captain ||
+    !xiIds.has(captain.id) ||
+    !isLegalSquad(squad) ||
+    (!options.allowStrategicBank && spend < minimumSpend - 1e-6) ||
+    (!options.benchBoost && premium > premiumLimit + 1e-6) ||
+    xi.filter((player) => requiresException(player, referencePlayers)).length > 1 ||
+    xi.some((player) => !isSafeStarter(player, referencePlayers))
+  ) {
+    throw new Error("Exact squad MILP returned an invalid squad or XI");
+  }
+  return {
+    squad,
+    xi,
+    captain,
+    bench,
+    benchPremium: premium,
+    benchSpend: bench.reduce((sum, player) => sum + Number(player.price), 0),
+    spend,
+    autosubPoints: 0,
+    score: solution.result,
+    solver: {
+      type: "exact-binary-milp",
+      status: solution.status,
+      inputPlayers: referencePlayers.length,
+      candidatePlayers: players.length,
+      variables: Object.keys(variables).length,
+      optimalityGap: 0,
+    },
+  };
 }

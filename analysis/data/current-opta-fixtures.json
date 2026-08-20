@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "season": "2026-27",
+  "gameweek": 1,
+  "asOf": "2026-08-20T12:00:00Z",
+  "source": "https://theanalyst.com/articles/premier-league-match-predictions",
+  "method": "Published Opta supercomputer Matchday 1 win/draw/loss probabilities. Values are deadline inputs, not inferred from article prose beyond the explicitly published percentages.",
+  "fixtures": [
+    { "homeTeam": "Arsenal", "awayTeam": "Coventry City", "homeProbability": 0.804, "drawProbability": 0.125, "awayProbability": 0.071 },
+    { "homeTeam": "Hull City", "awayTeam": "Manchester United", "homeProbability": 0.129, "drawProbability": 0.190, "awayProbability": 0.681 },
+    { "homeTeam": "Everton", "awayTeam": "Crystal Palace", "homeProbability": 0.457, "drawProbability": 0.259, "awayProbability": 0.284 },
+    { "homeTeam": "Ipswich Town", "awayTeam": "Sunderland", "homeProbability": 0.455, "drawProbability": 0.269, "awayProbability": 0.276 },
+    { "homeTeam": "Nottingham Forest", "awayTeam": "Leeds United", "homeProbability": 0.431, "drawProbability": 0.260, "awayProbability": 0.309 },
+    { "homeTeam": "Brentford", "awayTeam": "Tottenham Hotspur", "homeProbability": 0.409, "drawProbability": 0.249, "awayProbability": 0.342 },
+    { "homeTeam": "Brighton and Hove Albion", "awayTeam": "Aston Villa", "homeProbability": 0.442, "drawProbability": 0.245, "awayProbability": 0.314 },
+    { "homeTeam": "Manchester City", "awayTeam": "Bournemouth", "homeProbability": 0.633, "drawProbability": 0.198, "awayProbability": 0.169 },
+    { "homeTeam": "Newcastle United", "awayTeam": "Liverpool", "homeProbability": 0.399, "drawProbability": 0.266, "awayProbability": 0.335 },
+    { "homeTeam": "Fulham", "awayTeam": "Chelsea", "homeProbability": 0.267, "drawProbability": 0.245, "awayProbability": 0.488 }
+  ]
+}

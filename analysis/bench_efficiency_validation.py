@@ -8,9 +8,13 @@ from dataclasses import replace
 import numpy as np
 
 import calibrate_model as lens
-from captain_ranker_validation import rank_blend
-from frontier_ranker_validation import PLAYER_CANDIDATE, STRATEGY
-from listwise_ranker_validation import quantile_map
+from captain_ranker_validation import causal_captain_rank, rank_blend
+from frontier_ranker_validation import (
+    PLAYER_CANDIDATE,
+    STRATEGY,
+    causal_predictions as frontier_predictions,
+)
+from listwise_ranker_validation import causal_rank_predictions, quantile_map
 
 
 def championship_forecasts(data):
@@ -21,13 +25,9 @@ def championship_forecasts(data):
         schedule_censored=True,
     )
     stable_plan = 0.75 * immediate * 4.5 + 0.25 * horizon
-    frontier_raw = np.load(lens.CACHE / "frontier-causal-predictions-v2.npz")[
-        "prediction"
-    ]
-    horizon_raw = np.load(lens.CACHE / "listwise-horizon_target-v1.npz")[
-        "prediction"
-    ]
-    captain_raw = np.load(lens.CACHE / "captain-listwise-v1.npz")["prediction"]
+    frontier_raw, _ = frontier_predictions(data)
+    horizon_raw = causal_rank_predictions(data, "horizon_target")
+    captain_raw = causal_captain_rank(data, immediate)
     immediate_mapped = quantile_map(data, frontier_raw, immediate)
     plan_mapped = quantile_map(data, horizon_raw, stable_plan)
     score = 0.75 * immediate + 0.25 * immediate_mapped

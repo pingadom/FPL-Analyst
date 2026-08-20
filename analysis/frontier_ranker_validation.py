@@ -41,7 +41,7 @@ FEATURES = [
     "selected",
     "fixture_count",
 ]
-CACHE_VERSION = 2
+CACHE_VERSION = 3
 BLENDS = (0.10, 0.25, 0.40)
 PLAYER_CANDIDATE = lens.Candidate(0.32, 0.05, 0.00, 0.13, 0.19, 0.03, 0.18, 0.10, 0.76)
 STRATEGY = lens.SimulationStrategy(
@@ -125,9 +125,18 @@ def weights(frame: pd.DataFrame, prediction_order: int) -> np.ndarray:
 def causal_predictions(data: pd.DataFrame) -> tuple[np.ndarray, list[dict]]:
     path = lens.CACHE / f"frontier-causal-predictions-v{CACHE_VERSION}.npz"
     structural = data["component_xpts"].to_numpy(float)
+    fingerprint = lens.frame_fingerprint(
+        data,
+        [*FEATURES, "points", "component_xpts"],
+        f"frontier-v{CACHE_VERSION}",
+    )
     if path.exists():
         cache = np.load(path)
-        if len(cache["prediction"]) == len(data):
+        if (
+            len(cache["prediction"]) == len(data)
+            and "fingerprint" in cache.files
+            and str(cache["fingerprint"].item()) == fingerprint
+        ):
             return cache["prediction"], json.loads(str(cache["audit"].item()))
     frontier = selectable_frontier(data)
     prediction = structural.copy()
@@ -166,7 +175,12 @@ def causal_predictions(data: pd.DataFrame) -> tuple[np.ndarray, list[dict]]:
             )
             print(f"Frontier predicted {seasons[season_order]} position {position}")
         prediction[season_mask & (data["fixture_count"].to_numpy(int) == 0)] = 0
-    np.savez_compressed(path, prediction=prediction, audit=json.dumps(audit))
+    np.savez_compressed(
+        path,
+        prediction=prediction,
+        audit=json.dumps(audit),
+        fingerprint=fingerprint,
+    )
     return prediction, audit
 
 
