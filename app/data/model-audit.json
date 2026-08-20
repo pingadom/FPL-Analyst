@@ -1,0 +1,59 @@
+{
+  "generatedAt": "2026-08-20",
+  "status": "Lens 8 is the production research model; the causal retrained stack is a shadow challenger; the legacy 2,212 claim is retired.",
+  "lens7": {
+    "label": "Previous production",
+    "average": 2048.1
+  },
+  "lens8": {
+    "label": "Lens 8 repaired model",
+    "average": 2087.0,
+    "deltaVsLens7": 38.9,
+    "top500Hits": 0,
+    "seasons": 8
+  },
+  "causalChallenger": {
+    "label": "Retrained causal shadow",
+    "average": 2119.2,
+    "deltaVsLens8": 32.2,
+    "status": "Research-only until a locked promotion test and live final-fit are complete"
+  },
+  "top500Pace": 2296.8,
+  "causalGapToPace": 177.6,
+  "legacyBreakthrough": {
+    "label": "Legacy V3 claim",
+    "average": 2212.0,
+    "reproducedAverage": 2122.1,
+    "overstatement": 89.9,
+    "status": "Retired: it reused prediction caches built against an older feature schema"
+  },
+  "hybridDiagnostic": {
+    "average": 2112.2,
+    "status": "Rejected because it trailed the causal challenger"
+  },
+  "accepted": [
+    {
+      "name": "Lens 8 integrity repairs",
+      "result": "+38.9 vs Lens 7",
+      "detail": "Single-count fixtures, exact squad MILP, current availability, genuine team anchors, regime priors and XI fieldability survive the corrected replay."
+    },
+    {
+      "name": "Causal retrained shadow",
+      "result": "+32.2 vs Lens 8",
+      "detail": "Freshly trained multi-horizon player and captain ordering is the strongest reproducible challenger, but it has not passed the frozen production gate."
+    }
+  ],
+  "rejected": [
+    {
+      "name": "Legacy 2,212 headline",
+      "result": "Retired",
+      "detail": "The result falls to 2,122.1 under the repaired engine and schema-aware caches, so it is not a valid comparison target."
+    },
+    {
+      "name": "Lens 8 chip-policy hybrid",
+      "result": "2,112.2",
+      "detail": "Mixing the new ordering stack with the Lens 8 chip policy helped Lens 8 but lost 7.0 points to the coherent causal challenger."
+    }
+  ],
+  "promotionRule": "A result may become the live champion only after cache fingerprints match, all decisions use deadline-causal data, and a policy frozen before the evaluation seasons clears the declared gate."
+}

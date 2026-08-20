@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,14 +12,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
-  const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const origin = `${protocol}://${host}`;
-  const title = "FPL Lens — Breakthrough v3";
+export function generateMetadata(): Metadata {
+  const title = "FPL Lens — Lens 8 model audit";
   const description =
-    "The strongest FPL Lens research model: 2,212 average points across eight recursive season replays, with transparent holdout evidence and rejected experiments.";
+    "An audited FPL decision model with exact squad optimisation, causal historical replays and transparent production, shadow and retired results.";
   return {
     title,
     description,
@@ -29,13 +24,11 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: `${origin}/og-breakthrough-v3.png`, width: 1732, height: 919, alt: "FPL Lens Breakthrough v3 — 2,212 average points and 21.4 points above control" }],
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       title,
       description,
-      images: [`${origin}/og-breakthrough-v3.png`],
     },
   };
 }

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "season": "2026-27",
+  "asOf": "2026-08-20T16:45:00Z",
+  "method": "Public Opta 2026/27 supercomputer top-five probabilities anchor the long-run strength prior. Verified manager changes, promoted status, major exits and European load control carry-over uncertainty; they do not directly award fixture points.",
+  "sources": [
+    "https://theanalyst.com/articles/premier-league-predictions-2026-27-opta-supercomputer",
+    "https://theanalyst.com/articles/premier-league-fixtures-2026-27-release"
+  ],
+  "teams": {
+    "Arsenal": { "optaTopFiveProbability": 0.83, "managerChange": 0.0, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.0, "confidenceCap": 0.92 },
+    "Manchester City": { "optaTopFiveProbability": 0.694, "managerChange": 0.32, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.0, "confidenceCap": 0.72 },
+    "Liverpool": { "optaTopFiveProbability": 0.486, "managerChange": 0.32, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.0, "confidenceCap": 0.72 },
+    "Manchester United": { "optaTopFiveProbability": 0.4, "managerChange": 0.16, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.0, "confidenceCap": 0.8 },
+    "Aston Villa": { "optaTopFiveProbability": 0.338, "managerChange": 0.0, "keyExitSeverity": 0.38, "promoted": false, "europeanLoad": 0.0, "confidenceCap": 0.7 },
+    "Chelsea": { "optaTopFiveProbability": 0.303, "managerChange": 0.32, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.0, "confidenceCap": 0.7 },
+    "Newcastle United": { "optaTopFiveProbability": 0.262, "managerChange": 0.4, "keyExitSeverity": 0.58, "promoted": false, "europeanLoad": 0.0, "confidenceCap": 0.55 },
+    "Tottenham Hotspur": { "optaTopFiveProbability": 0.241, "managerChange": 0.16, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.0, "confidenceCap": 0.8 },
+    "Brighton and Hove Albion": { "optaTopFiveProbability": 0.215, "managerChange": 0.0, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.15, "confidenceCap": 0.82 },
+    "Bournemouth": { "optaTopFiveProbability": null, "managerChange": 0.36, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.15, "confidenceCap": 0.65 },
+    "Crystal Palace": { "optaTopFiveProbability": null, "managerChange": 0.0, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.15, "confidenceCap": 0.82 },
+    "Sunderland": { "optaTopFiveProbability": null, "managerChange": 0.0, "keyExitSeverity": 0.0, "promoted": false, "europeanLoad": 0.15, "confidenceCap": 0.8 },
+    "Ipswich Town": { "optaTopFiveProbability": null, "managerChange": 0.36, "keyExitSeverity": 0.0, "promoted": true, "europeanLoad": 0.0, "confidenceCap": 0.45 },
+    "Coventry City": { "optaTopFiveProbability": null, "managerChange": 0.0, "keyExitSeverity": 0.0, "promoted": true, "europeanLoad": 0.0, "confidenceCap": 0.42 },
+    "Hull City": { "optaTopFiveProbability": null, "managerChange": 0.0, "keyExitSeverity": 0.0, "promoted": true, "europeanLoad": 0.0, "confidenceCap": 0.42 }
+  }
+}

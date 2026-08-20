@@ -3,6 +3,7 @@ import chipScenarios from "../../data/chip-scenarios.json";
 import deadlineStatus from "../../data/deadline-status.json";
 import frontierScores from "../../data/frontier-scores.json";
 import listwiseScores from "../../data/listwise-scores.json";
+import modelAudit from "../../data/model-audit.json";
 import performanceProgress from "../../data/performance-progress.json";
 import shadowStatus from "../../data/shadow-status.json";
 
@@ -10,10 +11,11 @@ export async function GET() {
   return Response.json(
     {
       deadline: deadlineStatus,
-      breakthrough,
+      breakthrough: { ...breakthrough, status: "retired legacy artifact; see modelAudit" },
+      modelAudit,
       chips: chipScenarios,
       shadows: shadowStatus,
-      performance: performanceProgress,
+      performance: { ...performanceProgress, status: "retired legacy artifact; see modelAudit" },
       frontier: {
         status: frontierScores.status,
         model: frontierScores.model,

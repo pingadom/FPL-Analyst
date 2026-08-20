@@ -46,7 +46,36 @@ test("joint optimiser spends the initial budget on the XI and captain", () => {
   assert.equal(selection.xi.length, 11);
   assert.ok(selection.spend >= 99.5 && selection.spend <= 100);
   assert.ok(selection.benchPremium <= BENCH_PREMIUM_LIMIT + 1e-6);
+  assert.equal(selection.solver.type, "exact-binary-milp");
+  assert.equal(selection.solver.status, "optimal");
+  assert.equal(selection.solver.optimalityGap, 0);
+  assert.ok(selection.solver.candidatePlayers < selection.solver.inputPlayers);
   assert.ok(selection.xi.some((player) => player.id === selection.captain.id));
+  const positionCounts = Object.fromEntries(
+    ["GK", "DEF", "MID", "FWD"].map((position) => [
+      position,
+      selection.squad.filter((player) => player.position === position).length,
+    ]),
+  );
+  assert.deepEqual(positionCounts, { GK: 2, DEF: 5, MID: 5, FWD: 3 });
+  const clubCounts = new Map();
+  for (const player of selection.squad) {
+    clubCounts.set(player.team, (clubCounts.get(player.team) ?? 0) + 1);
+  }
+  assert.ok([...clubCounts.values()].every((count) => count <= 3));
+  const exceptional = selection.xi.filter(
+    (player) =>
+      player.minutesModel.startProbability < 70 ||
+      player.minutesModel.playProbability < 84,
+  );
+  assert.ok(exceptional.length <= 1, "only one exceptional-upside minutes exception is legal");
+  assert.ok(
+    exceptional.every(
+      (player) =>
+        player.minutesModel.startProbability >= 70 &&
+        player.minutesModel.playProbability >= 78,
+    ),
+  );
   assert.ok(
     selection.squad.some((player) => player.name === "Haaland"),
     "the highest immediate projection and captain option should not be displaced by premium substitutes",

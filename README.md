@@ -5,10 +5,10 @@ weights across every completed season from 2018/19 through 2025/26.
 
 The product includes:
 
-- a legal £100m, 15-player squad optimiser;
+- an exact mixed-integer £100m squad/XI/captain optimiser;
 - adjustable performance, value, age, fixture, market, and form-memory weights;
 - current 2026/27 FPL player prices, ownership, and fixtures;
-- 640 historical weight trials with walk-forward season checks; and
+- 2,400 historical weight trials with walk-forward season checks; and
 - a reproducible, leak-free analysis pipeline in `analysis/calibrate_model.py`.
 
 ## Local development
@@ -20,16 +20,22 @@ npm install
 npm run dev
 npm run build
 python analysis/calibrate_model.py
+pnpm research:refresh
 ```
 
 Historical data is cached under `work/` and is not committed. The generated
 model artifact lives at `app/data/model-results.json`.
 
-The latest full breakthrough implementation and promotion decisions are
-documented in `analysis/BREAKTHROUGH_IMPLEMENTATION_2026-08-20.md`.
-The forecast-first follow-up, including the full recursive tournament and the
-frozen v2 research challenger, is documented in
-`analysis/FORECAST_BREAKTHROUGH_V2.md`.
+Older breakthrough implementation notes are retained as research history, but
+their 2,212-point headline is retired because it did not reproduce under the
+repaired schema and cache rules.
+
+For a non-technical explanation of every analytics layer, read
+[`docs/MODEL_HANDBOOK.md`](docs/MODEL_HANDBOOK.md). The explanation-driven
+legacy review and Lens 8 acceptance gate are in
+[`docs/DECISION_AUDIT_LENS8.md`](docs/DECISION_AUDIT_LENS8.md).
+The fair Lens 7/Lens 8/causal-shadow comparison and the stale-cache root cause
+are in [`docs/PERFORMANCE_AUDIT_LENS8.md`](docs/PERFORMANCE_AUDIT_LENS8.md).
 
 ## Data
 
