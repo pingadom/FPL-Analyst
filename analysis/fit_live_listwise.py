@@ -139,6 +139,66 @@ def map_local_rank(raw: np.ndarray, reference: np.ndarray) -> np.ndarray:
     return mapped
 
 
+def forecast_v2_captain_scores(
+    current: list[dict],
+    route_captain: np.ndarray,
+) -> tuple[np.ndarray, dict]:
+    """Apply the historically selected match boundary when exact odds exist."""
+    market_path = lens.ROOT / "app" / "data" / "market-scores-v2.json"
+    if not market_path.exists():
+        return route_captain.copy(), {"status": "market artifact missing", "coveredPlayers": 0}
+    artifact = json.loads(market_path.read_text(encoding="utf-8"))
+    fixtures = {
+        (row["team"], row["opponent"], row["venue"]): row
+        for row in artifact.get("fixtures", [])
+    }
+    dynamic = np.asarray([float(row["projected"]) for row in current])
+    covered = 0
+    for index, row in enumerate(current):
+        match = fixtures.get((row["team"], row["opponent"], row["venue"]))
+        if match is None:
+            continue
+        covered += 1
+        team = row["teamContext"]
+        components = row["components"]
+        attack_ratio = np.clip(
+            float(match["dynamicExpectedGoalsFor"])
+            / max(float(team["expectedGoalsFor"]), 0.25),
+            0.60,
+            1.55,
+        )
+        attack_points = float(components["goals"]) + float(components["assists"])
+        attack_delta = attack_points * (attack_ratio - 1.0)
+        clean_probability = max(float(team["cleanSheetProbability"]) / 100.0, 0.03)
+        clean_delta = float(components["cleanSheet"]) * np.clip(
+            float(match["dynamicCleanProbability"]) / clean_probability - 1.0,
+            -0.70,
+            1.20,
+        )
+        conceded_delta = (
+            -0.5
+            * (
+                float(match["dynamicExpectedGoalsAgainst"])
+                - float(team["expectedGoalsAgainst"])
+            )
+            * (float(row["expectedMinutes"]) / 90.0)
+            * (row["position"] in {"GK", "DEF"})
+        )
+        dynamic[index] += 0.30 * (attack_delta + clean_delta + conceded_delta)
+    if covered == 0:
+        return route_captain.copy(), {
+            "status": artifact.get("status", "no matching market fixtures"),
+            "coveredPlayers": 0,
+        }
+    market_rank = pd.Series(dynamic).rank(method="average", pct=True).to_numpy(float) * 100
+    return 0.90 * route_captain + 0.10 * market_rank, {
+        "status": "exact-capture prospective shadow",
+        "coveredPlayers": covered,
+        "marketSnapshotHash": artifact.get("sourceSnapshotHash"),
+        "historicalSelection": "dynamicCaptain0.30",
+    }
+
+
 def terminal_action_scores(
     data: pd.DataFrame,
     live: pd.DataFrame,
@@ -262,6 +322,9 @@ def main() -> None:
         + SELECTED_SHARE * route_rank_mean
         - position_adjustment
     )
+    forecast_v2_captain, forecast_v2_audit = forecast_v2_captain_scores(
+        current, route_captain
+    )
     # The former action-transfer challenger failed its leak-free revalidation.
     # Keep compatibility fields inert so no stale consumer can activate it.
     action_score = reference_horizon.copy()
@@ -285,6 +348,7 @@ def main() -> None:
                 "captainBlend50": round(0.50 * structural_captain_percentile[index] + 0.50 * captain_percentile[index], 1),
                 "routeCaptainScore": round(float(route_captain[index]), 2),
                 "routeCaptainRankMean": round(float(route_rank_mean[index]), 2),
+                "forecastV2CaptainScore": round(float(forecast_v2_captain[index]), 2),
                 "actionConsensusMapped": round(float(action_score[index]), 2),
                 "actionVote": round(float(action_vote[index]), 2),
                 "actionAgreementSeeds": int(action_agreement[index]),
@@ -314,6 +378,11 @@ def main() -> None:
             "policy": "85% frozen captain rank + 15% five-seed route rank + 0.005 defender tie-break; minimum three completed training seasons",
             "historicalValidation": "analysis/data/captain_route_consensus_validation.json",
             "routeFits": route_audits,
+        },
+        "forecastV2Challenger": {
+            **forecast_v2_audit,
+            "policy": "90% route-consensus captain rank + 10% dynamic-match rank at 0.30 route strength",
+            "historicalValidation": "analysis/data/forecast_breakthrough_tournament_v2.json",
         },
         "players": players,
     }

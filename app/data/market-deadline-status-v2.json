@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "season": "2026-27",
+  "gameweek": 1,
+  "capturedAt": "2026-08-20T12:20:25.929011+00:00",
+  "deadline": "2026-08-21T17:30:00+00:00",
+  "status": "unavailable",
+  "source": "https://www.football-data.co.uk/mmz4281/2627/E0.csv",
+  "reason": "HTTPError: HTTP Error 300: Multiple Choices",
+  "fixtureCount": 0
+}

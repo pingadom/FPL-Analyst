@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-20T12:25:23.641073+00:00",
+  "policy": {
+    "historicalUse": "Unknown-capture archives may train research challengers but cannot independently justify production promotion.",
+    "prospectiveUse": "Exact captures at or before the deadline may advance locked shadow evidence.",
+    "forbiddenRealizedFields": [
+      "assists",
+      "bonus",
+      "bps",
+      "clean_sheets",
+      "full_time_away_goals",
+      "full_time_home_goals",
+      "goals_scored",
+      "minutes",
+      "points"
+    ],
+    "forbiddenClosingMarketFields": [
+      "AvgCA",
+      "AvgCD",
+      "AvgCH",
+      "B365CA",
+      "B365CD",
+      "B365CH",
+      "PSCA",
+      "PSCD",
+      "PSCH"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "football-data:1213-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/1213-E0.csv",
+      "sha256": "1df561d34a9b79ff8cb1fccd4fd279d183e74cd871063a307ecf18f01e0d622f",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "1213"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:1314-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/1314-E0.csv",
+      "sha256": "3cf16078fde2e0e6c6cb07ebdb20ca98d1a755c9508a18bbeb4ad6837fad2b42",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "1314"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:1415-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/1415-E0.csv",
+      "sha256": "76b7858051ff6b17f46f49f26fdc70c1f29537270492606f5cc63d67fad5d149",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "1415"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:1516-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/1516-E0.csv",
+      "sha256": "bd3502a18c38a1597fd9af62e2366b4015006d3528dd4d18b311bd6237bbc085",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "1516"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:1617-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/1617-E0.csv",
+      "sha256": "9625a7652b5f98fbd3e2e4d378c851fc246693f3343e34a72428d5b6e864d3e0",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "1617"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:1718-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/1718-E0.csv",
+      "sha256": "4f3389365ef3f7ac966764ed8ba67cf3b79f5aebed18dd224099c4b2c98bc67b",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "1718"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:1819-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/1819-E0.csv",
+      "sha256": "7c096b3c2ecd54c6993d22eeea73450c2bde11e3457238b226b8f43c62dfc35e",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "1819"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:1920-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/1920-E0.csv",
+      "sha256": "100037618b94f94057400bb02bf6bac4ef74ddaa58cde4b38370839c39caee61",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "1920"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:2021-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/2021-E0.csv",
+      "sha256": "5afe63f69401457b8354eaacee24f9a3e520b3c3af6329564a9783e20d789c62",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "2021"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:2122-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/2122-E0.csv",
+      "sha256": "335afcbabeb2939fa10ab39ba3e8215072d0b577cb8d0705c1e44c56e934e703",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "2122"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:2223-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/2223-E0.csv",
+      "sha256": "8442792d3b614c94ea3cf381bd2736805889cc1713169035368fff19c3d02380",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "2223"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:2324-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/2324-E0.csv",
+      "sha256": "b2e057b0ed959f198b0f63d2391c01239f3608e6de5db68edab3f88e04d07ff3",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "2324"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:2425-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/2425-E0.csv",
+      "sha256": "d0c8ce4a96d886cf60cf101f570f4a3893844226f91c7bd769eb568c49edbfa4",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "2425"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "football-data:2526-E0",
+      "source_type": "pre-closing-market-archive",
+      "captured_at": null,
+      "deadline_at": null,
+      "timing": "archive-first-odds-unknown-capture",
+      "path": "work/fpl-data/market-archive/2526-E0.csv",
+      "sha256": "3e3a8352f9ada6789c508d6ca184424421fed56a30400904a4a327c583407e62",
+      "fields": [
+        "home_odds",
+        "draw_odds",
+        "away_odds",
+        "over_under_odds"
+      ],
+      "seasons": [
+        "2526"
+      ],
+      "decision_status": "research-only",
+      "capturedBeforeDeadline": false,
+      "forbiddenFields": [],
+      "shadowEligible": false,
+      "promotionEligible": false,
+      "errors": []
+    },
+    {
+      "source_id": "official-fpl:2026-27:gw01",
+      "source_type": "official-fpl-deadline-snapshot",
+      "captured_at": "2026-08-20T11:38:38.124960+00:00",
+      "deadline_at": "2026-08-21T17:30:00Z",
+      "timing": "exact-capture",
+      "path": "analysis/snapshots/2026-27/gw-01/20260820T113838Z-1be44aa9a995.json",
+      "sha256": "d2114f7918e3da8c7a4b3ed1afb45881fe54a04c7303c446e3becb9b4aab7e72",
+      "fields": [
+        "official_player_status",
+        "official_chance_of_playing",
+        "fixtures",
+        "prices",
+        "ownership",
+        "transfers"
+      ],
+      "seasons": [
+        "2026-27"
+      ],
+      "decision_status": "provisional",
+      "capturedBeforeDeadline": true,
+      "forbiddenFields": [],
+      "shadowEligible": true,
+      "promotionEligible": false,
+      "errors": []
+    }
+  ],
+  "valid": true,
+  "shadowEligibleSources": 1,
+  "promotionEligibleSources": 0,
+  "researchOnlySources": 15
+}

@@ -1,0 +1,469 @@
+{
+  "status": "causal OpenFPL-inspired challenger",
+  "method": "Position-specific non-negative ridge over within-deadline ranks; each test season uses earlier seasons only and the output is quantile-mapped to the structural scale.",
+  "modelNames": [
+    "structural",
+    "role",
+    "frontier",
+    "routes"
+  ],
+  "informationBoundary": {
+    "forbiddenPostMatchFeatures": [
+      "expected_assists",
+      "expected_goals",
+      "expected_goals_conceded"
+    ],
+    "forbiddenFeaturesPresent": []
+  },
+  "metrics": {
+    "structural": {
+      "mae": 2.3564,
+      "spearman": 0.4219,
+      "top15_points": 4.9282,
+      "top15_blank_rate": 0.4419,
+      "missed_haul_rate": 0.8163
+    },
+    "frontier": {
+      "mae": 2.2996,
+      "spearman": 0.4166,
+      "top15_points": 4.9537,
+      "top15_blank_rate": 0.4449,
+      "missed_haul_rate": 0.8104
+    },
+    "routes": {
+      "mae": 2.3202,
+      "spearman": 0.4096,
+      "top15_points": 4.9522,
+      "top15_blank_rate": 0.4385,
+      "missed_haul_rate": 0.8121
+    },
+    "positionEnsemble": {
+      "mae": 2.3379,
+      "spearman": 0.4289,
+      "top15_points": 4.9787,
+      "top15_blank_rate": 0.4385,
+      "missed_haul_rate": 0.8096
+    }
+  },
+  "weightAudit": [
+    {
+      "season": "2019-20",
+      "position": 1,
+      "trainingRows": 4089,
+      "weights": {
+        "structural": 0.2312,
+        "role": 0.2822,
+        "frontier": 0.2586,
+        "routes": 0.2279
+      }
+    },
+    {
+      "season": "2019-20",
+      "position": 2,
+      "trainingRows": 6560,
+      "weights": {
+        "structural": 0.2225,
+        "role": 0.2578,
+        "frontier": 0.2352,
+        "routes": 0.2845
+      }
+    },
+    {
+      "season": "2019-20",
+      "position": 3,
+      "trainingRows": 6792,
+      "weights": {
+        "structural": 0.282,
+        "role": 0.2397,
+        "frontier": 0.3421,
+        "routes": 0.1362
+      }
+    },
+    {
+      "season": "2019-20",
+      "position": 4,
+      "trainingRows": 5236,
+      "weights": {
+        "structural": 0.2465,
+        "role": 0.2392,
+        "frontier": 0.2631,
+        "routes": 0.2512
+      }
+    },
+    {
+      "season": "2020-21",
+      "position": 1,
+      "trainingRows": 5457,
+      "weights": {
+        "structural": 0.2392,
+        "role": 0.2721,
+        "frontier": 0.2617,
+        "routes": 0.2271
+      }
+    },
+    {
+      "season": "2020-21",
+      "position": 2,
+      "trainingRows": 8749,
+      "weights": {
+        "structural": 0.2079,
+        "role": 0.2844,
+        "frontier": 0.2435,
+        "routes": 0.2642
+      }
+    },
+    {
+      "season": "2020-21",
+      "position": 3,
+      "trainingRows": 9049,
+      "weights": {
+        "structural": 0.283,
+        "role": 0.2314,
+        "frontier": 0.3676,
+        "routes": 0.1179
+      }
+    },
+    {
+      "season": "2020-21",
+      "position": 4,
+      "trainingRows": 6908,
+      "weights": {
+        "structural": 0.2433,
+        "role": 0.2364,
+        "frontier": 0.2661,
+        "routes": 0.2542
+      }
+    },
+    {
+      "season": "2021-22",
+      "position": 1,
+      "trainingRows": 6821,
+      "weights": {
+        "structural": 0.2507,
+        "role": 0.2591,
+        "frontier": 0.2709,
+        "routes": 0.2193
+      }
+    },
+    {
+      "season": "2021-22",
+      "position": 2,
+      "trainingRows": 10888,
+      "weights": {
+        "structural": 0.1827,
+        "role": 0.2826,
+        "frontier": 0.2694,
+        "routes": 0.2653
+      }
+    },
+    {
+      "season": "2021-22",
+      "position": 3,
+      "trainingRows": 11299,
+      "weights": {
+        "structural": 0.2642,
+        "role": 0.2127,
+        "frontier": 0.3926,
+        "routes": 0.1305
+      }
+    },
+    {
+      "season": "2021-22",
+      "position": 4,
+      "trainingRows": 8474,
+      "weights": {
+        "structural": 0.2413,
+        "role": 0.2414,
+        "frontier": 0.2647,
+        "routes": 0.2525
+      }
+    },
+    {
+      "season": "2022-23",
+      "position": 1,
+      "trainingRows": 8185,
+      "weights": {
+        "structural": 0.2617,
+        "role": 0.2555,
+        "frontier": 0.2783,
+        "routes": 0.2045
+      }
+    },
+    {
+      "season": "2022-23",
+      "position": 2,
+      "trainingRows": 13014,
+      "weights": {
+        "structural": 0.1746,
+        "role": 0.2715,
+        "frontier": 0.2524,
+        "routes": 0.3015
+      }
+    },
+    {
+      "season": "2022-23",
+      "position": 3,
+      "trainingRows": 13544,
+      "weights": {
+        "structural": 0.2535,
+        "role": 0.1815,
+        "frontier": 0.415,
+        "routes": 0.1499
+      }
+    },
+    {
+      "season": "2022-23",
+      "position": 4,
+      "trainingRows": 9990,
+      "weights": {
+        "structural": 0.2361,
+        "role": 0.2404,
+        "frontier": 0.2657,
+        "routes": 0.2578
+      }
+    },
+    {
+      "season": "2023-24",
+      "position": 1,
+      "trainingRows": 9517,
+      "weights": {
+        "structural": 0.2653,
+        "role": 0.249,
+        "frontier": 0.2815,
+        "routes": 0.2042
+      }
+    },
+    {
+      "season": "2023-24",
+      "position": 2,
+      "trainingRows": 15145,
+      "weights": {
+        "structural": 0.1721,
+        "role": 0.2515,
+        "frontier": 0.2594,
+        "routes": 0.317
+      }
+    },
+    {
+      "season": "2023-24",
+      "position": 3,
+      "trainingRows": 15763,
+      "weights": {
+        "structural": 0.2322,
+        "role": 0.1686,
+        "frontier": 0.4336,
+        "routes": 0.1656
+      }
+    },
+    {
+      "season": "2023-24",
+      "position": 4,
+      "trainingRows": 11637,
+      "weights": {
+        "structural": 0.196,
+        "role": 0.2042,
+        "frontier": 0.3059,
+        "routes": 0.2939
+      }
+    },
+    {
+      "season": "2024-25",
+      "position": 1,
+      "trainingRows": 10885,
+      "weights": {
+        "structural": 0.2742,
+        "role": 0.2453,
+        "frontier": 0.2783,
+        "routes": 0.2021
+      }
+    },
+    {
+      "season": "2024-25",
+      "position": 2,
+      "trainingRows": 17339,
+      "weights": {
+        "structural": 0.1754,
+        "role": 0.2382,
+        "frontier": 0.2633,
+        "routes": 0.323
+      }
+    },
+    {
+      "season": "2024-25",
+      "position": 3,
+      "trainingRows": 18019,
+      "weights": {
+        "structural": 0.2137,
+        "role": 0.1598,
+        "frontier": 0.4482,
+        "routes": 0.1783
+      }
+    },
+    {
+      "season": "2024-25",
+      "position": 4,
+      "trainingRows": 13245,
+      "weights": {
+        "structural": 0.1811,
+        "role": 0.193,
+        "frontier": 0.3272,
+        "routes": 0.2987
+      }
+    },
+    {
+      "season": "2025-26",
+      "position": 1,
+      "trainingRows": 12253,
+      "weights": {
+        "structural": 0.2856,
+        "role": 0.2345,
+        "frontier": 0.2755,
+        "routes": 0.2045
+      }
+    },
+    {
+      "season": "2025-26",
+      "position": 2,
+      "trainingRows": 19578,
+      "weights": {
+        "structural": 0.166,
+        "role": 0.2338,
+        "frontier": 0.2845,
+        "routes": 0.3157
+      }
+    },
+    {
+      "season": "2025-26",
+      "position": 3,
+      "trainingRows": 20293,
+      "weights": {
+        "structural": 0.2108,
+        "role": 0.1472,
+        "frontier": 0.455,
+        "routes": 0.187
+      }
+    },
+    {
+      "season": "2025-26",
+      "position": 4,
+      "trainingRows": 14722,
+      "weights": {
+        "structural": 0.1793,
+        "role": 0.187,
+        "frontier": 0.333,
+        "routes": 0.3007
+      }
+    }
+  ],
+  "frontierFitCount": 36,
+  "routeAudit": {
+    "routes": [
+      "appearance",
+      "sixty",
+      "goals",
+      "assists",
+      "cleanSheets",
+      "saves",
+      "goalsConceded",
+      "bonus",
+      "defensiveContribution",
+      "other"
+    ],
+    "features": [
+      "component_xpts_structural",
+      "empirical_xpts",
+      "role_ridge_xpts",
+      "expected_minutes",
+      "minutes_std",
+      "play_probability",
+      "start_probability",
+      "sixty_probability",
+      "minutes_model_confidence",
+      "rotation_volatility",
+      "competition_pressure",
+      "recent_raw",
+      "long_raw",
+      "recent_underlying_raw",
+      "long_underlying_raw",
+      "goal_rate",
+      "assist_rate",
+      "clean_sheet_rate",
+      "save_rate",
+      "bonus_rate",
+      "defensive_rate",
+      "bps_rate",
+      "team_attack_rating",
+      "team_defence_rating",
+      "opponent_attack_rating",
+      "opponent_defence_rating",
+      "team_expected_goals_for",
+      "team_expected_goals_against",
+      "team_clean_probability",
+      "team_rating_confidence",
+      "team_regime_shift",
+      "fixture_now",
+      "price",
+      "selected",
+      "observations",
+      "fixture_count",
+      "position_id",
+      "was_home",
+      "defensive_return_probability",
+      "defensive_event_coverage",
+      "opponent_goal_vulnerability",
+      "opponent_assist_vulnerability",
+      "team_clean_rating",
+      "opponent_clean_rating",
+      "league_goal_rate",
+      "table_goal_difference_before"
+    ],
+    "fits": [
+      {
+        "season": "2017-18",
+        "trainingRows": 7570,
+        "testRows": 22461
+      },
+      {
+        "season": "2018-19",
+        "trainingRows": 15161,
+        "testRows": 21788
+      },
+      {
+        "season": "2019-20",
+        "trainingRows": 22677,
+        "testRows": 22493
+      },
+      {
+        "season": "2020-21",
+        "trainingRows": 30163,
+        "testRows": 24198
+      },
+      {
+        "season": "2021-22",
+        "trainingRows": 37482,
+        "testRows": 25321
+      },
+      {
+        "season": "2022-23",
+        "trainingRows": 44733,
+        "testRows": 25713
+      },
+      {
+        "season": "2023-24",
+        "trainingRows": 52062,
+        "testRows": 29677
+      },
+      {
+        "season": "2024-25",
+        "trainingRows": 59488,
+        "testRows": 27279
+      },
+      {
+        "season": "2025-26",
+        "trainingRows": 66846,
+        "testRows": 29747
+      }
+    ],
+    "causal": "Every route, variance scale and stacker uses prior seasons only."
+  }
+}

@@ -1,0 +1,1107 @@
+{
+  "schemaVersion": 2,
+  "status": "research challenger tournament",
+  "selectionProtocol": "Candidate choice maximises mean minus 0.20 standard deviations on the first six evaluation seasons. The final two seasons are a locked holdout and every row is a full recursive replay with the same audited chip policy.",
+  "baseline": {
+    "name": "control",
+    "selectionSurface": "none",
+    "rationale": "Frozen recursive champion with route-consensus captaincy.",
+    "average": 2190.6,
+    "minimum": 2032,
+    "developmentAverage": 2197.3,
+    "holdoutAverage": 2170.5,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2129
+      },
+      {
+        "season": "2019/20",
+        "points": 2156
+      },
+      {
+        "season": "2020/21",
+        "points": 2238
+      },
+      {
+        "season": "2021/22",
+        "points": 2305
+      },
+      {
+        "season": "2022/23",
+        "points": 2258
+      },
+      {
+        "season": "2023/24",
+        "points": 2098
+      },
+      {
+        "season": "2024/25",
+        "points": 2309
+      },
+      {
+        "season": "2025/26",
+        "points": 2032
+      }
+    ],
+    "averageDelta": 0.0,
+    "developmentDelta": 0.0,
+    "developmentStability": 0.0,
+    "holdoutDelta": 0.0,
+    "worstSeasonDelta": 0,
+    "positiveSeasons": 0,
+    "negativeSeasons": 0,
+    "seasonDeltas": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "selectedByDevelopmentOnly": {
+    "name": "dynamicCaptain0.30",
+    "selectionSurface": "captain-only",
+    "rationale": "Dynamic match evidence may reorder only the armband.",
+    "average": 2194.2,
+    "minimum": 2032,
+    "developmentAverage": 2200.7,
+    "holdoutAverage": 2175.0,
+    "seasons": [
+      {
+        "season": "2018/19",
+        "points": 2129
+      },
+      {
+        "season": "2019/20",
+        "points": 2166
+      },
+      {
+        "season": "2020/21",
+        "points": 2247
+      },
+      {
+        "season": "2021/22",
+        "points": 2305
+      },
+      {
+        "season": "2022/23",
+        "points": 2262
+      },
+      {
+        "season": "2023/24",
+        "points": 2095
+      },
+      {
+        "season": "2024/25",
+        "points": 2318
+      },
+      {
+        "season": "2025/26",
+        "points": 2032
+      }
+    ],
+    "averageDelta": 3.6,
+    "developmentDelta": 3.3,
+    "developmentStability": 2.37,
+    "holdoutDelta": 4.5,
+    "worstSeasonDelta": -3,
+    "positiveSeasons": 4,
+    "negativeSeasons": 1,
+    "seasonDeltas": [
+      0,
+      10,
+      9,
+      0,
+      4,
+      -3,
+      9,
+      0
+    ]
+  },
+  "recursiveGate": {
+    "developmentPositive": true,
+    "holdoutNonNegative": true,
+    "worstSeasonAtLeastMinusFive": true,
+    "positiveSeasonsAtLeastFour": true
+  },
+  "provenanceGate": {
+    "historicalDeadlineTimestampsAuditable": false,
+    "prospectiveLockedDeadlineSampleComplete": false
+  },
+  "researchGatePassed": true,
+  "productionPromotion": false,
+  "matchForecast": {
+    "coverage": {
+      "evaluationSingleTeamWeeks": 5643,
+      "coveredTeamWeeks": 5643,
+      "coverage": 1.0
+    },
+    "metrics": {
+      "teamMatches": 5643,
+      "structural": {
+        "goalsForMae": 0.9607,
+        "goalsForPoissonDeviance": 1.2546,
+        "goalsAgainstMae": 0.9729,
+        "cleanSheetBrier": 0.23587
+      },
+      "market": {
+        "goalsForMae": 0.9055,
+        "goalsForPoissonDeviance": 1.108,
+        "goalsAgainstMae": 0.9141,
+        "cleanSheetBrier": 0.22495
+      },
+      "dynamic": {
+        "goalsForMae": 0.9065,
+        "goalsForPoissonDeviance": 1.1172,
+        "goalsAgainstMae": 0.9161,
+        "cleanSheetBrier": 0.22564
+      }
+    }
+  },
+  "openfplForecast": {
+    "metrics": {
+      "structural": {
+        "mae": 2.3564,
+        "spearman": 0.4219,
+        "top15_points": 4.9282,
+        "top15_blank_rate": 0.4419,
+        "missed_haul_rate": 0.8163
+      },
+      "frontier": {
+        "mae": 2.2996,
+        "spearman": 0.4166,
+        "top15_points": 4.9537,
+        "top15_blank_rate": 0.4449,
+        "missed_haul_rate": 0.8104
+      },
+      "routes": {
+        "mae": 2.3202,
+        "spearman": 0.4096,
+        "top15_points": 4.9522,
+        "top15_blank_rate": 0.4385,
+        "missed_haul_rate": 0.8121
+      },
+      "positionEnsemble": {
+        "mae": 2.3379,
+        "spearman": 0.4289,
+        "top15_points": 4.9787,
+        "top15_blank_rate": 0.4385,
+        "missed_haul_rate": 0.8096
+      }
+    },
+    "informationBoundary": {
+      "forbiddenPostMatchFeatures": [
+        "expected_assists",
+        "expected_goals",
+        "expected_goals_conceded"
+      ],
+      "forbiddenFeaturesPresent": []
+    }
+  },
+  "candidates": [
+    {
+      "name": "control",
+      "selectionSurface": "none",
+      "rationale": "Frozen recursive champion with route-consensus captaincy.",
+      "average": 2190.6,
+      "minimum": 2032,
+      "developmentAverage": 2197.3,
+      "holdoutAverage": 2170.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2156
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2098
+        },
+        {
+          "season": "2024/25",
+          "points": 2309
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": 0.0,
+      "developmentDelta": 0.0,
+      "developmentStability": 0.0,
+      "holdoutDelta": 0.0,
+      "worstSeasonDelta": 0,
+      "positiveSeasons": 0,
+      "negativeSeasons": 0,
+      "seasonDeltas": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "dynamicCaptain0.15",
+      "selectionSurface": "captain-only",
+      "rationale": "Dynamic match evidence may reorder only the armband.",
+      "average": 2191.5,
+      "minimum": 2032,
+      "developmentAverage": 2196.2,
+      "holdoutAverage": 2177.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2149
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2094
+        },
+        {
+          "season": "2024/25",
+          "points": 2323
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": 0.9,
+      "developmentDelta": -1.2,
+      "developmentStability": -1.863,
+      "holdoutDelta": 7.0,
+      "worstSeasonDelta": -7,
+      "positiveSeasons": 2,
+      "negativeSeasons": 2,
+      "seasonDeltas": [
+        0,
+        -7,
+        0,
+        0,
+        4,
+        -4,
+        14,
+        0
+      ]
+    },
+    {
+      "name": "dynamicCaptain0.30",
+      "selectionSurface": "captain-only",
+      "rationale": "Dynamic match evidence may reorder only the armband.",
+      "average": 2194.2,
+      "minimum": 2032,
+      "developmentAverage": 2200.7,
+      "holdoutAverage": 2175.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2166
+        },
+        {
+          "season": "2020/21",
+          "points": 2247
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2095
+        },
+        {
+          "season": "2024/25",
+          "points": 2318
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": 3.6,
+      "developmentDelta": 3.3,
+      "developmentStability": 2.37,
+      "holdoutDelta": 4.5,
+      "worstSeasonDelta": -3,
+      "positiveSeasons": 4,
+      "negativeSeasons": 1,
+      "seasonDeltas": [
+        0,
+        10,
+        9,
+        0,
+        4,
+        -3,
+        9,
+        0
+      ]
+    },
+    {
+      "name": "dynamicCaptain0.50",
+      "selectionSurface": "captain-only",
+      "rationale": "Dynamic match evidence may reorder only the armband.",
+      "average": 2194.5,
+      "minimum": 2037,
+      "developmentAverage": 2200.2,
+      "holdoutAverage": 2177.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2135
+        },
+        {
+          "season": "2019/20",
+          "points": 2162
+        },
+        {
+          "season": "2020/21",
+          "points": 2247
+        },
+        {
+          "season": "2021/22",
+          "points": 2300
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2095
+        },
+        {
+          "season": "2024/25",
+          "points": 2318
+        },
+        {
+          "season": "2025/26",
+          "points": 2037
+        }
+      ],
+      "averageDelta": 3.9,
+      "developmentDelta": 2.8,
+      "developmentStability": 1.817,
+      "holdoutDelta": 7.0,
+      "worstSeasonDelta": -5,
+      "positiveSeasons": 6,
+      "negativeSeasons": 2,
+      "seasonDeltas": [
+        6,
+        6,
+        9,
+        -5,
+        4,
+        -3,
+        9,
+        5
+      ]
+    },
+    {
+      "name": "dynamicCaptainMinutes0.25",
+      "selectionSurface": "captain-only",
+      "rationale": "Dynamic armband evidence plus a no-show/rotation downside veto.",
+      "average": 2194.2,
+      "minimum": 2032,
+      "developmentAverage": 2200.7,
+      "holdoutAverage": 2175.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2166
+        },
+        {
+          "season": "2020/21",
+          "points": 2247
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2095
+        },
+        {
+          "season": "2024/25",
+          "points": 2318
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": 3.6,
+      "developmentDelta": 3.3,
+      "developmentStability": 2.37,
+      "holdoutDelta": 4.5,
+      "worstSeasonDelta": -3,
+      "positiveSeasons": 4,
+      "negativeSeasons": 1,
+      "seasonDeltas": [
+        0,
+        10,
+        9,
+        0,
+        4,
+        -3,
+        9,
+        0
+      ]
+    },
+    {
+      "name": "dynamicCaptainMinutes0.50",
+      "selectionSurface": "captain-only",
+      "rationale": "Dynamic armband evidence plus a no-show/rotation downside veto.",
+      "average": 2192.6,
+      "minimum": 2032,
+      "developmentAverage": 2198.5,
+      "holdoutAverage": 2175.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2247
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2095
+        },
+        {
+          "season": "2024/25",
+          "points": 2318
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": 2.0,
+      "developmentDelta": 1.2,
+      "developmentStability": 0.323,
+      "holdoutDelta": 4.5,
+      "worstSeasonDelta": -3,
+      "positiveSeasons": 3,
+      "negativeSeasons": 2,
+      "seasonDeltas": [
+        0,
+        -3,
+        9,
+        0,
+        4,
+        -3,
+        9,
+        0
+      ]
+    },
+    {
+      "name": "openfplCaptain0.05",
+      "selectionSurface": "captain-only",
+      "rationale": "Position ensemble may reorder only the armband.",
+      "average": 2190.9,
+      "minimum": 2037,
+      "developmentAverage": 2196.8,
+      "holdoutAverage": 2173.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2094
+        },
+        {
+          "season": "2024/25",
+          "points": 2309
+        },
+        {
+          "season": "2025/26",
+          "points": 2037
+        }
+      ],
+      "averageDelta": 0.2,
+      "developmentDelta": -0.5,
+      "developmentStability": -1.013,
+      "holdoutDelta": 2.5,
+      "worstSeasonDelta": -4,
+      "positiveSeasons": 2,
+      "negativeSeasons": 2,
+      "seasonDeltas": [
+        0,
+        -3,
+        0,
+        0,
+        4,
+        -4,
+        0,
+        5
+      ]
+    },
+    {
+      "name": "openfplCaptain0.10",
+      "selectionSurface": "captain-only",
+      "rationale": "Position ensemble may reorder only the armband.",
+      "average": 2190.1,
+      "minimum": 2035,
+      "developmentAverage": 2196.8,
+      "holdoutAverage": 2170.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2094
+        },
+        {
+          "season": "2024/25",
+          "points": 2305
+        },
+        {
+          "season": "2025/26",
+          "points": 2035
+        }
+      ],
+      "averageDelta": -0.5,
+      "developmentDelta": -0.5,
+      "developmentStability": -1.013,
+      "holdoutDelta": -0.5,
+      "worstSeasonDelta": -4,
+      "positiveSeasons": 2,
+      "negativeSeasons": 3,
+      "seasonDeltas": [
+        0,
+        -3,
+        0,
+        0,
+        4,
+        -4,
+        -4,
+        3
+      ]
+    },
+    {
+      "name": "openfplCaptain0.15",
+      "selectionSurface": "captain-only",
+      "rationale": "Position ensemble may reorder only the armband.",
+      "average": 2194.2,
+      "minimum": 2037,
+      "developmentAverage": 2199.0,
+      "holdoutAverage": 2180.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2153
+        },
+        {
+          "season": "2020/21",
+          "points": 2230
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2265
+        },
+        {
+          "season": "2023/24",
+          "points": 2112
+        },
+        {
+          "season": "2024/25",
+          "points": 2323
+        },
+        {
+          "season": "2025/26",
+          "points": 2037
+        }
+      ],
+      "averageDelta": 3.6,
+      "developmentDelta": 1.7,
+      "developmentStability": 0.249,
+      "holdoutDelta": 9.5,
+      "worstSeasonDelta": -8,
+      "positiveSeasons": 4,
+      "negativeSeasons": 2,
+      "seasonDeltas": [
+        0,
+        -3,
+        -8,
+        0,
+        7,
+        14,
+        14,
+        5
+      ]
+    },
+    {
+      "name": "openfplSelection0.025",
+      "selectionSurface": "recursive-selection",
+      "rationale": "Small position-ensemble blend may alter XI and transfer boundaries.",
+      "average": 2190.4,
+      "minimum": 2032,
+      "developmentAverage": 2197.0,
+      "holdoutAverage": 2170.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2098
+        },
+        {
+          "season": "2024/25",
+          "points": 2309
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": -0.2,
+      "developmentDelta": -0.3,
+      "developmentStability": -0.482,
+      "holdoutDelta": 0.0,
+      "worstSeasonDelta": -2,
+      "positiveSeasons": 0,
+      "negativeSeasons": 1,
+      "seasonDeltas": [
+        0,
+        -2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "openfplSelection0.050",
+      "selectionSurface": "recursive-selection",
+      "rationale": "Small position-ensemble blend may alter XI and transfer boundaries.",
+      "average": 2192.1,
+      "minimum": 2032,
+      "developmentAverage": 2197.0,
+      "holdoutAverage": 2177.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2098
+        },
+        {
+          "season": "2024/25",
+          "points": 2323
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": 1.5,
+      "developmentDelta": -0.3,
+      "developmentStability": -0.482,
+      "holdoutDelta": 7.0,
+      "worstSeasonDelta": -2,
+      "positiveSeasons": 1,
+      "negativeSeasons": 1,
+      "seasonDeltas": [
+        0,
+        -2,
+        0,
+        0,
+        0,
+        0,
+        14,
+        0
+      ]
+    },
+    {
+      "name": "openfplSelection0.100",
+      "selectionSurface": "recursive-selection",
+      "rationale": "Small position-ensemble blend may alter XI and transfer boundaries.",
+      "average": 2190.8,
+      "minimum": 2029,
+      "developmentAverage": 2195.7,
+      "holdoutAverage": 2176.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2230
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2098
+        },
+        {
+          "season": "2024/25",
+          "points": 2323
+        },
+        {
+          "season": "2025/26",
+          "points": 2029
+        }
+      ],
+      "averageDelta": 0.1,
+      "developmentDelta": -1.7,
+      "developmentStability": -2.252,
+      "holdoutDelta": 5.5,
+      "worstSeasonDelta": -8,
+      "positiveSeasons": 1,
+      "negativeSeasons": 3,
+      "seasonDeltas": [
+        0,
+        -2,
+        -8,
+        0,
+        0,
+        0,
+        14,
+        -3
+      ]
+    },
+    {
+      "name": "openfplDefence0.05",
+      "selectionSurface": "defence-selection",
+      "rationale": "Position ensemble is restricted to goalkeeper/defender ordering.",
+      "average": 2190.9,
+      "minimum": 2032,
+      "developmentAverage": 2197.0,
+      "holdoutAverage": 2172.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2238
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2098
+        },
+        {
+          "season": "2024/25",
+          "points": 2313
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": 0.2,
+      "developmentDelta": -0.3,
+      "developmentStability": -0.482,
+      "holdoutDelta": 2.0,
+      "worstSeasonDelta": -2,
+      "positiveSeasons": 1,
+      "negativeSeasons": 1,
+      "seasonDeltas": [
+        0,
+        -2,
+        0,
+        0,
+        0,
+        0,
+        4,
+        0
+      ]
+    },
+    {
+      "name": "openfplDefence0.10",
+      "selectionSurface": "defence-selection",
+      "rationale": "Position ensemble is restricted to goalkeeper/defender ordering.",
+      "average": 2189.2,
+      "minimum": 2032,
+      "developmentAverage": 2194.8,
+      "holdoutAverage": 2172.5,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2154
+        },
+        {
+          "season": "2020/21",
+          "points": 2225
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2258
+        },
+        {
+          "season": "2023/24",
+          "points": 2098
+        },
+        {
+          "season": "2024/25",
+          "points": 2313
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": -1.4,
+      "developmentDelta": -2.5,
+      "developmentStability": -3.45,
+      "holdoutDelta": 2.0,
+      "worstSeasonDelta": -13,
+      "positiveSeasons": 1,
+      "negativeSeasons": 2,
+      "seasonDeltas": [
+        0,
+        -2,
+        -13,
+        0,
+        0,
+        0,
+        4,
+        0
+      ]
+    },
+    {
+      "name": "predeclaredCombined",
+      "selectionSurface": "recursive-selection+captain",
+      "rationale": "Predeclared 5% player ensemble plus conservative dynamic armband boundary.",
+      "average": 2195.8,
+      "minimum": 2032,
+      "developmentAverage": 2200.3,
+      "holdoutAverage": 2182.0,
+      "seasons": [
+        {
+          "season": "2018/19",
+          "points": 2129
+        },
+        {
+          "season": "2019/20",
+          "points": 2164
+        },
+        {
+          "season": "2020/21",
+          "points": 2247
+        },
+        {
+          "season": "2021/22",
+          "points": 2305
+        },
+        {
+          "season": "2022/23",
+          "points": 2262
+        },
+        {
+          "season": "2023/24",
+          "points": 2095
+        },
+        {
+          "season": "2024/25",
+          "points": 2332
+        },
+        {
+          "season": "2025/26",
+          "points": 2032
+        }
+      ],
+      "averageDelta": 5.1,
+      "developmentDelta": 3.0,
+      "developmentStability": 2.121,
+      "holdoutDelta": 11.5,
+      "worstSeasonDelta": -3,
+      "positiveSeasons": 4,
+      "negativeSeasons": 1,
+      "seasonDeltas": [
+        0,
+        8,
+        9,
+        0,
+        4,
+        -3,
+        23,
+        0
+      ]
+    }
+  ]
+}

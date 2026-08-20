@@ -80,6 +80,16 @@ MANAGERS = (
         "fieldability": True,
         "description": "Fieldability-constrained squad, XI and captain with conservative emergency repairs and the leak-free route captain.",
     },
+    {
+        "id": "forecast-breakthrough-v2",
+        "name": "Forecast breakthrough v2",
+        "planScore": "listwiseHorizonScore",
+        "lineupScore": "frontierImmediateScore",
+        "captainScore": "forecastV2CaptainScore",
+        "chips": True,
+        "transferHurdle": 2.2,
+        "description": "Frozen research winner: route captain plus a conservative exact-capture dynamic match boundary; falls back safely when market data is unavailable.",
+    },
 )
 
 
@@ -420,6 +430,10 @@ def main() -> None:
             listwise_row.get("routeCaptainScore", listwise_captain)
         )
         route_captain *= deadline_captain_factor
+        forecast_v2_captain = float(
+            listwise_row.get("forecastV2CaptainScore", route_captain)
+        )
+        forecast_v2_captain *= deadline_captain_factor
         action_consensus = float(
             listwise_row.get("actionConsensusMapped", horizon)
         ) * (0.75 + 0.25 * minute_ratio)
@@ -436,6 +450,7 @@ def main() -> None:
                 "listwiseHorizonScore": listwise_horizon,
                 "listwiseCaptainScore": listwise_captain,
                 "routeCaptainScore": route_captain,
+                "forecastV2CaptainScore": forecast_v2_captain,
                 "actionConsensusScore": action_consensus,
                 "actionConsensusVote": float(listwise_row.get("actionVote", 0)),
                 # Diagnostic only: fitted on all completed history after its

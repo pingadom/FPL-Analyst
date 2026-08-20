@@ -27,6 +27,9 @@ model artifact lives at `app/data/model-results.json`.
 
 The latest full breakthrough implementation and promotion decisions are
 documented in `analysis/BREAKTHROUGH_IMPLEMENTATION_2026-08-20.md`.
+The forecast-first follow-up, including the full recursive tournament and the
+frozen v2 research challenger, is documented in
+`analysis/FORECAST_BREAKTHROUGH_V2.md`.
 
 ## Data
 
