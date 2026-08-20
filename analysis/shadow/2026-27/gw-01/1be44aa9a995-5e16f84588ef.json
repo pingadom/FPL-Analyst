@@ -1528,15 +1528,5 @@
     }
   ],
   "protocol": "All managers receive the same immutable deadline snapshot. Only locked decisions update recursive state; no post-deadline edit is permitted.",
-  "decisionHash": "5e16f84588ef30519a4a80d57ada9c285a77ed4d80634ae249e317c0998d3515",
-  "decisionPath": "analysis/shadow/2026-27/gw-01/1be44aa9a995-5e16f84588ef.json",
-  "completedGameweeks": 0,
-  "cumulative": {
-    "structural-control": 0,
-    "structural-scenarios": 0,
-    "frontier-challenger": 0,
-    "captain-route-consensus": 0,
-    "breakthrough-decision": 0,
-    "forecast-breakthrough-v2": 0
-  }
+  "decisionHash": "5e16f84588ef30519a4a80d57ada9c285a77ed4d80634ae249e317c0998d3515"
 }

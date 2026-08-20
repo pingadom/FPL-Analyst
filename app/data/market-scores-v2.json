@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "status": "unavailable; forecast-v2 captain falls back to route consensus",
+  "season": "2026-27",
+  "gameweek": 1,
+  "capturedAt": "2026-08-20T12:20:25.929011+00:00",
+  "deadline": "2026-08-21T17:30:00+00:00",
+  "reason": "HTTPError: HTTP Error 300: Multiple Choices",
+  "fixtures": []
+}
