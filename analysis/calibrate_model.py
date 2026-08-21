@@ -3308,6 +3308,24 @@ class SimulationStrategy:
     fieldability_penalty: float = 0.0
     enforce_weekly_xi_floor: bool = False
     consistent_transfer_objective: bool = False
+    # Share of a predicted gain that is believed. The beam picks the maximum over
+    # many candidate bundles, and the maximum of noisy estimates is biased upward:
+    # measured over 350 realised transfers, a predicted six-Gameweek gain of 11.52
+    # delivered 4.31 — a realisation ratio of 0.374, regression slope 0.433.
+    #
+    # For the plain free-transfer decision this knob is *algebraically redundant*
+    # with `transfer_hurdle`, because believing a share of the gain and comparing
+    # against a bar is the same test as comparing the whole gain against a
+    # proportionally larger bar. A sweep confirms it: (1.00, 5.00), (0.60, 3.00)
+    # and (0.35, 1.50) all score identically. So the existing hurdle already *is*
+    # the curse correction, fitted rather than derived — which is why it could
+    # never be justified from first principles.
+    #
+    # It stops being redundant as soon as a fixed cost sits alongside the gain,
+    # because that cost does not scale with it: a paid hit, the package route
+    # discount, or a learned package adjustment. Keep it at 1.0 unless one of
+    # those is active.
+    gain_realisation: float = 1.0
 
 
 EXPERT_STRATEGY = SimulationStrategy(
@@ -4596,7 +4614,12 @@ def joint_transfer_plan(
                 )
             # A hit is charged here rather than netted off afterwards, so the
             # beam compares bundles on what the manager actually banks.
-            surplus = gain + learned_adjustment - hurdle - hit_cost(depth)
+            surplus = (
+                strategy.gain_realisation * gain
+                + learned_adjustment
+                - hurdle
+                - hit_cost(depth)
+            )
             if (
                 strategy.package_route_search
                 and strategy.package_deferred_routes
@@ -4615,7 +4638,7 @@ def joint_transfer_plan(
                     * strategy.transfer_hurdle
                 )
                 route_surplus = (
-                    gain
+                    strategy.gain_realisation * gain
                     + strategy.package_route_discount * future_option_delta
                     - route_hurdle
                     - hit_cost(depth)
@@ -5541,7 +5564,7 @@ def simulate_candidate(
                             else -0.35 * strategy.hold_option_value
                         )
                         move_hurdle += uncertainty_penalty + bank_adjustment
-                    if gain <= move_hurdle:
+                    if strategy.gain_realisation * gain <= move_hurdle:
                         break
                     out_index = row_by_element.get(outgoing)
                     immediate_out = (

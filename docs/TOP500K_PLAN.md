@@ -186,15 +186,33 @@ It explains every decision-layer failure measured today:
   curse, which is why it could not be derived and why it breaks whenever the forecast
   changes.
 
-**Do:** estimate the shrinkage causally on prior seasons — regress realised gain on
-predicted gain over the transfers each policy made — and apply it to every predicted gain
-before it meets a threshold. Then the thresholds become derivable rather than fitted: a
-free transfer's bar is roughly zero, a hit's is 4 real points, a chip's is its own
-opportunity cost. `optimizer_curse_validation.py` already exists in the repo and was never
-wired into the decision path.
+**Tried, and it does not work as stated — the shrinkage is redundant with the hurdle.**
+Believing a share of the gain and comparing against a bar is the same test as comparing
+the whole gain against a proportionally larger bar: `lambda * gain > hurdle` is
+`gain > hurdle / lambda`. A joint sweep confirms it exactly — (1.00, 5.00), (0.60, 3.00)
+and (0.35, 1.50) all score 2058.8, 2058.8 and 2058.9.
 
-*Expected value: this is the enabling fix for the whole of section 2. It is also the
-prerequisite for section 3 converting.*
+So `transfer_hurdle = 5.35` **already is** the curse correction. It was fitted rather than
+derived, which is precisely why it could never be justified from first principles and why
+it breaks whenever the forecast's dispersion changes. The 0.374 realisation ratio is the
+explanation for the hurdle's existence, not a new lever on top of it.
+
+The knob is retained at 1.0 (a no-op) because it stops being redundant the moment a fixed
+cost sits beside the gain and does not scale with it — a paid hit, the package route
+discount, a learned package adjustment. That is the only setting in which shrinking the
+gain and moving the bar differ.
+
+What the sweep *did* show, with the incumbent policy: the hurdle is set too high. Dropping
+it from 5.00 to 1.50 moves the training seasons 2048.5 -> 2062.0 and all ten 2058.8 ->
+2087.5, and it saturates below 1.5 (0.50 scores identically), meaning the binding
+constraint disappears entirely. **This is not shipped**: the effect is +14 on training
+against a measured selection standard error of roughly 48, so it is not distinguishable
+from noise on two seasons, and "transfer every single week" is a degenerate policy that
+deserves better evidence than this before being adopted.
+
+*Expected value: 0 as originally conceived. The real lesson is that the hurdle is the
+curse correction, so any future forecast change must re-derive it — which is what 1.2 now
+does automatically.*
 
 ### 2.2 Paid hits are structurally impossible, not merely disabled
 
@@ -282,10 +300,10 @@ term.
 | 1.1 stabilise the selection gate | measured ±40 swing | 0 (enabling) |
 | 1.2 scale-free thresholds | measured −60 on a better model | +30–50 |
 | 2.1 chip timing, live-aware | measured 35→64 already; pool is 100+ | +60–85 |
-| 2.0 shrink predicted gains | realisation ratio 0.374 measured | +40–70 |
+| 2.0 shrink predicted gains | measured: algebraically redundant with the hurdle | 0 |
 | 2.2 hits in the beam | measured: no price is profitable | 0 until 2.0 |
 | 3 forecast inputs | +7/0.01 corr, +0.02–0.04 available | +15–30 |
-| **total** | | **+145–235** |
+| **total** | | **+105–165** |
 
 The gap is **150–190**. So it closes, but only if the work goes into the decision layer and
 the measurement apparatus. The instinct that "better data analysis should walk this" is
