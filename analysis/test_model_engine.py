@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import unittest
 import sys
 from pathlib import Path
@@ -66,9 +67,11 @@ class ModelEngineTests(unittest.TestCase):
         self.assertLess(tenure[0], tenure[1])
 
     def test_triple_captain_signal_uses_points_not_rank_percentile(self) -> None:
-        self.assertAlmostEqual(lens.triple_captain_signal(7.6, 2), 15.2)
+        # The projection is already a Gameweek total, so the signal must not
+        # multiply a Double Gameweek in a second time.
+        self.assertAlmostEqual(lens.triple_captain_signal(15.2, 2), 15.2)
         self.assertAlmostEqual(lens.triple_captain_signal(7.6, 1), 7.6)
-        self.assertAlmostEqual(lens.triple_captain_signal(7.6, 0), 7.6)
+        self.assertAlmostEqual(lens.triple_captain_signal(7.6, 0), 0.0)
 
     def test_chip_allow_list_round_trips_to_audit_payload(self) -> None:
         policy = lens.ChipPolicy(
@@ -167,7 +170,7 @@ class ModelEngineTests(unittest.TestCase):
         )
 
         def run(strategy: lens.SimulationStrategy) -> tuple[dict, int]:
-            result, _, moves, _ = lens.joint_transfer_plan(
+            result, _, moves, _, _ = lens.joint_transfer_plan(
                 squad={key: value.copy() for key, value in squad.items()},
                 bank=0,
                 free_transfers=1,
@@ -274,7 +277,7 @@ class ModelEngineTests(unittest.TestCase):
         def favour_sixteen(context: dict) -> float:
             return 20.0 if 16 in context["incomingElements"] else 0.0
 
-        result, _, moves, _ = lens.joint_transfer_plan(
+        result, _, moves, _, _ = lens.joint_transfer_plan(
             squad={key: value.copy() for key, value in squad.items()},
             bank=0,
             free_transfers=1,
@@ -309,6 +312,138 @@ class ModelEngineTests(unittest.TestCase):
             safe_captain=False,
         )
         self.assertEqual(strategy.additional_move_hurdle, 1.15)
+
+    def test_team_ratings_ignore_events_the_club_did_not_play(self) -> None:
+        # A blank Gameweek used to enter the attack/defence EWM as a goalless
+        # match, depressing attack and flattering defence for weeks afterwards.
+        rows = []
+        for gw in range(1, 9):
+            blank = gw == 5
+            rows.append(
+                {
+                    "season": "toy",
+                    "season_order": 0,
+                    "GW": gw,
+                    "team_id": 1,
+                    "team_name": "Scorers",
+                    "opponent_team": 2,
+                    "was_home": True,
+                    "team_games": 0 if blank else 1,
+                    "team_goals": 0 if blank else 3,
+                    "team_xg": 0 if blank else 3.0,
+                    "team_goals_against": 0,
+                    "team_xga": 0.0,
+                    "team_clean_sheets": 0 if blank else 1,
+                    "team_result_points": 0 if blank else 3,
+                }
+            )
+        opponents = [dict(row, team_id=2, team_name="Conceders") for row in rows]
+        frame = pd.DataFrame(rows + opponents)
+        rated = lens.add_causal_team_strength(frame)
+        scorers = rated[rated["team_id"] == 1].set_index("GW")
+        # The rating carried into GW6 must reflect the four scoring matches
+        # played, not a phantom goalless fifth.
+        self.assertGreater(float(scorers.loc[6, "team_attack_rating"]), 2.0)
+        self.assertAlmostEqual(
+            float(scorers.loc[6, "team_attack_rating"]),
+            float(scorers.loc[5, "team_attack_rating"]),
+            places=6,
+        )
+
+    def test_expiring_chip_threshold_ramps_down_to_a_token_check(self) -> None:
+        def threshold(chip: str, remaining: int) -> float:
+            floor = lens.CHIP_EXPIRY_THRESHOLD_SHARE[chip]
+            share = 1.0 - math.exp(-remaining / lens.CHIP_HOLD_DECAY_GWS)
+            return floor + (1.0 + lens.CHIP_HOLD_VALUE - floor) * share
+
+        for chip in lens.CHIP_EXPIRY_THRESHOLD_SHARE:
+            ladder = [threshold(chip, remaining) for remaining in range(0, 20)]
+            self.assertAlmostEqual(
+                ladder[0], lens.CHIP_EXPIRY_THRESHOLD_SHARE[chip]
+            )
+            self.assertTrue(all(a < b for a, b in zip(ladder, ladder[1:])))
+            # Patient while the window is open.
+            self.assertGreater(ladder[-1], 1.0)
+
+    def test_wildcard_expires_dearer_than_the_one_week_chips(self) -> None:
+        """A Wildcard's cost is the squad trajectory it leaves behind.
+
+        Free Hit, Bench Boost and Triple Captain settle inside their own
+        Gameweek, so an unplayed one really is worth nothing and dumping it is
+        close to free. Treating the Wildcard the same way fired it 1.75 times a
+        season out of a possible 2.
+        """
+        floors = lens.CHIP_EXPIRY_THRESHOLD_SHARE
+        for chip in ("Free Hit", "Bench Boost", "Triple Captain"):
+            self.assertLess(floors[chip], floors["Wildcard"])
+
+    def test_monotone_map_honours_custom_bins_and_bounds(self) -> None:
+        counts = np.full(20, 50.0)
+        successes = np.linspace(0, 50, 20)
+        mapped = lens.monotone_probability_map(
+            successes, counts, 0.5, bounds=(2.0, 88.0)
+        )
+        self.assertEqual(len(mapped), 20)
+        self.assertTrue(np.all(np.diff(mapped) >= -1e-9))
+        self.assertTrue(np.all((mapped >= 2.0) & (mapped <= 88.0)))
+
+    def test_calibration_tier_tracks_price_within_the_group(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "position_id": [3] * 100,
+                "price": list(range(40, 140)),
+            }
+        )
+        tiers = lens.minutes_calibration_tier(frame, ["position_id"])
+        self.assertEqual(tiers[0], 0)
+        self.assertEqual(tiers[-1], 2)
+        # Monotone in price: a dearer player is never placed in a lower band.
+        self.assertTrue(np.all(np.diff(tiers) >= 0))
+
+    def test_minutes_calibration_undoes_the_compression(self) -> None:
+        """A compressed predictor must be pulled apart by realised outcomes.
+
+        Every player is predicted to start half the time. The cheap ones actually
+        start one week in ten and the expensive ones nine, which is exactly the
+        residual the raw beta prior cannot express.
+        """
+        rows = []
+        for gw in range(1, 21):
+            for index in range(200):
+                rows.append((gw, 40, 0.1, f"cheap{index}"))
+            for index in range(30):
+                rows.append((gw, 100, 0.9, f"prem{index}"))
+        frame = pd.DataFrame(rows, columns=["GW", "price", "true_rate", "who"])
+        rng = np.random.default_rng(7)
+        started = (rng.random(len(frame)) < frame["true_rate"]).astype(float)
+        frame = frame.assign(
+            season="toy",
+            season_order=0,
+            position_id=3,
+            fixture_count=1.0,
+            starts_observed=started,
+            appearances_observed=started,
+            sixty_observed=started,
+            start_minutes_total=started * 85.0,
+            bench_minutes_total=0.0,
+            bench_appearances_observed=0.0,
+            start_probability=0.5,
+            play_probability=0.5,
+            sixty_probability=0.5,
+            minutes_if_start=80.0,
+            minutes_if_bench=20.0,
+        )
+        calibrated = lens.causal_calibrate_minutes(frame)
+        final = calibrated[calibrated["GW"] == 20]
+        cheap = final.loc[final["price"] == 40, "start_probability"].mean()
+        premium = final.loc[final["price"] == 100, "start_probability"].mean()
+        self.assertLess(cheap, 0.25)
+        self.assertGreater(premium, 0.70)
+        # The uncalibrated series is retained so the live deadline can fit its
+        # own map on the raw predictor rather than on a corrected one.
+        self.assertTrue(
+            np.allclose(calibrated["start_probability_uncalibrated"], 0.5)
+        )
 
 
 if __name__ == "__main__":

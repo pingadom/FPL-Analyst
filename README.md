@@ -38,6 +38,9 @@ The fair Lens 7/Lens 8/causal-shadow comparison and the stale-cache root cause
 are in [`docs/PERFORMANCE_AUDIT_LENS8.md`](docs/PERFORMANCE_AUDIT_LENS8.md).
 The causal injury-source, no-show and long-held-player review is in
 [`docs/AVAILABILITY_AND_HELD_PLAYER_AUDIT.md`](docs/AVAILABILITY_AND_HELD_PLAYER_AUDIT.md).
+The independent logic audit, its repaired defects and the open backlog are in
+[`docs/MODEL_LOGIC_AUDIT.md`](docs/MODEL_LOGIC_AUDIT.md). The costed plan for reaching a
+top-500k season average is in [`docs/TOP500K_PLAN.md`](docs/TOP500K_PLAN.md).
 
 ## Data
 
