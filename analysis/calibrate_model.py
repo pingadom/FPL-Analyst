@@ -14,7 +14,7 @@ import unicodedata
 import urllib.request
 from urllib.error import HTTPError
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime
 from pathlib import Path
 
@@ -35,7 +35,7 @@ from live_external_signals import (
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "work" / "fpl-data"
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens8-availability-v3.pkl"
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-minutes-calibrated-v2.pkl"
 OUTPUT = ROOT / "app" / "data" / "model-results.json"
 PLAYERS_OUTPUT = ROOT / "app" / "data" / "current-players.json"
 TRAINING_SEASONS = ["2016-17", "2017-18"]
@@ -61,6 +61,42 @@ TRIALS = 2400
 # adding no new family beyond those already preserved by the priority rules.
 SCREENING_FINALISTS = 80
 CHIP_POLICY_TRIALS = 48
+# Holding an unused chip is an option, and an option is only worth something
+# while weeks remain in which to exercise it. These three constants define that
+# option value as a share of the chip's own base threshold. They deliberately
+# depend on the remaining window length alone: the historical archive has no
+# announcement timestamps for postponements, so the future blank/double schedule
+# cannot be consulted without leaking.
+CHIP_HOLD_VALUE = 0.55
+CHIP_HOLD_DECAY_GWS = 6.0
+# In the final week of a window an unplayed chip is worth nothing, so the bar
+# ramps down towards a token positive-value check rather than expiring the chip
+# unused. Only one chip may be played per Gameweek, so the structural-signal
+# requirement is also waived slightly before the true deadline: several chips
+# can share the same expiry week and they cannot all go in it.
+#
+# The floor is per chip because the chips do not share a cost structure. Free
+# Hit, Bench Boost and Triple Captain are settled inside their own Gameweek, so
+# an unplayed one really is worth nothing and dumping it is close to free. A
+# Wildcard is not: its cost is the squad trajectory it leaves behind, which no
+# single-week measure can see. A flat 0.25 floor fired 14 Wildcards across eight
+# seasons — 1.75 of a possible 2 per season — and turned +76 points of local
+# 2018/19 chip gain into a 30-point seasonal loss. The Wildcard therefore stays
+# close to its searched `wildcard_gap` even at expiry.
+# 0.70 was chosen on the two pre-2018 training seasons alone (2,123.5 against
+# 2,079.5 for the old flat floor). The response surface is rugged — a Wildcard
+# played one week earlier cascades through the rest of the season, so adjacent
+# floors can differ by 20 points with no monotone trend — so treat this as a
+# reasonable setting rather than a tuned optimum.
+CHIP_EXPIRY_THRESHOLD_SHARE: dict[str, float] = {
+    "Wildcard": 0.70,
+    "Free Hit": 0.25,
+    "Bench Boost": 0.25,
+    "Triple Captain": 0.25,
+    "Assistant Manager": 0.25,
+}
+DEFAULT_CHIP_EXPIRY_THRESHOLD_SHARE = 0.25
+CHIP_FORCED_USE_WINDOW_GWS = 1
 POSITION_LABELS = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}
 XI_QUOTAS = {1: 1, 2: 3, 3: 5, 4: 2}
 SQUAD_QUOTAS = {1: 2, 2: 5, 3: 5, 4: 3}
@@ -143,6 +179,186 @@ AFCON_NATIONS = {
     "Uganda", "Zambia", "Zimbabwe",
 }
 
+# Every decision threshold in this file — transfer hurdles, hold-option values,
+# chip gaps — is a number of points. That makes each of them silently dependent on
+# how widely the forecast spreads players apart. Swap in a model with a different
+# dispersion and the same constant means something else, so what gets measured is
+# the scale mismatch rather than the new model. A leak-free six-Gameweek model with
+# a *better* correlation against the six-Gameweek target (0.7114 against 0.6927)
+# cost 60 points a season purely this way.
+#
+# These are the within-Gameweek cross-sectional spreads the frozen constants were
+# tuned against. Thresholds are rescaled by the ratio of the live spread to these,
+# which leaves the tuned configuration unchanged and lets any other forecast be
+# judged on its merits.
+REFERENCE_IMMEDIATE_SPREAD = 1.4641
+REFERENCE_PLAN_SPREAD = 5.6529
+
+
+def cross_sectional_spread(
+    frame: pd.DataFrame, values: np.ndarray, minimum: float = 1e-6
+) -> float:
+    """Mean within-Gameweek standard deviation of a per-player score.
+
+    A per-player threshold lives on the scale that separates players *within* a
+    deadline, which is not the same as the pooled spread across a whole season.
+    """
+    active = frame["fixture_count"].to_numpy(int) > 0
+    if not active.any():
+        return minimum
+    table = pd.DataFrame(
+        {
+            "season": frame["season"].to_numpy()[active],
+            "GW": frame["GW"].to_numpy()[active],
+            "value": np.asarray(values, dtype=float)[active],
+        }
+    )
+    spread = table.groupby(["season", "GW"])["value"].std().mean()
+    return float(max(minimum, 0.0 if pd.isna(spread) else spread))
+
+
+def rescale_decision_thresholds(
+    strategy: "SimulationStrategy",
+    chip_policy: "ChipPolicy | None",
+    immediate_scale: float,
+    plan_scale: float,
+) -> tuple["SimulationStrategy", "ChipPolicy | None"]:
+    """Put every points-denominated threshold back on the live forecast's scale."""
+    strategy = replace(
+        strategy,
+        transfer_hurdle=strategy.transfer_hurdle * plan_scale,
+        additional_move_hurdle=strategy.additional_move_hurdle * plan_scale,
+        hold_option_value=strategy.hold_option_value * plan_scale,
+        hit_immediate_hurdle=strategy.hit_immediate_hurdle * immediate_scale,
+        package_setup_hurdle=strategy.package_setup_hurdle * plan_scale,
+        package_setup_loss_limit=strategy.package_setup_loss_limit * plan_scale,
+        staleness_hurdle_reduction=strategy.staleness_hurdle_reduction * plan_scale,
+        staleness_hold_reduction=strategy.staleness_hold_reduction * plan_scale,
+        staleness_gap_trigger=(
+            None
+            if strategy.staleness_gap_trigger is None
+            else strategy.staleness_gap_trigger * plan_scale
+        ),
+        fieldability_penalty=strategy.fieldability_penalty * plan_scale,
+    )
+    if chip_policy is not None:
+        chip_policy = replace(
+            chip_policy,
+            # A Wildcard is judged on a whole-squad planning utility; the other
+            # three are read off one Gameweek's projected points.
+            wildcard_gap=chip_policy.wildcard_gap * plan_scale,
+            free_hit_gap=chip_policy.free_hit_gap * immediate_scale,
+            bench_score=chip_policy.bench_score * immediate_scale,
+            triple_score=chip_policy.triple_score * immediate_scale,
+        )
+    return strategy, chip_policy
+
+
+# The decision-policy gate picks between four combinations using the mean of two
+# pre-2018 training seasons. Those combinations differ by up to 200 points a season
+# on evaluation data, so choosing between them on n=2 is a coin flip — and it has
+# been observed to flip on an unrelated one-constant change, moving the reported
+# mean by 40 points and individual seasons by nearly 200. A max over four noisy
+# estimates also carries a large optimistic bias.
+#
+# So the gate now defends an incumbent. A challenger has to win a paired
+# block-bootstrap of the weekly training-season differences by a real margin, not
+# merely post a higher point estimate. Weekly blocks keep the streaky, correlated
+# nature of a season intact; pairing cancels the shocks both policies shared.
+# A points hit costs a certain -4, but the gain it is weighed against is a
+# selected maximum over many candidate bundles and is therefore optimistic — the
+# optimiser's curse. Charging the literal 4 makes hits look cheap against
+# horizon-scale gains and the beam takes 15-23 a season, all of them
+# value-destroying. This is the price the beam actually pays, and it is a tuning
+# parameter rather than a rule of the game.
+PAID_MOVE_UTILITY_COST = 4.0
+GATE_INCUMBENT = "central:Six-GW planner + adaptive banking"
+GATE_SWITCH_CONFIDENCE = 0.75
+GATE_BOOTSTRAP_SAMPLES = 2000
+GATE_BOOTSTRAP_BLOCK = 4
+GATE_BOOTSTRAP_SEED = 20260813
+
+
+def block_bootstrap_season_delta(
+    challenger_weeks: list[list[float]],
+    incumbent_weeks: list[list[float]],
+    rng: np.random.Generator,
+    block: int = GATE_BOOTSTRAP_BLOCK,
+    samples: int = GATE_BOOTSTRAP_SAMPLES,
+) -> np.ndarray:
+    """Sampling distribution of the mean season-total difference."""
+    series = [
+        np.asarray(challenger, dtype=float) - np.asarray(incumbent, dtype=float)
+        for challenger, incumbent in zip(challenger_weeks, incumbent_weeks)
+        if len(challenger) == len(incumbent) and len(challenger) >= block
+    ]
+    if not series:
+        return np.zeros(1, dtype=float)
+    draws = np.zeros(samples, dtype=float)
+    for index in range(samples):
+        season_totals = []
+        for values in series:
+            count = len(values)
+            starts = rng.integers(0, count, size=int(np.ceil(count / block)))
+            resampled = np.concatenate(
+                [
+                    np.take(values, range(start, start + block), mode="wrap")
+                    for start in starts
+                ]
+            )[:count]
+            season_totals.append(resampled.sum())
+        draws[index] = float(np.mean(season_totals))
+    return draws
+
+
+def select_gate_option(
+    gate_results: dict[str, tuple],
+    training_count: int,
+) -> tuple[str, dict]:
+    """Keep the incumbent policy unless a challenger clears the selection noise."""
+    rng = np.random.default_rng(GATE_BOOTSTRAP_SEED)
+    incumbent = (
+        GATE_INCUMBENT if GATE_INCUMBENT in gate_results else sorted(gate_results)[0]
+    )
+
+    def weeks(name: str) -> list[list[float]]:
+        return [
+            list(gate_results[name][3][index]["weeklyPoints"])
+            for index in range(min(training_count, len(gate_results[name][3])))
+        ]
+
+    incumbent_weeks = weeks(incumbent)
+    report: dict = {
+        "incumbent": incumbent,
+        "switchConfidence": GATE_SWITCH_CONFIDENCE,
+        "options": {},
+    }
+    selected, best_confidence = incumbent, GATE_SWITCH_CONFIDENCE
+    for name in sorted(gate_results):
+        training_mean = float(np.mean(gate_results[name][0][:training_count]))
+        if name == incumbent:
+            report["options"][name] = {
+                "trainingMean": round(training_mean, 1),
+                "confidenceVsIncumbent": None,
+                "meanDelta": 0.0,
+                "standardError": 0.0,
+            }
+            continue
+        draws = block_bootstrap_season_delta(weeks(name), incumbent_weeks, rng)
+        confidence = float(np.mean(draws > 0))
+        report["options"][name] = {
+            "trainingMean": round(training_mean, 1),
+            "confidenceVsIncumbent": round(confidence, 3),
+            "meanDelta": round(float(draws.mean()), 1),
+            "standardError": round(float(draws.std()), 1),
+        }
+        if confidence >= best_confidence:
+            selected, best_confidence = name, confidence
+    report["selected"] = selected
+    report["switched"] = selected != incumbent
+    return selected, report
+
+
 _SIMULATION_CONTEXT_CACHE: dict[tuple[int, int], dict] = {}
 
 
@@ -221,10 +437,17 @@ def normal_cdf(values: pd.Series | np.ndarray | float) -> np.ndarray:
 
 
 def monotone_probability_map(
-    successes: np.ndarray, counts: np.ndarray, global_rate: float
+    successes: np.ndarray,
+    counts: np.ndarray,
+    global_rate: float,
+    bounds: tuple[float, float] = (0.005, 0.995),
+    shrinkage: float = 32.0,
 ) -> np.ndarray:
-    """Beta-smoothed isotonic bin estimates without an extra dependency."""
-    shrinkage = 32.0
+    """Beta-smoothed isotonic bin estimates without an extra dependency.
+
+    ``successes`` may be any additive quantity (event counts, or realised
+    minutes) as long as ``bounds`` describes the range of the resulting mean.
+    """
     values = (successes + shrinkage * global_rate) / (counts + shrinkage)
     weights = counts + shrinkage
     blocks: list[list[float]] = []
@@ -242,10 +465,10 @@ def monotone_probability_map(
                     merged_weight,
                 ]
             )
-    mapped = np.zeros(10, dtype=float)
+    mapped = np.zeros(len(counts), dtype=float)
     for start, end, value, _ in blocks:
         mapped[int(start) : int(end) + 1] = value
-    return np.clip(mapped, 0.005, 0.995)
+    return np.clip(mapped, bounds[0], bounds[1])
 
 
 def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
@@ -351,13 +574,19 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
 
     for output, values in calibrated.items():
         data[output] = values
-    data["prediction_half_width_80"] = half_width.clip(0.4, 9.0)
+    # The interval caps are per-match ceilings, so a Double Gameweek needs a
+    # correspondingly wider band rather than a truncated one.
+    fixture_scale = np.sqrt(
+        data["fixture_count"].clip(lower=1).to_numpy(float)
+    )
+    data["prediction_half_width_80"] = np.clip(half_width, 0.4, 9.0 * fixture_scale)
     data["prediction_p10"] = (
         data["component_xpts"] - data["prediction_half_width_80"]
     ).clip(lower=0)
-    data["prediction_p90"] = (
-        data["component_xpts"] + data["prediction_half_width_80"]
-    ).clip(upper=25)
+    data["prediction_p90"] = np.minimum(
+        data["component_xpts"] + data["prediction_half_width_80"],
+        25.0 * data["fixture_count"].clip(lower=1),
+    )
     structural_blank = data["fixture_count"].eq(0)
     data.loc[structural_blank, "blank_probability"] = 1.0
     data.loc[structural_blank, "return5_probability"] = 0.0
@@ -406,13 +635,253 @@ def calibrate_live_distributions(
         current.loc[current_mask, "prediction_half_width_80"] = (
             current.loc[current_mask, "projection_std"] * np.clip(ratio_80, 0.25, 2.50)
         )
+    # The ceiling is a per-match cap, so a Double Gameweek gets a proportionally
+    # wider band instead of a truncated one.
+    fixture_ceiling = 25.0 * current["fixture_count"].clip(lower=1)
     current["prediction_p10"] = (
         current["raw_projection"] - current["prediction_half_width_80"]
     ).clip(lower=0)
     current["prediction_p50"] = current["raw_projection"]
-    current["prediction_p90"] = (
-        current["raw_projection"] + current["prediction_half_width_80"]
-    ).clip(upper=25)
+    current["prediction_p90"] = np.minimum(
+        current["raw_projection"] + current["prediction_half_width_80"],
+        fixture_ceiling,
+    )
+    return current
+
+
+MINUTES_CALIBRATION_BINS = 20
+MINUTES_CALIBRATION_MINIMUM_ROWS = 400.0
+# (predicted column, realised numerator, realised denominator, positional prior,
+#  bin scale, output bounds)
+MINUTES_CALIBRATION_SPECS: tuple[
+    tuple[str, str, str, dict[int, float], float, tuple[float, float]], ...
+] = (
+    (
+        "start_probability",
+        "starts_observed",
+        "fixture_count",
+        {1: 0.68, 2: 0.58, 3: 0.56, 4: 0.54},
+        1.0,
+        (0.01, 0.99),
+    ),
+    (
+        "play_probability",
+        "appearances_observed",
+        "fixture_count",
+        {1: 0.70, 2: 0.68, 3: 0.70, 4: 0.70},
+        1.0,
+        (0.02, 0.995),
+    ),
+    (
+        "sixty_probability",
+        "sixty_observed",
+        "fixture_count",
+        {1: 0.66, 2: 0.52, 3: 0.46, 4: 0.42},
+        1.0,
+        (0.01, 0.99),
+    ),
+    (
+        "minutes_if_start",
+        "start_minutes_total",
+        "starts_observed",
+        {1: 88.0, 2: 82.0, 3: 79.0, 4: 77.0},
+        90.0,
+        (30.0, 90.0),
+    ),
+    (
+        "minutes_if_bench",
+        "bench_minutes_total",
+        "bench_appearances_observed",
+        {1: 6.0, 2: 18.0, 3: 22.0, 4: 24.0},
+        90.0,
+        (1.0, 70.0),
+    ),
+)
+
+
+MINUTES_CALIBRATION_TIERS = (0, 1, 2)
+
+
+def _minutes_bins(values: np.ndarray, scale: float) -> np.ndarray:
+    raw = (np.asarray(values, dtype=float) / scale * MINUTES_CALIBRATION_BINS).astype(int)
+    return np.clip(raw, 0, MINUTES_CALIBRATION_BINS - 1)
+
+
+def minutes_calibration_tier(
+    frame: pd.DataFrame, group_columns: list[str]
+) -> np.ndarray:
+    """Coarse deadline-known role band, used as a second calibration axis.
+
+    The predicted probability alone is not a sufficient statistic: inside the
+    same predicted bin, a premium starts far more often than a cheap squad
+    player, because the beta prior compresses the two toward each other. Price is
+    the market's view of who is first choice, it is known at the deadline, and it
+    separates that residual cleanly.
+    """
+    rank = frame.groupby(group_columns)["price"].rank(pct=True).to_numpy(float)
+    return np.select([rank < 0.55, rank < 0.88], [0, 1], default=2).astype(int)
+
+
+def _rebuild_minutes_decomposition(frame: pd.DataFrame) -> None:
+    """Restore the internal consistency the calibrated probabilities must keep."""
+    start = frame["start_probability"].to_numpy(float)
+    play = np.maximum(frame["play_probability"].to_numpy(float), start)
+    sixty = np.minimum(frame["sixty_probability"].to_numpy(float), start)
+    frame["play_probability"] = np.clip(play, 0.02, 0.995)
+    frame["sixty_probability"] = np.clip(sixty, 0.01, 0.99)
+    # Downstream code rebuilds expected minutes from the decomposition rather
+    # than from the probabilities directly, so invert it back out.
+    frame["sub_probability_given_bench"] = np.clip(
+        (play - start) / np.clip(1.0 - start, 1e-6, None), 0.0, 0.95
+    )
+    frame["sixty_probability_given_start"] = np.clip(
+        sixty / np.clip(start, 1e-6, None), 0.0, 1.0
+    )
+
+
+def causal_calibrate_minutes(data: pd.DataFrame) -> pd.DataFrame:
+    """Recalibrate the minutes model on realised outcomes, prior deadlines only.
+
+    The beta-smoothed estimates are compressed. Flat positional priors pull every
+    player toward a common middle, and the rest/rotation/competition penalties can
+    only ever push a start probability *down*, so a nailed starter is capped below
+    his true rate while a fringe player floats above his. Because almost every
+    scoring route is scaled by expected minutes — and appearance and clean-sheet
+    points key directly off the play and 60-minute probabilities — that compression
+    under-rates expensive players and over-rates cheap ones across the board.
+
+    Learn a per-position isotonic map from predicted to realised, scoring each
+    deadline before its own outcomes join the fit.
+    """
+    position_values = data["position_id"].to_numpy(int)
+    tier_values = minutes_calibration_tier(data, ["season", "GW", "position_id"])
+    data["minutes_calibration_tier"] = tier_values
+    cells = [
+        (position, tier)
+        for position in SQUAD_QUOTAS
+        for tier in MINUTES_CALIBRATION_TIERS
+    ]
+    scored = data["fixture_count"].to_numpy(float) > 0
+    keys = (
+        data["season_order"].to_numpy(np.int64) * 1000
+        + data["GW"].to_numpy(np.int64)
+    )
+    order = np.argsort(keys, kind="stable")
+    deadlines = np.split(order, np.flatnonzero(np.diff(keys[order])) + 1)
+
+    for column, numerator, denominator, priors, scale, bounds in (
+        MINUTES_CALIBRATION_SPECS
+    ):
+        raw = data[column].to_numpy(float)
+        successes_all = data[numerator].to_numpy(float)
+        counts_all = data[denominator].to_numpy(float)
+        calibrated = raw.copy()
+        state = {
+            cell: {
+                "successes": np.zeros(MINUTES_CALIBRATION_BINS, dtype=float),
+                "counts": np.zeros(MINUTES_CALIBRATION_BINS, dtype=float),
+                "total_successes": 0.0,
+                "total_count": 0.0,
+            }
+            for cell in cells
+        }
+        for deadline in deadlines:
+            active = deadline[scored[deadline]]
+            for position, tier in cells:
+                local = active[
+                    (position_values[active] == position)
+                    & (tier_values[active] == tier)
+                ]
+                entry = state[(position, tier)]
+                if not len(local) or entry["total_count"] < MINUTES_CALIBRATION_MINIMUM_ROWS:
+                    continue
+                global_rate = (
+                    entry["total_successes"] + 60 * priors[position]
+                ) / (entry["total_count"] + 60)
+                mapping = monotone_probability_map(
+                    entry["successes"], entry["counts"], global_rate, bounds
+                )
+                calibrated[local] = mapping[_minutes_bins(raw[local], scale)]
+            # Update only once the whole deadline has been scored, so a player is
+            # never calibrated using his own result.
+            update = deadline[counts_all[deadline] > 0]
+            for position, tier in cells:
+                local = update[
+                    (position_values[update] == position)
+                    & (tier_values[update] == tier)
+                ]
+                if not len(local):
+                    continue
+                entry = state[(position, tier)]
+                bins = _minutes_bins(raw[local], scale)
+                np.add.at(entry["counts"], bins, counts_all[local])
+                np.add.at(entry["successes"], bins, successes_all[local])
+                entry["total_count"] += float(counts_all[local].sum())
+                entry["total_successes"] += float(successes_all[local].sum())
+        # Keep the uncalibrated series: the live deadline needs a map fitted on
+        # the raw predictor, not on an already-corrected one.
+        data[f"{column}_uncalibrated"] = raw
+        data[column] = calibrated
+
+    _rebuild_minutes_decomposition(data)
+    return data
+
+
+def calibrate_live_minutes(
+    current: pd.DataFrame, historical: pd.DataFrame
+) -> pd.DataFrame:
+    """Apply terminal historical minutes calibration to the next deadline.
+
+    The live minutes model is built from season-to-date starts rather than the
+    historical rolling beta, but both are compressed the same way and live on the
+    same 0-1 (or 0-90) scale, so the historical map transfers.
+    """
+    positions = current["position_id"].astype(int)
+    live_tier = minutes_calibration_tier(current, ["position_id"])
+    history_tier = (
+        historical["minutes_calibration_tier"].to_numpy(int)
+        if "minutes_calibration_tier" in historical
+        else np.full(len(historical), -1)
+    )
+    for column, numerator, denominator, priors, scale, bounds in (
+        MINUTES_CALIBRATION_SPECS
+    ):
+        source = f"{column}_uncalibrated"
+        if source not in historical:
+            continue
+        for position, tier in (
+            (position, tier)
+            for position in sorted(positions.unique())
+            for tier in MINUTES_CALIBRATION_TIERS
+        ):
+            history = historical[
+                (historical["position_id"].astype(int) == position)
+                & (history_tier == tier)
+                & historical[denominator].gt(0)
+            ]
+            if len(history) < MINUTES_CALIBRATION_MINIMUM_ROWS:
+                continue
+            bins = _minutes_bins(history[source].to_numpy(float), scale)
+            counts = np.bincount(
+                bins,
+                weights=history[denominator].to_numpy(float),
+                minlength=MINUTES_CALIBRATION_BINS,
+            ).astype(float)
+            successes = np.bincount(
+                bins,
+                weights=history[numerator].to_numpy(float),
+                minlength=MINUTES_CALIBRATION_BINS,
+            ).astype(float)
+            global_rate = (successes.sum() + 60 * priors[position]) / (
+                counts.sum() + 60
+            )
+            mapping = monotone_probability_map(successes, counts, global_rate, bounds)
+            mask = (positions == position).to_numpy() & (live_tier == tier)
+            live_bins = _minutes_bins(
+                current.loc[mask, column].to_numpy(float), scale
+            )
+            current.loc[mask, column] = mapping[live_bins]
+    _rebuild_minutes_decomposition(current)
     return current
 
 
@@ -465,8 +934,12 @@ def causal_role_ridge_predictions(data: pd.DataFrame) -> pd.Series:
     """Online ridge predictions; a GW is scored before its outcomes update the fit."""
     work = data.reset_index(drop=True)
     features = role_feature_matrix(work)
-    outcomes = work["points"].clip(-2, 20).to_numpy(float)
-    predictions = work["component_xpts_structural"].to_numpy(float).copy()
+    # Per-fixture target: this challenger is blended with the other per-match
+    # routes, and the fixture count is applied once after the blend.
+    outcomes = (
+        (work["points"] / work["fixture_count"].clip(lower=1)).clip(-2, 20)
+    ).to_numpy(float)
+    predictions = work["structural_per_fixture"].to_numpy(float).copy()
     roles = work["player_role"].astype(str).to_numpy()
     observed = work["fixture_count"].to_numpy(int) > 0
     states: dict[str, dict[str, object]] = {}
@@ -509,7 +982,11 @@ def live_role_ridge_predictions(
     historical = historical[historical["fixture_count"] > 0].copy()
     historical_features = role_feature_matrix(historical)
     live_features = role_feature_matrix(current)
-    outcomes = historical["points"].clip(-2, 20).to_numpy(float)
+    outcomes = (
+        (historical["points"] / historical["fixture_count"].clip(lower=1))
+        .clip(-2, 20)
+        .to_numpy(float)
+    )
     max_order = int(historical["season_order"].max())
     recency_weight = np.power(
         0.72, max_order - historical["season_order"].to_numpy(int)
@@ -1476,6 +1953,18 @@ def build_season(
     ).clip(lower=1.0)
 
     def censored_fixture_horizon(row: pd.Series) -> float:
+        """Future opponents are known; the number of future fixtures is not.
+
+        The Premier League publishes all 380 fixtures before the season starts, so
+        who a club faces in GW n+1..n+5 is legitimately available at every
+        deadline. What is *not* available is the rescheduling: blanks and doubles
+        are announced later and the archive keeps no announcement dates. So the
+        opponent difficulty of each future event is used, while each future event
+        contributes exactly one fixture's worth of weight regardless of how many
+        fixtures the archive eventually recorded there. Where a club has no
+        archived fixture the original opponent is unrecoverable, so the neutral
+        median stands in rather than a known blank.
+        """
         base_gw = int(row["GW"])
         position = int(row["position_id"])
         team = int(row["team_id"])
@@ -1488,8 +1977,19 @@ def build_season(
                     (base_gw, position, opponent), fallback
                 ) + (0.18 if home else 0.0)
                 values.append((strength, horizon_weights[0]))
-            for horizon_weight in horizon_weights[1 : len(event_gws)]:
-                values.append((fallback, horizon_weight))
+            for offset, target_gw in enumerate(event_gws[1:], start=1):
+                slate = schedule_map.get((team, target_gw), [])
+                strengths = [
+                    fixture_lookup.get((base_gw, position, opponent), fallback)
+                    + (0.18 if home else 0.0)
+                    for opponent, home in slate
+                ]
+                values.append(
+                    (
+                        sum(strengths) / len(strengths) if strengths else fallback,
+                        horizon_weights[offset],
+                    )
+                )
         if not values:
             return fallback
         return sum(value * weight for value, weight in values) / sum(
@@ -1569,18 +2069,29 @@ def add_causal_team_strength(data: pd.DataFrame) -> pd.DataFrame:
     goals_against = team["team_goals_against"] / games
     xg_for = team["team_xg"] / games
     xg_against = team["team_xga"] / games
-    team["attack_observation"] = np.where(
-        team["team_xg"] > 0,
-        0.72 * xg_for + 0.28 * goals_for,
-        goals_for,
-    )
-    team["defence_observation"] = np.where(
-        team["team_xga"] > 0,
-        0.72 * xg_against + 0.28 * goals_against,
-        goals_against,
-    )
-    team["form_observation"] = team["team_result_points"] / games
-    team["clean_observation"] = team["team_clean_sheets"] / games
+    # A club with no fixture in an event has produced no evidence about its
+    # attack or defence. Leaving those rows in the panel as 0-0 taught the
+    # ratings that every blank Gameweek was a goalless match, which depressed
+    # attack and flattered defence for several weeks after any postponement.
+    played = team["team_games"] > 0
+    team["attack_observation"] = pd.Series(
+        np.where(
+            team["team_xg"] > 0,
+            0.72 * xg_for + 0.28 * goals_for,
+            goals_for,
+        ),
+        index=team.index,
+    ).where(played)
+    team["defence_observation"] = pd.Series(
+        np.where(
+            team["team_xga"] > 0,
+            0.72 * xg_against + 0.28 * goals_against,
+            goals_against,
+        ),
+        index=team.index,
+    ).where(played)
+    team["form_observation"] = (team["team_result_points"] / games).where(played)
+    team["clean_observation"] = (team["team_clean_sheets"] / games).where(played)
 
     league_week = (
         team.groupby(["season", "season_order", "GW"], as_index=False)
@@ -1617,8 +2128,12 @@ def add_causal_team_strength(data: pd.DataFrame) -> pd.DataFrame:
     ).clip(0, 0.94)
 
     def dynamic_rating(column: str, prior: pd.Series | float) -> pd.Series:
+        # ignore_na keeps a blank event from consuming decay weight; the rating
+        # simply carries forward until the club plays again.
         rolling = team.groupby("team_key", sort=False)[column].transform(
-            lambda values: values.ewm(alpha=0.22, adjust=False).mean().shift(1)
+            lambda values: values.ewm(alpha=0.22, adjust=False, ignore_na=True)
+            .mean()
+            .shift(1)
         )
         if isinstance(prior, pd.Series):
             fallback = prior
@@ -1636,10 +2151,14 @@ def add_causal_team_strength(data: pd.DataFrame) -> pd.DataFrame:
     team["team_form_rating"] = dynamic_rating("form_observation", 1.35).clip(0, 3)
     team["team_clean_rating"] = dynamic_rating("clean_observation", 0.28).clip(0, 0.75)
     fast_attack = team.groupby("team_key", sort=False)["attack_observation"].transform(
-        lambda values: values.ewm(alpha=0.48, adjust=False).mean().shift(1)
+        lambda values: values.ewm(alpha=0.48, adjust=False, ignore_na=True)
+        .mean()
+        .shift(1)
     ).fillna(team["league_goal_rate"])
     fast_defence = team.groupby("team_key", sort=False)["defence_observation"].transform(
-        lambda values: values.ewm(alpha=0.48, adjust=False).mean().shift(1)
+        lambda values: values.ewm(alpha=0.48, adjust=False, ignore_na=True)
+        .mean()
+        .shift(1)
     ).fillna(team["league_goal_rate"])
     team["team_regime_shift"] = (
         (
@@ -1851,12 +2370,15 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     minutes_prior = data["position_id"].map({1: 0.66, 2: 0.58, 3: 0.57, 4: 0.55})
     underlying_prior = data["position_id"].map({1: 2.5, 2: 4.0, 3: 6.0, 4: 6.5})
 
-    data["performance_points"] = data["points"].where(
-        data["fixture_count"] > 0
-    )
-    data["performance_minutes"] = data["minutes"].where(
-        data["fixture_count"] > 0
-    )
+    # Per-fixture, not per-Gameweek: the empirical model that consumes these is
+    # blended with the other per-fixture routes and the whole blend is scaled by
+    # the number of fixtures once, at the end.
+    data["performance_points"] = (
+        data["points"] / data["fixture_count"].clip(lower=1)
+    ).where(data["fixture_count"] > 0)
+    data["performance_minutes"] = (
+        data["minutes"] / data["fixture_count"].clip(lower=1)
+    ).where(data["fixture_count"] > 0)
     by_player = data.groupby("player_key", sort=False)
     data["long_raw"] = by_player["performance_points"].transform(
         lambda values: values.expanding().mean().shift(1)
@@ -1972,6 +2494,9 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     data["sixty_probability"] = (
         data["start_probability"] * data["sixty_probability_given_start"]
     ).clip(0.02, 0.98)
+    # Remove the compression before anything downstream consumes these. Every
+    # quantity below is rebuilt from the calibrated decomposition.
+    data = causal_calibrate_minutes(data)
     data["expected_minutes"] = (
         data["start_probability"] * data["minutes_if_start"]
         + (1 - data["start_probability"])
@@ -2009,40 +2534,79 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         lambda values: values.rolling(6, min_periods=1).mean().shift(1)
     ).fillna(data["long_underlying_raw"])
 
+    # Every scoring rate below is a *conditional-on-playing* quantity: the
+    # component forecast multiplies it by expected minutes, so availability must
+    # not also be baked into the rate itself. A week with no fixture, or a week
+    # spent as an unused substitute, is therefore censored rather than recorded
+    # as a zero-return appearance. The per-appearance denominator likewise keeps
+    # a Double Gameweek from inflating a per-match rate.
+    appeared = data["appearances_observed"] > 0
+    appearance_denominator = data["appearances_observed"].clip(lower=1)
     minute_denominator = data["minutes"].clip(lower=45)
-    data["goal_signal_game"] = np.where(
-        data["expected_goals"] > 0,
-        0.72 * data["expected_goals"] + 0.28 * data["goals"],
-        data["goals"],
-    ) / minute_denominator * 90
-    data["assist_signal_game"] = np.where(
-        data["expected_assists"] > 0,
-        0.72 * data["expected_assists"] + 0.28 * data["assists"],
-        data["assists"],
-    ) / minute_denominator * 90
+    data["goal_signal_game"] = (
+        pd.Series(
+            np.where(
+                data["expected_goals"] > 0,
+                0.72 * data["expected_goals"] + 0.28 * data["goals"],
+                data["goals"],
+            ),
+            index=data.index,
+        )
+        / minute_denominator
+        * 90
+    ).where(appeared)
+    data["assist_signal_game"] = (
+        pd.Series(
+            np.where(
+                data["expected_assists"] > 0,
+                0.72 * data["expected_assists"] + 0.28 * data["assists"],
+                data["assists"],
+            ),
+            index=data.index,
+        )
+        / minute_denominator
+        * 90
+    ).where(appeared)
     data["clean_sheet_game"] = (
-        data["clean_sheets"] / data["fixture_count"].clip(lower=1)
-    ).clip(0, 1)
+        (data["clean_sheets"] / appearance_denominator).clip(0, 1).where(appeared)
+    )
     data["defensive_actions_game"] = (
-        data["defensive_actions"] / data["fixture_count"].clip(lower=1)
-    ).clip(0, 35)
+        (data["defensive_actions"] / appearance_denominator)
+        .clip(0, 35)
+        .where(appeared)
+    )
     data["bps_game"] = (
-        data["bps"] / data["fixture_count"].clip(lower=1)
-    ).clip(-10, 80)
+        (data["bps"] / appearance_denominator).clip(-10, 80).where(appeared)
+    )
+    # These official feeds arrive as Gameweek totals, so they need the same
+    # per-appearance normalisation before they can be used as per-match rates.
+    for raw_column in (
+        "saves",
+        "bonus",
+        "yellow_cards",
+        "red_cards",
+        "goals_conceded",
+        "penalties_saved",
+        "penalties_missed",
+        "own_goals",
+    ):
+        data[f"{raw_column}_game"] = (
+            data[raw_column] / appearance_denominator
+        ).where(appeared)
     for source, target, prior in [
         ("goal_signal_game", "goal_rate", {1: 0.01, 2: 0.04, 3: 0.20, 4: 0.28}),
         ("assist_signal_game", "assist_rate", {1: 0.01, 2: 0.08, 3: 0.18, 4: 0.13}),
         ("clean_sheet_game", "clean_sheet_rate", {1: 0.28, 2: 0.28, 3: 0.22, 4: 0.0}),
-        ("saves", "save_rate", {1: 3.0, 2: 0.0, 3: 0.0, 4: 0.0}),
-        ("bonus", "bonus_rate", {1: 0.18, 2: 0.22, 3: 0.28, 4: 0.28}),
-        ("yellow_cards", "yellow_rate", {1: 0.05, 2: 0.12, 3: 0.10, 4: 0.08}),
-        ("red_cards", "red_rate", {1: 0.005, 2: 0.008, 3: 0.006, 4: 0.005}),
-        ("goals_conceded", "conceded_rate", {1: 1.35, 2: 1.35, 3: 0.0, 4: 0.0}),
+        ("saves_game", "save_rate", {1: 3.0, 2: 0.0, 3: 0.0, 4: 0.0}),
+        ("bonus_game", "bonus_rate", {1: 0.18, 2: 0.22, 3: 0.28, 4: 0.28}),
+        ("yellow_cards_game", "yellow_rate", {1: 0.05, 2: 0.12, 3: 0.10, 4: 0.08}),
+        ("red_cards_game", "red_rate", {1: 0.005, 2: 0.008, 3: 0.006, 4: 0.005}),
+        ("goals_conceded_game", "conceded_rate", {1: 1.35, 2: 1.35, 3: 0.0, 4: 0.0}),
         ("defensive_actions_game", "defensive_rate", {1: 0.0, 2: 6.8, 3: 6.0, 4: 3.0}),
         ("bps_game", "bps_rate", {1: 15.0, 2: 14.0, 3: 12.0, 4: 11.0}),
-        ("penalties_saved", "penalty_save_rate", {1: 0.025, 2: 0.0, 3: 0.0, 4: 0.0}),
-        ("penalties_missed", "penalty_miss_rate", {1: 0.0, 2: 0.002, 3: 0.01, 4: 0.015}),
-        ("own_goals", "own_goal_rate", {1: 0.002, 2: 0.008, 3: 0.003, 4: 0.002}),
+        ("penalties_saved_game", "penalty_save_rate", {1: 0.025, 2: 0.0, 3: 0.0, 4: 0.0}),
+        ("penalties_missed_game", "penalty_miss_rate", {1: 0.0, 2: 0.002, 3: 0.01, 4: 0.015}),
+        ("own_goals_game", "own_goal_rate", {1: 0.002, 2: 0.008, 3: 0.003, 4: 0.002}),
     ]:
         rolling = data.groupby("player_key", sort=False)[source].transform(
             lambda values: values.rolling(12, min_periods=1).mean().shift(1)
@@ -2050,12 +2614,21 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         data[target] = rolling.fillna(data["position_id"].map(prior)).clip(lower=0)
 
     data["player_role"] = assign_player_role(data)
-    data["defensive_exact_games"] = data["fixture_count"] * data["defensive_exact"]
+    # Only appearances carry defensive-action evidence; an unused substitute is
+    # not a game in which the player recorded zero actions.
+    data["defensive_exact_games"] = (
+        data["appearances_observed"] * data["defensive_exact"]
+    )
     data["defensive_exact_actions"] = (
         data["defensive_actions_game"] * data["defensive_exact_games"]
     )
+    # Coverage answers "did the feed exist for this fixture", which is a
+    # scheduling question rather than a selection one, so it keeps the fixture
+    # denominator even though the rate itself is per appearance.
+    data["defensive_feed_games"] = data["fixture_count"] * data["defensive_exact"]
     exact_games_prior = rolling_total("defensive_exact_games", 18).fillna(0)
     exact_actions_prior = rolling_total("defensive_exact_actions", 18).fillna(0)
+    feed_games_prior = rolling_total("defensive_feed_games", 18).fillna(0)
     role_defensive_prior = data["player_role"].map(
         {
             "shot_stopper": 0.0,
@@ -2074,7 +2647,7 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         }
     ).fillna(4.0)
     data["defensive_event_coverage"] = (
-        exact_games_prior / prior_games.clip(lower=1)
+        feed_games_prior / prior_games.clip(lower=1)
     ).clip(0, 1)
     data["defensive_rate"] = (
         exact_actions_prior + 5.0 * role_defensive_prior
@@ -2100,10 +2673,17 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         .transform("median")
         .clip(lower=0.01)
     ).clip(0.72, 1.35)
+    # Team attacking strength for *this* fixture, back-ported from the live
+    # forecast so the two paths price the attacking route identically. It is a
+    # relative factor centred on 1.0, so it adjusts a player's long-run personal
+    # rate to the match in front of him rather than re-adding team quality.
+    team_attack_multiplier = (
+        data["team_expected_goals_for"] / data["league_goal_rate"].clip(lower=0.9)
+    ).pow(0.45).clip(0.70, 1.38)
     attacking_points = (
         data["goal_rate"] * goal_points * goal_vulnerability
         + data["assist_rate"] * 3 * assist_vulnerability
-    ) * minutes_factor
+    ) * minutes_factor * team_attack_multiplier
     blended_clean_probability = (
         0.82 * data["team_clean_probability"]
         + 0.18 * data["clean_sheet_rate"]
@@ -2166,12 +2746,22 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         + rare_event_points
         + conceded_points
     )
-    data["component_xpts_structural"] = (
+    # Every route above is priced for one match. The number of matches is
+    # applied once, after the ensemble blend, so that all four models scale with
+    # a Double Gameweek instead of only the structural one.
+    fixture_multiplier = data["fixture_count"].clip(lower=1)
+    data["structural_per_fixture"] = (
         structural_without_dc + defensive_points_season_rules
-    ).clip(0.2, 13.0) * data["fixture_count"].clip(lower=1)
-    data["component_xpts_current_rules"] = (
+    ).clip(0.2, 13.0)
+    data["structural_per_fixture_current_rules"] = (
         structural_without_dc + defensive_points_current_rules
-    ).clip(0.2, 13.5) * data["fixture_count"].clip(lower=1)
+    ).clip(0.2, 13.5)
+    data["component_xpts_structural"] = (
+        data["structural_per_fixture"] * fixture_multiplier
+    )
+    data["component_xpts_current_rules"] = (
+        data["structural_per_fixture_current_rules"] * fixture_multiplier
+    )
 
     data["empirical_xpts"] = (
         (0.62 * data["recent_raw"] + 0.38 * data["long_raw"])
@@ -2190,37 +2780,60 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         )
     ).clip(0.2, 13.5)
     data["role_ridge_xpts"] = causal_role_ridge_predictions(data).clip(0.2, 13.5)
+    # The blend is built on the per-fixture scale, so the errors that set its
+    # weights are measured against per-fixture realised points too. Comparing a
+    # Gameweek-total structural model with three per-match challengers made
+    # every Double Gameweek look like a structural-model failure.
     ensemble_models = [
-        "component_xpts_structural",
+        "structural_per_fixture",
         "empirical_xpts",
         "market_role_xpts",
         "role_ridge_xpts",
     ]
+    points_per_fixture = (
+        data["points"] / data["fixture_count"].clip(lower=1)
+    ).where(data["fixture_count"] > 0)
     error_keys = ["season_order", "GW", "position_id"]
     error_table = data[error_keys].drop_duplicates().sort_values(error_keys).copy()
     for model_name in ensemble_models:
         data[f"{model_name}_absolute_error"] = (
-            data[model_name] - data["points"]
-        ).abs().where(data["fixture_count"] > 0)
+            data[model_name] - points_per_fixture
+        ).abs()
+        # The *signed* error matters as much as its size. Inverse-error weighting
+        # only balances precision, so a member that is systematically high drags
+        # the blend's level with it however small its weight — and the transfer
+        # hurdles and chip thresholds are denominated in points.
+        data[f"{model_name}_signed_error"] = data[model_name] - points_per_fixture
         weekly_error = (
-            data.groupby(error_keys, as_index=False)[f"{model_name}_absolute_error"]
+            data.groupby(error_keys, as_index=False)[
+                [f"{model_name}_absolute_error", f"{model_name}_signed_error"]
+            ]
             .mean()
             .sort_values(error_keys)
         )
-        weekly_error[f"{model_name}_mae"] = weekly_error.groupby(
-            "position_id", sort=False
-        )[f"{model_name}_absolute_error"].transform(
-            lambda values: values.expanding().mean().shift(1)
-        )
+        for source, target in (
+            (f"{model_name}_absolute_error", f"{model_name}_mae"),
+            (f"{model_name}_signed_error", f"{model_name}_bias"),
+        ):
+            weekly_error[target] = weekly_error.groupby(
+                "position_id", sort=False
+            )[source].transform(
+                lambda values: values.expanding().mean().shift(1)
+            )
         error_table = error_table.merge(
-            weekly_error[error_keys + [f"{model_name}_mae"]],
+            weekly_error[
+                error_keys + [f"{model_name}_mae", f"{model_name}_bias"]
+            ],
             on=error_keys,
             how="left",
         )
     data = data.merge(error_table, on=error_keys, how="left")
     data = data.copy()
+    # The merge above rebuilds the index, so any Series captured before it can
+    # no longer be aligned against the new frame.
+    fixture_multiplier = data["fixture_count"].clip(lower=1)
     default_mae = {
-        "component_xpts_structural_mae": 2.85,
+        "structural_per_fixture_mae": 2.85,
         "empirical_xpts_mae": 3.05,
         "market_role_xpts_mae": 3.25,
         "role_ridge_xpts_mae": 3.10,
@@ -2234,25 +2847,44 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     data["ensemble_empirical_weight"] = inverse_errors[1] / inverse_total
     data["ensemble_market_weight"] = inverse_errors[2] / inverse_total
     data["ensemble_role_weight"] = inverse_errors[3] / inverse_total
-    data["component_xpts_base"] = (
-        data["ensemble_structural_weight"] * data["component_xpts_structural"]
-        + data["ensemble_empirical_weight"] * data["empirical_xpts"]
-        + data["ensemble_market_weight"] * data["market_role_xpts"]
-        + data["ensemble_role_weight"] * data["role_ridge_xpts"]
+    # Level-correct each member on its own prior-season bias before blending.
+    # Dropping the worst member outright was tested and lost within-Gameweek
+    # ranking power, so the diversity is kept and only the level is repaired.
+    corrected_models = []
+    for model_name in ensemble_models:
+        bias_column = f"{model_name}_bias"
+        data[bias_column] = data[bias_column].fillna(0.0).clip(-1.5, 1.5)
+        corrected = f"{model_name}_levelled"
+        data[corrected] = (data[model_name] - data[bias_column]).clip(
+            lower=0.2, upper=13.5
+        )
+        corrected_models.append(corrected)
+    data["component_per_fixture"] = (
+        data["ensemble_structural_weight"] * data[corrected_models[0]]
+        + data["ensemble_empirical_weight"] * data[corrected_models[1]]
+        + data["ensemble_market_weight"] * data[corrected_models[2]]
+        + data["ensemble_role_weight"] * data[corrected_models[3]]
     ).clip(0.2, 13.5)
+    data["component_xpts_base"] = data["component_per_fixture"] * fixture_multiplier
     data["component_xpts"] = data["component_xpts_base"] * (
         data["fixture_count"] > 0
     ).astype(float)
     current_rule_uplift = (
-        data["component_xpts_current_rules"] - data["component_xpts_structural"]
+        data["structural_per_fixture_current_rules"]
+        - data["structural_per_fixture"]
     )
-    data["ensemble_xpts_current_rules_base"] = (
-        data["component_xpts_base"] + current_rule_uplift
+    data["component_per_fixture_current_rules"] = (
+        data["component_per_fixture"] + current_rule_uplift
     ).clip(0.2, 14.0)
+    data["ensemble_xpts_current_rules_base"] = (
+        data["component_per_fixture_current_rules"] * fixture_multiplier
+    )
     data["ensemble_xpts_current_rules"] = data[
         "ensemble_xpts_current_rules_base"
     ] * (data["fixture_count"] > 0).astype(float)
-    model_stack = data[ensemble_models].to_numpy(float)
+    # Disagreement between level-corrected members is genuine uncertainty; between
+    # raw members it partly just measures their different calibrations.
+    model_stack = data[corrected_models].to_numpy(float)
     data["ensemble_disagreement"] = np.std(model_stack, axis=1)
     # The immediate component already contains the current opponent through
     # team xG, clean-sheet probability and opponent vulnerability. Translate it
@@ -2262,24 +2894,24 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         (data["fixture_horizon_raw"].fillna(2.5) + 1.5)
         / (data["fixture_raw"].fillna(2.5) + 1.5)
     ).pow(0.35).clip(0.78, 1.28)
-    single_fixture_base = data["component_xpts_base"] / data["fixture_count"].clip(lower=1)
+    single_fixture_base = data["component_per_fixture"]
     data["component_horizon"] = (
         single_fixture_base
         * data["horizon_weighted_games"].clip(lower=1)
         * horizon_multiplier
     ).clip(0.5, 50)
+    # Now that the censored horizon carries real future-opponent information it
+    # should not be held to a tighter band than the uncensored diagnostic.
     censored_horizon_multiplier = (
         (data["fixture_horizon_censored_raw"].fillna(2.5) + 1.5)
         / (data["fixture_raw"].fillna(2.5) + 1.5)
-    ).pow(0.35).clip(0.82, 1.22)
+    ).pow(0.35).clip(0.78, 1.28)
     data["component_horizon_censored"] = (
         single_fixture_base
         * data["horizon_weighted_games_censored"].clip(lower=0)
         * censored_horizon_multiplier
     ).clip(0.0, 50)
-    current_rule_single_fixture = data["ensemble_xpts_current_rules_base"] / data[
-        "fixture_count"
-    ].clip(lower=1)
+    current_rule_single_fixture = data["component_per_fixture_current_rules"]
     data["component_horizon_current_rules"] = (
         current_rule_single_fixture
         * data["horizon_weighted_games"].clip(lower=1)
@@ -2290,12 +2922,15 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         * data["horizon_weighted_games_censored"].clip(lower=0)
         * censored_horizon_multiplier
     ).clip(0.0, 52)
+    # The bracket is a one-match variance, so a Double Gameweek total carries
+    # roughly twice that variance: scale the clipped per-match standard
+    # deviation by sqrt(fixtures). Single Gameweeks are unchanged.
     data["prediction_uncertainty"] = np.sqrt(
         1.1**2
         + 0.020 * data["minutes_std"].pow(2)
         + 0.85 * data["ensemble_disagreement"].pow(2)
         + 2.2 / np.sqrt(data["observations"] + 1)
-    ).clip(1.2, 5.5)
+    ).clip(1.2, 5.5) * np.sqrt(fixture_multiplier)
     data["raw_blank_probability"] = normal_cdf(
         (2.5 - data["component_xpts"]) / data["prediction_uncertainty"]
     )
@@ -2768,7 +3403,10 @@ AUDITED_CHAMPION_CHIP_POLICY = ChipPolicy(
     wildcard_gap=1_000_000.0,
     free_hit_gap=1_000_000.0,
     bench_score=11.0,
-    triple_score=15.0,
+    # Rescaled after the fixture-count repair: the Triple Captain signal is now
+    # the captain's Gameweek total rather than that total multiplied by the
+    # fixture count a second time.
+    triple_score=9.0,
     afcon_bonus=0.0,
     first_wildcard_min_gw=10,
     second_wildcard_min_gw=28,
@@ -2782,8 +3420,10 @@ def chip_policy_pool() -> list[ChipPolicy]:
         ChipPolicy(
             wildcard_gap=float(rng.uniform(30.0, 85.0)),
             free_hit_gap=float(rng.uniform(7.0, 30.0)),
-            bench_score=float(rng.uniform(9.0, 18.0)),
-            triple_score=float(rng.uniform(12.0, 24.0)),
+            # Both bars are read against Gameweek-total projections now that
+            # every ensemble route scales with the fixture count.
+            bench_score=float(rng.uniform(10.0, 22.0)),
+            triple_score=float(rng.uniform(7.0, 15.0)),
             afcon_bonus=float(rng.uniform(0.20, 0.80)),
             first_wildcard_min_gw=int(rng.choice([4, 6, 8, 10])),
             second_wildcard_min_gw=int(rng.choice([20, 24, 28])),
@@ -2792,10 +3432,10 @@ def chip_policy_pool() -> list[ChipPolicy]:
     ]
     policies.extend(
         [
-            ChipPolicy(52.0, 14.0, 12.0, 16.0, 0.55, 10, 20),
-            ChipPolicy(64.0, 20.0, 15.0, 19.0, 0.55, 8, 24),
-            ChipPolicy(42.0, 10.0, 10.0, 14.0, 0.30, 6, 20),
-            ChipPolicy(76.0, 26.0, 17.0, 22.0, 0.70, 10, 28),
+            ChipPolicy(52.0, 14.0, 12.0, 10.0, 0.55, 10, 20),
+            ChipPolicy(64.0, 20.0, 15.0, 12.0, 0.55, 8, 24),
+            ChipPolicy(42.0, 10.0, 10.0, 8.5, 0.30, 6, 20),
+            ChipPolicy(76.0, 26.0, 17.0, 14.0, 0.70, 10, 28),
         ]
     )
     return policies
@@ -3431,8 +4071,12 @@ def triple_captain_signal(expected_points: float, fixture_count: int) -> float:
 
     Captain ranking scores can be percentiles or listwise utilities; they must
     never enter a points threshold directly.
+
+    ``expected_points`` is already a Gameweek total, so it carries the Double
+    Gameweek itself. ``fixture_count`` is retained only to keep a blank from
+    signalling a Triple Captain.
     """
-    return float(expected_points) * max(1, int(fixture_count))
+    return float(expected_points) * float(min(1, max(0, int(fixture_count))))
 
 
 def selling_price(purchase_price: int, current_price: int) -> int:
@@ -3564,12 +4208,19 @@ def joint_transfer_plan(
         strategy.staleness_gap_trigger is not None
         and staleness_gap >= strategy.staleness_gap_trigger
     )
-    # The joint branch currently accounts only for banked free transfers.  A
-    # stale forecast may lower the decision hurdle, but must never silently add
-    # an uncharged move; paid hits require explicit hit accounting.
-    max_moves = max(0, min(int(free_transfers), 5))
+    # Paid moves are searched alongside free ones, and every move beyond the
+    # banked free transfers is charged its full -4 inside the objective, so the
+    # beam only keeps a hit that pays for itself. Before this the branch capped
+    # moves at the free-transfer count, which made `max_hits` silently inert:
+    # setting it to 3 changed the season by 0.0 points and produced 0.0 hits,
+    # because a paid move was not merely discouraged, it was unreachable.
+    paid_allowance = max(0, int(strategy.max_hits))
+    max_moves = max(0, min(int(free_transfers) + paid_allowance, 5))
     if max_moves == 0:
-        return squad, bank, 0, 0.0
+        return squad, bank, 0, 0, 0.0
+
+    def hit_cost(moves: int) -> float:
+        return PAID_MOVE_UTILITY_COST * max(0, moves - int(free_transfers))
 
     def option_utility(element: int, state: dict) -> float:
         index = row_by_element.get(element)
@@ -3943,7 +4594,9 @@ def joint_transfer_plan(
                     * min(1.5, candidate[4] / max(1, depth) / 3.0)
                     + (effective_hold if free_transfers <= 1 else -0.35 * effective_hold)
                 )
-            surplus = gain + learned_adjustment - hurdle
+            # A hit is charged here rather than netted off afterwards, so the
+            # beam compares bundles on what the manager actually banks.
+            surplus = gain + learned_adjustment - hurdle - hit_cost(depth)
             if (
                 strategy.package_route_search
                 and strategy.package_deferred_routes
@@ -3965,14 +4618,16 @@ def joint_transfer_plan(
                     gain
                     + strategy.package_route_discount * future_option_delta
                     - route_hurdle
+                    - hit_cost(depth)
                 )
                 surplus = max(surplus, route_surplus)
             if surplus > best_surplus:
                 best_surplus = surplus
                 best = candidate
     if best[3] == 0:
-        return squad, bank, 0, 0.0
-    return best[2], best[1], best[3], float(best[0] - base_utility)
+        return squad, bank, 0, 0, 0.0
+    paid_moves = max(0, best[3] - int(free_transfers))
+    return best[2], best[1], best[3], paid_moves, float(best[0] - base_utility)
 
 
 def simulate_candidate(
@@ -3995,6 +4650,12 @@ def simulate_candidate(
     """Carry one legal squad through each season and make deadline-only transfers."""
     if plan_scores is None:
         plan_scores = scores
+    strategy, chip_policy = rescale_decision_thresholds(
+        strategy,
+        chip_policy,
+        cross_sectional_spread(data, scores) / REFERENCE_IMMEDIATE_SPREAD,
+        cross_sectional_spread(data, plan_scores) / REFERENCE_PLAN_SPREAD,
+    )
     actual = data[actual_column].to_numpy(float)
     played_minutes = data["minutes"].to_numpy(float)
     element_values = data["element"].to_numpy(int)
@@ -4685,7 +5346,7 @@ def simulate_candidate(
                     and not unlimited_rebuild
                 ):
                     squad_before_joint = set(squad)
-                    squad, bank, changes_this_week, _ = joint_transfer_plan(
+                    squad, bank, changes_this_week, paid_moves, _ = joint_transfer_plan(
                         squad=squad,
                         bank=bank,
                         free_transfers=free_transfers,
@@ -4744,9 +5405,14 @@ def simulate_candidate(
                                     for element in incoming_elements
                                 ],
                                 "bank": round(bank / 10, 1),
+                                "hits": int(paid_moves),
                             }
                         )
                     transfers += changes_this_week
+                    if paid_moves:
+                        hits += paid_moves
+                        hit_cost += 4 * paid_moves
+                        hit_points_this_week += 4 * paid_moves
                     move_range = range(0)
                 else:
                     move_range = range(
@@ -5371,8 +6037,10 @@ def simulate_candidate(
                     and element not in excluded_elements
                 )
                 bench_metric = sum(
+                    # The score is now a Gameweek total, so a bench double is
+                    # already worth twice a bench single; the old hand-added
+                    # 0.15 nudge would double-count it.
                     max(0.0, scores[row_by_element[element]])
-                    + 0.15 * max(0, fixture_counts[row_by_element[element]] - 1)
                     for element in bench
                     if element in row_by_element
                     and element not in excluded_elements
@@ -5593,44 +6261,49 @@ def simulate_candidate(
                         return assistant_manager_option is not None
                     return True
 
-                def schedule_opportunity(chip_name: str, target_gw: int) -> float:
-                    counts = schedule_counts.get(target_gw, {})
-                    blanks = sum(value == 0 for value in counts.values())
-                    doubles = sum(value > 1 for value in counts.values())
-                    largest_double = max(counts.values(), default=1) - 1
-                    if chip_name == "Free Hit":
-                        return 0.36 * blanks + 0.22 * doubles
-                    if chip_name == "Bench Boost":
-                        return 0.22 * doubles + 0.18 * largest_double
-                    if chip_name == "Triple Captain":
-                        return 0.28 * doubles + 0.22 * largest_double
-                    return 0.0
-
                 effective_thresholds: dict[int, float] = {}
                 option_values: dict[int, float] = {}
+                expiring_windows: set[int] = set()
                 for window in available:
                     chip_name = str(window["chip"])
                     base_threshold = thresholds[chip_name]
                     remaining = max(0, int(window["end"]) - gw)
-                    current_schedule_signal = schedule_opportunity(chip_name, gw)
-                    continuation_value = 0.0
-                    option_cost = 0.30 * max(
-                        0.0, continuation_value - current_schedule_signal
+                    # Optimal-stopping option value. Playing a chip today
+                    # forfeits every remaining week in its window, so the bar is
+                    # raised while those weeks exist and ramps down as they run
+                    # out, reaching a token positive-value check in the last
+                    # legal week. This uses the window length only — never the
+                    # future schedule, whose blank/double announcement dates are
+                    # absent from the archive.
+                    horizon_share = 1.0 - math.exp(
+                        -remaining / CHIP_HOLD_DECAY_GWS
                     )
-                    expiry_relief = base_threshold * 0.22 * math.exp(-remaining / 2.3)
+                    expiry_share = CHIP_EXPIRY_THRESHOLD_SHARE.get(
+                        chip_name, DEFAULT_CHIP_EXPIRY_THRESHOLD_SHARE
+                    )
                     key = id(window)
-                    option_values[key] = continuation_value
-                    effective_thresholds[key] = max(
-                        0.60 * base_threshold,
-                        base_threshold + option_cost - expiry_relief,
+                    option_values[key] = (
+                        base_threshold * CHIP_HOLD_VALUE * horizon_share
                     )
+                    effective_thresholds[key] = base_threshold * (
+                        expiry_share
+                        + (1.0 + CHIP_HOLD_VALUE - expiry_share) * horizon_share
+                    )
+                    if remaining <= CHIP_FORCED_USE_WINDOW_GWS:
+                        expiring_windows.add(key)
 
                 choices = [
                     window
                     for window in available
                     if metrics[str(window["chip"])]
                     >= effective_thresholds[id(window)]
-                    and has_structural_signal(str(window["chip"]))
+                    and (
+                        has_structural_signal(str(window["chip"]))
+                        or (
+                            id(window) in expiring_windows
+                            and metrics[str(window["chip"])] > 0
+                        )
+                    )
                 ]
                 chosen_window = max(
                     choices,
@@ -6362,8 +7035,10 @@ def pick_squad(
         0.045 * horizon_per_game
         + 0.055 * play_probability * np.minimum(immediate, 4.5)
     )
+    # The captain contributes one extra copy of their own expected score, so this
+    # block carries weight 1.0 on a points scale — not a rescaled rank.
     captain_utility = (
-        frame["captain_score"].to_numpy(float) * 5
+        frame["captain_score"].to_numpy(float)
         if "captain_score" in frame
         else 0.90 * immediate + 0.10 * model_score * 5
     )
@@ -6543,20 +7218,37 @@ def current_recommendation(
 
     first_fixtures = pd.DataFrame(fixtures)
     first_fixtures = first_fixtures[first_fixtures["event"] == gw_number]
-    fixture_map: dict[int, dict] = {}
+    first_fixtures = first_fixtures.sort_values("kickoff_time", kind="stable")
+    # A club can hold two fixtures in one Gameweek. Keep every one of them:
+    # a single dict entry per club silently discarded the second match, so
+    # opponent, venue, expected goals, clean-sheet probability and the market
+    # join all described one arbitrary half of a Double Gameweek.
+    fixtures_by_team: dict[int, list[dict]] = {}
     for _, fixture in first_fixtures.iterrows():
-        fixture_map[int(fixture["team_h"])] = {
-            "fixture_id": int(fixture["id"]),
-            "opponent": int(fixture["team_a"]),
-            "home": True,
-            "kickoff": fixture["kickoff_time"],
-        }
-        fixture_map[int(fixture["team_a"])] = {
-            "fixture_id": int(fixture["id"]),
-            "opponent": int(fixture["team_h"]),
-            "home": False,
-            "kickoff": fixture["kickoff_time"],
-        }
+        fixtures_by_team.setdefault(int(fixture["team_h"]), []).append(
+            {
+                "fixture_id": int(fixture["id"]),
+                "opponent": int(fixture["team_a"]),
+                "home": True,
+                "kickoff": fixture["kickoff_time"],
+            }
+        )
+        fixtures_by_team.setdefault(int(fixture["team_a"]), []).append(
+            {
+                "fixture_id": int(fixture["id"]),
+                "opponent": int(fixture["team_h"]),
+                "home": False,
+                "kickoff": fixture["kickoff_time"],
+            }
+        )
+    # The single-fixture view is retained only for labelling (opponent badge,
+    # venue, kickoff). It is the earliest match, not an arbitrary one.
+    fixture_map: dict[int, dict] = {
+        team_id: entries[0] for team_id, entries in fixtures_by_team.items()
+    }
+    fixture_counts_by_team: dict[int, int] = {
+        team_id: len(entries) for team_id, entries in fixtures_by_team.items()
+    }
 
     played_history = historical[
         (historical["minutes"] > 0) & historical["player_code"].notna()
@@ -6668,6 +7360,11 @@ def current_recommendation(
     )
     current["position_id"] = current["element_type"].astype(int)
     current["team_id"] = current["team"].astype(int)
+    # Needed before the projection is built: the per-match routes are scaled by
+    # this once, so a Double Gameweek is worth two matches rather than one.
+    current["fixture_count"] = (
+        current["team_id"].map(fixture_counts_by_team).fillna(0).astype(int)
+    )
     current["team_name"] = current["team_id"].map(team_name)
     current["team_full_name"] = current["team_id"].map(team_full_name)
     current["team_key"] = (
@@ -6942,11 +7639,31 @@ def current_recommendation(
         expected_for = float(np.clip(expected_for, 0.30, 3.40))
         return expected_for, expected_against, float(np.exp(-expected_against))
 
-    internal_rates: dict[int, tuple[float, float, float]] = {}
-    for team_id, fixture in fixture_map.items():
-        internal_rates[int(team_id)] = match_rates(
-            int(team_id), int(fixture["opponent"]), bool(fixture["home"])
+    def mean_rates(
+        samples: list[tuple[float, float, float]]
+    ) -> tuple[float, float, float]:
+        """Average per-match rates over a club's fixtures in this Gameweek.
+
+        Every scoring route the projection builds from these is linear in the
+        per-match rate, so the mean rate multiplied by the fixture count equals
+        the correct Double Gameweek total.
+        """
+        return (
+            float(np.mean([sample[0] for sample in samples])),
+            float(np.mean([sample[1] for sample in samples])),
+            float(np.mean([sample[2] for sample in samples])),
         )
+
+    internal_fixture_rates: dict[int, list[tuple[float, float, float]]] = {}
+    for team_id, entries in fixtures_by_team.items():
+        internal_fixture_rates[int(team_id)] = [
+            match_rates(int(team_id), int(entry["opponent"]), bool(entry["home"]))
+            for entry in entries
+        ]
+    internal_rates: dict[int, tuple[float, float, float]] = {
+        team_id: mean_rates(samples)
+        for team_id, samples in internal_fixture_rates.items()
+    }
     expected_market_fixtures = [
         (team_full_name[int(row.team_h)], team_full_name[int(row.team_a)])
         for row in first_fixtures[["team_h", "team_a"]].itertuples(index=False)
@@ -6955,7 +7672,7 @@ def current_recommendation(
     matchbook_lookup = external_fixture_lookup(matchbook_payload)
     opta_fixture_payload = load_opta_fixture_predictions()
     opta_fixture_lookup = opta_fixture_payload.get("lookup", {})
-    immediate_rates: dict[int, tuple[float, float, float]] = dict(internal_rates)
+    immediate_fixture_rates: dict[int, list[tuple[float, float, float]]] = {}
     market_team_detail: dict[int, dict] = {}
     for fixture in first_fixtures.itertuples(index=False):
         home_team = int(fixture.team_h)
@@ -6966,11 +7683,15 @@ def current_recommendation(
         )
         market = matchbook_lookup.get(key)
         opta_fixture = opta_fixture_lookup.get(key)
-        internal_home = internal_rates[home_team]
-        internal_away = internal_rates[away_team]
+        # Rates for *this* match, not the club's Gameweek average, so a market
+        # price is blended against the fixture it actually refers to.
+        internal_home = match_rates(home_team, away_team, True)
+        internal_away = match_rates(away_team, home_team, False)
         internal_outcomes = external_poisson_outcomes(
             internal_home[0], internal_away[0]
         )
+        home_fixture_rates = internal_home
+        away_fixture_rates = internal_away
         market_weight = (
             float(np.clip(0.92 * float(market["quality"]), 0.0, 0.82))
             if market
@@ -7008,8 +7729,10 @@ def current_recommendation(
                 )
             home_for = (1 - market_weight) * internal_home[0] + market_weight * market_home_for
             away_for = (1 - market_weight) * internal_away[0] + market_weight * market_away_for
-            immediate_rates[home_team] = (home_for, away_for, float(np.exp(-away_for)))
-            immediate_rates[away_team] = (away_for, home_for, float(np.exp(-home_for)))
+            home_fixture_rates = (home_for, away_for, float(np.exp(-away_for)))
+            away_fixture_rates = (away_for, home_for, float(np.exp(-home_for)))
+        immediate_fixture_rates.setdefault(home_team, []).append(home_fixture_rates)
+        immediate_fixture_rates.setdefault(away_team, []).append(away_fixture_rates)
         for active_team, is_home in ((home_team, True), (away_team, False)):
             market_win = (
                 float(market["homeProbability"] if is_home else market["awayProbability"])
@@ -7033,7 +7756,9 @@ def current_recommendation(
                 else opta_win
             )
             model_win = float(internal_outcomes[0] if is_home else internal_outcomes[2])
-            market_team_detail[active_team] = {
+            # Fixtures are ordered by kickoff, so in a Double Gameweek this
+            # reports the market view of the same match the fixture label shows.
+            market_team_detail.setdefault(active_team, {
                 "covered": bool(market),
                 "marketWeight": round(market_weight, 4),
                 "modelWinProbability": round(model_win, 4),
@@ -7050,7 +7775,13 @@ def current_recommendation(
                 ),
                 "quality": round(float(market["quality"]), 4) if market else 0.0,
                 "volume": round(float(market["matchVolume"]), 2) if market else 0.0,
-            }
+            })
+    immediate_rates: dict[int, tuple[float, float, float]] = {
+        team_id: mean_rates(samples)
+        for team_id, samples in immediate_fixture_rates.items()
+    }
+    for team_id, fallback in internal_rates.items():
+        immediate_rates.setdefault(int(team_id), fallback)
     current["team_expected_goals_for"] = current["team_id"].map(
         lambda team_id: immediate_rates.get(int(team_id), (1.4, 1.4, 0.25))[0]
     )
@@ -7267,12 +7998,19 @@ def current_recommendation(
     current["sixty_probability"] = (
         current["start_probability"] * prior_sixty_start
     ).clip(0.01, 0.99)
-    minutes_if_start = current["minutes_if_start"].fillna(
+    # Resolve the missing-history defaults before calibrating: the isotonic map
+    # bins on the predicted value and has no NaN bin.
+    current["minutes_if_start"] = current["minutes_if_start"].fillna(
         current["position_id"].map({1: 88.0, 2: 80.0, 3: 76.0, 4: 73.0})
     )
-    minutes_if_bench = current["minutes_if_bench"].fillna(
+    current["minutes_if_bench"] = current["minutes_if_bench"].fillna(
         current["position_id"].map({1: 5.0, 2: 16.0, 3: 20.0, 4: 22.0})
     )
+    # Same compression repair as the historical path, using terminal maps fitted
+    # on the uncalibrated historical predictor.
+    current = calibrate_live_minutes(current, historical)
+    minutes_if_start = current["minutes_if_start"]
+    minutes_if_bench = current["minutes_if_bench"]
     current["minutes_if_start_forecast"] = minutes_if_start
     current["minutes_if_bench_forecast"] = minutes_if_bench
     expected_minutes = (
@@ -7313,10 +8051,6 @@ def current_recommendation(
     team_attack_multiplier = (
         current["team_expected_goals_for"] / league_goal_rate
     ).pow(0.45).clip(0.70, 1.38)
-    fixture_baseline = current.groupby("position_id")["fixture_raw"].transform("median")
-    position_match_multiplier = (
-        current["fixture_raw"] / fixture_baseline.clip(lower=0.35)
-    ).pow(0.24).clip(0.82, 1.18)
     goal_vulnerability = (
         current["opponent_goal_vulnerability"]
         / current.groupby("position_id")["opponent_goal_vulnerability"]
@@ -7349,14 +8083,23 @@ def current_recommendation(
     penalty_role_probability = np.select(
         [penalties_order == 1, penalties_order == 2], [0.86, 0.12], default=0.0
     )
+    # Opta prices a penalty at about 0.79 xG, and FPL's `expected_goals` field is
+    # Opta xG, so an established taker's penalty return is *already inside*
+    # `goal_rate_live`. Adding the full uplift on top double-counted it, worth
+    # roughly half a point a week for exactly the premium forwards and
+    # midfielders. The uplift is therefore worth only what the player's own
+    # history cannot yet tell us — the same 5-appearance prior share the rate
+    # itself uses — which is what makes it useful for a new signing or a taker
+    # who has just been handed the job.
+    set_piece_novelty = (5.0 / rate_denominator).clip(0, 1)
     set_piece_goal_rate = (
         0.075 * current["team_expected_goals_for"] * penalty_role_probability
         + 0.018 * (free_kick_order == 1).astype(float)
-    )
+    ) * set_piece_novelty
     set_piece_assist_rate = (
         0.025 * (corner_order == 1).astype(float)
         + 0.010 * (corner_order == 2).astype(float)
-    )
+    ) * set_piece_novelty
     appearance_component = 1.0 + appearance_share
     goal_component = (
         (goal_rate_live + set_piece_goal_rate)
@@ -7488,21 +8231,50 @@ def current_recommendation(
     )
     current["component_projection_unscaled"] = component_projection
     own_projection = component_projection
+    # `position_match_multiplier` used to scale both of these by the current
+    # fixture rank. That is the second absolute fixture price the handbook says
+    # was removed: the opponent is already inside the structural routes through
+    # expected goals and vulnerability, and neither challenger has a historical
+    # counterpart carrying it. Both are now built exactly as in
+    # `prepare_causal_history`.
     empirical_projection = (
         (0.62 * current["recent_raw"] + 0.38 * current["long_raw"])
         * (0.72 + 0.28 * current["play_probability"])
-        * position_match_multiplier
-    ).clip(0.3, 13.5)
+    ).clip(0.2, 13.5)
     position_base = current["position_id"].map({1: 3.2, 2: 2.8, 3: 3.0, 4: 2.8})
     market_projection = (
         position_base
         * (0.64 + 0.46 * current["minutes_security_raw"])
         * (0.82 + 0.28 * current["team_context_raw"].clip(0.4, 1.8))
         * (0.94 + 0.12 * current["crowd_raw"].rank(pct=True))
-        * position_match_multiplier
-    ).clip(0.3, 13.5)
+    ).clip(0.2, 13.5)
     role_projection = live_role_ridge_predictions(historical, current)
     current["role_ridge_projection"] = role_projection
+    # Level-correct each member against its terminal historical bias, matching
+    # the causal correction in `prepare_causal_history`. Without it the blend
+    # inherits whichever member happens to sit highest, and the hurdles and chip
+    # thresholds it feeds are all denominated in points.
+    scored_history = historical[historical["fixture_count"] > 0]
+    history_per_fixture = scored_history["points"] / scored_history[
+        "fixture_count"
+    ].clip(lower=1)
+    live_positions = current["position_id"].astype(int)
+
+    def level_corrected(history_column: str, projection: pd.Series) -> pd.Series:
+        if history_column not in scored_history:
+            return projection
+        bias = (
+            (scored_history[history_column] - history_per_fixture)
+            .groupby(scored_history["position_id"].astype(int))
+            .mean()
+        )
+        offset = live_positions.map(bias).fillna(0.0).clip(-1.5, 1.5)
+        return (projection - offset).clip(0.2, 13.5)
+
+    own_projection = level_corrected("structural_per_fixture", own_projection)
+    empirical_projection = level_corrected("empirical_xpts", empirical_projection)
+    market_projection = level_corrected("market_role_xpts", market_projection)
+    role_projection = level_corrected("role_ridge_xpts", role_projection)
     structural_weight = current["ensemble_structural_weight"].fillna(0.32)
     empirical_weight = current["ensemble_empirical_weight"].fillna(0.27)
     market_weight = current["ensemble_market_weight"].fillna(0.21)
@@ -7542,9 +8314,17 @@ def current_recommendation(
         / history_per90.abs().clip(lower=2.0)
     ).clip(-0.30, 0.30)
     current["h2h_adjustment"] = (0.10 * h2h_reliability * h2h_signal).clip(-0.025, 0.025)
-    current["raw_projection"] = (
+    current["raw_projection_per_fixture"] = (
         current["raw_projection"] * (1 + current["h2h_adjustment"])
     ).clip(0.4, 13.8)
+    # Every route above prices one match. Apply the number of matches once, at
+    # the end, so a Double Gameweek is projected as two and a blank as zero.
+    # The variance multiplier keeps a floor of one so a blank still has a
+    # defined (and correctly pessimistic) return distribution.
+    live_fixture_multiplier = current["fixture_count"].clip(lower=1)
+    current["raw_projection"] = (
+        current["raw_projection_per_fixture"] * current["fixture_count"].clip(lower=0)
+    )
     ensemble_stack = np.vstack(
         [
             own_projection.to_numpy(float),
@@ -7606,22 +8386,28 @@ def current_recommendation(
         ),
         index=current.index,
     ).clip(0.72, 1.35)
+    # weighted_games already counts both legs of a current Double Gameweek, so
+    # the horizon multiplies the per-match projection, not the Gameweek total.
     current["horizon_projection"] = (
-        current["raw_projection"]
+        current["raw_projection_per_fixture"]
         * weighted_games
         * team_horizon_multiplier
     )
     current["expected_minutes"] = expected_minutes
     official_disagreement = (
         (own_projection - current["ep_next_num"]).abs()
-        / current["raw_projection"].clip(lower=1)
+        / current["raw_projection_per_fixture"].clip(lower=1)
     ).clip(0, 1)
-    current["projection_std"] = np.sqrt(
+    current["projection_std_per_fixture"] = np.sqrt(
         1.05**2
         + 0.020 * current["minutes_std"].pow(2)
         + 0.90 * current["ensemble_disagreement"].pow(2)
         + 1.8 / np.sqrt(nineties + 1)
     ).clip(1.15, 5.8)
+    # A two-match total carries roughly twice the one-match variance.
+    current["projection_std"] = current[
+        "projection_std_per_fixture"
+    ] * np.sqrt(live_fixture_multiplier)
     current["uncertainty"] = (
         current["projection_std"]
         / (current["raw_projection"] + current["projection_std"]).clip(lower=1)
@@ -7658,7 +8444,13 @@ def current_recommendation(
     # These fields feed prospective shadow models only; the production squad
     # score above remains unchanged.
     current["component_xpts"] = current["raw_projection"]
-    current["component_xpts_structural"] = own_projection
+    # Match the historical frame's scales: the structural column is a Gameweek
+    # total, the three challengers are per-match.
+    current["structural_per_fixture"] = own_projection
+    current["component_per_fixture"] = current["raw_projection_per_fixture"]
+    current["component_xpts_structural"] = own_projection * current[
+        "fixture_count"
+    ].clip(lower=0)
     current["empirical_xpts"] = empirical_projection
     current["role_ridge_xpts"] = current["role_ridge_projection"]
     current["horizon_weighted_games_censored"] = weighted_games
@@ -7670,14 +8462,6 @@ def current_recommendation(
     current["observations"] = current["history_matches"].fillna(0)
     current["prediction_uncertainty"] = current["uncertainty"]
     current["GW"] = gw_number
-    current["fixture_count"] = current["team_id"].map(
-        lambda team_id: int(
-            (
-                (first_fixtures["team_h"] == int(team_id))
-                | (first_fixtures["team_a"] == int(team_id))
-            ).sum()
-        )
-    )
     current["selected"] = numeric_current("selected").where(
         numeric_current("selected") > 0,
         current["ownership"] * 50_000,
@@ -7697,7 +8481,9 @@ def current_recommendation(
     ).clip(lower=0.2)
     robust_horizon = (
         current["horizon_projection"]
-        - 0.10 * current["projection_std"] * np.sqrt(weighted_games)
+        - 0.10
+        * current["projection_std_per_fixture"]
+        * np.sqrt(weighted_games)
         + 0.32
         * (current["price_rise_probability"] - current["price_fall_probability"])
         + 0.20 * current["haul8_probability"]
@@ -7747,7 +8533,17 @@ def current_recommendation(
         + 0.22 * pool["horizon_projection"].rank(pct=True)
         + 0.10 * pool["team_attack"].rank(pct=True)
     )
-    pool["captain_score"] = (
+    # Captaincy is worth exactly one extra copy of the player's Gameweek score,
+    # so the armband must be decided in points. The previous blend of four
+    # percentile ranks threw away the only thing that matters — the size of the
+    # gap between the best option and the next — and gave ownership a vote in a
+    # decision ownership has no bearing on. Replayed from 2018/19, it disagreed
+    # with the expected-points choice in 87% of weeks and returned 5.42 against
+    # 6.96 a week.
+    pool["captain_score"] = pool["risk_adjusted_projection"]
+    # Kept separately for display: the rank blend is still a readable "how safe
+    # is this armband" summary, it just must not decide anything.
+    pool["captain_safety"] = (
         0.56 * pool["risk_adjusted_projection"].rank(pct=True)
         + 0.18 * pool["fixture_now"]
         + 0.20 * pool["minutes_security"]
@@ -8103,7 +8899,9 @@ def current_recommendation(
                     float(row["raw_projection"] - popular_rival["raw_projection"]), 1
                 ),
             },
-            "captainRating": round(float(row["captain_score"]) * 100),
+            # A 0-100 readability score. The armband itself is decided on
+            # expected points via `captain_score`, not on this.
+            "captainRating": round(float(row["captain_safety"]) * 100),
             "score": round(float(row["model_score"]) * 100),
             "strategyScores": {
                 "protect": round(float(row["protect_utility"]), 4),
@@ -8396,7 +9194,7 @@ def main() -> None:
         ("central", central_plan_scores, central_gate_fresh),
     ]:
         for strategy_option in [WEEKLY_CHASE_STRATEGY, JOINT_OPTION_STRATEGY]:
-            totals, _ = simulate_candidate(
+            totals, gate_stats = simulate_candidate(
                 data,
                 gate_scores,
                 strategy_option,
@@ -8409,12 +9207,17 @@ def main() -> None:
                 totals,
                 strategy_option,
                 plan_values,
+                gate_stats,
             )
-    selected_gate_name = max(
-        gate_results,
-        key=lambda name: float(np.mean(gate_results[name][0][:training_count])),
+    selected_gate_name, gate_selection_report = select_gate_option(
+        gate_results, training_count
     )
-    selected_probe_totals, active_strategy, gate_plan_scores = gate_results[
+    print(
+        f"Decision gate: {selected_gate_name}"
+        f" ({'switched from' if gate_selection_report['switched'] else 'held'}"
+        f" {gate_selection_report['incumbent']})"
+    )
+    selected_probe_totals, active_strategy, gate_plan_scores, _ = gate_results[
         selected_gate_name
     ]
     robust_planning_enabled = selected_gate_name.startswith("robust:")
@@ -8689,8 +9492,10 @@ def main() -> None:
     structural_only_plan = (
         data["component_horizon_censored"].to_numpy(float)
         * (
-            data["component_xpts_structural"]
-            / data["component_xpts"].clip(lower=0.2)
+            # Per-fixture ratio: both terms are strictly positive, so a blank
+            # Gameweek cannot blow the ablation's horizon up.
+            data["structural_per_fixture"]
+            / data["component_per_fixture"].clip(lower=0.2)
         ).to_numpy(float)
         * best_calibration
     )
@@ -8722,7 +9527,9 @@ def main() -> None:
         key=lambda name: float(np.mean(gate_results[name][0][:training_count])),
         reverse=True,
     )
-    rejected_plan_totals = gate_results[ranked_gate_names[1]][0]
+    rejected_plan_totals = gate_results[
+        next(name for name in ranked_gate_names if name != selected_gate_name)
+    ][0]
     selected_plan_totals = selected_probe_totals
     baseline_totals = recursive_scores[baseline_local_index]
 
@@ -8881,6 +9688,7 @@ def main() -> None:
         "fixtureMatchups": matchups,
         "backtest": walk_forward,
         "rankTarget": rank_target,
+        "decisionGate": gate_selection_report,
         "championGovernance": {
             "decisionChampion": "Lens 8.0" if decision_promoted else "Research baseline",
             "decisionChallenger": "Frozen audited policy",
