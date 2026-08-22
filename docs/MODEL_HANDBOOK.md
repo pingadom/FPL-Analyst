@@ -161,13 +161,13 @@ Hundreds or thousands of weight settings can be screened cheaply, but only a sma
 
 Top-500k cutoffs are estimates rather than complete official historical tables. The model publishes the uncertainty and does not translate out-of-range totals into a made-up precise rank.
 
-The repaired replay averages **2,110.1 points**, against 2,087.0 for the
-previous published model on the same eight evaluation seasons — and that
-comparison carries a selection standard error of roughly 48 points, which is
-larger than the difference. An earlier configuration recorded 2,147.2, but the
-decision gate that produced it was choosing between policies separated by less
-noise than it could measure; the number here is the stable one. Most of the
-improvement is in the forecast rather than the chips. The estimated top-500k shortfall roughly halved, from 210 points to 150
+The repaired replay averages **2,154.5 points**, against 2,087.0 for the
+previous published model on the same eight evaluation seasons. Roughly a third of
+that comes from the forecast repairs and the rest from the decision gate, which
+now pools several candidate weightings before ranking strategies and walks its
+choice forward season by season. Pooling halved the gate's own standard errors,
+which is what let a real difference between policies become visible instead of
+drowning in selection noise. The estimated top-500k shortfall roughly halved, from 210 points to 150
 on average and from 443 to 307 at worst, but the target is still not reached in
 any season. The former 2,212 V3 result stays retired because stale learned-model
 caches made it unreproducible. The earlier Lens 8 comparison is in
