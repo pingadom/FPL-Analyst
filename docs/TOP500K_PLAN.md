@@ -2,8 +2,7 @@
 
 Target: **2,297 points a season** (mean of the eight measured top-500k cutoffs, each
 anchored to sampled official manager ranks — 2024/25's 2,411 sits at rank 500,469).
-Current model: **2,110.1**, with a selection standard error of roughly 48 (see Progress).
-Gap: **187 points**.
+Current model: **2,154.5**. Gap: **142 points**.
 
 Everything below is priced from replay experiments, not estimated. Where a number is a
 guess it says so.
@@ -46,6 +45,37 @@ scores 3577 against a 2297 target. Nothing here is an optimiser problem.
 ---
 
 ## Progress
+
+### Result: +42.9 from repairing the decision gate
+
+| run | change | mean |
+|---|---|---|
+| — | original published model | 2087.0 |
+| 3 | Tier 1 + Round 2 forecast repairs, incumbent-defending gate | 2110.1 |
+| 4 | + walk-forward gate | 2110.1 (+0.0) |
+| 5 | + regime-matched seasons | 2111.6 (+1.5) |
+| **6** | **+ candidate-pooled gate** | **2154.5 (+42.9)** |
+
+Concentrated in 2023/24 (+140) and 2024/25 (+203), and it comes from the walk-forward
+gate finally switching policy in the later seasons.
+
+The mechanism is visible in the gate's own error bars. Pooling three candidates roughly
+halved every standard error — 47.7 to 29.3 on the leading challenger, 54.9 to 31.2, 22.2
+to 19.3. Averaging across candidates removed a variance component that single-candidate
+evaluation had been mistaking for signal.
+
+**Three of the four gate changes were worth nothing on their own.** The walk-forward
+structure had nothing to detect until the comparison feeding it was precise enough to
+detect it. That is the argument for section 1: enabling work scores zero until the thing
+it enables arrives.
+
+The root cause, for the record: the gate judged strategies using a single
+training-selected candidate, but the walk-forward then scored seasons with per-season
+blended candidates. Whether the joint tree beats the incumbent *depends on the weights it
+is judged with* — it trailed by 8.5 under one candidate and led by 32.7 under another. A
+ranking that flips with the weighting is not a ranking.
+
+
 
 **1.1 and 1.2 are done.** Both were enabling work: neither was expected to add points,
 and neither did. What they bought is the ability to measure anything at all.

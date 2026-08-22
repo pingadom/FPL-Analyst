@@ -445,6 +445,44 @@ class ModelEngineTests(unittest.TestCase):
             np.allclose(calibrated["start_probability_uncalibrated"], 0.5)
         )
 
+    def test_gate_prefers_regime_comparable_seasons(self) -> None:
+        """Once an xG-era season exists the gate must stop using pre-xG ones.
+
+        The decision policies rank oppositely across the two data regimes, so
+        selecting on the oldest seasons picks a policy for a game that no longer
+        exists.
+        """
+        weeks = [1.0] * 38
+        gate = {
+            "central:Six-GW planner + adaptive banking": (
+                np.zeros(len(lens.SEASONS)),
+                lens.WEEKLY_CHASE_STRATEGY,
+                None,
+                [{"weeklyPoints": weeks} for _ in lens.SEASONS],
+            ),
+            "central:Joint transfer-chip tree + hold value": (
+                np.zeros(len(lens.SEASONS)),
+                lens.JOINT_OPTION_STRATEGY,
+                None,
+                [{"weeklyPoints": weeks} for _ in lens.SEASONS],
+            ),
+        }
+        modern = lens.SEASONS.index(lens.XG_ERA_FIRST_SEASON)
+
+        _, early = lens.select_gate_option(gate, modern)
+        self.assertFalse(early["regimeMatched"])
+        self.assertIn(lens.SEASONS[0], early["seasonsUsed"])
+
+        _, late = lens.select_gate_option(gate, len(lens.SEASONS))
+        self.assertTrue(late["regimeMatched"])
+        self.assertNotIn(lens.SEASONS[0], late["seasonsUsed"])
+        self.assertTrue(
+            all(
+                lens.SEASONS.index(season) >= modern
+                for season in late["seasonsUsed"]
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
