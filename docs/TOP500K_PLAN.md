@@ -46,6 +46,34 @@ scores 3577 against a 2297 target. Nothing here is an optimiser problem.
 
 ## Progress
 
+### Closed: the objective is not the problem
+
+A manager whose only signal is ownership, run through the identical decision engine —
+same optimiser, same transfer rules, same chips:
+
+| | mean | vs cutoff |
+|---|---|---|
+| template (ownership only) | 1924.4 | **-372.4** |
+| model | 2171.4 | -125.4 |
+| top-500k cutoff | 2296.8 | — |
+
+The template misses the cutoff in all eight seasons, and **the model beats it by 247
+points a season**. That closes the one genuinely fundamental question that was open: it is
+not worth reworking the objective from expected points to something rank-aware. If the
+crowd scored near the cutoff you would need differential play to beat it; the crowd scores
+1,924, and no rank trick converts a 372-point deficit into a surplus. You get there by
+being better, which is what maximising expected points already does.
+
+It also vindicates the handbook's refusal to treat ownership as evidence, and retires the
+earlier suggestion to weight it more heavily. Ownership correlates 0.38 with realised
+points against the model's 0.47; the +0.056 residual correlation with model error is real
+but small enough that the replays correctly measured it as noise.
+
+Caveat on the number: this proxy builds the highest-total-ownership legal squad within
+budget, which is harsher than a real template — actual managers own the popular premiums
+and fill in with value picks. The direction is unambiguous at -372; 1,924 is not a claim
+about what a typical manager scores.
+
 ### Result: +80.9 from repairing the forecast and the decision gate
 
 | run | change | mean |
