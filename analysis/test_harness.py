@@ -66,6 +66,23 @@ class HarnessTests(unittest.TestCase):
         )
         self.assertEqual(clear.verdict, "better")
 
+    def test_zero_uncertainty_is_not_reported_as_unresolved(self) -> None:
+        # Two configurations that never diverge produce identical bootstrap
+        # draws. Calling that "unresolved" invites someone to go looking for a
+        # bigger sample when the honest answer is that nothing happened.
+        none = harness.Comparison("x", 0.0, 0.0, 0.0, standard_error=0.0, confidence=0.0)
+        self.assertEqual(none.verdict, "no effect on the selecting seasons")
+        deterministic = harness.Comparison(
+            "x", -6.0, -6.0, -6.0, standard_error=0.0, confidence=0.0
+        )
+        self.assertEqual(deterministic.verdict, "worse")
+
+    def test_confidently_negative_is_worse_not_unresolved(self) -> None:
+        losing = harness.Comparison(
+            "x", -50.0, -50.0, -50.0, standard_error=10.0, confidence=0.02
+        )
+        self.assertEqual(losing.verdict, "worse")
+
     def test_outcome_splits_training_from_evaluation(self) -> None:
         totals = np.arange(len(lens.SEASONS), dtype=float)
         outcome = harness.Outcome("x", totals, [], [])

@@ -24,6 +24,11 @@ does not re-search anything. Given a configuration it replays deterministically,
 and it reports differences with the uncertainty attached, because effects here are
 routinely smaller than the noise in measuring them.
 
+One more caveat: `reference_config()` reads the shipped artifact, so it tracks
+production and therefore *moves when production moves*. Baseline and variants
+within a single invocation share a configuration and are comparable; numbers from
+two invocations spanning a pipeline run are not.
+
 What this is not
 ----------------
 A harness result is a *screen*, not a release decision. It replays one pinned
@@ -237,9 +242,19 @@ class Comparison:
     def verdict(self) -> str:
         """Effects here are routinely smaller than the noise around them, so a
         point estimate on its own is not a result."""
+        if self.standard_error == 0.0:
+            # Every bootstrap draw was identical, so the configurations either
+            # never diverged or diverged deterministically. Neither is "unresolved".
+            if abs(self.delta_training) < 1e-9:
+                return "no effect on the selecting seasons"
+            return "better" if self.delta_training > 0 else "worse"
         if abs(self.delta_training) < self.standard_error:
             return "indistinguishable from noise"
-        return "better" if self.confidence >= 0.75 else "unresolved"
+        if self.confidence >= 0.75:
+            return "better"
+        if self.confidence <= 0.25:
+            return "worse"
+        return "unresolved"
 
 
 def compare(
