@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22",
+  "generatedAt": "2026-08-24",
   "status": "Lens 8 is the production research model; the causal retrained stack is a shadow challenger; the legacy 2,212 claim is retired.",
   "lens7": {
     "label": "Previous production",
@@ -7,15 +7,15 @@
   },
   "lens8": {
     "label": "Lens 8 repaired model",
-    "average": 2154.5,
-    "deltaVsLens7": 106.4,
+    "average": 2167.9,
+    "deltaVsLens7": 119.8,
     "top500Hits": 0,
     "seasons": 8
   },
   "causalChallenger": {
     "label": "Retrained causal shadow",
     "average": 2094.9,
-    "deltaVsLens8": -59.6,
+    "deltaVsLens8": -73.0,
     "status": "Research-only until a locked promotion test and live final-fit are complete"
   },
   "top500Pace": 2296.8,
@@ -28,7 +28,7 @@
     "status": "Retired: it reused prediction caches built against an older feature schema"
   },
   "hybridDiagnostic": {
-    "average": 2118.5,
+    "average": 2121.9,
     "status": "Rejected because it trailed the causal challenger"
   },
   "accepted": [

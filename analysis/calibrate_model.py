@@ -3385,6 +3385,13 @@ WEEKLY_CHASE_STRATEGY = SimulationStrategy(
     bank_limit=5,
     force_weekly_review=False,
     safe_captain=False,
+    # Hits stay off. In isolation a single paid hit looked strongly positive —
+    # +82.5 on the training seasons and +28.1 across ten with the strategy held
+    # fixed — but through the full pipeline it cost 20.8 points a season,
+    # because allowing it changed the incumbent's profile enough that the
+    # decision gate stopped switching policy in 2024/25 and gave back the 203
+    # points that switch was worth. A local gain that disturbs a larger effect
+    # is not a gain.
     max_hits=0,
     hit_immediate_hurdle=99.0,
     initial_spend_gap=5,
@@ -3480,11 +3487,25 @@ AUDITED_CHAMPION_CHIP_POLICY = ChipPolicy(
 )
 
 
+# The gate's job is to compare decision strategies, so everything else it holds
+# must stay still. Taking its chip policy from the searched pool coupled the two:
+# editing the chip search space silently changed the gate's probe conditions, the
+# switch decision in 2024/25 flipped, and 200 points moved in a season for reasons
+# that had nothing to do with chips. This policy is frozen and deliberately not a
+# member of `chip_policy_pool`.
+GATE_CHIP_POLICY = ChipPolicy(52.0, 14.0, 12.0, 10.0, 0.55, 10, 20)
+
+
 def chip_policy_pool() -> list[ChipPolicy]:
     rng = np.random.default_rng(20260812)
     policies = [
         ChipPolicy(
-            wildcard_gap=float(rng.uniform(30.0, 85.0)),
+            # The floor used to be 30, which put the optimum outside the search
+            # entirely: only 11 of 20 available Wildcards were ever played, and
+            # dropping the bar to 20 is worth +33.5 points on the training
+            # seasons and plays all 20. A threshold the search cannot reach is
+            # not a threshold the search has rejected.
+            wildcard_gap=float(rng.uniform(8.0, 60.0)),
             free_hit_gap=float(rng.uniform(7.0, 30.0)),
             # Both bars are read against Gameweek-total projections now that
             # every ensemble route scales with the fixture count.
@@ -3498,10 +3519,10 @@ def chip_policy_pool() -> list[ChipPolicy]:
     ]
     policies.extend(
         [
-            ChipPolicy(52.0, 14.0, 12.0, 10.0, 0.55, 10, 20),
-            ChipPolicy(64.0, 20.0, 15.0, 12.0, 0.55, 8, 24),
-            ChipPolicy(42.0, 10.0, 10.0, 8.5, 0.30, 6, 20),
-            ChipPolicy(76.0, 26.0, 17.0, 14.0, 0.70, 10, 28),
+            ChipPolicy(20.0, 14.0, 19.0, 10.0, 0.55, 10, 20),
+            ChipPolicy(12.0, 20.0, 15.0, 12.0, 0.55, 8, 24),
+            ChipPolicy(35.0, 10.0, 17.0, 8.5, 0.30, 6, 20),
+            ChipPolicy(50.0, 26.0, 21.0, 14.0, 0.70, 10, 28),
         ]
     )
     return policies
@@ -9260,7 +9281,7 @@ def main() -> None:
     ]
     gate_candidate = gate_candidates[0]
     chip_policies = chip_policy_pool()
-    gate_policy = chip_policies[-4]
+    gate_policy = GATE_CHIP_POLICY
     gate_scores, robust_plan_scores, _ = candidate_forecasts(data, gate_candidate)
     _, central_plan_scores, _ = candidate_forecasts(
         data, gate_candidate, robust_planning=False
@@ -9449,7 +9470,7 @@ def main() -> None:
         if season_id == 0:
             trial_candidate = candidates[-5]
             mode = "fixed preseason seed"
-            trial_policy = chip_policies[-4]
+            trial_policy = GATE_CHIP_POLICY
             chip_mode = "fixed preseason seed"
         else:
             prior = per_gameweek[:, :season_id]

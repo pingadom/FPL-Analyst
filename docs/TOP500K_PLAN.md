@@ -2,7 +2,7 @@
 
 Target: **2,297 points a season** (mean of the eight measured top-500k cutoffs, each
 anchored to sampled official manager ranks — 2024/25's 2,411 sits at rank 500,469).
-Current model: **2,154.5**. Gap: **142 points**.
+Current model: **2,167.9**. Gap: **129 points**.
 
 Everything below is priced from replay experiments, not estimated. Where a number is a
 guess it says so.
@@ -46,7 +46,31 @@ scores 3577 against a 2297 target. Nothing here is an optimiser problem.
 
 ## Progress
 
-### Result: +42.9 from repairing the decision gate
+### Result: +80.9 from repairing the forecast and the decision gate
+
+| run | change | mean |
+|---|---|---|
+| — | original published model | 2087.0 |
+| 3 | Tier 1 + Round 2 forecast repairs | 2110.1 |
+| 6 | candidate-pooled walk-forward gate | 2154.5 |
+| 7 | + widened chip range **and** paid hits | 2133.8 (-20.8) |
+| 8 | + widened chip range only | 2140.9 (-13.6) |
+| **9** | **+ gate decoupled from the chip pool** | **2167.9 (+13.4)** |
+
+Runs 7 and 8 look like failures and were not. The chip-range change was gaining **+153 in
+2022/23 the entire time**, while simultaneously destroying **+203 in 2024/25** through a
+coupling that had nothing to do with chips: `gate_policy` was drawn from the searched chip
+pool, so editing that pool changed the conditions under which strategies were compared and
+the policy switch stopped firing.
+
+The net read as a small loss, and reverting on the net would have thrown away the good
+half with the bad. Only the per-season breakdown showed 2024/25 collapsing in a way the
+change could not plausibly explain. **A net number can hide two large opposing effects.**
+
+`GATE_CHIP_POLICY` is now frozen and explicitly outside the pool. With the dependency gone
+both effects coexist: 2022/23 keeps its +153 and 2024/25 recovers to 2317.
+
+### Earlier: +42.9 from repairing the decision gate
 
 | run | change | mean |
 |---|---|---|
