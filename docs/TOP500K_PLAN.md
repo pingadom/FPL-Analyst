@@ -2,7 +2,7 @@
 
 Target: **2,297 points a season** (mean of the eight measured top-500k cutoffs, each
 anchored to sampled official manager ranks — 2024/25's 2,411 sits at rank 500,469).
-Current model: **2,167.9**. Gap: **129 points**.
+Current model: **2,173.1**. Gap: **124 points**.
 
 Everything below is priced from replay experiments, not estimated. Where a number is a
 guess it says so.
@@ -83,7 +83,8 @@ about what a typical manager scores.
 | 6 | candidate-pooled walk-forward gate | 2154.5 |
 | 7 | + widened chip range **and** paid hits | 2133.8 (-20.8) |
 | 8 | + widened chip range only | 2140.9 (-13.6) |
-| **9** | **+ gate decoupled from the chip pool** | **2167.9 (+13.4)** |
+| 9 | + gate decoupled from the chip pool | 2167.9 (+13.4) |
+| **10** | **+ chips ranked by points, not ratio-to-threshold** | **2173.1 (+5.2)** |
 
 Runs 7 and 8 look like failures and were not. The chip-range change was gaining **+153 in
 2022/23 the entire time**, while simultaneously destroying **+203 in 2024/25** through a

@@ -7,28 +7,28 @@
   },
   "lens8": {
     "label": "Lens 8 repaired model",
-    "average": 2167.9,
-    "deltaVsLens7": 119.8,
+    "average": 2173.1,
+    "deltaVsLens7": 125.0,
     "top500Hits": 0,
     "seasons": 8
   },
   "causalChallenger": {
     "label": "Retrained causal shadow",
-    "average": 2094.9,
-    "deltaVsLens8": -73.0,
+    "average": 2087.2,
+    "deltaVsLens8": -85.9,
     "status": "Research-only until a locked promotion test and live final-fit are complete"
   },
   "top500Pace": 2296.8,
-  "causalGapToPace": 201.9,
+  "causalGapToPace": 209.6,
   "legacyBreakthrough": {
     "label": "Legacy V3 claim",
     "average": 2212.0,
-    "reproducedAverage": 2088.8,
-    "overstatement": 123.2,
+    "reproducedAverage": 2081.1,
+    "overstatement": 130.9,
     "status": "Retired: it reused prediction caches built against an older feature schema"
   },
   "hybridDiagnostic": {
-    "average": 2121.9,
+    "average": 2125.1,
     "status": "Rejected because it trailed the causal challenger"
   },
   "accepted": [
