@@ -58,50 +58,50 @@
     "averageHits": 0.0
   },
   "lens81HybridDiagnostic": {
-    "average": 2118.5,
+    "average": 2121.9,
     "points": [
-      1871,
-      1985,
-      2203,
-      2103,
-      2274,
-      2265,
-      2226,
-      2021
+      1963,
+      1986,
+      2156,
+      2094,
+      2214,
+      2160,
+      2315,
+      2087
     ],
-    "chipGain": 45.2,
-    "averageTransfers": 25.0,
+    "chipGain": 48.6,
+    "averageTransfers": 26.0,
     "averageHits": 0.0,
     "warning": "Diagnostic only: Lens 8 chip policy was selected on the broader historical search and must pass a frozen walk-forward gate before promotion."
   },
   "lens8": {
-    "average": 2154.5,
+    "average": 2167.9,
     "points": [
       2112,
       2028,
-      2142,
-      2315,
-      2119,
+      2138,
+      2303,
+      2272,
       2235,
-      2352,
-      1933
+      2317,
+      1938
     ]
   },
   "deltas": {
     "repairedShadowVsRecordedLegacy": -123.2,
-    "lens8VsRepairedShadow": 65.8,
-    "lens8VsCausalRepairedShadow": 59.6,
-    "hybridVsLens8": -36.0,
-    "lens8VsRecordedLegacy": -57.5,
+    "lens8VsRepairedShadow": 79.1,
+    "lens8VsCausalRepairedShadow": 73.0,
+    "hybridVsLens8": -46.0,
+    "lens8VsRecordedLegacy": -44.1,
     "lens8VsRepairedShadowBySeason": [
       216,
       43,
-      65,
-      333,
-      -116,
+      61,
+      321,
+      37,
       -76,
-      164,
-      -103
+      129,
+      -98
     ]
   },
   "dynamicMarketAudit": {

@@ -161,7 +161,7 @@ Hundreds or thousands of weight settings can be screened cheaply, but only a sma
 
 Top-500k cutoffs are estimates rather than complete official historical tables. The model publishes the uncertainty and does not translate out-of-range totals into a made-up precise rank.
 
-The repaired replay averages **2,154.5 points**, against 2,087.0 for the
+The repaired replay averages **2,167.9 points**, against 2,087.0 for the
 previous published model on the same eight evaluation seasons. Roughly a third of
 that comes from the forecast repairs and the rest from the decision gate, which
 now pools several candidate weightings before ranking strategies and walks its
