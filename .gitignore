@@ -41,3 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 __pycache__/
 *.py[cod]
+
+# harness experiment log (regenerated locally)
+analysis/data/harness_runs.json
