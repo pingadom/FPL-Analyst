@@ -6397,12 +6397,29 @@ def simulate_candidate(
                         )
                     )
                 ]
-                chosen_window = max(
-                    choices,
-                    key=lambda window: metrics[str(window["chip"])]
-                    / max(0.01, effective_thresholds[id(window)]),
-                    default=None,
-                )
+                # Bench Boost, Triple Captain and Free Hit all measure the same
+                # thing — extra points in this Gameweek — so when several clear
+                # their bars at once they are compared on that, not on how far
+                # each cleared a bar of its own. Ranking by ratio let a chip win
+                # a Double Gameweek by having a generous threshold rather than by
+                # being worth more: Bench Boost sums four bench players against a
+                # bar of 19 while Triple Captain doubles one premium against a bar
+                # of 10, and those ratios are not commensurable. A Wildcard's
+                # metric is a squad-planning utility rather than a weekly score,
+                # so it keeps the ratio comparison.
+                immediate_chips = {"Bench Boost", "Triple Captain", "Free Hit"}
+
+                def chip_priority(window: dict) -> tuple[int, float]:
+                    name = str(window["chip"])
+                    if name in immediate_chips:
+                        return (1, float(metrics[name]))
+                    return (
+                        0,
+                        float(metrics[name])
+                        / max(0.01, effective_thresholds[id(window)]),
+                    )
+
+                chosen_window = max(choices, key=chip_priority, default=None)
                 if chosen_window is not None:
                     chip_name = str(chosen_window["chip"])
                     no_chip_points = week_points

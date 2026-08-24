@@ -24,84 +24,84 @@
     ]
   },
   "repairedShadow": {
-    "average": 2088.8,
+    "average": 2081.1,
     "points": [
       1896,
-      1985,
+      1957,
       2077,
       1982,
       2235,
-      2311,
+      2278,
       2188,
       2036
     ],
     "noChipAverage": 2069.1,
-    "chipGain": 19.6,
+    "chipGain": 12.0,
     "averageTransfers": 29.0,
     "averageHits": 0.0
   },
   "causalRepairedShadow": {
-    "average": 2094.9,
+    "average": 2087.2,
     "points": [
       1898,
-      1986,
+      1958,
       2059,
       2001,
       2247,
-      2328,
+      2295,
       2191,
       2049
     ],
     "noChipAverage": 2073.2,
-    "chipGain": 21.6,
+    "chipGain": 14.0,
     "averageTransfers": 29.0,
     "averageHits": 0.0
   },
   "lens81HybridDiagnostic": {
-    "average": 2121.9,
+    "average": 2125.1,
     "points": [
-      1963,
+      1962,
       1986,
-      2156,
+      2183,
       2094,
       2214,
       2160,
       2315,
       2087
     ],
-    "chipGain": 48.6,
-    "averageTransfers": 26.0,
+    "chipGain": 51.9,
+    "averageTransfers": 25.9,
     "averageHits": 0.0,
     "warning": "Diagnostic only: Lens 8 chip policy was selected on the broader historical search and must pass a frozen walk-forward gate before promotion."
   },
   "lens8": {
-    "average": 2167.9,
+    "average": 2173.1,
     "points": [
       2112,
-      2028,
+      2030,
       2138,
-      2303,
+      2301,
       2272,
-      2235,
-      2317,
-      1938
+      2247,
+      2352,
+      1933
     ]
   },
   "deltas": {
-    "repairedShadowVsRecordedLegacy": -123.2,
-    "lens8VsRepairedShadow": 79.1,
-    "lens8VsCausalRepairedShadow": 73.0,
-    "hybridVsLens8": -46.0,
-    "lens8VsRecordedLegacy": -44.1,
+    "repairedShadowVsRecordedLegacy": -130.9,
+    "lens8VsRepairedShadow": 92.0,
+    "lens8VsCausalRepairedShadow": 85.9,
+    "hybridVsLens8": -48.0,
+    "lens8VsRecordedLegacy": -38.9,
     "lens8VsRepairedShadowBySeason": [
       216,
-      43,
+      73,
       61,
-      321,
+      319,
       37,
-      -76,
-      129,
-      -98
+      -31,
+      164,
+      -103
     ]
   },
   "dynamicMarketAudit": {
