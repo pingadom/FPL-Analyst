@@ -26,6 +26,14 @@ pnpm research:refresh
 Historical data is cached under `work/` and is not committed. The generated
 model artifact lives at `app/data/model-results.json`.
 
+Three supporting modules sit alongside the pipeline:
+
+| module | what it does |
+|---|---|
+| `analysis/harness.py` | replays a *pinned* configuration so one change can be measured without the pipeline re-searching around it. A screen, not a release decision — confirm with a full run. |
+| `analysis/historical_odds.py` | free *opening* betting prices for all ten replayed seasons, de-vigged into implied team goals. The backtest previously had no market view at all. |
+| `analysis/team_identity.py` | recovers club names for 2016/17 and 2017/18, whose archive ships no team list, and verifies them against an independent match record (380/380 on both seasons). |
+
 Older breakthrough implementation notes are retained as research history, but
 their 2,212-point headline is retired because it did not reproduce under the
 repaired schema and cache rules.

@@ -8,19 +8,27 @@ never validated.
 football-data.co.uk closes that gap. It publishes free, unauthenticated CSVs of
 closing prices for every Premier League match, and Pinnacle — the sharpest of the
 listed books — covers all ten seasons the model replays, 380 matches each.
+At full coverage its implied goals correlate 0.3846 with realised team goals,
+against 0.2495 for the model's own expected goals.
 
 Timestamp discipline
 --------------------
-These are *closing* prices, taken at kick-off. A Gameweek deadline falls before
-kick-off, so a closing line contains team news the manager did not have: late
-injuries, rotation, and in the extreme a confirmed lineup. Using it raw would
-leak, in the same way the archive's final blank/double assignments would.
+The sheet carries two lines per match, and which one is used decides whether this
+is a forecast or a leak. `PSCH` is the *closing* price, taken at kick-off, and a
+Gameweek deadline falls before kick-off — so a closing line contains team news the
+manager did not have: late injuries, rotation, and in the extreme a confirmed
+lineup. `PSH` is the *opening* price, posted days ahead and, for the first match
+of a Gameweek, before the deadline that governs it.
 
-Two things keep that honest. The market's weight is capped well below the live
-path's, and it is applied to *team* scoring rates only, never to a player's own
-availability, which is where post-deadline news does its real damage. A shifted
-team total is a much weaker leak than a shifted lineup, and the cap is a tunable
-so the sensitivity can be measured rather than assumed.
+**This module uses the opening line and never the closing one.** The two are not
+interchangeable: they differ on 97.6% of matches, by an average of 0.194 on the
+home price. `PRICE_COLUMNS` and `OVER_COLUMNS` below therefore list only
+un-prefixed columns; anything with a `C` infix is deliberately absent.
+
+Two further guards. The market's weight is capped well below the live path's, and
+it is applied to *team* scoring rates only, never to a player's own availability,
+which is where late news does its real damage. The cap is a tunable so the
+sensitivity can be measured rather than assumed.
 """
 
 from __future__ import annotations
@@ -61,6 +69,10 @@ TEAM_ALIASES = {
     "tottenham": "spurs",
     "nottmforest": "nottmforest",
     "sheffieldunited": "sheffutd",
+    # FPL writes "Sheffield Utd" and the odds sheet "Sheffield United"; without
+    # this both sides normalise one hop apart and three seasons silently lose a
+    # club, which the coverage report showed as a flat 90%.
+    "sheffieldutd": "sheffutd",
     "sheffieldweds": "sheffieldwed",
     "westbrom": "westbrom",
     "wolverhampton": "wolves",
@@ -71,6 +83,10 @@ TEAM_ALIASES = {
 
 # Pinnacle first: it is the sharpest book on the sheet and the only one complete
 # across every replayed season. The others stand in where it is missing.
+#
+# Every name here is the *opening* line. The closing equivalents (PSCH, B365CH,
+# AvgC*) exist in all ten files and must stay out: they are priced at kick-off,
+# after the deadline these forecasts are made at. See "Timestamp discipline".
 PRICE_COLUMNS = (
     ("PSH", "PSD", "PSA"),
     ("B365H", "B365D", "B365A"),

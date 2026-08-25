@@ -483,6 +483,80 @@ class ModelEngineTests(unittest.TestCase):
             )
         )
 
+    def test_placeholder_seasons_have_real_club_names(self):
+        """The two nameless seasons must resolve to twenty real clubs each.
+
+        Placeholder names are not cosmetic. `add_causal_team_strength` scopes its
+        `team_key` per season for anything starting "Team ", so a placeholder
+        restarts every club's rating history at the 2017 to 2018 boundary, and no
+        external source can be joined by club.
+        """
+        import historical_odds as odds
+        import team_identity as identity
+
+        for season in identity.PLACEHOLDER_SEASONS:
+            mapping = identity.PLACEHOLDER_TEAM_NAMES[season]
+            self.assertEqual(len(mapping), 20)
+            self.assertEqual(sorted(mapping), list(range(1, 21)))
+            self.assertFalse(
+                any(name.startswith("Team ") for name in mapping.values())
+            )
+            keys = {odds.normalise_team(name) for name in mapping.values()}
+            self.assertEqual(len(keys), 20)
+            # The reconstructed clubs must be exactly the twenty an independent
+            # record says played that season — not merely twenty distinct names.
+            self.assertEqual(keys, set(identity.season_club_names(season)))
+
+    def test_recovered_names_share_team_keys_with_named_seasons(self):
+        """A club in both eras must key identically, or its rating still restarts."""
+        import historical_odds as odds
+        import team_identity as identity
+
+        earlier = {
+            odds.normalise_team(name)
+            for name in identity.PLACEHOLDER_TEAM_NAMES["2017-18"].values()
+        }
+        later = set(identity.season_club_names("2018-19"))
+        # Sixteen clubs survived 2017/18 into 2018/19; the exact figure matters
+        # less than that the overlap is substantial rather than empty, which is
+        # what a spelling mismatch would produce.
+        self.assertGreaterEqual(len(earlier & later), 15)
+
+    def test_market_uses_opening_odds_never_closing(self):
+        """The opening line is priced before the deadline; the closing line is not.
+
+        football-data ships both, and they are not interchangeable — they differ on
+        the large majority of matches. Reading a `C`-infixed column would turn this
+        forecast into a leak, silently, because a closing line is strictly the
+        better predictor and would look like an improvement.
+        """
+        import historical_odds as odds
+
+        selected = [
+            name
+            for group in (*odds.PRICE_COLUMNS, *odds.OVER_COLUMNS)
+            for name in group
+        ]
+        self.assertTrue(selected)
+        for name in selected:
+            # Closing columns are the opening name with a C before the outcome:
+            # PSH -> PSCH, Avg>2.5 -> AvgC>2.5, B365H -> B365CH.
+            self.assertNotIn("C>", name)
+            self.assertNotIn("C<", name)
+            self.assertFalse(
+                name.endswith(("CH", "CD", "CA")),
+                f"{name} is a closing-odds column",
+            )
+
+    def test_market_blend_is_off_by_default(self):
+        """A market weight must be opt-in, and must not share a cache when set.
+
+        A blended frame reachable under the unblended cache name would serve one
+        experiment's data to every later run.
+        """
+        self.assertEqual(lens.MARKET_BLEND_WEIGHT, 0.0)
+        self.assertNotIn("market", lens.PREPARED_HISTORY_CACHE.name)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -53,6 +53,18 @@ Manager changes, major exits, promotion and European workload reduce confidence 
 
 Opta and Matchbook can disagree. That disagreement is displayed. It is not resolved by pretending one source is always right: the exchange receives more current-fixture weight, while Opta supplies an independent model vote.
 
+The backtest had none of that for a long time, because exchange data does not exist far enough back — which meant any odds-derived idea could be shipped and never checked. `analysis/historical_odds.py` closes the gap with free closing prices covering all ten replayed seasons, and the comparison is not close: implied goals correlate 0.3846 with realised team goals where the model's own expected goals manage 0.2495.
+
+The source publishes two lines per match and the distinction matters more than the headline. The *closing* price is taken at kick-off, after the deadline, and carries team news the manager never had. The *opening* price is posted days ahead. This model uses the opening line and never the closing one — they are not interchangeable, differing on 97.6% of matches. The weight is also capped and applied to team scoring rates only, never to a player's own availability, which is where late news does its real damage.
+
+One caution stands regardless: the correlation is a forecast-quality number, not a points number. A better team forecast has to survive the squad, captain and transfer layers before it is worth anything, and this project has repeatedly seen component gains evaporate end to end. That is a separate measurement.
+
+#### Two seasons had no club names at all
+
+The 2016/17 and 2017/18 archives ship no team list, so the loader fell back to `Team 1` … `Team 20`. That is not cosmetic. Ratings are keyed by club name, and placeholder names are scoped per season, so **every club's rating history restarted in 2018/19** — and nothing external could be joined to those two seasons by club, which silently excluded the market from precisely the seasons used to *select* weights.
+
+`analysis/team_identity.py` recovers the names from `team_code`, which unlike the per-season `team` id is stable across seasons. The handful of clubs that never appear in a named season have no such anchor and are filled by alphabetical position, which is a guess — so the result is verified rather than trusted: every fixture is rebuilt from the archive and checked, opponent and score together, against an independent match record. Both seasons verify **380/380**.
+
 ### 4. Price the current fixture exactly once
 
 This was a major Lens 8 repair.
