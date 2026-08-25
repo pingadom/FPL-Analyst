@@ -388,6 +388,58 @@ term.
 | 3 forecast inputs | **market beats the model 0.3846 vs 0.2495 on team goals** | +15–30, now testable |
 | **total** | | **+105–165** |
 
+### Full-run ledger for this session's changes
+
+Every number here is the mean over the eight evaluation seasons through the
+complete walk-forward, which re-selects the candidate and the chip policy. Nothing
+below is a harness screen.
+
+| # | configuration | mean | delta |
+|---|---|---|---|
+| — | previous published | 2173.1 | — |
+| A | + recovered team names, blank-free calibration | 2127.1 | −46.0 |
+| B | + midweek European congestion | 2139.9 | +12.8 |
+| C | + recent-absence calibration axis | **2177.9** | **+38.0** |
+| D | + betting market in team expected goals | pending | |
+
+Run C clears the previous published 2173.1, and its decomposition is what makes it
+credible rather than lucky. Splitting each run into chip points and everything
+else:
+
+| run | mean | without chips | chips |
+|---|---|---|---|
+| A | 2127.1 | 2067.1 | +60.0 |
+| B | 2139.9 | 2049.8 | +90.1 |
+| C | 2177.9 | 2100.4 | +77.5 |
+
+The European feature gained through **chips** (+30.1) while the base squad got
+slightly worse (-17.3) — sensible, because knowing a club rests players before a
+knockout tie helps decide when to fire a Bench Boost more than it helps pick a
+squad. The absence fix did the opposite: chips fell 12.6 while the **base squad
+rose 50.6**, which is exactly what a better minutes forecast should do — it
+improves every week's eleven rather than one decision a season. Two changes, two
+different mechanisms, each showing up in the half of the score it should.
+
+2020/21 also cleared the top-500k cutoff for the first time (+7), taking the hit
+rate from 0/8 to 1/8 and the mean margin from -169.6 to -118.9.
+
+Against run A the absence fix is +50.8 +/- 36.9 (1.4 SE) with 5 of 8 seasons
+improved; against the published 2173.1 it is +4.8, which is noise. The claim worth
+making is that it recovered the -46 and edged past, with a coherent mechanism —
+not that a large gain has been banked.
+
+Run B is the first end-to-end confirmation of a change made this session. The
+European feature screened at +4.9 +/- 8.3 under a pinned policy and delivered
+**+12.8** through the full pipeline — same sign, larger effect, which is the
+opposite of the usual pattern here and consistent with the pinned screen being
+unable to see the chip and candidate re-selection it enables. Chip gains recovered
+from a mean of 60.0 in run A to 90.1 in run B.
+
+The −46.0 at run A remains attributed to selection variance rather than to the
+repairs themselves: bisecting the frame under a pinned policy showed every repair
+neutral-to-positive, and the pinned comparison itself flips sign depending on which
+champion is pinned. See the two sections below.
+
 ### The archive has no injury feed, and the one signal it does have was ignored
 
 No season's per-Gameweek file carries `chance_of_playing`, `status` or `news`, and
@@ -558,9 +610,36 @@ seasons and ~90% on three others to **100% across all ten**. The comparison is n
 | market implied goals | **0.3846** |
 | model expected goals | 0.2495 |
 
-At the measured exchange rate of roughly +7 season points per +0.01 of weekly correlation,
-that difference is the largest single forecast lever identified so far. Two caveats hold it
-to "testable" rather than "banked":
+**Correction: this is not the large lever it looked like.** Blending the market into team
+expected goals at weight 0.35 was built and measured, and the edge does not survive the
+trip to player points:
+
+| | team-xG correlation | player `component_xpts` correlation | MAE |
+|---|---|---|---|
+| model alone | 0.2495 | 0.5388 | 1.1984 |
+| blended at 0.35 | **0.3244** | 0.5407 | 1.1963 |
+
+A 30% relative improvement in forecasting *team goals* produces a 0.35% improvement in
+forecasting *player points*. The improvement is real and consistent everywhere the market
+can reach, and then it hits a wall:
+
+| measure | model alone | blended | relative |
+|---|---|---|---|
+| team expected goals for | 0.2495 | 0.3244 | +30% |
+| team expected goals against | 0.2543 | 0.3342 | +31% |
+| clean-sheet probability (60+ minute defenders) | 0.1716 | 0.2250 | +31% |
+| **player points, pooled** | **0.5388** | **0.5407** | **+0.35%** |
+
+By position the gain lands where the theory says it should — defenders +0.0039 and keepers
++0.0020 against midfielders +0.0009 — because a team total predicts clean sheets and very
+little else about a player. Attacking returns depend on *which* player scores, and minutes,
+bonus and cards dominate the rest. That is the 78%-irreducible weekly variance in practice.
+
+The earlier framing of this as "the largest single forecast lever identified so far" was
+wrong, and wrong in an instructive way: it compared a team-level metric against a
+player-level target and assumed transmission. The right reading is that the market is a
+strong *defensive* signal worth keeping, not a general forecast upgrade. Two further
+caveats stand:
 
 * This is a *team goals* correlation, not a player-points one, and it must survive the
   squad, captain and transfer layers. This project has watched component gains evaporate end
