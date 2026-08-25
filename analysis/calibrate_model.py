@@ -74,6 +74,30 @@ MARKET_BLEND_WEIGHT = float(os.environ.get("FPL_MARKET_BLEND", "0.0"))
 EUROPEAN_KNOCKOUT_REST_PENALTY = float(
     os.environ.get("FPL_EUROPEAN_PENALTY", "0.10")
 )
+
+# Bisect switches. The v3 repairs — recovered club names for the two nameless
+# seasons, and excluding structural blanks from the calibration and role-ridge
+# *update* loops — are both defensible on correctness grounds and together cost
+# 46 points a season through the full pipeline. These exist to attribute that loss
+# to one of them rather than argue about it. Both default to the repaired
+# behaviour; set to 0 to restore the old one.
+USE_RECOVERED_TEAM_NAMES = os.environ.get("FPL_TEAM_NAMES", "1") != "0"
+USE_BLANK_FREE_CALIBRATION = os.environ.get("FPL_BLANK_FILTER", "1") != "0"
+if (
+    not USE_RECOVERED_TEAM_NAMES
+    or not USE_BLANK_FREE_CALIBRATION
+    or EUROPEAN_KNOCKOUT_REST_PENALTY != 0.10
+):
+    # A bisect arm must never be reachable under the default cache name. The
+    # penalty belongs in the key too: it is baked into `start_probability` during
+    # the build, so two penalties are two different frames.
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem
+        + f"-names{int(USE_RECOVERED_TEAM_NAMES)}"
+        + f"-blank{int(USE_BLANK_FREE_CALIBRATION)}"
+        + f"-eu{EUROPEAN_KNOCKOUT_REST_PENALTY:.2f}".replace(".", "_")
+        + PREPARED_HISTORY_CACHE.suffix
+    )
 if MARKET_BLEND_WEIGHT > 0.0:
     # A blended frame must never be reachable under the unblended cache name.
     # Without this a rebuild at one weight silently serves every later run at
@@ -648,9 +672,10 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
             # that these projections blank far more often than they do — and the
             # live twin `calibrate_live_distributions` already filters, so leaving
             # this open trains and serves two different calibrations.
-            indices = indices[
-                data.loc[indices, "fixture_count"].to_numpy(int) > 0
-            ]
+            if USE_BLANK_FREE_CALIBRATION:
+                indices = indices[
+                    data.loc[indices, "fixture_count"].to_numpy(int) > 0
+                ]
             if not len(indices):
                 continue
             # `setdefault` rather than `state[position]`: the scoring loop skips a
@@ -1099,7 +1124,11 @@ def causal_role_ridge_predictions(data: pd.DataFrame) -> pd.Series:
             # prediction loop above, which skips a role with no observed rows, so
             # `states[role_name]` could raise `KeyError` for a rare role — a
             # set-piece centre back with nobody active in a small Blank Gameweek.
-            local = indices[(roles[indices] == role_name) & observed[indices]]
+            local = (
+                indices[(roles[indices] == role_name) & observed[indices]]
+                if USE_BLANK_FREE_CALIBRATION
+                else indices[roles[indices] == role_name]
+            )
             if not len(local):
                 continue
             state = states.setdefault(
@@ -1371,7 +1400,11 @@ def build_season(
         # verifies them against an independent match record. See that module.
         from team_identity import PLACEHOLDER_TEAM_NAMES
 
-        known = PLACEHOLDER_TEAM_NAMES.get(season, {})
+        known = (
+            PLACEHOLDER_TEAM_NAMES.get(season, {})
+            if USE_RECOVERED_TEAM_NAMES
+            else {}
+        )
         team_ids = sorted(players["team"].dropna().astype(int).unique())
         teams = pd.DataFrame(
             {
