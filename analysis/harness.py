@@ -37,6 +37,25 @@ season, so the two answer different questions and can disagree. The reference
 here scores 2171.4 across the evaluation seasons where the published
 walk-forward scores 2140.9, and neither is wrong.
 
+Comparing *frames* is worse than comparing fields
+------------------------------------------------
+Pinning the policy and varying the data sounds like the cleanest experiment this
+module can run. It is the least trustworthy one, because the candidate and the
+frame are coupled: a champion was *selected* on some frame, and it flatters the
+frame it was selected on.
+
+Measured, on the same two frames and the same code, changing only which champion
+was pinned:
+
+    pinned: previous champion    old 2146.7   repaired 2135.6   repaired worse by 11
+    pinned: current champion     old 2139.0   repaired 2163.2   repaired better by 24
+
+A 35-point swing, and a sign flip, from the choice of reference alone. Both runs
+are "controlled"; neither is informative about whether the repaired frame is
+better. So do not use this module to accept or reject a change to the *data* —
+only `main()`, which re-selects the candidate, answers that. Varying a policy
+field against a fixed frame remains sound, which is what the module is for.
+
 That gap matters because it is the residual of the very problem this module
 addresses. Pinning removes uncontrolled *variation*; it cannot remove pipeline
 *interaction*. A change that looks good here can still lose end to end by

@@ -388,6 +388,51 @@ term.
 | 3 forecast inputs | **market beats the model 0.3846 vs 0.2495 on team goals** | +15–30, now testable |
 | **total** | | **+105–165** |
 
+### Selection variance is the binding constraint, and it is now measured
+
+The two Tier 3 repairs — recovered club names, and keeping structural blanks out
+of the calibration and role-ridge update loops — were committed on correctness
+grounds and then measured through the full pipeline:
+
+| | mean over the 8 evaluation seasons |
+|---|---|
+| previous published | 2173.1 |
+| full run, repaired frame | **2127.1** |
+
+**−46 a season.** The natural conclusion is that the repairs are bad. They are not.
+
+Bisecting the frame under a pinned policy, with each repair isolated behind its
+own switch and its own cache key:
+
+| frame | mean, all 10 seasons | vs old |
+|---|---|---|
+| old (neither repair) | 2139.0 | — |
+| names only | 2157.0 | +18.0 +/- 21.1 |
+| blank only | 2147.0 | +8.0 +/- 25.0 |
+| both, plus the European feature | 2163.2 | +24.2 +/- 21.6 |
+
+No repair degrades the frame; every point estimate is positive, all within noise.
+The loss is the pipeline **selecting a different champion candidate** — it picked
+trial 1676 of 2400, which is worse on the evaluation seasons than the one the old
+frame led it to.
+
+And the measurement apparatus itself is compromised for this class of question.
+The same two frames, same code, varying only which champion is pinned:
+
+    pinned: previous champion    old 2146.7   repaired 2135.6   repaired worse by 11
+    pinned: current champion     old 2139.0   repaired 2163.2   repaired better by 24
+
+A 35-point swing and a sign flip from the choice of reference. The candidate and
+the frame are coupled, because a champion flatters the frame it was selected on.
+So a pinned comparison cannot accept or reject a change to the *data*, and any
+earlier conclusion of that shape in this document is worth no more than its
+reference.
+
+The practical consequence: **item 1.1 is not one item among several, it is the
+gate on all of them.** While a legitimate data improvement can cost 46 points a
+season by moving the selection, no forecast work can be evaluated honestly, and
+the +15-30 attributed to better inputs cannot be collected or even measured.
+
 ### Midweek European football, and why the obvious test was worthless
 
 The archive is Premier League only, so a club that played a Champions League
