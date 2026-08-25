@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import unittest
+from unittest import mock
 import sys
 from pathlib import Path
 
@@ -663,6 +664,33 @@ class ModelEngineTests(unittest.TestCase):
             frame.drop(columns=["absence_run"]), ["position_id"]
         )
         self.assertTrue(all(0 <= tier <= 2 for tier in legacy))
+
+    def test_gate_pin_holds_the_selection_and_rejects_unknown_names(self):
+        """Pinning the gate is the only way to vary the data on its own.
+
+        The gate chooses between options differing by up to 200 points a season,
+        and it has moved on changes unrelated to strategy. When it moves at the
+        same time as the thing being measured the comparison is confounded, and
+        no care elsewhere in the run recovers it.
+        """
+        options = {
+            "central:Six-GW planner + adaptive banking": None,
+            "central:Joint transfer-chip tree + hold value": None,
+        }
+        with mock.patch.object(lens, "GATE_PIN", ""):
+            # Unpinned, the incumbent is defended rather than pinned.
+            self.assertFalse(lens.GATE_PIN)
+        with mock.patch.object(
+            lens, "GATE_PIN", "central:Joint transfer-chip tree + hold value"
+        ):
+            name, detail = lens.select_gate_option(options, len(lens.SEASONS))
+            self.assertEqual(name, "central:Joint transfer-chip tree + hold value")
+            self.assertTrue(detail["pinned"])
+        # A typo must fail loudly. Silently falling back to the incumbent would
+        # produce a run that looks pinned, is not, and is reported as controlled.
+        with mock.patch.object(lens, "GATE_PIN", "central:No such strategy"):
+            with self.assertRaises(KeyError):
+                lens.select_gate_option(options, len(lens.SEASONS))
 
 
 if __name__ == "__main__":
