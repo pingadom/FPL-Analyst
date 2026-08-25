@@ -428,10 +428,18 @@ def select_gate_option(
             raise KeyError(
                 f"FPL_GATE_PIN={GATE_PIN!r} is not one of {sorted(gate_results)}"
             )
+        # Must carry the same keys the normal path returns: callers read
+        # `switched` and `incumbent` to report the decision, and a partial dict
+        # fails late, after the expensive replays have already run.
         return GATE_PIN, {
             "selected": GATE_PIN,
+            "incumbent": GATE_PIN,
+            "switched": False,
             "pinned": True,
             "reason": "held by FPL_GATE_PIN for a controlled comparison",
+            "switchConfidence": GATE_SWITCH_CONFIDENCE,
+            "options": {},
+            "seasonsAvailable": int(seasons_available),
             "seasonsUsed": [],
             "regimeMatched": False,
         }
