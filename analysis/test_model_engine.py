@@ -615,6 +615,55 @@ class ModelEngineTests(unittest.TestCase):
         covid = euro.load_european_matches(["2019-20"], ("cl",))
         self.assertGreater(covid["date"].max(), pd.Timestamp("2020-07-01"))
 
+    def test_absence_run_treats_a_blank_gameweek_as_neither(self):
+        """A blank week is not an absence and not a return.
+
+        There was no fixture to miss, so the run must carry through it. Resetting
+        on a blank would tell the model an injured player had recovered because
+        his club happened to have a free week.
+        """
+        codes = np.array(["a"] * 6 + ["b"] * 3)
+        minutes = np.array([90.0, 0.0, 0.0, 0.0, 90.0, 0.0, 0.0, 90.0, 0.0])
+        had_fixture = np.array(
+            [True, True, False, True, True, True, True, True, True]
+        )
+        runs = lens.absence_run_lengths(codes, minutes, had_fixture)
+        # index 2 is the blank: the run holds at 1 rather than resetting to 0
+        # or counting up to 2.
+        self.assertEqual(list(runs[:6]), [0.0, 0.0, 1.0, 1.0, 2.0, 0.0])
+        # The count is of *earlier* weeks only, so the first row of any player is
+        # always zero — it can never see its own outcome.
+        self.assertEqual(runs[0], 0.0)
+        self.assertEqual(runs[6], 0.0)
+        self.assertEqual(list(runs[6:]), [0.0, 1.0, 0.0])
+
+    def test_calibration_tier_separates_price_and_absence(self):
+        """Nine cells: three price bands crossed with three absence bands.
+
+        Price says who is first choice; absence says who is available, and the
+        predicted-to-realised map differs completely between them.
+        """
+        frame = pd.DataFrame(
+            {
+                "price": [40, 40, 70, 70, 130, 130],
+                "position_id": [3] * 6,
+                "absence_run": [0.0, 4.0, 0.0, 4.0, 0.0, 1.0],
+            }
+        )
+        tiers = lens.minutes_calibration_tier(frame, ["position_id"])
+        # Same price, different absence, must not share a cell.
+        self.assertNotEqual(tiers[0], tiers[1])
+        self.assertNotEqual(tiers[2], tiers[3])
+        # Same absence, different price, must not share a cell either.
+        self.assertNotEqual(tiers[0], tiers[2])
+        self.assertTrue(all(0 <= tier < len(lens.MINUTES_CALIBRATION_TIERS) for tier in tiers))
+        # Without the column the tier falls back to price alone, so a frame built
+        # before this axis existed still calibrates rather than crashing.
+        legacy = lens.minutes_calibration_tier(
+            frame.drop(columns=["absence_run"]), ["position_id"]
+        )
+        self.assertTrue(all(0 <= tier <= 2 for tier in legacy))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -40,7 +40,11 @@ CACHE = ROOT / "work" / "fpl-data"
 # `european_days_since`, `european_knockout_soon`) and the knockout rest penalty
 # on start probability. v3 recovered the 2016/17 and 2017/18 club names and
 # stopped the calibration and role-ridge maps training on structural blanks.
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-european-v4.pkl"
+# v5: recent-absence is now a minutes-calibration axis alongside price. The
+# archive has no weekly availability feed, so consecutive missed Gameweeks is the
+# only injury signal available, and the model was over-rating absent players by
+# more than 2x (0.453 predicted against 0.210 realised after two missed weeks).
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-absence-v5.pkl"
 
 # How much of the closing betting line to fold into team expected goals.
 #
@@ -847,12 +851,42 @@ MINUTES_CALIBRATION_SPECS: tuple[
 )
 
 
-MINUTES_CALIBRATION_TIERS = (0, 1, 2)
+# Three price bands crossed with three absence bands. A cell that never reaches
+# `MINUTES_CALIBRATION_MINIMUM_ROWS` is simply left uncalibrated, which is the
+# behaviour before this axis existed, so the split degrades safely.
+MINUTES_CALIBRATION_TIERS = tuple(range(9))
 
 
 def _minutes_bins(values: np.ndarray, scale: float) -> np.ndarray:
     raw = (np.asarray(values, dtype=float) / scale * MINUTES_CALIBRATION_BINS).astype(int)
     return np.clip(raw, 0, MINUTES_CALIBRATION_BINS - 1)
+
+
+def absence_run_lengths(
+    player_codes: np.ndarray, minutes: np.ndarray, had_fixture: np.ndarray
+) -> np.ndarray:
+    """Consecutive prior Gameweeks with a fixture and no appearance, per player.
+
+    Rows must already be ordered by player and then by time. The value on a row
+    counts only *earlier* Gameweeks, so it is known at that deadline.
+
+    A blank Gameweek is neither an absence nor a return — there was no fixture to
+    miss — so it leaves the run untouched. Resetting on a blank would tell the
+    model an injured player had recovered because his club had a free week.
+    """
+    runs = np.zeros(len(player_codes), dtype=float)
+    streak = 0.0
+    previous_code = None
+    for row in range(len(player_codes)):
+        if player_codes[row] != previous_code:
+            streak = 0.0
+            previous_code = player_codes[row]
+        runs[row] = streak
+        if minutes[row] > 0:
+            streak = 0.0
+        elif had_fixture[row]:
+            streak += 1.0
+    return runs
 
 
 def minutes_calibration_tier(
@@ -867,7 +901,17 @@ def minutes_calibration_tier(
     separates that residual cleanly.
     """
     rank = frame.groupby(group_columns)["price"].rank(pct=True).to_numpy(float)
-    return np.select([rank < 0.55, rank < 0.88], [0, 1], default=2).astype(int)
+    price_tier = np.select([rank < 0.55, rank < 0.88], [0, 1], default=2).astype(int)
+    if "absence_run" not in frame:
+        return price_tier
+    # Recent absence is the second axis, and the larger of the two. Price
+    # separates who is first choice; absence separates who is *available*, and
+    # the predicted-to-realised map is completely different between them —
+    # 0.702 predicted against 0.792 realised for a player who played last week,
+    # 0.453 against 0.210 for one who missed the last two.
+    run = frame["absence_run"].fillna(0).to_numpy(float)
+    absence_tier = np.select([run <= 0, run <= 2], [0, 1], default=2).astype(int)
+    return (price_tier + 3 * absence_tier).astype(int)
 
 
 def _rebuild_minutes_decomposition(frame: pd.DataFrame) -> None:
@@ -2585,6 +2629,20 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ["player_key", "season_order", "GW"], inplace=True, kind="stable"
     )
     by_player = data.groupby("player_key", sort=False)
+    # Consecutive prior Gameweeks in which the player had a fixture and did not
+    # appear. There is no weekly availability feed in any season of the archive —
+    # no `chance_of_playing`, no `status`, no `news` — so this run length is the
+    # only injury signal the historical model can have, and it is badly
+    # under-used: a player who missed the last two Gameweeks is given a 0.453
+    # start probability and actually starts 0.210 of the time.
+    #
+    # A blank Gameweek is neither an absence nor a return: the player had no
+    # fixture to miss, so it leaves the run untouched rather than resetting it.
+    data["absence_run"] = absence_run_lengths(
+        data["player_key"].to_numpy(),
+        data["minutes"].fillna(0).to_numpy(float),
+        data["fixture_count"].to_numpy(int) > 0,
+    )
     previous_minutes_observed = by_player["minutes"].shift(1)
     previous_official_xp = by_player["official_xp"].shift(1)
     previous_xp_trusted = by_player["official_xp_feed_trusted"].shift(1).fillna(False)
@@ -8383,6 +8441,26 @@ def current_recommendation(
     current["minutes_if_bench"] = current["minutes_if_bench"].fillna(
         current["position_id"].map({1: 5.0, 2: 16.0, 3: 20.0, 4: 22.0})
     )
+    # The absence axis the causal path calibrates on, rebuilt for this deadline.
+    # Without it the live frame would be scored by maps fitted under a different
+    # tier definition, which is the train/serve skew this model keeps hitting.
+    # A blank Gameweek leaves the run untouched, exactly as in the causal build.
+    live_season = historical[historical["season"] == "2025-26"]
+    absence_state: dict[object, float] = {}
+    for code, group in live_season.sort_values("GW").groupby(
+        "player_code", sort=False
+    ):
+        streak = 0.0
+        for minutes, fixtures in zip(
+            group["minutes"].fillna(0).to_numpy(float),
+            group["fixture_count"].fillna(0).to_numpy(int),
+        ):
+            if minutes > 0:
+                streak = 0.0
+            elif fixtures > 0:
+                streak += 1.0
+        absence_state[code] = streak
+    current["absence_run"] = current["player_code"].map(absence_state).fillna(0.0)
     # Same compression repair as the historical path, using terminal maps fitted
     # on the uncalibrated historical predictor.
     current = calibrate_live_minutes(current, historical)

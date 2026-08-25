@@ -388,6 +388,69 @@ term.
 | 3 forecast inputs | **market beats the model 0.3846 vs 0.2495 on team goals** | +15–30, now testable |
 | **total** | | **+105–165** |
 
+### The archive has no injury feed, and the one signal it does have was ignored
+
+No season's per-Gameweek file carries `chance_of_playing`, `status` or `news`, and
+`players_raw.csv` is an end-of-season snapshot, so no backtest here can see team
+news. The live path reads FPL's official flags; the historical path cannot, and
+the best proxy it had — official xP of zero — only exists from 2020/21.
+
+What is recoverable from the archive alone is the run of consecutive Gameweeks in
+which a player's club had a fixture and he did not appear. Measured on
+established starters in single Gameweeks, the model was using it barely at all:
+
+| consecutive weeks missed | n | predicted | realised |
+|---|---|---|---|
+| 0 | 58,057 | 0.702 | 0.792 |
+| 1 | 5,782 | 0.558 | 0.360 |
+| 2 | 2,647 | 0.453 | 0.210 |
+| 3 | 1,636 | 0.378 | 0.158 |
+| 4-6 | 2,429 | 0.297 | 0.112 |
+| 7+ | 832 | 0.190 | 0.064 |
+
+A two-week absentee was rated at 0.453 and started 0.210 — over-rated by more than
+2x. In practice that means the squad optimiser kept selecting injured players. The
+existing minutes calibration could not fix it because its only axes were position
+and price; absence was never one of them.
+
+Adding absence as a second calibration axis lets the isotonic map learn the
+correction itself, causally, with no hand-set coefficient:
+
+| weeks missed | bias before | bias after |
+|---|---|---|
+| 0 | +0.090 | +0.017 |
+| 1 | -0.198 | +0.025 |
+| 2 | -0.243 | -0.085 |
+| 3 | -0.219 | +0.041 |
+| 4-6 | -0.185 | +0.008 |
+| 7+ | -0.127 | +0.003 |
+
+Mean absolute bias falls from roughly 0.177 to 0.030, and it fixes the 56,000
+healthy-player rows at the same time. This is the largest calibration error found
+in the audit.
+
+It is also, so far, only a calibration result. Three separate component-level
+gains this session failed to convert into season points, so it does not count
+until a full walk-forward says so.
+
+### A negative result: domestic cups do not move league selection
+
+The European work suggested the obvious follow-up — the FA Cup and EFL Cup, which
+the archive is equally blind to and which produce the heaviest rotation in English
+football. Measured with the same within-club design, they do not:
+
+| window | residual vs that club's own free weeks |
+|---|---|
+| 2-3 days before a cup tie | -0.0178 +/- 0.0082 |
+| early rounds, tie within 4 days | -0.0086 +/- 0.0059 |
+| late rounds, tie within 4 days | +0.0081 +/- 0.0129 |
+
+Nothing worth a feature. The mechanism appears to be that clubs rotate *within*
+the cup tie rather than around it, so the league side is unaffected. Not built —
+which also avoids a coverage problem, since the source has no cup data for
+2016/17, 2017/18 or 2025/26, and the last of those would have left the live model
+blind to a feature the backtest relied on.
+
 ### Selection variance is the binding constraint, and it is now measured
 
 The two Tier 3 repairs — recovered club names, and keeping structural blanks out

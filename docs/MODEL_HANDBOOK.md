@@ -37,6 +37,26 @@ For the live XI, an ordinary starter needs at least a 70% start probability and 
 
 Historical GW1 has no observed team sheets. Its causal play floor therefore begins at 68% and rises to 78% by GW5. This is a Bayesian cold-start rule, not a claim that old GW1 lineups were known with modern certainty.
 
+#### Injuries, when there is no injury feed
+
+The archive has no weekly availability data in any season — no `chance_of_playing`, no `status`, no `news` column in the per-Gameweek files, and `players_raw.csv` is an end-of-season snapshot. A backtest here can never see a Friday press conference. The live model does read FPL's official flags at each deadline; the historical model cannot.
+
+What *is* recoverable is the shape of an absence: consecutive Gameweeks in which a player's club had a fixture and he did not appear. That is the only injury signal available, and the model was barely using it. Measured on established starters in single Gameweeks:
+
+| consecutive weeks missed | model said | actually started |
+|---|---|---|
+| 0 | 0.702 | 0.792 |
+| 1 | 0.558 | 0.360 |
+| 2 | 0.453 | 0.210 |
+| 3 | 0.378 | 0.158 |
+| 7+ | 0.190 | 0.064 |
+
+A player who had missed two Gameweeks was rated to start 45% of the time and actually started 21% — over-rated by more than double, which in practice means the model kept picking injured players. Meanwhile the 56,000 players who *had* played were under-rated by nine points.
+
+The repair adds recent absence as a second axis of the minutes calibration, alongside price. The isotonic map then learns the correction from the data, per position, using only prior deadlines — no hand-set coefficients. Mean absolute bias across those bands falls from about 0.177 to 0.030.
+
+A blank Gameweek counts as neither an absence nor a return, because there was no fixture to miss. Resetting the run on a blank would tell the model an injured player had recovered because his club had a free week.
+
 ### 3. Rate the teams
 
 Team quality is split into attack and defence. The historical model updates those ratings only from completed earlier matches and shrinks small samples toward the league average. Promoted teams receive extra shrinkage because Championship dominance does not translate one-for-one into Premier League strength.
