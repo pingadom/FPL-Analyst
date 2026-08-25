@@ -400,7 +400,31 @@ below is a harness screen.
 | A | + recovered team names, blank-free calibration | 2127.1 | −46.0 |
 | B | + midweek European congestion | 2139.9 | +12.8 |
 | C | + recent-absence calibration axis | **2177.9** | **+38.0** |
-| D | + betting market in team expected goals | pending | |
+| D | + betting market in team expected goals | 2172.4 | -5.5 |
+
+Run D confirms the forecast screen: the market does not convert. -5.5 +/- 20.3
+(-0.3 SE) against run C, 3 of 8 seasons improved, which is what a +0.0019
+player-points correlation was always going to be worth.
+
+Its decomposition is more informative than its mean:
+
+| run | mean | without chips | chips | spread | cutoff cleared |
+|---|---|---|---|---|---|
+| C | 2177.9 | 2100.4 | +77.5 | 123.3 | 1/8 |
+| D | 2172.4 | **2132.1** | **+40.2** | **112.8** | **2/8** |
+
+The market made the base squad **better by 31.7** — matching the clean-sheet
+mechanism it was predicted to help — and chip timing **worse by 37.3**, netting
+slightly negative. It also produced the lowest spread of any run and cleared the
+cutoff in two seasons rather than one.
+
+That chip loss has the signature of the coupling already catalogued here: chip
+thresholds are searched against metric scales the blend shifts, so the selected
+policy no longer fits the metrics it is applied to — the same family as the
+`gate_policy` defect. The market therefore stays **off by default**, with the
+squad-side gain recorded as real and worth revisiting once chip policy is
+decoupled from metric scale. Tuning the blend weight against a -0.3 SE result
+would be fitting noise.
 
 Run C clears the previous published 2173.1, and its decomposition is what makes it
 credible rather than lucky. Splitting each run into chip points and everything
