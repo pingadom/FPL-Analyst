@@ -15,7 +15,7 @@ defects, not by a missing feature. The five in Tier 1 are worth, conservatively,
 ## Status
 
 **Tier 1 (1-5) and Round 2 (26-30) are fixed, and the full calibration has been
-re-run.** The feature cache is now `prepared-history-lens9-minutes-calibrated-v2.pkl`;
+re-run.** The feature cache is now `prepared-history-lens9-teams-blankfree-v3.pkl`;
 earlier frames are not compatible.
 
 ### Walk-forward result
@@ -595,7 +595,25 @@ pool centroid regardless of the training signal. `blend_chip_policies` does the 
 12 of 48 policies. Combined with (8), the per-season "trained" model is effectively the
 same model every year — which is exactly the plateau symptom.
 
-### 10. The transfer search can only buy the ten most expensive players per position
+### 10. The transfer search can only buy the ten most expensive players per position *(overstated — measured inert)*
+
+**Correction.** The heading is wrong for the shipped configuration, and the measurement
+says so. `transfer_candidate_limit` is read *only* inside `joint_transfer_plan`, and the
+champion strategy runs `joint_squad_optimiser = False`, so that slice is never reached.
+The path that actually makes transfers in production iterates the full `plan_order[:40]`.
+
+Swept 10 / 16 / 24 / 32: **+0.0 on every season, to the decimal**. Identical totals across
+four settings is not a small effect — it is the knob failing to reach the code, which is
+what sent me looking. Reordering the frontier was tested separately and also failed:
+`expand_transfer_frontier = True` scored +0.0 on training and **−9.1** on evaluation, so
+the price-aware interleave is neutral at best.
+
+What survives of the finding is narrower: the incoming universe is the top 40 by
+*absolute* horizon score with price ignored, so a cheap enabler outside that 40 is
+unreachable. That is a real ceiling, but it is a 40-deep one, not the 10-deep one written
+below, and widening the order it is drawn in does not pay. The original text follows.
+
+
 
 With `expand_transfer_frontier = False` (the default on every production strategy),
 `incoming_by_position[position] = plan_order[:40]` — sorted by **absolute** horizon score,
@@ -649,25 +667,25 @@ not apply to the squad the site actually shows.
 
 ## Tier 3 — correctness bugs
 
-14. **Blank rows contaminate the calibration maps.** In `causal_calibrate_distributions`,
+14. **Blank rows contaminate the calibration maps.** *(fixed)* In `causal_calibrate_distributions`,
     the scoring loop filters `fixture_count > 0` but the *update* loop (line ~322) does not.
     7,912 structural blanks (always 0 points) are folded into the isotonic
     blank/return5/haul8 bins and the uncertainty ratio histogram. The live twin
     `calibrate_live_distributions` **does** filter — so causal and live calibration are
     trained on different populations.
 
-15. **Same bug in the role ridge.** `causal_role_ridge_predictions` filters `observed` when
+15. **Same bug in the role ridge.** *(fixed)* `causal_role_ridge_predictions` filters `observed` when
     predicting but not when updating `xtx`/`xty`, so every blank row teaches the model
     "these features → 0 points". `live_role_ridge_predictions` filters correctly.
     Same train/serve skew.
 
-16. **Latent `KeyError` in `causal_role_ridge_predictions`.** The update loop does
+16. **Latent `KeyError` in `causal_role_ridge_predictions`.** *(fixed)* The update loop does
     `state = states[role_name]`, but `states` is only populated in the prediction loop,
     which `continue`s before `setdefault` when a role has no observed rows. A rare role
     (`set_piece_centre_back`) with zero active players in a small Blank Gameweek slate
     crashes the run.
 
-17. **Bench Boost and Triple Captain silently refund a points hit.**
+17. **Bench Boost and Triple Captain silently refund a points hit.** *(fixed)*
     `week_points = base_breakdown["normal"] - hit_points_this_week`, but the chip branches
     then do `week_points = base_breakdown["bench_boost"]` / `["triple_captain"]`, dropping
     the `-4`. Latent today only because `max_hits = 0`; it will fire the moment hits are
@@ -677,13 +695,13 @@ not apply to the squad the site actually shows.
     `free_transfers = 1` (pre-2024/25), then the end-of-week rule applies
     `min(bank_limit, max(0, 1 - 0) + 1) = 2`. Real FPL gives you 1 the following week.
 
-19. **Look-ahead in the horizon ridge features.** `horizon_feature_matrix` uses
+19. **Look-ahead in the horizon ridge features.** *(fixed)* `horizon_feature_matrix` uses
     `horizon_weighted_games` (the **uncensored** count, built from the final future
     schedule) while everything else uses `..._censored`. They differ on 23% of rows.
     Contained today — `causal_horizon_ridge` is computed at line 2360 and never consumed
     by the production scorer — but it invalidates any research script that reads it.
 
-20. **Inconsistent per-fixture normalisation.** `goal_rate`, `assist_rate`,
+20. **Inconsistent per-fixture normalisation.** *(already fixed)* `goal_rate`, `assist_rate`,
     `clean_sheet_rate`, `defensive_rate` and `bps_rate` divide by `fixture_count`;
     `save_rate`, `bonus_rate`, `yellow_rate`, `red_rate`, `conceded_rate`,
     `penalty_save_rate`, `penalty_miss_rate` and `own_goal_rate` use the raw per-GW sum.
@@ -695,13 +713,13 @@ not apply to the squad the site actually shows.
     the whole window, called up or not — so South African, Namibian and Zimbabwean players
     are benched alongside the actual absentees. There is no squad-list check.
 
-22. **`refresh_current_artifact` reconstructs weights from rounded integer percentages.**
+22. **`refresh_current_artifact` reconstructs weights from rounded integer percentages.** *(fixed)*
     `Candidate.as_dict()` rounds to whole percent and dumps the residual onto the largest
     weight; `refresh_current_artifact` reads those back and divides by 100. `pnpm
     research:refresh` therefore runs on measurably different weights than the calibration
     that produced them.
 
-23. **`calibration_curve` percentiles are wrong.** `round(index / (len(candidates) - 1) * 100)`
+23. **`calibration_curve` percentiles are wrong.** *(fixed)* `round(index / (len(candidates) - 1) * 100)`
     uses 2,399 as the denominator while `index` ranges over the 20 finalists, so every
     published percentile is 0–0.8%.
 
@@ -717,6 +735,38 @@ not apply to the squad the site actually shows.
     the handbook is therefore a much lower bar than it reads.
 
 ---
+
+## Tier 3 repairs — what was done
+
+Findings 14, 15 and 16 turned out to be one defect wearing three hats. Both
+`causal_calibrate_distributions` and `causal_role_ridge_predictions` filter
+`fixture_count > 0` when *scoring* but not when *updating*, so structural blanks —
+guaranteed zeros, because there was no fixture — taught both models that these
+projections produce nothing. Both live twins already filtered, so the causal and live
+paths were trained on different populations. And both had the same latent crash: the
+scoring loop `continue`s before `setdefault`, so the update loop's unconditional
+`states[key]` could raise `KeyError` for a rare role or position in a small Blank
+Gameweek. Filtering the update loop and switching to `setdefault` fixes all three.
+
+Findings 17, 19, 22 and 23 are repaired and inert or display-only:
+
+* **17** — Bench Boost and Triple Captain overwrote `week_points` with a gross
+  breakdown, handing back a `-4` that had already been paid. Wildcard and Free Hit
+  are correct because both zero the hit first: they make the week's transfers free.
+  Latent while `max_hits = 0`, and it would have fired the moment hits were enabled.
+* **19** — the horizon ridge read the uncensored fixture count, built from the final
+  schedule. Nothing in production consumes that ridge, which is the only reason the
+  look-ahead never reached a score.
+* **22** — the exact candidate weights are now stored alongside the rounded display
+  percentages, so `--refresh-current` reconstructs the calibrated model instead of an
+  approximation of it. Older artifacts without the field still load.
+* **23** — the percentile denominator now matches what the index ranges over.
+
+**20 needed no repair.** Every rate already divides by `appearance_denominator`, or by
+minutes per 90 for goals and assists; the DGW inflation the finding describes was
+removed by the Tier 1 work.
+
+Findings 21, 24 and 25 remain open.
 
 ## Recommended order of work
 

@@ -382,11 +382,74 @@ term.
 |---|---|---|
 | 1.1 stabilise the selection gate | measured ±40 swing | 0 (enabling) |
 | 1.2 scale-free thresholds | measured −60 on a better model | +30–50 |
-| 2.1 chip timing, live-aware | measured 35→64 already; pool is 100+ | +60–85 |
+| 2.1 chip timing, live-aware | **revised down — see below** | +15–25 |
 | 2.0 shrink predicted gains | measured: algebraically redundant with the hurdle | 0 |
 | 2.2 hits in the beam | measured: no price is profitable | 0 until 2.0 |
-| 3 forecast inputs | +7/0.01 corr, +0.02–0.04 available | +15–30 |
+| 3 forecast inputs | **market beats the model 0.3846 vs 0.2495 on team goals** | +15–30, now testable |
 | **total** | | **+105–165** |
+
+### The backtest now has a market view, and two seasons it never had
+
+Two gaps closed together, and they were connected.
+
+The 2016/17 and 2017/18 archives ship no team list, so the loader emitted `Team 1` …
+`Team 20`. Ratings key on club name and placeholder names are scoped per season, so every
+club's rating history restarted in 2018/19 — and nothing external could join those seasons
+by club. They are the seasons used to *select* weights, so the market was excluded from
+exactly the data that picks the model. `analysis/team_identity.py` recovers the names from
+stable club codes and verifies them fixture by fixture against an independent record:
+**380/380 on both seasons**.
+
+With that fixed and a club-name alias corrected, market coverage went from 0% on those two
+seasons and ~90% on three others to **100% across all ten**. The comparison is not close:
+
+| | correlation with realised team goals |
+|---|---|
+| market implied goals | **0.3846** |
+| model expected goals | 0.2495 |
+
+At the measured exchange rate of roughly +7 season points per +0.01 of weekly correlation,
+that difference is the largest single forecast lever identified so far. Two caveats hold it
+to "testable" rather than "banked":
+
+* This is a *team goals* correlation, not a player-points one, and it must survive the
+  squad, captain and transfer layers. This project has watched component gains evaporate end
+  to end more than once.
+* It is only legitimate because the loader uses the **opening** line. The source ships
+  closing prices too; those are priced at kick-off, after the deadline, and would be a leak
+  that looks like an improvement. A regression test now pins that choice.
+
+### Correction: the chip target was a unit mismatch
+
+The "+60–85 from chips" line compared quantities that are not the same quantity, and it
+inflated a whole workstream. The model reports chip **gain** — points *relative to not
+playing the chip*. The human figures it was benchmarked against (150–250 a season) are
+gross chip-week scores.
+
+For Bench Boost the two coincide, because the bench replaces nothing. For Triple Captain
+they do not: the gain is only the *third* copy of the captain, so a human reporting "my TC
+returned 36" had a captain who scored 12 — a gain of 12, against this model's 10.4. Free
+Hit and Wildcard gains are counterfactuals a human never computes at all.
+
+Measured consistently in marginal points, a strong human season is roughly **75–90**, not
+150–250, against the model's 59.5 realised (72.0 walk-forward). The realistic headroom is
+**15–25 points a season, not 60–85.**
+
+Two measurements support treating chip timing as close to done rather than wide open:
+
+* **Triple Captain is already aimed perfectly** — 9 of 9 uses fell on a Double Gameweek
+  with the captain themselves playing twice. Its modest 10.4 average is a captain-quality
+  ceiling, not a timing failure. Predicted 12.6 against realised 10.4 is very nearly
+  unbiased, so there is no forecasting error to harvest either.
+* **Bench Boost aimed at doubles did *worse* than the late dumps** — 11.25 across 4 DGW
+  uses against 17.6 across 5 expiry-week uses. That inverts the obvious intuition. It is
+  4 against 5 observations and badly confounded (a GW37 bench is made of established
+  starters, not early-season filler), so it is not evidence that dumping is *better* —
+  but it is firmly not evidence that aiming is.
+
+That aligns with the negative result already recorded this session: deferring Bench Boost
+lost 4.1 points, because raising a threshold in a hold-then-dump system produces *later*,
+not *better*.
 
 The gap is **150–190**. So it closes, but only if the work goes into the decision layer and
 the measurement apparatus. The instinct that "better data analysis should walk this" is

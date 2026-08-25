@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 import unicodedata
 import urllib.request
@@ -35,7 +36,33 @@ from live_external_signals import (
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "work" / "fpl-data"
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-minutes-calibrated-v2.pkl"
+# v3: recovered club names for 2016/17 and 2017/18, and the calibration and
+# role-ridge maps no longer train on structural blanks. All three change the
+# prepared frame, so the v2 pickle is not reusable.
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-teams-blankfree-v3.pkl"
+
+# How much of the closing betting line to fold into team expected goals.
+#
+# The market is the sharper forecaster of team scoring by a wide margin: implied
+# goals correlate 0.3846 with realised team goals against the model's 0.2495, on
+# all ten seasons at full coverage. But these are *closing* prices, taken at kick-off,
+# and a Gameweek deadline falls before that — so they carry team news the manager
+# did not have. The weight is therefore capped and applied to team scoring rates
+# only, never to a player's own availability, which is where post-deadline news
+# does its real damage.
+#
+# Default off. Set FPL_MARKET_BLEND to rebuild the frame at another weight; the
+# prepared-history cache must be rebuilt for a change here to take effect.
+MARKET_BLEND_WEIGHT = float(os.environ.get("FPL_MARKET_BLEND", "0.0"))
+if MARKET_BLEND_WEIGHT > 0.0:
+    # A blended frame must never be reachable under the unblended cache name.
+    # Without this a rebuild at one weight silently serves every later run at
+    # another, which is the same contamination the version bump exists to stop.
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem
+        + f"-market{MARKET_BLEND_WEIGHT:.2f}".replace(".", "_")
+        + PREPARED_HISTORY_CACHE.suffix
+    )
 OUTPUT = ROOT / "app" / "data" / "model-results.json"
 PLAYERS_OUTPUT = ROOT / "app" / "data" / "current-players.json"
 TRAINING_SEASONS = ["2016-17", "2017-18"]
@@ -595,7 +622,35 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
             indices = np.asarray(
                 group_positions[group_positions == position].index, dtype=int
             )
-            position_state = state[position]
+            # Same filter the scoring loop above applies. A structural blank is a
+            # guaranteed zero because there was no fixture, not because the player
+            # failed to return, so feeding it to the isotonic bins teaches the map
+            # that these projections blank far more often than they do — and the
+            # live twin `calibrate_live_distributions` already filters, so leaving
+            # this open trains and serves two different calibrations.
+            indices = indices[
+                data.loc[indices, "fixture_count"].to_numpy(int) > 0
+            ]
+            if not len(indices):
+                continue
+            # `setdefault` rather than `state[position]`: the scoring loop skips a
+            # position with no observed rows before it ever creates the entry, so
+            # a small Blank Gameweek could raise `KeyError` here.
+            position_state = state.setdefault(
+                position,
+                {
+                    "events": {
+                        output: {
+                            "successes": np.zeros(10, dtype=float),
+                            "counts": np.zeros(10, dtype=float),
+                            "total_successes": 0.0,
+                            "total_count": 0.0,
+                        }
+                        for output in event_specs
+                    },
+                    "ratio_hist": np.zeros(81, dtype=float),
+                },
+            )
             events = position_state["events"]
             assert isinstance(events, dict)
             for output, (raw_column, target, _) in event_specs.items():
@@ -1014,8 +1069,27 @@ def causal_role_ridge_predictions(data: pd.DataFrame) -> pd.Series:
                 )
                 predictions[local] = np.clip(features[local] @ beta, 0.15, 14.0)
         for role_name in np.unique(roles[indices]):
-            local = indices[roles[indices] == role_name]
-            state = states[role_name]
+            # Update on observed rows only, matching `live_role_ridge_predictions`.
+            # A blank row carries no fixture, so its zero is structural rather than
+            # a bad performance; folding it in teaches the fit that these features
+            # predict nothing. The live twin filters, so leaving this unfiltered
+            # trains and serves two different models.
+            #
+            # This also removes a latent crash. `states` was populated only in the
+            # prediction loop above, which skips a role with no observed rows, so
+            # `states[role_name]` could raise `KeyError` for a rare role — a
+            # set-piece centre back with nobody active in a small Blank Gameweek.
+            local = indices[(roles[indices] == role_name) & observed[indices]]
+            if not len(local):
+                continue
+            state = states.setdefault(
+                role_name,
+                {
+                    "xtx": np.zeros((feature_count, feature_count)),
+                    "xty": np.zeros(feature_count),
+                    "rows": 0,
+                },
+            )
             local_features = features[local]
             state["xtx"] = np.asarray(state["xtx"]) + local_features.T @ local_features
             state["xty"] = np.asarray(state["xty"]) + local_features.T @ outcomes[local]
@@ -1075,7 +1149,13 @@ def horizon_feature_matrix(data: pd.DataFrame) -> np.ndarray:
             data["long_underlying"].to_numpy(float),
             data["recent_value"].to_numpy(float),
             data["prediction_uncertainty"].to_numpy(float) / 5.5,
-            data["horizon_weighted_games"].to_numpy(float) / 6.0,
+            # Censored: the uncensored count is built from the final schedule and
+            # so knows about fixtures that had not been scheduled at this
+            # deadline. The two differ on 23% of rows. Nothing in production
+            # consumes this ridge today, which is the only reason the look-ahead
+            # never reached a score, but a research script reading it would have
+            # been quietly measuring the future.
+            data["horizon_weighted_games_censored"].to_numpy(float) / 6.0,
             data["price"].to_numpy(float) / 150.0,
         ]
     )
@@ -1261,12 +1341,23 @@ def build_season(
     gw = pd.read_csv(gw_path, encoding="latin-1", low_memory=False)
     players = pd.read_csv(players_path, encoding="latin-1", low_memory=False)
     if teams_path is None:
+        # 2016/17 and 2017/18 ship no team list at all. Placeholder names are not
+        # harmless: `add_causal_team_strength` scopes its `team_key` per season for
+        # anything starting "Team ", so every club's rating history would restart
+        # in 2018/19, and nothing external can be joined by club — which excluded
+        # the betting market from precisely the two seasons used to select weights.
+        #
+        # `team_identity` recovers the real names from stable club codes and
+        # verifies them against an independent match record. See that module.
+        from team_identity import PLACEHOLDER_TEAM_NAMES
+
+        known = PLACEHOLDER_TEAM_NAMES.get(season, {})
+        team_ids = sorted(players["team"].dropna().astype(int).unique())
         teams = pd.DataFrame(
             {
-                "id": sorted(players["team"].dropna().astype(int).unique()),
+                "id": team_ids,
                 "name": [
-                    f"Team {team_id}"
-                    for team_id in sorted(players["team"].dropna().astype(int).unique())
+                    known.get(team_id, f"Team {team_id}") for team_id in team_ids
                 ],
             }
         )
@@ -2315,6 +2406,37 @@ def add_causal_team_strength(data: pd.DataFrame) -> pd.DataFrame:
         * (data["opponent_defence_rating"] / league_rate).pow(0.70)
         * home_gf_factor
     ).clip(0.30, 3.40)
+    if MARKET_BLEND_WEIGHT > 0.0:
+        from historical_odds import attach_market_rates
+
+        data = attach_market_rates(data)
+        # A join that reaches nothing looks exactly like a market with no opinion,
+        # so refuse to run rather than report the blend as a null result. Coverage
+        # is 100% on all ten seasons; anything near zero means the club keys stopped
+        # matching, not that the odds stopped mattering.
+        reached = float(
+            data.loc[data["fixture_count"] > 0, "market_expected_goals_for"]
+            .notna()
+            .mean()
+        )
+        if reached < 0.80:
+            raise AssertionError(
+                f"market blend enabled but only {reached:.1%} of scored rows matched"
+            )
+        weight = MARKET_BLEND_WEIGHT
+        for column, market_column in (
+            ("team_expected_goals_for", "market_expected_goals_for"),
+            ("team_expected_goals_against", "market_expected_goals_against"),
+        ):
+            market = data[market_column]
+            # Only where the market actually reached this fixture. A missing line
+            # must leave the model's own view untouched rather than blend toward a
+            # nan or, worse, toward zero.
+            data[column] = np.where(
+                market.notna(),
+                (1.0 - weight) * data[column] + weight * market.fillna(0.0),
+                data[column],
+            ).clip(0.30, 3.40)
     data["team_clean_probability"] = np.exp(
         -data["team_expected_goals_against"]
     ).clip(0.03, 0.74)
@@ -3176,6 +3298,12 @@ class Candidate:
         rounded[max(raw, key=raw.get)] += 100 - sum(rounded.values())
         rounded["recent"] = round(self.recent_share * 100)
         rounded["history"] = 100 - rounded["recent"]
+        # Those are display values: whole percents, with the rounding residual
+        # dumped onto the largest weight. Reading them back reconstructs a
+        # measurably different model from the one that was calibrated, which is
+        # what `--refresh-current` was doing. Carry the exact weights alongside
+        # so the refresh can rebuild this candidate rather than an approximation.
+        rounded["exact"] = {**raw, "recent_share": self.recent_share}
         return rounded
 
 
@@ -6569,9 +6697,19 @@ def simulate_candidate(
                                 else 1
                             )
                     elif chip_name == "Bench Boost":
-                        week_points = base_breakdown["bench_boost"]
+                        # Subtract the hit again: the breakdown is a gross score,
+                        # and overwriting `week_points` with it would hand back a
+                        # -4 that was already paid. Wildcard and Free Hit do not
+                        # need this because both zero the hit first — they make
+                        # the week's transfers free. Bench Boost and Triple
+                        # Captain do not.
+                        week_points = base_breakdown["bench_boost"] - (
+                            hit_points_this_week if week_number > 0 else 0
+                        )
                     elif chip_name == "Triple Captain":
-                        week_points = base_breakdown["triple_captain"]
+                        week_points = base_breakdown["triple_captain"] - (
+                            hit_points_this_week if week_number > 0 else 0
+                        )
                     elif chip_name == "Assistant Manager":
                         if assistant_manager_option is None:
                             raise AssertionError(
@@ -9604,7 +9742,12 @@ def main() -> None:
     sorted_scores = np.sort(stability)
     calibration_curve = [
         {
-            "percentile": round(int(index) / (len(candidates) - 1) * 100),
+            # Denominator must match what `index` ranges over. `curve_indices`
+            # walks the finalists, not the full search pool, so dividing by the
+            # pool size pinned every published percentile between 0 and 0.8.
+            "percentile": round(
+                int(index) / max(1, len(recursive_candidates) - 1) * 100
+            ),
             "score": round(float(sorted_scores[index]), 2),
         }
         for index in curve_indices
@@ -10105,17 +10248,33 @@ def refresh_current_artifact() -> None:
     # while preserving the split payload that makes the initial page smaller.
     result.pop("currentPlayers", None)
     weights = result["model"]["weights"]
-    best = Candidate(
-        weights["performance"] / 100,
-        weights["value"] / 100,
-        weights["age"] / 100,
-        weights["fixture"] / 100,
-        weights.get("team", 0) / 100,
-        weights["crowd"] / 100,
-        weights["minutes"] / 100,
-        weights["underlying"] / 100,
-        weights["recent"] / 100,
-    )
+    exact = weights.get("exact")
+    if exact is not None:
+        best = Candidate(
+            float(exact["performance"]),
+            float(exact["value"]),
+            float(exact["age"]),
+            float(exact["fixture"]),
+            float(exact.get("team", 0.0)),
+            float(exact["crowd"]),
+            float(exact["minutes"]),
+            float(exact["underlying"]),
+            float(exact["recent_share"]),
+        )
+    else:
+        # Artifacts written before the exact weights were stored carry only the
+        # rounded display percentages. Approximate rather than refuse to run.
+        best = Candidate(
+            weights["performance"] / 100,
+            weights["value"] / 100,
+            weights["age"] / 100,
+            weights["fixture"] / 100,
+            weights.get("team", 0) / 100,
+            weights["crowd"] / 100,
+            weights["minutes"] / 100,
+            weights["underlying"] / 100,
+            weights["recent"] / 100,
+        )
     historical, _ = load_or_build_prepared_history()
     result["fixtureIntegrity"] = fixture_integrity_audit(historical)
     stored_strategy = str(result["model"].get("strategy", ""))
