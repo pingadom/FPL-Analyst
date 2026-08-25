@@ -36,10 +36,11 @@ from live_external_signals import (
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "work" / "fpl-data"
-# v3: recovered club names for 2016/17 and 2017/18, and the calibration and
-# role-ridge maps no longer train on structural blanks. All three change the
-# prepared frame, so the v2 pickle is not reusable.
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-teams-blankfree-v3.pkl"
+# v4: adds the European fixture calendar (`european_days_to`,
+# `european_days_since`, `european_knockout_soon`) and the knockout rest penalty
+# on start probability. v3 recovered the 2016/17 and 2017/18 club names and
+# stopped the calibration and role-ridge maps training on structural blanks.
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-european-v4.pkl"
 
 # How much of the closing betting line to fold into team expected goals.
 #
@@ -54,6 +55,25 @@ PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-teams-blankfree-v3.pkl"
 # Default off. Set FPL_MARKET_BLEND to rebuild the frame at another weight; the
 # prepared-history cache must be rebuilt for a change here to take effect.
 MARKET_BLEND_WEIGHT = float(os.environ.get("FPL_MARKET_BLEND", "0.0"))
+
+# How hard a looming European knockout tie pushes a start probability down.
+#
+# Measured within European clubs only, each compared against its *own* weeks with
+# no tie nearby, so club quality and squad depth are held fixed. A tie within four
+# days costs 0.075 of start probability in the knockout months and an
+# indistinguishable 0.004 in the group months (6.5 SE against 0.4) — managers rest
+# players before a quarter-final, not before a dead group game.
+#
+# The effect is anticipation, not fatigue: 2-3 days *after* a European match the
+# residual is +0.043, if anything slightly above par. So this keys on the tie
+# ahead, never the one behind.
+#
+# Scaled by rotation volatility in the same idiom as the rest and competition
+# penalties: a settled side rests nobody, and the squads that rotate for Europe
+# are the squads that already rotate.
+EUROPEAN_KNOCKOUT_REST_PENALTY = float(
+    os.environ.get("FPL_EUROPEAN_PENALTY", "0.10")
+)
 if MARKET_BLEND_WEIGHT > 0.0:
     # A blended frame must never be reachable under the unblended cache name.
     # Without this a rebuild at one weight silently serves every later run at
@@ -1612,6 +1632,12 @@ def build_season(
         team_fixtures.groupby("team_id")["kickoff_time"].diff().dt.total_seconds()
         / 86400
     ).clip(2, 14).fillna(7)
+    # A midweek in Munich is invisible to `team_rest_days`, which only sees league
+    # kick-offs. Attach the European calendar so the minutes model can tell a club
+    # that trained all week from one resting players for a quarter-final.
+    from european_fixtures import attach_european_proximity
+
+    team_fixtures = attach_european_proximity(team_fixtures, season, team_names)
     team_fixtures["team_result_points"] = np.select(
         [
             team_fixtures["team_goals"] > team_fixtures["team_goals_against"],
@@ -1631,6 +1657,9 @@ def build_season(
             team_clean_sheets=("team_clean_sheet", "sum"),
             team_result_points=("team_result_points", "sum"),
             team_rest_days=("team_rest_days", "min"),
+            european_days_to=("european_days_to", "min"),
+            european_days_since=("european_days_since", "min"),
+            european_knockout_soon=("european_knockout_soon", "max"),
         )
     )
     # Reconstruct the table at each deadline so the one-season 2024/25
@@ -1659,6 +1688,17 @@ def build_season(
     team_week_panel["team_rest_days"] = pd.to_numeric(
         team_week_panel["team_rest_days"], errors="coerce"
     ).fillna(7)
+    # A blank week has no league fixture and so no European proximity either; the
+    # "far away" sentinel keeps it out of the congestion penalty rather than
+    # letting a missing value read as zero days.
+    for column, default in (
+        ("european_days_to", 99.0),
+        ("european_days_since", 99.0),
+        ("european_knockout_soon", 0.0),
+    ):
+        team_week_panel[column] = pd.to_numeric(
+            team_week_panel[column], errors="coerce"
+        ).fillna(default)
     team_week_panel.sort_values(["team_id", "GW"], inplace=True)
     by_team_week = team_week_panel.groupby("team_id", sort=False)
     team_week_panel["table_points_before"] = by_team_week[
@@ -1909,6 +1949,16 @@ def build_season(
         "table_position_before",
     ]:
         weekly[column] = pd.to_numeric(weekly[column], errors="coerce").fillna(0)
+    # Not in the loop above: zero is the *most* congested value these can take, so
+    # filling a missing row with 0 would claim a European tie on the same day.
+    for column, default in (
+        ("european_days_to", 99.0),
+        ("european_days_since", 99.0),
+        ("european_knockout_soon", 0.0),
+    ):
+        weekly[column] = pd.to_numeric(
+            weekly[column], errors="coerce"
+        ).fillna(default)
     weekly["season"] = season
     season_start = date(int(season[:4]), 8, 1)
     weekly["age"] = weekly["birth_date"].map(
@@ -2630,7 +2680,18 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     competition_penalty = (
         0.045 * data["competition_pressure"] * (0.35 + data["rotation_volatility"])
     ).clip(0, 0.10)
-    data["start_probability"] *= 1 - rest_penalty - rotation_penalty - competition_penalty
+    european_penalty = (
+        EUROPEAN_KNOCKOUT_REST_PENALTY
+        * data["european_knockout_soon"]
+        * (0.45 + data["rotation_volatility"])
+    ).clip(0, 0.16)
+    data["start_probability"] *= (
+        1
+        - rest_penalty
+        - rotation_penalty
+        - competition_penalty
+        - european_penalty
+    )
     # The historical archive does not carry a complete weekly injury field, but
     # from 2020/21 it does retain official FPL xP captured around the deadline.
     # A zero xP field alone is not enough to suppress a player: genuine doubts
@@ -8208,6 +8269,39 @@ def current_recommendation(
         gaps = kickoffs.diff().dt.total_seconds().dropna() / 86400
         congestion_map[int(team_id)] = float(gaps.min()) if len(gaps) else 7.0
     current["minimum_fixture_gap"] = current["team_id"].map(congestion_map).fillna(7)
+    # The same European calendar the causal path uses. Feeding one and not the
+    # other is the train/serve skew this model has been repeatedly bitten by, and
+    # `team_name` here is short codes ("MCI"), so the join needs the full names.
+    from european_fixtures import attach_european_proximity
+
+    upcoming_rows = []
+    for team_id in current["team_id"].astype(int).unique():
+        team_schedule = horizon_fixtures[
+            (horizon_fixtures["team_h"] == team_id)
+            | (horizon_fixtures["team_a"] == team_id)
+        ]
+        kickoffs = pd.to_datetime(
+            team_schedule["kickoff_time"], errors="coerce", utc=True
+        ).dropna()
+        if len(kickoffs):
+            upcoming_rows.append(
+                {"team_id": int(team_id), "kickoff_time": kickoffs.min()}
+            )
+    if upcoming_rows:
+        european_frame = attach_european_proximity(
+            pd.DataFrame(upcoming_rows), "2025-26", team_full_name
+        )
+        knockout_map = dict(
+            zip(
+                european_frame["team_id"].astype(int),
+                european_frame["european_knockout_soon"].astype(float),
+            )
+        )
+    else:
+        knockout_map = {}
+    current["european_knockout_soon"] = (
+        current["team_id"].map(knockout_map).fillna(0.0)
+    )
     viable_starter = (prior_start >= 0.28).astype(float)
     competition_count = viable_starter.groupby(
         [current["team_id"], current["position_id"]]
@@ -8235,7 +8329,10 @@ def current_recommendation(
         * (0.35 + live_rotation_volatility)
         + ((4.5 - current["minimum_fixture_gap"]).clip(lower=0) / 5)
         * (0.20 + 0.45 * live_rotation_volatility)
-    ).clip(0, 0.28)
+        + EUROPEAN_KNOCKOUT_REST_PENALTY
+        * current["european_knockout_soon"]
+        * (0.45 + live_rotation_volatility)
+    ).clip(0, 0.34)
     current["start_probability"] = current["start_probability"].clip(0.01, 0.98)
     current["sub_probability_given_bench"] = prior_sub
     current["play_probability"] = (

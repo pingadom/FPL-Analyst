@@ -557,6 +557,64 @@ class ModelEngineTests(unittest.TestCase):
         self.assertEqual(lens.MARKET_BLEND_WEIGHT, 0.0)
         self.assertNotIn("market", lens.PREPARED_HISTORY_CACHE.name)
 
+    def test_european_proximity_finds_the_right_ties(self):
+        """Days to and from the nearest European match, against known fixtures.
+
+        Manchester City played Real Madrid in the 2023/24 quarter-final on the
+        Tuesday and the following Wednesday, with a league game between them.
+        """
+        import european_fixtures as euro
+
+        rows = pd.DataFrame(
+            {
+                "team_id": [43, 43, 43, 1],
+                "kickoff_time": pd.to_datetime(
+                    [
+                        "2024-04-13T11:30:00Z",  # between both quarter-final legs
+                        "2023-11-25T15:00:00Z",  # three days before a group tie
+                        "2024-02-10T15:00:00Z",  # three days before a last-16 tie
+                        "2024-04-13T14:00:00Z",  # a club with no European football
+                    ],
+                    utc=True,
+                ),
+            }
+        )
+        out = euro.attach_european_proximity(
+            rows, "2023-24", {43: "Man City", 1: "Burnley"}
+        )
+        self.assertAlmostEqual(out["european_days_since"].iloc[0], 4.479, places=2)
+        self.assertAlmostEqual(out["european_days_to"].iloc[0], 3.521, places=2)
+        # A knockout tie within four days counts; a group tie the same distance
+        # away does not, which is the entire distinction the penalty rests on.
+        self.assertEqual(out["european_knockout_soon"].iloc[0], 1.0)
+        self.assertEqual(out["european_knockout_soon"].iloc[1], 0.0)
+        self.assertEqual(out["european_knockout_soon"].iloc[2], 1.0)
+        # No European football must be "far away", never zero days.
+        self.assertEqual(out["european_days_to"].iloc[3], 99.0)
+        self.assertEqual(out["european_knockout_soon"].iloc[3], 0.0)
+
+    def test_european_season_dates_resolve_across_the_new_year(self):
+        """The source states the year once per file; everything else is inferred.
+
+        Two ways to get this wrong were found and fixed: tracking the year while
+        reading drifts forward on every out-of-order section, and a plain
+        July-to-June rule dates the COVID-delayed 2019/20 finals to August 2019 —
+        on top of that season's own opening Gameweeks.
+        """
+        import european_fixtures as euro
+
+        for season in ("2018-19", "2019-20", "2023-24"):
+            matches = euro.load_european_matches([season], ("cl",))
+            self.assertFalse(matches.empty)
+            start = int(season.split("-")[0])
+            # Every date must sit inside the season it belongs to, never a year out.
+            self.assertGreaterEqual(matches["date"].min(), pd.Timestamp(f"{start}-06-01"))
+            self.assertLessEqual(matches["date"].max(), pd.Timestamp(f"{start + 1}-09-30"))
+
+        # 2019/20 ran to the Lisbon final tournament in August 2020.
+        covid = euro.load_european_matches(["2019-20"], ("cl",))
+        self.assertGreater(covid["date"].max(), pd.Timestamp("2020-07-01"))
+
 
 if __name__ == "__main__":
     unittest.main()

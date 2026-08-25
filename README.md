@@ -32,6 +32,7 @@ Three supporting modules sit alongside the pipeline:
 |---|---|
 | `analysis/harness.py` | replays a *pinned* configuration so one change can be measured without the pipeline re-searching around it. A screen, not a release decision — confirm with a full run. |
 | `analysis/historical_odds.py` | free *opening* betting prices for all ten replayed seasons, de-vigged into implied team goals. The backtest previously had no market view at all. |
+| `analysis/european_fixtures.py` | Champions League, Europa and Conference fixtures for English clubs, so the minutes model can see the midweek games the Premier League archive does not contain. |
 | `analysis/team_identity.py` | recovers club names for 2016/17 and 2017/18, whose archive ships no team list, and verifies them against an independent match record (380/380 on both seasons). |
 
 Older breakthrough implementation notes are retained as research history, but
