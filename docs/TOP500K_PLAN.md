@@ -388,6 +388,48 @@ term.
 | 3 forecast inputs | **market beats the model 0.3846 vs 0.2495 on team goals** | +15–30, now testable |
 | **total** | | **+105–165** |
 
+### Midweek European football, and why the obvious test was worthless
+
+The archive is Premier League only, so a club that played a Champions League
+quarter-final on the Wednesday looked exactly as rested as one that trained all
+week. Every rotation feature in the model — `team_rest_days`,
+`team_rotation_rate`, `rotation_volatility` — is built from league kick-offs.
+
+The first attempt to measure it compared European clubs against everyone else and
+found a large, highly significant gap: a 0.043 difference in start-probability
+residual at roughly 12 standard errors. It was **not** the effect. The gap is flat
+across every phase of the season, including GW 1-6 before European football has
+properly begun, which is the signature of a club-level constant rather than a
+fixture-calendar one. Since the clubs in Europe are very nearly the big six, that
+design cannot separate *in Europe* from *is a big club*, and it never could.
+
+Comparing each European club against **its own** free weeks holds quality, depth
+and manager fixed. What survives:
+
+| | residual vs that club's own free weeks |
+|---|---|
+| 2-3 days *after* a European tie | +0.0434 +/- 0.0310 |
+| 2-3 days *before* a tie | -0.0225 +/- 0.0091 |
+| sandwiched between two ties | -0.0526 +/- 0.0154 |
+| **knockout months, tie within 4 days** | **-0.0746 +/- 0.0115** |
+| group months, tie within 4 days | -0.0040 +/- 0.0094 |
+
+Two things fall out. The mechanism is **anticipation, not fatigue** — after a
+European match players start slightly *more* than predicted, so the cost is a fit
+player left out before a big tie, not a tired one after it. And it is confined to
+the **knockout rounds**: 6.5 standard errors in the knockout months against 0.4 in
+the group months.
+
+Shipped as `analysis/european_fixtures.py` plus a rest penalty scaled by rotation
+volatility, fed to the causal *and* live paths. It is not a leak — European draws
+are made weeks ahead of the deadline they affect.
+
+Caveats: the penalty coefficient is set from the pooled measurement rather than
+fitted on training seasons alone, so the full run is the real test. Europa and
+Conference fixtures only exist in the source from 2020/21 and 2021/22, so some
+congested early-season weeks are still labelled free — which attenuates the
+feature rather than corrupting it.
+
 ### The backtest now has a market view, and two seasons it never had
 
 Two gaps closed together, and they were connected.

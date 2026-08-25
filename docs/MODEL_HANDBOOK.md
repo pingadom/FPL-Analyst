@@ -43,6 +43,21 @@ Team quality is split into attack and defence. The historical model updates thos
 
 A Gameweek in which a club has no fixture is not a match. It produces no evidence and leaves the rating unchanged. Treating it as a 0-0 draw — which an earlier version did — made a postponed club look as if it had forgotten how to score and become defensively elite for several weeks afterwards, exactly during the fixture swings that decide chip and transfer timing.
 
+#### Midweek European football
+
+The archive holds Premier League matches and nothing else, so every fixture looked equally rested. `team_rest_days`, `team_rotation_rate` and `rotation_volatility` are all built from league kick-offs, and none of them can see a Tuesday in Munich.
+
+Measuring it needed care, because the obvious comparison is worthless. Set European clubs against everyone else and a large gap appears — but it is flat across the whole season, including the opening Gameweeks before European football starts. That is the signature of "big clubs differ from small ones", and since the clubs in Europe are very nearly the big six, the two cannot be told apart that way.
+
+Comparing each European club against **its own** weeks with no tie nearby holds squad depth, quality and manager fixed. Two findings survive that:
+
+* **It is anticipation, not fatigue.** Two to three days *after* a European match, players start slightly *more* than predicted (+0.043). The cost lands *before* the tie, when a fit player is simply left out.
+* **Only the knockout rounds matter.** A tie within four days costs 0.075 of start probability in the knockout months, against 0.004 in the group months — 6.5 standard errors versus 0.4. Nobody rests a first-choice forward for a dead November group game.
+
+So the model now carries the European calendar and applies a rest penalty before knockout ties, scaled by how much a squad rotates in the first place. Fixtures come from a free, unauthenticated source covering all ten replayed seasons, and nothing about it is a leak: European draws are made weeks ahead, so a manager at a Saturday deadline already knows about Tuesday.
+
+Coverage is honest rather than complete. Europa League is available from 2020/21 and the Conference League from 2021/22, so some genuinely congested earlier weeks are still recorded as free. That weakens the feature rather than corrupting it — a missing tie makes the model *less* sure a player will be rested, never more.
+
 The live model adds three external checks:
 
 - Opta season probabilities for slow-moving team quality;
