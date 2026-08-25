@@ -464,6 +464,47 @@ repairs themselves: bisecting the frame under a pinned policy showed every repai
 neutral-to-positive, and the pinned comparison itself flips sign depending on which
 champion is pinned. See the two sections below.
 
+### The market: a squad gain and a consistency gain, paid for at the chip table
+
+Run D was first read as "the market costs 37 chip points", then re-attributed to
+the strategy switch that happened alongside it (D's gate moved from `central` to
+`robust`), then settled by pinning the gate and varying only the data. The middle
+step was wrong, and instructively so: spotting a confound tells you a comparison
+is unsafe, it does not tell you which way the confound resolves. The right
+statement at that point was "unknown until pinned", not a replacement conclusion.
+
+With `FPL_GATE_PIN` holding the strategy fixed:
+
+| | mean | squad | chips | spread | worst season |
+|---|---|---|---|---|---|
+| C: no market, central | 2177.9 | 2100.4 | +77.5 | 123.3 | 1962 |
+| E: market, central | 2169.4 | **2122.4** | +47.0 | **85.5** | **2024** |
+| D: market, robust | 2172.4 | 2132.1 | +40.2 | 112.8 | 1966 |
+
+The market's effects are real and reproducible under both strategies:
+
+* **Squad +22.0.** Consistent with the mechanism — clean-sheet correlation rose
+  0.1716 to 0.2250 and the gain concentrates in defenders and keepers.
+* **Chips -30.5.** Not the strategy. The chip-policy search lands on a lower
+  `wildcardGap` (52.2 -> 40.5) and the model burns **16 Wildcards at mean 10.0**
+  against 11 at 20.6. Bench Boost shows the same defect inverted: a *higher*
+  threshold (12.8 -> 19.9) producing *worse* returns, which is what a threshold
+  that no longer means what it did looks like.
+* **Spread 123.3 -> 85.5**, with the worst season 62 points better and the worst
+  margin to the cutoff improving from -282 to -223.
+
+So the "best of everything" configuration is well defined and not yet built: the
+market's squad and consistency gains with the no-market chip behaviour, worth
+roughly +30 on the mean and a third off the variance. The blocker is specific —
+chip thresholds are not scale-invariant with respect to a change in plan-score
+dispersion, even though `rescale_decision_thresholds` already rescales them by
+the cross-sectional spread of the *player* projection. That is the next
+experiment, and it is a bug hunt rather than a tuning exercise.
+
+Worth weighing separately: for a target that must be cleared in the season you
+actually play, E's variance reduction may be worth more than C's 8.5 points of
+mean. The mean is not the objective.
+
 ### The archive has no injury feed, and the one signal it does have was ignored
 
 No season's per-Gameweek file carries `chance_of_playing`, `status` or `news`, and

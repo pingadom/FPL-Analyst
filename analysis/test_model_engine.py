@@ -686,6 +686,21 @@ class ModelEngineTests(unittest.TestCase):
             name, detail = lens.select_gate_option(options, len(lens.SEASONS))
             self.assertEqual(name, "central:Joint transfer-chip tree + hold value")
             self.assertTrue(detail["pinned"])
+            # The pinned report must carry every key the normal path returns.
+            # The first version of this omitted "switched" and "incumbent", which
+            # the caller reads to print the decision — so the run died on a
+            # KeyError after the expensive replays had already finished, and the
+            # test passed anyway because it only checked "pinned".
+            for key in (
+                "selected",
+                "incumbent",
+                "switched",
+                "seasonsAvailable",
+                "seasonsUsed",
+                "regimeMatched",
+            ):
+                self.assertIn(key, detail)
+            self.assertFalse(detail["switched"])
         # A typo must fail loudly. Silently falling back to the incumbent would
         # produce a run that looks pinned, is not, and is reported as controlled.
         with mock.patch.object(lens, "GATE_PIN", "central:No such strategy"):
