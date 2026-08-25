@@ -365,6 +365,14 @@ PAID_MOVE_UTILITY_COST = 4.0
 GATE_CANDIDATE_POOL = 3
 XG_ERA_FIRST_SEASON = "2022-23"
 GATE_INCUMBENT = "central:Six-GW planner + adaptive banking"
+# Hold the gate's choice for a controlled experiment. The gate decides between
+# options that differ by up to 200 points a season, and it has been observed to
+# move on changes that have nothing to do with strategy — so when it moves at the
+# same time as the thing being measured, the measurement is confounded and no
+# amount of care in the rest of the run recovers it. Setting this pins the
+# selection so a data change can be varied on its own. Empty means decide
+# normally, which is what production does.
+GATE_PIN = os.environ.get("FPL_GATE_PIN", "").strip()
 GATE_SWITCH_CONFIDENCE = 0.75
 GATE_BOOTSTRAP_SAMPLES = 2000
 GATE_BOOTSTRAP_BLOCK = 4
@@ -415,6 +423,18 @@ def select_gate_option(
     later season decide on everything completed before it.
     """
     rng = np.random.default_rng(GATE_BOOTSTRAP_SEED)
+    if GATE_PIN:
+        if GATE_PIN not in gate_results:
+            raise KeyError(
+                f"FPL_GATE_PIN={GATE_PIN!r} is not one of {sorted(gate_results)}"
+            )
+        return GATE_PIN, {
+            "selected": GATE_PIN,
+            "pinned": True,
+            "reason": "held by FPL_GATE_PIN for a controlled comparison",
+            "seasonsUsed": [],
+            "regimeMatched": False,
+        }
     incumbent = (
         GATE_INCUMBENT if GATE_INCUMBENT in gate_results else sorted(gate_results)[0]
     )
