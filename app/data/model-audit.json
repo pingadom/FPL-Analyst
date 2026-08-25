@@ -7,9 +7,9 @@
   },
   "lens8": {
     "label": "Lens 8 repaired model",
-    "average": 2173.1,
-    "deltaVsLens7": 125.0,
-    "top500Hits": 0,
+    "average": 2177.9,
+    "deltaVsLens7": 129.8,
+    "top500Hits": 1,
     "seasons": 8
   },
   "causalChallenger": {
