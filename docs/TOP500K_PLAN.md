@@ -464,6 +464,55 @@ repairs themselves: bisecting the frame under a pinned policy showed every repai
 neutral-to-positive, and the pinned comparison itself flips sign depending on which
 champion is pinned. See the two sections below.
 
+### A leak that wasn't, and how the mistake was made
+
+`chip_stability` averages chip gains over every season and takes an argmax over 48
+policies, with no training-season slice. That looked like a serious leak: eight of
+those ten seasons are the evaluation seasons that get reported.
+
+It is not one. The reported backtest comes from the walk-forward loop, which
+already does the right thing:
+
+    prior_chip_gain = chip_gains[:, :season_id]        # prior seasons only
+    chip_ensemble_indices = np.argsort(chip_train_score)[-12:]
+    trial_policy = blend_chip_policies(chip_ensemble_indices)
+
+Causal, and a blend of twelve rather than an argmax over forty-eight, which is
+also gentler on the optimiser's curse. The leaky line feeds only
+`chipStrategy.policy` and `diagnosticBestPolicyAverageGain` — a published figure,
+not the score. Restricting it is still correct, because a number selected on the
+seasons it is reported against is misleading whatever else is true, but it is a
+reporting fix worth zero points.
+
+**The evidence was visible before the diagnosis and was read past.** Two run pairs
+came back byte-identical — leaky and clean chip selection on the market frame
+(E == G), and again unpinned (D == H). Identical season totals across eight
+seasons is the signature of a change that does nothing. Each pair was explained
+away individually — "equivalent policies", "convergence" — instead of the pattern
+being read as what it was.
+
+The -21.2 attributed to the leak was really the **gate pin**, which forces every
+season's walk-forward gate to one option instead of letting it evolve as evidence
+accumulates. That is a large effect, and it is a property of the experimental
+control rather than of the model.
+
+### The market: sign depends on the control, so it stays off
+
+| | no market | market | effect |
+|---|---|---|---|
+| gate pinned | 2156.6 | 2169.4 | **+12.8** |
+| gate free *(production)* | **2177.9** | 2172.4 | **-5.5** |
+
+Pinning was introduced to remove a confound and introduced a different one: it
+changes the walk-forward gate for both arms, and the market interacts with those
+per-season choices. A comparison run under a control production does not use
+cannot license a production default, so the blend stays off.
+
+What survives is the mechanism, which is reproducible under either control:
+clean-sheet correlation rises 0.1716 to 0.2250 and the gain concentrates in
+defenders and keepers. What is unestablished is whether that reaches season points
+with the gate free.
+
 ### The market: a squad gain and a consistency gain, paid for at the chip table
 
 Run D was first read as "the market costs 37 chip points", then re-attributed to

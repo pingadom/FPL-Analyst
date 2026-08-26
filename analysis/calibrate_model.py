@@ -56,8 +56,20 @@ PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-absence-v5.pkl"
 # only, never to a player's own availability, which is where post-deadline news
 # does its real damage.
 #
-# Default off. Set FPL_MARKET_BLEND to rebuild the frame at another weight; the
-# prepared-history cache must be rebuilt for a change here to take effect.
+# Off by default. The blend measured +12.8 with the decision gate pinned and -5.5
+# without it, and production does not pin — so the honest reading is -5.5.
+#
+#   pinned    no market 2156.6   market 2169.4   +12.8
+#   unpinned  no market 2177.9   market 2172.4    -5.5
+#
+# The sign flips because pinning forces every season's walk-forward gate to one
+# option instead of letting it evolve with accumulating evidence, and the market
+# interacts with those per-season choices. A comparison run under a control that
+# production does not use does not license a production default.
+#
+# The squad-side gain is real and reproducible either way (clean-sheet correlation
+# 0.1716 -> 0.2250, concentrated in defenders and keepers). What is not
+# established is that it survives to season points once the gate is free.
 MARKET_BLEND_WEIGHT = float(os.environ.get("FPL_MARKET_BLEND", "0.0"))
 
 # How hard a looming European knockout tie pushes a start probability down.
@@ -374,15 +386,18 @@ GATE_INCUMBENT = "central:Six-GW planner + adaptive banking"
 # normally, which is what production does.
 GATE_PIN = os.environ.get("FPL_GATE_PIN", "").strip()
 
-# Which seasons may choose the chip policy.
+# Which seasons may choose the *diagnostic* best chip policy.
 #
-# "training" is correct and the default. "all" reproduces the previous behaviour,
-# which picked the best of 48 policies using outcomes from every season —
-# including the eight evaluation seasons that are then reported. Every other
-# selection stage here is training-only (candidate screening, the recursive
-# search, the decision gate); this one was not, so the reported chip contribution
-# was chosen knowing the answer, and the argmax over 48 noisy estimates moved
-# whenever the frame moved.
+# This affects `chipStrategy.policy` and `diagnosticBestPolicyAverageGain` only.
+# It does NOT touch the reported backtest: that comes from the walk-forward loop,
+# which already slices `chip_gains[:, :season_id]` and blends the top twelve
+# policies rather than taking an argmax over forty-eight — causal, and gentler on
+# the optimiser's curse.
+#
+# Restricting it is still right, because a published figure selected on the
+# seasons it is reported against is misleading whatever else is true. But it is a
+# reporting fix, not a scoring one: runs with this set to "training" and to "all"
+# produce byte-identical backtests, which is how the distinction was found.
 CHIP_POLICY_SELECTION = os.environ.get("FPL_CHIP_SELECT", "training").strip()
 GATE_SWITCH_CONFIDENCE = 0.75
 GATE_BOOTSTRAP_SAMPLES = 2000

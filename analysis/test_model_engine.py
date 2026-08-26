@@ -549,14 +549,35 @@ class ModelEngineTests(unittest.TestCase):
                 f"{name} is a closing-odds column",
             )
 
-    def test_market_blend_is_off_by_default(self):
-        """A market weight must be opt-in, and must not share a cache when set.
+    def test_market_blend_has_its_own_cache_when_enabled(self):
+        """A blended frame must never be reachable under an unblended name.
 
-        A blended frame reachable under the unblended cache name would serve one
-        experiment's data to every later run.
+        The blend is off by default: it measured +12.8 with the gate pinned and
+        -5.5 without, and production does not pin. What must not change either way
+        is the namespacing — a frame built at one weight being served to a run at
+        another would silently mix two experiments, which is the contamination the
+        version bump exists to stop.
         """
-        self.assertEqual(lens.MARKET_BLEND_WEIGHT, 0.0)
-        self.assertNotIn("market", lens.PREPARED_HISTORY_CACHE.name)
+        if lens.MARKET_BLEND_WEIGHT > 0.0:
+            self.assertIn("market", lens.PREPARED_HISTORY_CACHE.name)
+        else:
+            self.assertNotIn("market", lens.PREPARED_HISTORY_CACHE.name)
+
+    def test_diagnostic_chip_policy_is_not_chosen_on_the_reported_seasons(self):
+        """The *published* best-policy figure must not be picked on its own test.
+
+        This governs `chipStrategy.policy` and `diagnosticBestPolicyAverageGain`
+        only. The reported backtest comes from the walk-forward loop, which
+        already slices `chip_gains[:, :season_id]`, so runs under "training" and
+        "all" produce byte-identical season totals — the fix is to a published
+        figure, not to the score.
+        """
+        self.assertEqual(lens.CHIP_POLICY_SELECTION, "training")
+        # The training seasons must be a strict prefix of SEASONS, or a
+        # `[:training_count]` slice would not mean "the selecting seasons".
+        self.assertEqual(
+            lens.SEASONS[: len(lens.TRAINING_SEASONS)], list(lens.TRAINING_SEASONS)
+        )
 
     def test_european_proximity_finds_the_right_ties(self):
         """Days to and from the nearest European match, against known fixtures.

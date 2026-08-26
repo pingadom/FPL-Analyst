@@ -1,6 +1,6 @@
 {
   "product": "FPL Lens",
-  "generatedAt": "2026-08-25T16:53+01:00",
+  "generatedAt": "2026-08-25T15:41+01:00",
   "model": {
     "version": "Lens 8.0",
     "trials": 2400,
@@ -62,7 +62,7 @@
     "historicalSeasons": 10,
     "componentModel": "Single-count fixture components + Opta/regime team priors + Matchbook Poisson + role ensemble + coverage-aware defender DC/BPS",
     "decisionEngine": "Joint transfer-chip tree + hold value",
-    "managerPopulation": 9637155,
+    "managerPopulation": 9629137,
     "officialRankImport": true,
     "publicProjectionEndpoint": "/api/projections",
     "defensiveEventCoverage": 39,
@@ -87,7 +87,7 @@
           498
         ],
         "expectedXI": 44.0,
-        "downsideXI": 26.9,
+        "downsideXI": 26.8,
         "upsideXI": 61.1,
         "spend": 100.0
       },
@@ -111,7 +111,7 @@
           498
         ],
         "expectedXI": 44.0,
-        "downsideXI": 26.9,
+        "downsideXI": 26.8,
         "upsideXI": 61.1,
         "spend": 100.0
       },
@@ -120,13 +120,13 @@
         "squadIds": [
           1,
           4,
-          46,
           55,
           61,
           106,
           109,
-          115,
           123,
+          124,
+          304,
           332,
           356,
           368,
@@ -162,112 +162,112 @@
       "optaFixtureAsOf": "2026-08-20T12:00:00Z",
       "optaFixtureCoverage": "10/10",
       "matchbookStatus": "available",
-      "matchbookCapturedAt": "2026-08-25T15:53:31.217811+00:00",
+      "matchbookCapturedAt": "2026-08-25T14:41:11.236422+00:00",
       "matchbookCoverage": "10/10",
       "marketDisagreements": [
         {
           "team": "ARS",
           "covered": true,
-          "marketWeight": 0.5232,
+          "marketWeight": 0.5171,
           "modelWinProbability": 0.4437,
           "marketWinProbability": 0.6332,
           "optaWinProbability": null,
           "externalWinProbability": 0.6332,
           "winProbabilityGap": -0.1895,
           "externalProbabilityGap": -0.1895,
-          "quality": 0.5687,
-          "volume": 161.57
+          "quality": 0.5621,
+          "volume": 145.67
         },
         {
           "team": "MCI",
           "covered": true,
-          "marketWeight": 0.7072,
+          "marketWeight": 0.7069,
           "modelWinProbability": 0.4243,
           "marketWinProbability": 0.5981,
           "optaWinProbability": null,
           "externalWinProbability": 0.5981,
           "winProbabilityGap": -0.1739,
           "externalProbabilityGap": -0.1739,
-          "quality": 0.7687,
-          "volume": 1933.88
-        },
-        {
-          "team": "MUN",
-          "covered": true,
-          "marketWeight": 0.6191,
-          "modelWinProbability": 0.519,
-          "marketWinProbability": 0.6863,
-          "optaWinProbability": null,
-          "externalWinProbability": 0.6863,
-          "winProbabilityGap": -0.1673,
-          "externalProbabilityGap": -0.1673,
-          "quality": 0.6729,
-          "volume": 1529.12
+          "quality": 0.7684,
+          "volume": 1924.9
         },
         {
           "team": "CRY",
           "covered": true,
-          "marketWeight": 0.7072,
+          "marketWeight": 0.7069,
           "modelWinProbability": 0.3384,
           "marketWinProbability": 0.1723,
           "optaWinProbability": null,
           "externalWinProbability": 0.1723,
           "winProbabilityGap": 0.1662,
           "externalProbabilityGap": 0.1662,
-          "quality": 0.7687,
-          "volume": 1933.88
+          "quality": 0.7684,
+          "volume": 1924.9
+        },
+        {
+          "team": "MUN",
+          "covered": true,
+          "marketWeight": 0.6581,
+          "modelWinProbability": 0.519,
+          "marketWinProbability": 0.6841,
+          "optaWinProbability": null,
+          "externalWinProbability": 0.6841,
+          "winProbabilityGap": -0.1651,
+          "externalProbabilityGap": -0.1651,
+          "quality": 0.7153,
+          "volume": 1399.82
         },
         {
           "team": "AVL",
           "covered": true,
-          "marketWeight": 0.5232,
+          "marketWeight": 0.5171,
           "modelWinProbability": 0.2966,
           "marketWinProbability": 0.1382,
           "optaWinProbability": null,
           "externalWinProbability": 0.1382,
           "winProbabilityGap": 0.1584,
           "externalProbabilityGap": 0.1584,
-          "quality": 0.5687,
-          "volume": 161.57
+          "quality": 0.5621,
+          "volume": 145.67
         },
         {
           "team": "CHE",
           "covered": true,
-          "marketWeight": 0.6554,
+          "marketWeight": 0.6446,
           "modelWinProbability": 0.3729,
-          "marketWinProbability": 0.5014,
+          "marketWinProbability": 0.5033,
           "optaWinProbability": null,
-          "externalWinProbability": 0.5014,
-          "winProbabilityGap": -0.1285,
-          "externalProbabilityGap": -0.1285,
-          "quality": 0.7124,
-          "volume": 597.03
+          "externalWinProbability": 0.5033,
+          "winProbabilityGap": -0.1303,
+          "externalProbabilityGap": -0.1303,
+          "quality": 0.7006,
+          "volume": 497.05
         },
         {
           "team": "IPS",
           "covered": true,
-          "marketWeight": 0.6191,
+          "marketWeight": 0.6581,
           "modelWinProbability": 0.2553,
-          "marketWinProbability": 0.1275,
+          "marketWinProbability": 0.1286,
           "optaWinProbability": null,
-          "externalWinProbability": 0.1275,
-          "winProbabilityGap": 0.1279,
-          "externalProbabilityGap": 0.1279,
-          "quality": 0.6729,
-          "volume": 1529.12
+          "externalWinProbability": 0.1286,
+          "winProbabilityGap": 0.1267,
+          "externalProbabilityGap": 0.1267,
+          "quality": 0.7153,
+          "volume": 1399.82
         },
         {
           "team": "BHA",
           "covered": true,
-          "marketWeight": 0.6554,
+          "marketWeight": 0.6446,
           "modelWinProbability": 0.3707,
-          "marketWinProbability": 0.247,
+          "marketWinProbability": 0.2461,
           "optaWinProbability": null,
-          "externalWinProbability": 0.247,
-          "winProbabilityGap": 0.1237,
-          "externalProbabilityGap": 0.1237,
-          "quality": 0.7124,
-          "volume": 597.03
+          "externalWinProbability": 0.2461,
+          "winProbabilityGap": 0.1246,
+          "externalProbabilityGap": 0.1246,
+          "quality": 0.7006,
+          "volume": 497.05
         }
       ],
       "teamAnchors": [
@@ -514,9 +514,9 @@
           "status": "agreement",
           "selected": true,
           "starter": true,
-          "projection": 4.85,
-          "horizonProjection": 17.56,
-          "ownership": 49.6,
+          "projection": 4.86,
+          "horizonProjection": 17.49,
+          "ownership": 49.7,
           "positionRank": 2
         },
         {
@@ -525,10 +525,10 @@
           "status": "agreement",
           "selected": true,
           "starter": true,
-          "projection": 3.63,
-          "horizonProjection": 13.15,
-          "ownership": 36.9,
-          "positionRank": 18
+          "projection": 3.64,
+          "horizonProjection": 13.1,
+          "ownership": 37.0,
+          "positionRank": 19
         },
         {
           "player": "Semenyo",
@@ -538,7 +538,7 @@
           "starter": false,
           "projection": 3.38,
           "horizonProjection": 13.51,
-          "ownership": 25.1,
+          "ownership": 25.2,
           "positionRank": 14
         },
         {
@@ -547,8 +547,8 @@
           "status": "core-disagreement",
           "selected": false,
           "starter": false,
-          "projection": 2.95,
-          "horizonProjection": 10.51,
+          "projection": 2.96,
+          "horizonProjection": 10.53,
           "ownership": 65.8,
           "positionRank": 18
         },
@@ -559,7 +559,7 @@
           "selected": true,
           "starter": false,
           "projection": 3.29,
-          "horizonProjection": 15.51,
+          "horizonProjection": 15.62,
           "ownership": 13.5,
           "positionRank": 5
         },
@@ -580,9 +580,9 @@
           "status": "watch-disagreement",
           "selected": false,
           "starter": false,
-          "projection": 2.96,
-          "horizonProjection": 10.21,
-          "ownership": 20.2,
+          "projection": 2.97,
+          "horizonProjection": 10.16,
+          "ownership": 20.3,
           "positionRank": 31
         },
         {
@@ -594,7 +594,7 @@
           "projection": 1.97,
           "horizonProjection": 7.58,
           "ownership": 3.6,
-          "positionRank": 72
+          "positionRank": 71
         },
         {
           "player": "N.Williams",
@@ -603,7 +603,7 @@
           "selected": false,
           "starter": false,
           "projection": 2.5,
-          "horizonProjection": 12.63,
+          "horizonProjection": 12.58,
           "ownership": 9.5,
           "positionRank": 15
         },
@@ -616,7 +616,7 @@
           "projection": 1.68,
           "horizonProjection": 6.01,
           "ownership": 13.4,
-          "positionRank": 96
+          "positionRank": 97
         },
         {
           "player": "Calvert-Lewin",
@@ -638,13 +638,13 @@
         },
         {
           "player": "Gabriel",
-          "projection": 4.36,
+          "projection": 4.37,
           "ownership": 29.4
         },
         {
           "player": "Watkins",
           "projection": 3.77,
-          "ownership": 9.2
+          "ownership": 9.3
         },
         {
           "player": "Truffert",
@@ -654,21 +654,21 @@
         {
           "player": "Thiago",
           "projection": 3.42,
-          "ownership": 17.0
+          "ownership": 17.1
         },
         {
           "player": "Hinshelwood",
-          "projection": 3.67,
+          "projection": 3.66,
           "ownership": 1.7
         },
         {
           "player": "Virgil",
-          "projection": 4.19,
+          "projection": 4.16,
           "ownership": 19.6
         },
         {
           "player": "Szoboszlai",
-          "projection": 4.34,
+          "projection": 4.33,
           "ownership": 42.7
         },
         {
@@ -678,7 +678,7 @@
         }
       ]
     },
-    "sourceUpdated": "2026-08-25T16:53+01:00"
+    "sourceUpdated": "2026-08-25T15:41+01:00"
   },
   "squad": [
     {
@@ -693,7 +693,7 @@
       "expectedMinutes": 86,
       "uncertainty": 0.46,
       "confidence": 54,
-      "valueProjected": 2.78,
+      "valueProjected": 2.79,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -766,10 +766,10 @@
         "priceFallProbability": 0
       },
       "teamContext": {
-        "expectedGoalsFor": 1.71,
+        "expectedGoalsFor": 1.7,
         "expectedGoalsAgainst": 0.97,
         "cleanSheetProbability": 38,
-        "horizonExpectedGoalsAgainst": 0.96,
+        "horizonExpectedGoalsAgainst": 0.97,
         "horizonCleanSheetProbability": 39,
         "attackRank": 4,
         "defenceRank": 1,
@@ -787,9 +787,9 @@
         "appearance": 1.8,
         "goals": 0.0,
         "assists": 0.0,
-        "cleanSheet": 1.5,
+        "cleanSheet": 1.49,
         "defence": 0.58,
-        "bonus": 0.46,
+        "bonus": 0.47,
         "adjustment": -0.43
       },
       "history": {
@@ -812,11 +812,11 @@
         "positionPlayers": 44,
         "projectionRank": 100,
         "popularRival": "Calafiori",
-        "popularRivalOwnership": 41.2,
+        "popularRivalOwnership": 41.1,
         "popularRivalProjection": 2.7,
         "edgeVsPopular": 1.2
       },
-      "captainRating": 96,
+      "captainRating": 97,
       "score": 99,
       "strategyScores": {
         "protect": 0.993,
@@ -836,8 +836,8 @@
         "underlying": 0.7863
       },
       "researchFeatures": {
-        "component_xpts": 3.91948646,
-        "role_ridge_xpts": 3.53509594,
+        "component_xpts": 3.91975472,
+        "role_ridge_xpts": 3.53969564,
         "expected_minutes": 86.1713783,
         "minutes_std": 20.81970879,
         "play_probability": 0.96747447,
@@ -848,15 +848,15 @@
         "goal_rate": 0.0,
         "assist_rate": 0.00109091,
         "bonus_rate": 0.45454545,
-        "team_expected_goals_for": 1.70633822,
-        "team_expected_goals_against": 0.96986454,
-        "team_clean_probability": 0.37913439,
+        "team_expected_goals_for": 1.70348808,
+        "team_expected_goals_against": 0.9719017,
+        "team_clean_probability": 0.37836282,
         "price": 60.0,
         "selected": 1905000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.98507463,
-        "fixture_now": 0.8358209,
+        "fixture_now": 0.92537313,
         "team_context": 0.98507463,
         "team_attack": 0.8358209,
         "team_defence": 0.98507463,
@@ -873,10 +873,10 @@
         "price_rise_probability": 0.91093443,
         "price_fall_probability": 0.00077251,
         "competition_pressure": 0.0,
-        "prediction_uncertainty": 0.46286479,
+        "prediction_uncertainty": 0.46276617,
         "position_id": 1.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.04152934,
+        "component_xpts_structural": 4.03803076,
         "empirical_xpts": 4.6693341,
         "recent_underlying_raw": 1.58333333,
         "long_underlying_raw": 1.85686813,
@@ -1063,8 +1063,8 @@
         "underlying": 0.9382
       },
       "researchFeatures": {
-        "component_xpts": 3.98633389,
-        "role_ridge_xpts": 4.11051594,
+        "component_xpts": 3.9863332,
+        "role_ridge_xpts": 4.11051481,
         "expected_minutes": 80.5579612,
         "minutes_std": 26.40610148,
         "play_probability": 0.92986249,
@@ -1075,9 +1075,9 @@
         "goal_rate": 0.05124242,
         "assist_rate": 0.17512121,
         "bonus_rate": 0.75757576,
-        "team_expected_goals_for": 1.65110122,
-        "team_expected_goals_against": 1.16114471,
-        "team_clean_probability": 0.31312753,
+        "team_expected_goals_for": 1.65111454,
+        "team_expected_goals_against": 1.16114814,
+        "team_clean_probability": 0.31312646,
         "price": 55.0,
         "selected": 215000.0,
         "fixture_count": 1.0,
@@ -1100,10 +1100,10 @@
         "price_rise_probability": 0.00687963,
         "price_fall_probability": 0.53302375,
         "competition_pressure": 0.25,
-        "prediction_uncertainty": 0.55017148,
+        "prediction_uncertainty": 0.55017149,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.37260512,
+        "component_xpts_structural": 4.37260341,
         "empirical_xpts": 5.28027055,
         "recent_underlying_raw": 5.02,
         "long_underlying_raw": 4.10664969,
@@ -1147,7 +1147,7 @@
       "expectedMinutes": 81,
       "uncertainty": 0.5,
       "confidence": 50,
-      "valueProjected": 2.32,
+      "valueProjected": 2.33,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -1213,17 +1213,17 @@
         "roleChallenger": 24,
         "official": 18,
         "disagreement": 0.89,
-        "roleProjection": 4.41
+        "roleProjection": 4.46
       },
       "marketForecast": {
         "priceRiseProbability": 0,
         "priceFallProbability": 93
       },
       "teamContext": {
-        "expectedGoalsFor": 1.71,
+        "expectedGoalsFor": 1.7,
         "expectedGoalsAgainst": 0.97,
         "cleanSheetProbability": 38,
-        "horizonExpectedGoalsAgainst": 0.96,
+        "horizonExpectedGoalsAgainst": 0.97,
         "horizonCleanSheetProbability": 39,
         "attackRank": 4,
         "defenceRank": 1,
@@ -1238,7 +1238,7 @@
         "externalWinProbability": 63
       },
       "components": {
-        "appearance": 1.71,
+        "appearance": 1.72,
         "goals": 0.52,
         "assists": 0.19,
         "cleanSheet": 1.36,
@@ -1266,16 +1266,16 @@
         "positionPlayers": 128,
         "projectionRank": 100,
         "popularRival": "Calafiori",
-        "popularRivalOwnership": 41.2,
+        "popularRivalOwnership": 41.1,
         "popularRivalProjection": 2.7,
         "edgeVsPopular": 1.7
       },
-      "captainRating": 96,
+      "captainRating": 97,
       "score": 99,
       "strategyScores": {
-        "protect": 0.9859,
-        "balanced": 0.9903,
-        "chase": 0.9642
+        "protect": 0.9868,
+        "balanced": 0.9909,
+        "chase": 0.9648
       },
       "features": {
         "recent": 0.9804,
@@ -1290,8 +1290,8 @@
         "underlying": 0.8839
       },
       "researchFeatures": {
-        "component_xpts": 4.36321214,
-        "role_ridge_xpts": 4.41452788,
+        "component_xpts": 4.37381075,
+        "role_ridge_xpts": 4.46216953,
         "expected_minutes": 80.80891513,
         "minutes_std": 25.99239802,
         "play_probability": 0.92986249,
@@ -1302,15 +1302,15 @@
         "goal_rate": 0.06927273,
         "assist_rate": 0.0992303,
         "bonus_rate": 0.90909091,
-        "team_expected_goals_for": 1.70633822,
-        "team_expected_goals_against": 0.96986454,
-        "team_clean_probability": 0.37913439,
+        "team_expected_goals_for": 1.70348808,
+        "team_expected_goals_against": 0.9719017,
+        "team_clean_probability": 0.37836282,
         "price": 80.0,
         "selected": 1470000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.98284314,
-        "fixture_now": 0.87990196,
+        "fixture_now": 0.93382353,
         "team_context": 0.98284314,
         "team_attack": 0.82598039,
         "team_defence": 0.98284314,
@@ -1327,10 +1327,10 @@
         "price_rise_probability": 0.00061164,
         "price_fall_probability": 0.9281597,
         "competition_pressure": 0.5,
-        "prediction_uncertainty": 0.49852965,
+        "prediction_uncertainty": 0.49784138,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.8543124,
+        "component_xpts_structural": 4.85046589,
         "empirical_xpts": 4.93751876,
         "recent_underlying_raw": 4.11666667,
         "long_underlying_raw": 3.09351804,
@@ -1517,8 +1517,8 @@
         "underlying": 0.8645
       },
       "researchFeatures": {
-        "component_xpts": 3.8199239,
-        "role_ridge_xpts": 3.85855976,
+        "component_xpts": 3.81992586,
+        "role_ridge_xpts": 3.85856111,
         "expected_minutes": 80.80891513,
         "minutes_std": 25.99239802,
         "play_probability": 0.92986249,
@@ -1529,9 +1529,9 @@
         "goal_rate": 0.01554545,
         "assist_rate": 0.0634,
         "bonus_rate": 0.60606061,
-        "team_expected_goals_for": 1.57856289,
-        "team_expected_goals_against": 1.32173604,
-        "team_clean_probability": 0.26667195,
+        "team_expected_goals_for": 1.57855931,
+        "team_expected_goals_against": 1.32173054,
+        "team_clean_probability": 0.26667341,
         "price": 60.0,
         "selected": 400000.0,
         "fixture_count": 1.0,
@@ -1554,10 +1554,10 @@
         "price_rise_probability": 0.00073198,
         "price_fall_probability": 0.91521339,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.54515261,
+        "prediction_uncertainty": 0.54515262,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.09865636,
+        "component_xpts_structural": 4.09866304,
         "empirical_xpts": 4.9425196,
         "recent_underlying_raw": 3.93,
         "long_underlying_raw": 2.8496383,
@@ -1597,11 +1597,11 @@
       "price": 6.5,
       "ownership": 19.6,
       "projected": 4.2,
-      "sixWeekProjected": 13.9,
+      "sixWeekProjected": 14.0,
       "expectedMinutes": 81,
       "uncertainty": 0.53,
       "confidence": 47,
-      "valueProjected": 2.14,
+      "valueProjected": 2.15,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -1644,7 +1644,7 @@
         }
       },
       "distribution": {
-        "p10": 2.6,
+        "p10": 2.5,
         "median": 4.2,
         "p90": 5.8,
         "blankProbability": 53,
@@ -1666,8 +1666,8 @@
         "marketRole": 9,
         "roleChallenger": 24,
         "official": 18,
-        "disagreement": 1.14,
-        "roleProjection": 4.34
+        "disagreement": 1.12,
+        "roleProjection": 4.28
       },
       "marketForecast": {
         "priceRiseProbability": 83,
@@ -1675,9 +1675,9 @@
       },
       "teamContext": {
         "expectedGoalsFor": 2.2,
-        "expectedGoalsAgainst": 1.08,
-        "cleanSheetProbability": 34,
-        "horizonExpectedGoalsAgainst": 1.41,
+        "expectedGoalsAgainst": 1.11,
+        "cleanSheetProbability": 33,
+        "horizonExpectedGoalsAgainst": 1.42,
         "horizonCleanSheetProbability": 25,
         "attackRank": 10,
         "defenceRank": 13,
@@ -1686,8 +1686,8 @@
         "regimeShift": 32,
         "marketWinProbability": 65,
         "modelWinProbability": 56,
-        "marketWeight": 72,
-        "marketDisagreement": -10,
+        "marketWeight": 67,
+        "marketDisagreement": -9,
         "optaWinProbability": null,
         "externalWinProbability": 65
       },
@@ -1695,10 +1695,10 @@
         "appearance": 1.69,
         "goals": 1.03,
         "assists": 0.14,
-        "cleanSheet": 1.0,
+        "cleanSheet": 0.98,
         "defence": 0.54,
         "bonus": 0.36,
-        "adjustment": -0.56
+        "adjustment": -0.58
       },
       "history": {
         "matches": 295,
@@ -1716,20 +1716,20 @@
       "comparison": {
         "fixtureRank": 2,
         "fixturePlayers": 38,
-        "positionRank": 7,
+        "positionRank": 6,
         "positionPlayers": 128,
-        "projectionRank": 95,
+        "projectionRank": 96,
         "popularRival": "Szoboszlai",
         "popularRivalOwnership": 42.7,
         "popularRivalProjection": 4.3,
-        "edgeVsPopular": -0.1
+        "edgeVsPopular": -0.2
       },
-      "captainRating": 97,
+      "captainRating": 96,
       "score": 98,
       "strategyScores": {
-        "protect": 0.9649,
-        "balanced": 0.9795,
-        "chase": 0.9185
+        "protect": 0.9657,
+        "balanced": 0.9801,
+        "chase": 0.9181
       },
       "features": {
         "recent": 0.9902,
@@ -1744,8 +1744,8 @@
         "underlying": 0.9465
       },
       "researchFeatures": {
-        "component_xpts": 4.19039834,
-        "role_ridge_xpts": 4.34476179,
+        "component_xpts": 4.16466524,
+        "role_ridge_xpts": 4.27978084,
         "expected_minutes": 80.80891513,
         "minutes_std": 25.99239802,
         "play_probability": 0.92986249,
@@ -1756,15 +1756,15 @@
         "goal_rate": 0.25722222,
         "assist_rate": 0.04664444,
         "bonus_rate": 0.41666667,
-        "team_expected_goals_for": 2.19681082,
-        "team_expected_goals_against": 1.07799881,
-        "team_clean_probability": 0.3402758,
+        "team_expected_goals_for": 2.20200861,
+        "team_expected_goals_against": 1.1066912,
+        "team_clean_probability": 0.33065121,
         "price": 65.0,
         "selected": 980000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.79411765,
-        "fixture_now": 0.92647059,
+        "fixture_now": 0.8872549,
         "team_context": 0.39705882,
         "team_attack": 0.54411765,
         "team_defence": 0.3872549,
@@ -1777,14 +1777,14 @@
         "rotation_volatility": 0.0,
         "team_rating_confidence": 0.71454382,
         "team_regime_shift": 0.32,
-        "transfer_pressure_rank": 0.86111111,
-        "price_rise_probability": 0.82523446,
-        "price_fall_probability": 0.00167173,
+        "transfer_pressure_rank": 0.8627451,
+        "price_rise_probability": 0.82781156,
+        "price_fall_probability": 0.001642,
         "competition_pressure": 0.5,
-        "prediction_uncertainty": 0.52754452,
+        "prediction_uncertainty": 0.52833212,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.73637264,
+        "component_xpts_structural": 4.6957174,
         "empirical_xpts": 5.12631554,
         "recent_underlying_raw": 5.91666667,
         "long_underlying_raw": 3.32415894,
@@ -1822,9 +1822,9 @@
       "team": "MUN",
       "position": "MID",
       "price": 12.0,
-      "ownership": 49.6,
+      "ownership": 49.7,
       "projected": 4.9,
-      "sixWeekProjected": 17.6,
+      "sixWeekProjected": 17.5,
       "expectedMinutes": 78,
       "uncertainty": 0.51,
       "confidence": 49,
@@ -1898,15 +1898,15 @@
         "roleChallenger": 24,
         "official": 18,
         "disagreement": 1.28,
-        "roleProjection": 4.75
+        "roleProjection": 4.76
       },
       "marketForecast": {
         "priceRiseProbability": 0,
         "priceFallProbability": 95
       },
       "teamContext": {
-        "expectedGoalsFor": 2.08,
-        "expectedGoalsAgainst": 1.0,
+        "expectedGoalsFor": 2.09,
+        "expectedGoalsAgainst": 0.99,
         "cleanSheetProbability": 37,
         "horizonExpectedGoalsAgainst": 1.34,
         "horizonCleanSheetProbability": 27,
@@ -1915,12 +1915,12 @@
         "strengthRank": 3,
         "ratingConfidence": 72,
         "regimeShift": 29,
-        "marketWinProbability": 69,
+        "marketWinProbability": 68,
         "modelWinProbability": 52,
-        "marketWeight": 62,
+        "marketWeight": 66,
         "marketDisagreement": -17,
         "optaWinProbability": null,
-        "externalWinProbability": 69
+        "externalWinProbability": 68
       },
       "components": {
         "appearance": 1.44,
@@ -1951,7 +1951,7 @@
         "positionPlayers": 149,
         "projectionRank": 99,
         "popularRival": "Mbeumo",
-        "popularRivalOwnership": 36.9,
+        "popularRivalOwnership": 37.0,
         "popularRivalProjection": 3.6,
         "edgeVsPopular": 1.2
       },
@@ -1975,8 +1975,8 @@
         "underlying": 0.9973
       },
       "researchFeatures": {
-        "component_xpts": 4.8516889,
-        "role_ridge_xpts": 4.75461148,
+        "component_xpts": 4.85738656,
+        "role_ridge_xpts": 4.76108675,
         "expected_minutes": 78.24323421,
         "minutes_std": 27.63898829,
         "play_probability": 0.93163819,
@@ -1987,11 +1987,11 @@
         "goal_rate": 0.17648889,
         "assist_rate": 0.52958889,
         "bonus_rate": 0.90277778,
-        "team_expected_goals_for": 2.08120916,
-        "team_expected_goals_against": 1.00330945,
-        "team_clean_probability": 0.36666397,
+        "team_expected_goals_for": 2.09438868,
+        "team_expected_goals_against": 0.98762087,
+        "team_clean_probability": 0.37246177,
         "price": 120.0,
-        "selected": 2480000.0,
+        "selected": 2485000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.86380597,
@@ -2012,10 +2012,10 @@
         "price_rise_probability": 0.00041196,
         "price_fall_probability": 0.95046082,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.51152423,
+        "prediction_uncertainty": 0.5115446,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 6.27208014,
+        "component_xpts_structural": 6.28925195,
         "empirical_xpts": 5.16212999,
         "recent_underlying_raw": 11.18333333,
         "long_underlying_raw": 9.42587056,
@@ -2129,7 +2129,7 @@
         "roleChallenger": 24,
         "official": 18,
         "disagreement": 1.38,
-        "roleProjection": 4.72
+        "roleProjection": 4.71
       },
       "marketForecast": {
         "priceRiseProbability": 95,
@@ -2137,9 +2137,9 @@
       },
       "teamContext": {
         "expectedGoalsFor": 2.2,
-        "expectedGoalsAgainst": 1.08,
-        "cleanSheetProbability": 34,
-        "horizonExpectedGoalsAgainst": 1.41,
+        "expectedGoalsAgainst": 1.11,
+        "cleanSheetProbability": 33,
+        "horizonExpectedGoalsAgainst": 1.42,
         "horizonCleanSheetProbability": 25,
         "attackRank": 10,
         "defenceRank": 13,
@@ -2148,8 +2148,8 @@
         "regimeShift": 32,
         "marketWinProbability": 65,
         "modelWinProbability": 56,
-        "marketWeight": 72,
-        "marketDisagreement": -10,
+        "marketWeight": 67,
+        "marketDisagreement": -9,
         "optaWinProbability": null,
         "externalWinProbability": 65
       },
@@ -2184,14 +2184,14 @@
         "popularRival": "Virgil",
         "popularRivalOwnership": 19.6,
         "popularRivalProjection": 4.2,
-        "edgeVsPopular": 0.1
+        "edgeVsPopular": 0.2
       },
       "captainRating": 99,
       "score": 98,
       "strategyScores": {
         "protect": 0.9592,
         "balanced": 0.9831,
-        "chase": 0.9237
+        "chase": 0.9247
       },
       "features": {
         "recent": 0.9851,
@@ -2206,8 +2206,8 @@
         "underlying": 0.973
       },
       "researchFeatures": {
-        "component_xpts": 4.33801232,
-        "role_ridge_xpts": 4.71835039,
+        "component_xpts": 4.33484944,
+        "role_ridge_xpts": 4.70760115,
         "expected_minutes": 78.24323421,
         "minutes_std": 27.63898829,
         "play_probability": 0.93163819,
@@ -2218,9 +2218,9 @@
         "goal_rate": 0.23472727,
         "assist_rate": 0.28682424,
         "bonus_rate": 0.6969697,
-        "team_expected_goals_for": 2.19681082,
-        "team_expected_goals_against": 1.07799881,
-        "team_clean_probability": 0.3402758,
+        "team_expected_goals_for": 2.20200861,
+        "team_expected_goals_against": 1.1066912,
+        "team_clean_probability": 0.33065121,
         "price": 70.0,
         "selected": 2135000.0,
         "fixture_count": 1.0,
@@ -2243,10 +2243,10 @@
         "price_rise_probability": 0.94785936,
         "price_fall_probability": 0.00043477,
         "competition_pressure": 1.5,
-        "prediction_uncertainty": 0.56245186,
+        "prediction_uncertainty": 0.56260606,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 5.69211454,
+        "component_xpts_structural": 5.68971387,
         "empirical_xpts": 4.87951969,
         "recent_underlying_raw": 8.48333333,
         "long_underlying_raw": 6.05129157,
@@ -2286,11 +2286,11 @@
       "price": 6.0,
       "ownership": 1.7,
       "projected": 3.7,
-      "sixWeekProjected": 17.3,
+      "sixWeekProjected": 17.4,
       "expectedMinutes": 72,
       "uncertainty": 0.6,
       "confidence": 40,
-      "valueProjected": 2.88,
+      "valueProjected": 2.9,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -2355,15 +2355,15 @@
         "marketRole": 10,
         "roleChallenger": 24,
         "official": 18,
-        "disagreement": 1.13,
-        "roleProjection": 3.79
+        "disagreement": 1.12,
+        "roleProjection": 3.8
       },
       "marketForecast": {
         "priceRiseProbability": 94,
         "priceFallProbability": 0
       },
       "teamContext": {
-        "expectedGoalsFor": 1.26,
+        "expectedGoalsFor": 1.24,
         "expectedGoalsAgainst": 1.63,
         "cleanSheetProbability": 20,
         "horizonExpectedGoalsAgainst": 1.36,
@@ -2375,16 +2375,16 @@
         "regimeShift": 16,
         "marketWinProbability": 25,
         "modelWinProbability": 37,
-        "marketWeight": 66,
+        "marketWeight": 64,
         "marketDisagreement": 12,
         "optaWinProbability": null,
         "externalWinProbability": 25
       },
       "components": {
-        "appearance": 1.26,
+        "appearance": 1.27,
         "goals": 1.51,
         "assists": 0.42,
-        "cleanSheet": 0.16,
+        "cleanSheet": 0.17,
         "defence": 0.0,
         "bonus": 0.3,
         "adjustment": 0.0
@@ -2433,8 +2433,8 @@
         "underlying": 0.8287
       },
       "researchFeatures": {
-        "component_xpts": 3.66970075,
-        "role_ridge_xpts": 3.79462492,
+        "component_xpts": 3.66440494,
+        "role_ridge_xpts": 3.79573137,
         "expected_minutes": 71.57488718,
         "minutes_std": 26.55668627,
         "play_probability": 0.92744444,
@@ -2445,9 +2445,9 @@
         "goal_rate": 0.56656415,
         "assist_rate": 0.19502565,
         "bonus_rate": 0.52631579,
-        "team_expected_goals_for": 1.26296423,
-        "team_expected_goals_against": 1.63164958,
-        "team_clean_probability": 0.19560664,
+        "team_expected_goals_for": 1.23884133,
+        "team_expected_goals_against": 1.62731256,
+        "team_clean_probability": 0.19645683,
         "price": 60.0,
         "selected": 85000.0,
         "fixture_count": 1.0,
@@ -2470,10 +2470,10 @@
         "price_rise_probability": 0.94323482,
         "price_fall_probability": 0.00047563,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.59986489,
+        "prediction_uncertainty": 0.59971095,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 5.20569736,
+        "component_xpts_structural": 5.18253113,
         "empirical_xpts": 3.7666502,
         "recent_underlying_raw": 6.99611176,
         "long_underlying_raw": 2.24410033,
@@ -2511,7 +2511,7 @@
       "team": "MUN",
       "position": "MID",
       "price": 8.0,
-      "ownership": 36.9,
+      "ownership": 37.0,
       "projected": 3.6,
       "sixWeekProjected": 13.1,
       "expectedMinutes": 74,
@@ -2586,16 +2586,16 @@
         "marketRole": 10,
         "roleChallenger": 24,
         "official": 18,
-        "disagreement": 0.82,
-        "roleProjection": 4.53
+        "disagreement": 0.83,
+        "roleProjection": 4.54
       },
       "marketForecast": {
         "priceRiseProbability": 0,
         "priceFallProbability": 95
       },
       "teamContext": {
-        "expectedGoalsFor": 2.08,
-        "expectedGoalsAgainst": 1.0,
+        "expectedGoalsFor": 2.09,
+        "expectedGoalsAgainst": 0.99,
         "cleanSheetProbability": 37,
         "horizonExpectedGoalsAgainst": 1.34,
         "horizonCleanSheetProbability": 27,
@@ -2604,12 +2604,12 @@
         "strengthRank": 3,
         "ratingConfidence": 72,
         "regimeShift": 29,
-        "marketWinProbability": 69,
+        "marketWinProbability": 68,
         "modelWinProbability": 52,
-        "marketWeight": 62,
+        "marketWeight": 66,
         "marketDisagreement": -17,
         "optaWinProbability": null,
-        "externalWinProbability": 69
+        "externalWinProbability": 68
       },
       "components": {
         "appearance": 1.54,
@@ -2636,20 +2636,20 @@
       "comparison": {
         "fixtureRank": 2,
         "fixturePlayers": 38,
-        "positionRank": 18,
+        "positionRank": 19,
         "positionPlayers": 149,
-        "projectionRank": 89,
+        "projectionRank": 88,
         "popularRival": "B.Fernandes",
-        "popularRivalOwnership": 49.6,
+        "popularRivalOwnership": 49.7,
         "popularRivalProjection": 4.9,
         "edgeVsPopular": -1.2
       },
       "captainRating": 94,
       "score": 94,
       "strategyScores": {
-        "protect": 0.9262,
-        "balanced": 0.9358,
-        "chase": 0.8358
+        "protect": 0.9254,
+        "balanced": 0.9352,
+        "chase": 0.8352
       },
       "features": {
         "recent": 0.8172,
@@ -2664,8 +2664,8 @@
         "underlying": 0.9088
       },
       "researchFeatures": {
-        "component_xpts": 3.63310603,
-        "role_ridge_xpts": 4.52767361,
+        "component_xpts": 3.63747953,
+        "role_ridge_xpts": 4.5352189,
         "expected_minutes": 73.79571602,
         "minutes_std": 28.99087181,
         "play_probability": 0.90779647,
@@ -2676,11 +2676,11 @@
         "goal_rate": 0.32140477,
         "assist_rate": 0.15214206,
         "bonus_rate": 0.06944444,
-        "team_expected_goals_for": 2.08120916,
-        "team_expected_goals_against": 1.00330945,
-        "team_clean_probability": 0.36666397,
+        "team_expected_goals_for": 2.09438868,
+        "team_expected_goals_against": 0.98762087,
+        "team_clean_probability": 0.37246177,
         "price": 80.0,
-        "selected": 1845000.0,
+        "selected": 1850000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.86380597,
@@ -2701,10 +2701,10 @@
         "price_rise_probability": 0.00043477,
         "price_fall_probability": 0.94785936,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.58322311,
+        "prediction_uncertainty": 0.58315755,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.28707341,
+        "component_xpts_structural": 4.29767953,
         "empirical_xpts": 3.22314154,
         "recent_underlying_raw": 5.40316214,
         "long_underlying_raw": 6.56125388,
@@ -2742,7 +2742,7 @@
       "team": "AVL",
       "position": "FWD",
       "price": 8.0,
-      "ownership": 9.2,
+      "ownership": 9.3,
       "projected": 3.8,
       "sixWeekProjected": 21.7,
       "expectedMinutes": 69,
@@ -2823,7 +2823,7 @@
       },
       "teamContext": {
         "expectedGoalsFor": 0.97,
-        "expectedGoalsAgainst": 1.71,
+        "expectedGoalsAgainst": 1.7,
         "cleanSheetProbability": 18,
         "horizonExpectedGoalsAgainst": 1.57,
         "horizonCleanSheetProbability": 21,
@@ -2846,7 +2846,7 @@
         "cleanSheet": 0.0,
         "defence": 0.0,
         "bonus": 0.19,
-        "adjustment": 0.0
+        "adjustment": -0.0
       },
       "history": {
         "matches": 213,
@@ -2868,7 +2868,7 @@
         "positionPlayers": 49,
         "projectionRank": 100,
         "popularRival": "Calafiori",
-        "popularRivalOwnership": 41.2,
+        "popularRivalOwnership": 41.1,
         "popularRivalProjection": 2.7,
         "edgeVsPopular": 1.1
       },
@@ -2892,8 +2892,8 @@
         "underlying": 0.9748
       },
       "researchFeatures": {
-        "component_xpts": 3.77245904,
-        "role_ridge_xpts": 4.5884387,
+        "component_xpts": 3.77261581,
+        "role_ridge_xpts": 4.58872443,
         "expected_minutes": 69.01742487,
         "minutes_std": 32.84715015,
         "play_probability": 0.89973642,
@@ -2904,11 +2904,11 @@
         "goal_rate": 0.06185301,
         "assist_rate": 0.00892675,
         "bonus_rate": 0.13706975,
-        "team_expected_goals_for": 0.96986454,
-        "team_expected_goals_against": 1.70633822,
-        "team_clean_probability": 0.1815293,
+        "team_expected_goals_for": 0.9719017,
+        "team_expected_goals_against": 1.70348808,
+        "team_clean_probability": 0.18204742,
         "price": 80.0,
-        "selected": 460000.0,
+        "selected": 465000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.60273973,
@@ -2929,10 +2929,10 @@
         "price_rise_probability": 0.00039742,
         "price_fall_probability": 0.95212627,
         "competition_pressure": 0.0,
-        "prediction_uncertainty": 0.5789329,
+        "prediction_uncertainty": 0.57891655,
         "position_id": 4.0,
         "GW": 2.0,
-        "component_xpts_structural": 2.1448453,
+        "component_xpts_structural": 2.14508636,
         "empirical_xpts": 6.16688512,
         "recent_underlying_raw": 10.34961731,
         "long_underlying_raw": 7.2267513,
@@ -2970,7 +2970,7 @@
       "team": "BRE",
       "position": "FWD",
       "price": 8.0,
-      "ownership": 17.0,
+      "ownership": 17.1,
       "projected": 3.4,
       "sixWeekProjected": 15.6,
       "expectedMinutes": 79,
@@ -3075,7 +3075,7 @@
         "cleanSheet": 0.0,
         "defence": 0.01,
         "bonus": 0.24,
-        "adjustment": -0.0
+        "adjustment": 0.0
       },
       "history": {
         "matches": 46,
@@ -3106,7 +3106,7 @@
       "strategyScores": {
         "protect": 0.9311,
         "balanced": 0.9566,
-        "chase": 0.8939
+        "chase": 0.8929
       },
       "features": {
         "recent": 0.911,
@@ -3121,8 +3121,8 @@
         "underlying": 0.7721
       },
       "researchFeatures": {
-        "component_xpts": 3.42248896,
-        "role_ridge_xpts": 4.28587664,
+        "component_xpts": 3.42248804,
+        "role_ridge_xpts": 4.28587382,
         "expected_minutes": 79.00967236,
         "minutes_std": 28.12709899,
         "play_probability": 0.92517687,
@@ -3133,11 +3133,11 @@
         "goal_rate": 0.55392857,
         "assist_rate": 0.05694361,
         "bonus_rate": 0.28195489,
-        "team_expected_goals_for": 1.27217516,
-        "team_expected_goals_against": 1.45802817,
-        "team_clean_probability": 0.23269466,
+        "team_expected_goals_for": 1.27217366,
+        "team_expected_goals_against": 1.45803556,
+        "team_clean_probability": 0.23269294,
         "price": 80.0,
-        "selected": 850000.0,
+        "selected": 855000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.42465753,
@@ -3158,10 +3158,10 @@
         "price_rise_probability": 0.00092448,
         "price_fall_probability": 0.89523434,
         "competition_pressure": 0.0,
-        "prediction_uncertainty": 0.58649328,
+        "prediction_uncertainty": 0.58649332,
         "position_id": 4.0,
         "GW": 2.0,
-        "component_xpts_structural": 3.69575753,
+        "component_xpts_structural": 3.69575653,
         "empirical_xpts": 3.51366077,
         "recent_underlying_raw": 6.68333333,
         "long_underlying_raw": 3.61923538,
@@ -3205,7 +3205,7 @@
       "expectedMinutes": 78,
       "uncertainty": 0.65,
       "confidence": 35,
-      "valueProjected": 3.16,
+      "valueProjected": 3.17,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -3278,7 +3278,7 @@
         "priceFallProbability": 0
       },
       "teamContext": {
-        "expectedGoalsFor": 1.26,
+        "expectedGoalsFor": 1.24,
         "expectedGoalsAgainst": 1.63,
         "cleanSheetProbability": 20,
         "horizonExpectedGoalsAgainst": 1.36,
@@ -3290,7 +3290,7 @@
         "regimeShift": 16,
         "marketWinProbability": 25,
         "modelWinProbability": 37,
-        "marketWeight": 66,
+        "marketWeight": 64,
         "marketDisagreement": 12,
         "optaWinProbability": null,
         "externalWinProbability": 25
@@ -3302,7 +3302,7 @@
         "cleanSheet": 0.87,
         "defence": 0.63,
         "bonus": 0.16,
-        "adjustment": -0.71
+        "adjustment": -0.7
       },
       "history": {
         "matches": 93,
@@ -3333,7 +3333,7 @@
       "strategyScores": {
         "protect": 0.8981,
         "balanced": 0.9513,
-        "chase": 0.8122
+        "chase": 0.8142
       },
       "features": {
         "recent": 0.9776,
@@ -3348,8 +3348,8 @@
         "underlying": 0.8525
       },
       "researchFeatures": {
-        "component_xpts": 2.8185799,
-        "role_ridge_xpts": 3.1002943,
+        "component_xpts": 2.81974583,
+        "role_ridge_xpts": 3.10063178,
         "expected_minutes": 78.38862477,
         "minutes_std": 32.00919893,
         "play_probability": 0.87447214,
@@ -3360,9 +3360,9 @@
         "goal_rate": 0.0,
         "assist_rate": 0.00081818,
         "bonus_rate": 0.15151515,
-        "team_expected_goals_for": 1.26296423,
-        "team_expected_goals_against": 1.63164958,
-        "team_clean_probability": 0.19560664,
+        "team_expected_goals_for": 1.23884133,
+        "team_expected_goals_against": 1.62731256,
+        "team_clean_probability": 0.19645683,
         "price": 45.0,
         "selected": 1080000.0,
         "fixture_count": 1.0,
@@ -3385,10 +3385,10 @@
         "price_rise_probability": 0.91796154,
         "price_fall_probability": 0.00070616,
         "competition_pressure": 0.0,
-        "prediction_uncertainty": 0.65102701,
+        "prediction_uncertainty": 0.65104626,
         "position_id": 1.0,
         "GW": 2.0,
-        "component_xpts_structural": 2.61866931,
+        "component_xpts_structural": 2.62306105,
         "empirical_xpts": 3.60290574,
         "recent_underlying_raw": 2.19,
         "long_underlying_raw": 2.02612613,
@@ -3515,12 +3515,12 @@
         "strengthRank": 17,
         "ratingConfidence": 85,
         "regimeShift": 19,
-        "marketWinProbability": 38,
+        "marketWinProbability": 37,
         "modelWinProbability": 45,
         "marketWeight": 59,
         "marketDisagreement": 8,
         "optaWinProbability": null,
-        "externalWinProbability": 38
+        "externalWinProbability": 37
       },
       "components": {
         "appearance": 1.58,
@@ -3575,8 +3575,8 @@
         "underlying": 0.7878
       },
       "researchFeatures": {
-        "component_xpts": 2.94507645,
-        "role_ridge_xpts": 3.44806485,
+        "component_xpts": 2.94507711,
+        "role_ridge_xpts": 3.44806523,
         "expected_minutes": 77.60766254,
         "minutes_std": 29.61155585,
         "play_probability": 0.90601673,
@@ -3587,9 +3587,9 @@
         "goal_rate": 0.04068217,
         "assist_rate": 0.02017058,
         "bonus_rate": 0.4469697,
-        "team_expected_goals_for": 1.45802817,
-        "team_expected_goals_against": 1.27217516,
-        "team_clean_probability": 0.28022143,
+        "team_expected_goals_for": 1.45803556,
+        "team_expected_goals_against": 1.27217366,
+        "team_clean_probability": 0.28022185,
         "price": 45.0,
         "selected": 45000.0,
         "fixture_count": 1.0,
@@ -3612,10 +3612,10 @@
         "price_rise_probability": 0.90946534,
         "price_fall_probability": 0.00078651,
         "competition_pressure": 0.75,
-        "prediction_uncertainty": 0.65449307,
+        "prediction_uncertainty": 0.65449308,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 3.49460782,
+        "component_xpts_structural": 3.49461016,
         "empirical_xpts": 3.31034605,
         "recent_underlying_raw": 3.83,
         "long_underlying_raw": 1.98383799,
@@ -3655,11 +3655,11 @@
       "price": 5.5,
       "ownership": 13.5,
       "projected": 3.3,
-      "sixWeekProjected": 15.5,
+      "sixWeekProjected": 15.6,
       "expectedMinutes": 77,
       "uncertainty": 0.61,
       "confidence": 39,
-      "valueProjected": 2.82,
+      "valueProjected": 2.84,
       "verdict": "Watch",
       "setPieces": [
         "Penalties #1",
@@ -3736,7 +3736,7 @@
         "priceFallProbability": 94
       },
       "teamContext": {
-        "expectedGoalsFor": 1.26,
+        "expectedGoalsFor": 1.24,
         "expectedGoalsAgainst": 1.63,
         "cleanSheetProbability": 20,
         "horizonExpectedGoalsAgainst": 1.36,
@@ -3748,15 +3748,15 @@
         "regimeShift": 16,
         "marketWinProbability": 25,
         "modelWinProbability": 37,
-        "marketWeight": 66,
+        "marketWeight": 64,
         "marketDisagreement": 12,
         "optaWinProbability": null,
         "externalWinProbability": 25
       },
       "components": {
-        "appearance": 1.66,
-        "goals": 0.46,
-        "assists": 0.87,
+        "appearance": 1.67,
+        "goals": 0.45,
+        "assists": 0.86,
         "cleanSheet": 0.19,
         "defence": 0.03,
         "bonus": 0.21,
@@ -3791,7 +3791,7 @@
       "strategyScores": {
         "protect": 0.9384,
         "balanced": 0.9788,
-        "chase": 0.8146
+        "chase": 0.8136
       },
       "features": {
         "recent": 0.9478,
@@ -3806,8 +3806,8 @@
         "underlying": 0.9651
       },
       "researchFeatures": {
-        "component_xpts": 3.28910628,
-        "role_ridge_xpts": 3.5590048,
+        "component_xpts": 3.28513995,
+        "role_ridge_xpts": 3.55995434,
         "expected_minutes": 77.46605617,
         "minutes_std": 28.55708515,
         "play_probability": 0.92744444,
@@ -3818,9 +3818,9 @@
         "goal_rate": 0.04145455,
         "assist_rate": 0.27073333,
         "bonus_rate": 0.26515152,
-        "team_expected_goals_for": 1.26296423,
-        "team_expected_goals_against": 1.63164958,
-        "team_clean_probability": 0.19560664,
+        "team_expected_goals_for": 1.23884133,
+        "team_expected_goals_against": 1.62731256,
+        "team_clean_probability": 0.19645683,
         "price": 55.0,
         "selected": 675000.0,
         "fixture_count": 1.0,
@@ -3843,10 +3843,10 @@
         "price_rise_probability": 0.00050197,
         "price_fall_probability": 0.94027775,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.61258205,
+        "prediction_uncertainty": 0.61247986,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 3.67919099,
+        "component_xpts_structural": 3.66171103,
         "empirical_xpts": 4.06809399,
         "recent_underlying_raw": 8.45,
         "long_underlying_raw": 5.58192383,
@@ -3886,11 +3886,11 @@
       "price": 4.5,
       "ownership": 2.3,
       "projected": 1.4,
-      "sixWeekProjected": 7.2,
+      "sixWeekProjected": 7.3,
       "expectedMinutes": 35,
       "uncertainty": 0.84,
       "confidence": 16,
-      "valueProjected": 1.6,
+      "valueProjected": 1.61,
       "verdict": "Fade",
       "setPieces": [],
       "riskFlags": [
@@ -3956,7 +3956,7 @@
         "marketRole": 17,
         "roleChallenger": 16,
         "official": 18,
-        "disagreement": 0.38,
+        "disagreement": 0.37,
         "roleProjection": 1.36
       },
       "marketForecast": {
@@ -3964,8 +3964,8 @@
         "priceFallProbability": 0
       },
       "teamContext": {
-        "expectedGoalsFor": 1.0,
-        "expectedGoalsAgainst": 2.08,
+        "expectedGoalsFor": 0.99,
+        "expectedGoalsAgainst": 2.09,
         "cleanSheetProbability": 12,
         "horizonExpectedGoalsAgainst": 1.61,
         "horizonCleanSheetProbability": 21,
@@ -3976,7 +3976,7 @@
         "regimeShift": 73,
         "marketWinProbability": 13,
         "modelWinProbability": 26,
-        "marketWeight": 62,
+        "marketWeight": 66,
         "marketDisagreement": 13,
         "optaWinProbability": null,
         "externalWinProbability": 13
@@ -4004,22 +4004,22 @@
         "returnRate": 0
       },
       "comparison": {
-        "fixtureRank": 34,
+        "fixtureRank": 33,
         "fixturePlayers": 38,
-        "positionRank": 31,
+        "positionRank": 29,
         "positionPlayers": 49,
-        "projectionRank": 39,
+        "projectionRank": 43,
         "popularRival": "B.Fernandes",
-        "popularRivalOwnership": 49.6,
+        "popularRivalOwnership": 49.7,
         "popularRivalProjection": 4.9,
         "edgeVsPopular": -3.5
       },
       "captainRating": 26,
       "score": 37,
       "strategyScores": {
-        "protect": 0.2676,
-        "balanced": 0.3693,
-        "chase": 0.5102
+        "protect": 0.2724,
+        "balanced": 0.3737,
+        "chase": 0.5138
       },
       "features": {
         "recent": 0.3425,
@@ -4034,8 +4034,8 @@
         "underlying": 0.1638
       },
       "researchFeatures": {
-        "component_xpts": 1.36047817,
-        "role_ridge_xpts": 1.35904038,
+        "component_xpts": 1.35969736,
+        "role_ridge_xpts": 1.3581394,
         "expected_minutes": 35.00244962,
         "minutes_std": 34.81811502,
         "play_probability": 0.67752138,
@@ -4046,9 +4046,9 @@
         "goal_rate": 0.27391304,
         "assist_rate": 0.12717391,
         "bonus_rate": 0.27391304,
-        "team_expected_goals_for": 1.00330945,
-        "team_expected_goals_against": 2.08120916,
-        "team_clean_probability": 0.12477924,
+        "team_expected_goals_for": 0.98762087,
+        "team_expected_goals_against": 2.09438868,
+        "team_clean_probability": 0.1231455,
         "price": 45.0,
         "selected": 115000.0,
         "fixture_count": 1.0,
@@ -4071,10 +4071,10 @@
         "price_rise_probability": 0.8865012,
         "price_fall_probability": 0.00101132,
         "competition_pressure": 1.5,
-        "prediction_uncertainty": 0.84388723,
+        "prediction_uncertainty": 0.8438673,
         "position_id": 4.0,
         "GW": 2.0,
-        "component_xpts_structural": 1.86438692,
+        "component_xpts_structural": 1.86197439,
         "empirical_xpts": 0.86040972,
         "recent_underlying_raw": 0.0,
         "long_underlying_raw": 0.0,
@@ -4114,7 +4114,7 @@
       "team": "AVL",
       "position": "FWD",
       "price": 8.0,
-      "ownership": 9.2,
+      "ownership": 9.3,
       "projected": 3.8,
       "sixWeekProjected": 21.7,
       "expectedMinutes": 69,
@@ -4195,7 +4195,7 @@
       },
       "teamContext": {
         "expectedGoalsFor": 0.97,
-        "expectedGoalsAgainst": 1.71,
+        "expectedGoalsAgainst": 1.7,
         "cleanSheetProbability": 18,
         "horizonExpectedGoalsAgainst": 1.57,
         "horizonCleanSheetProbability": 21,
@@ -4218,7 +4218,7 @@
         "cleanSheet": 0.0,
         "defence": 0.0,
         "bonus": 0.19,
-        "adjustment": 0.0
+        "adjustment": -0.0
       },
       "history": {
         "matches": 213,
@@ -4240,7 +4240,7 @@
         "positionPlayers": 49,
         "projectionRank": 100,
         "popularRival": "Calafiori",
-        "popularRivalOwnership": 41.2,
+        "popularRivalOwnership": 41.1,
         "popularRivalProjection": 2.7,
         "edgeVsPopular": 1.1
       },
@@ -4264,8 +4264,8 @@
         "underlying": 0.9748
       },
       "researchFeatures": {
-        "component_xpts": 3.77245904,
-        "role_ridge_xpts": 4.5884387,
+        "component_xpts": 3.77261581,
+        "role_ridge_xpts": 4.58872443,
         "expected_minutes": 69.01742487,
         "minutes_std": 32.84715015,
         "play_probability": 0.89973642,
@@ -4276,11 +4276,11 @@
         "goal_rate": 0.06185301,
         "assist_rate": 0.00892675,
         "bonus_rate": 0.13706975,
-        "team_expected_goals_for": 0.96986454,
-        "team_expected_goals_against": 1.70633822,
-        "team_clean_probability": 0.1815293,
+        "team_expected_goals_for": 0.9719017,
+        "team_expected_goals_against": 1.70348808,
+        "team_clean_probability": 0.18204742,
         "price": 80.0,
-        "selected": 460000.0,
+        "selected": 465000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.60273973,
@@ -4301,10 +4301,10 @@
         "price_rise_probability": 0.00039742,
         "price_fall_probability": 0.95212627,
         "competition_pressure": 0.0,
-        "prediction_uncertainty": 0.5789329,
+        "prediction_uncertainty": 0.57891655,
         "position_id": 4.0,
         "GW": 2.0,
-        "component_xpts_structural": 2.1448453,
+        "component_xpts_structural": 2.14508636,
         "empirical_xpts": 6.16688512,
         "recent_underlying_raw": 10.34961731,
         "long_underlying_raw": 7.2267513,
@@ -4342,9 +4342,9 @@
       "team": "MUN",
       "position": "MID",
       "price": 12.0,
-      "ownership": 49.6,
+      "ownership": 49.7,
       "projected": 4.9,
-      "sixWeekProjected": 17.6,
+      "sixWeekProjected": 17.5,
       "expectedMinutes": 78,
       "uncertainty": 0.51,
       "confidence": 49,
@@ -4418,15 +4418,15 @@
         "roleChallenger": 24,
         "official": 18,
         "disagreement": 1.28,
-        "roleProjection": 4.75
+        "roleProjection": 4.76
       },
       "marketForecast": {
         "priceRiseProbability": 0,
         "priceFallProbability": 95
       },
       "teamContext": {
-        "expectedGoalsFor": 2.08,
-        "expectedGoalsAgainst": 1.0,
+        "expectedGoalsFor": 2.09,
+        "expectedGoalsAgainst": 0.99,
         "cleanSheetProbability": 37,
         "horizonExpectedGoalsAgainst": 1.34,
         "horizonCleanSheetProbability": 27,
@@ -4435,12 +4435,12 @@
         "strengthRank": 3,
         "ratingConfidence": 72,
         "regimeShift": 29,
-        "marketWinProbability": 69,
+        "marketWinProbability": 68,
         "modelWinProbability": 52,
-        "marketWeight": 62,
+        "marketWeight": 66,
         "marketDisagreement": -17,
         "optaWinProbability": null,
-        "externalWinProbability": 69
+        "externalWinProbability": 68
       },
       "components": {
         "appearance": 1.44,
@@ -4471,7 +4471,7 @@
         "positionPlayers": 149,
         "projectionRank": 99,
         "popularRival": "Mbeumo",
-        "popularRivalOwnership": 36.9,
+        "popularRivalOwnership": 37.0,
         "popularRivalProjection": 3.6,
         "edgeVsPopular": 1.2
       },
@@ -4495,8 +4495,8 @@
         "underlying": 0.9973
       },
       "researchFeatures": {
-        "component_xpts": 4.8516889,
-        "role_ridge_xpts": 4.75461148,
+        "component_xpts": 4.85738656,
+        "role_ridge_xpts": 4.76108675,
         "expected_minutes": 78.24323421,
         "minutes_std": 27.63898829,
         "play_probability": 0.93163819,
@@ -4507,11 +4507,11 @@
         "goal_rate": 0.17648889,
         "assist_rate": 0.52958889,
         "bonus_rate": 0.90277778,
-        "team_expected_goals_for": 2.08120916,
-        "team_expected_goals_against": 1.00330945,
-        "team_clean_probability": 0.36666397,
+        "team_expected_goals_for": 2.09438868,
+        "team_expected_goals_against": 0.98762087,
+        "team_clean_probability": 0.37246177,
         "price": 120.0,
-        "selected": 2480000.0,
+        "selected": 2485000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.86380597,
@@ -4532,10 +4532,10 @@
         "price_rise_probability": 0.00041196,
         "price_fall_probability": 0.95046082,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.51152423,
+        "prediction_uncertainty": 0.5115446,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 6.27208014,
+        "component_xpts_structural": 6.28925195,
         "empirical_xpts": 5.16212999,
         "recent_underlying_raw": 11.18333333,
         "long_underlying_raw": 9.42587056,
@@ -4722,8 +4722,8 @@
         "underlying": 0.9382
       },
       "researchFeatures": {
-        "component_xpts": 3.98633389,
-        "role_ridge_xpts": 4.11051594,
+        "component_xpts": 3.9863332,
+        "role_ridge_xpts": 4.11051481,
         "expected_minutes": 80.5579612,
         "minutes_std": 26.40610148,
         "play_probability": 0.92986249,
@@ -4734,9 +4734,9 @@
         "goal_rate": 0.05124242,
         "assist_rate": 0.17512121,
         "bonus_rate": 0.75757576,
-        "team_expected_goals_for": 1.65110122,
-        "team_expected_goals_against": 1.16114471,
-        "team_clean_probability": 0.31312753,
+        "team_expected_goals_for": 1.65111454,
+        "team_expected_goals_against": 1.16114814,
+        "team_clean_probability": 0.31312646,
         "price": 55.0,
         "selected": 215000.0,
         "fixture_count": 1.0,
@@ -4759,10 +4759,10 @@
         "price_rise_probability": 0.00687963,
         "price_fall_probability": 0.53302375,
         "competition_pressure": 0.25,
-        "prediction_uncertainty": 0.55017148,
+        "prediction_uncertainty": 0.55017149,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.37260512,
+        "component_xpts_structural": 4.37260341,
         "empirical_xpts": 5.28027055,
         "recent_underlying_raw": 5.02,
         "long_underlying_raw": 4.10664969,
@@ -4806,7 +4806,7 @@
       "expectedMinutes": 81,
       "uncertainty": 0.5,
       "confidence": 50,
-      "valueProjected": 2.32,
+      "valueProjected": 2.33,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -4872,17 +4872,17 @@
         "roleChallenger": 24,
         "official": 18,
         "disagreement": 0.89,
-        "roleProjection": 4.41
+        "roleProjection": 4.46
       },
       "marketForecast": {
         "priceRiseProbability": 0,
         "priceFallProbability": 93
       },
       "teamContext": {
-        "expectedGoalsFor": 1.71,
+        "expectedGoalsFor": 1.7,
         "expectedGoalsAgainst": 0.97,
         "cleanSheetProbability": 38,
-        "horizonExpectedGoalsAgainst": 0.96,
+        "horizonExpectedGoalsAgainst": 0.97,
         "horizonCleanSheetProbability": 39,
         "attackRank": 4,
         "defenceRank": 1,
@@ -4897,7 +4897,7 @@
         "externalWinProbability": 63
       },
       "components": {
-        "appearance": 1.71,
+        "appearance": 1.72,
         "goals": 0.52,
         "assists": 0.19,
         "cleanSheet": 1.36,
@@ -4925,16 +4925,16 @@
         "positionPlayers": 128,
         "projectionRank": 100,
         "popularRival": "Calafiori",
-        "popularRivalOwnership": 41.2,
+        "popularRivalOwnership": 41.1,
         "popularRivalProjection": 2.7,
         "edgeVsPopular": 1.7
       },
-      "captainRating": 96,
+      "captainRating": 97,
       "score": 99,
       "strategyScores": {
-        "protect": 0.9859,
-        "balanced": 0.9903,
-        "chase": 0.9642
+        "protect": 0.9868,
+        "balanced": 0.9909,
+        "chase": 0.9648
       },
       "features": {
         "recent": 0.9804,
@@ -4949,8 +4949,8 @@
         "underlying": 0.8839
       },
       "researchFeatures": {
-        "component_xpts": 4.36321214,
-        "role_ridge_xpts": 4.41452788,
+        "component_xpts": 4.37381075,
+        "role_ridge_xpts": 4.46216953,
         "expected_minutes": 80.80891513,
         "minutes_std": 25.99239802,
         "play_probability": 0.92986249,
@@ -4961,15 +4961,15 @@
         "goal_rate": 0.06927273,
         "assist_rate": 0.0992303,
         "bonus_rate": 0.90909091,
-        "team_expected_goals_for": 1.70633822,
-        "team_expected_goals_against": 0.96986454,
-        "team_clean_probability": 0.37913439,
+        "team_expected_goals_for": 1.70348808,
+        "team_expected_goals_against": 0.9719017,
+        "team_clean_probability": 0.37836282,
         "price": 80.0,
         "selected": 1470000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.98284314,
-        "fixture_now": 0.87990196,
+        "fixture_now": 0.93382353,
         "team_context": 0.98284314,
         "team_attack": 0.82598039,
         "team_defence": 0.98284314,
@@ -4986,10 +4986,10 @@
         "price_rise_probability": 0.00061164,
         "price_fall_probability": 0.9281597,
         "competition_pressure": 0.5,
-        "prediction_uncertainty": 0.49852965,
+        "prediction_uncertainty": 0.49784138,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.8543124,
+        "component_xpts_structural": 4.85046589,
         "empirical_xpts": 4.93751876,
         "recent_underlying_raw": 4.11666667,
         "long_underlying_raw": 3.09351804,
@@ -5033,7 +5033,7 @@
       "expectedMinutes": 86,
       "uncertainty": 0.46,
       "confidence": 54,
-      "valueProjected": 2.78,
+      "valueProjected": 2.79,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -5106,10 +5106,10 @@
         "priceFallProbability": 0
       },
       "teamContext": {
-        "expectedGoalsFor": 1.71,
+        "expectedGoalsFor": 1.7,
         "expectedGoalsAgainst": 0.97,
         "cleanSheetProbability": 38,
-        "horizonExpectedGoalsAgainst": 0.96,
+        "horizonExpectedGoalsAgainst": 0.97,
         "horizonCleanSheetProbability": 39,
         "attackRank": 4,
         "defenceRank": 1,
@@ -5127,9 +5127,9 @@
         "appearance": 1.8,
         "goals": 0.0,
         "assists": 0.0,
-        "cleanSheet": 1.5,
+        "cleanSheet": 1.49,
         "defence": 0.58,
-        "bonus": 0.46,
+        "bonus": 0.47,
         "adjustment": -0.43
       },
       "history": {
@@ -5152,11 +5152,11 @@
         "positionPlayers": 44,
         "projectionRank": 100,
         "popularRival": "Calafiori",
-        "popularRivalOwnership": 41.2,
+        "popularRivalOwnership": 41.1,
         "popularRivalProjection": 2.7,
         "edgeVsPopular": 1.2
       },
-      "captainRating": 96,
+      "captainRating": 97,
       "score": 99,
       "strategyScores": {
         "protect": 0.993,
@@ -5176,8 +5176,8 @@
         "underlying": 0.7863
       },
       "researchFeatures": {
-        "component_xpts": 3.91948646,
-        "role_ridge_xpts": 3.53509594,
+        "component_xpts": 3.91975472,
+        "role_ridge_xpts": 3.53969564,
         "expected_minutes": 86.1713783,
         "minutes_std": 20.81970879,
         "play_probability": 0.96747447,
@@ -5188,15 +5188,15 @@
         "goal_rate": 0.0,
         "assist_rate": 0.00109091,
         "bonus_rate": 0.45454545,
-        "team_expected_goals_for": 1.70633822,
-        "team_expected_goals_against": 0.96986454,
-        "team_clean_probability": 0.37913439,
+        "team_expected_goals_for": 1.70348808,
+        "team_expected_goals_against": 0.9719017,
+        "team_clean_probability": 0.37836282,
         "price": 60.0,
         "selected": 1905000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.98507463,
-        "fixture_now": 0.8358209,
+        "fixture_now": 0.92537313,
         "team_context": 0.98507463,
         "team_attack": 0.8358209,
         "team_defence": 0.98507463,
@@ -5213,10 +5213,10 @@
         "price_rise_probability": 0.91093443,
         "price_fall_probability": 0.00077251,
         "competition_pressure": 0.0,
-        "prediction_uncertainty": 0.46286479,
+        "prediction_uncertainty": 0.46276617,
         "position_id": 1.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.04152934,
+        "component_xpts_structural": 4.03803076,
         "empirical_xpts": 4.6693341,
         "recent_underlying_raw": 1.58333333,
         "long_underlying_raw": 1.85686813,
@@ -5388,7 +5388,7 @@
       "strategyScores": {
         "protect": 0.9559,
         "balanced": 0.9861,
-        "chase": 0.8396
+        "chase": 0.8386
       },
       "features": {
         "recent": 0.9776,
@@ -5403,8 +5403,8 @@
         "underlying": 0.9364
       },
       "researchFeatures": {
-        "component_xpts": 3.70091863,
-        "role_ridge_xpts": 3.85066453,
+        "component_xpts": 3.70091987,
+        "role_ridge_xpts": 3.85066422,
         "expected_minutes": 71.57925531,
         "minutes_std": 27.229895,
         "play_probability": 0.93163819,
@@ -5415,9 +5415,9 @@
         "goal_rate": 0.22975913,
         "assist_rate": 0.08876463,
         "bonus_rate": 0.0760392,
-        "team_expected_goals_for": 1.65110122,
-        "team_expected_goals_against": 1.16114471,
-        "team_clean_probability": 0.31312753,
+        "team_expected_goals_for": 1.65111454,
+        "team_expected_goals_against": 1.16114814,
+        "team_clean_probability": 0.31312646,
         "price": 65.0,
         "selected": 140000.0,
         "fixture_count": 1.0,
@@ -5440,10 +5440,10 @@
         "price_rise_probability": 0.7919197,
         "price_fall_probability": 0.0020733,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.56895398,
+        "prediction_uncertainty": 0.56895401,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 3.84906611,
+        "component_xpts_structural": 3.84907154,
         "empirical_xpts": 5.03546261,
         "recent_underlying_raw": 6.64738441,
         "long_underlying_raw": 6.09215327,
@@ -5557,7 +5557,7 @@
         "roleChallenger": 24,
         "official": 18,
         "disagreement": 1.38,
-        "roleProjection": 4.72
+        "roleProjection": 4.71
       },
       "marketForecast": {
         "priceRiseProbability": 95,
@@ -5565,9 +5565,9 @@
       },
       "teamContext": {
         "expectedGoalsFor": 2.2,
-        "expectedGoalsAgainst": 1.08,
-        "cleanSheetProbability": 34,
-        "horizonExpectedGoalsAgainst": 1.41,
+        "expectedGoalsAgainst": 1.11,
+        "cleanSheetProbability": 33,
+        "horizonExpectedGoalsAgainst": 1.42,
         "horizonCleanSheetProbability": 25,
         "attackRank": 10,
         "defenceRank": 13,
@@ -5576,8 +5576,8 @@
         "regimeShift": 32,
         "marketWinProbability": 65,
         "modelWinProbability": 56,
-        "marketWeight": 72,
-        "marketDisagreement": -10,
+        "marketWeight": 67,
+        "marketDisagreement": -9,
         "optaWinProbability": null,
         "externalWinProbability": 65
       },
@@ -5612,14 +5612,14 @@
         "popularRival": "Virgil",
         "popularRivalOwnership": 19.6,
         "popularRivalProjection": 4.2,
-        "edgeVsPopular": 0.1
+        "edgeVsPopular": 0.2
       },
       "captainRating": 99,
       "score": 98,
       "strategyScores": {
         "protect": 0.9592,
         "balanced": 0.9831,
-        "chase": 0.9237
+        "chase": 0.9247
       },
       "features": {
         "recent": 0.9851,
@@ -5634,8 +5634,8 @@
         "underlying": 0.973
       },
       "researchFeatures": {
-        "component_xpts": 4.33801232,
-        "role_ridge_xpts": 4.71835039,
+        "component_xpts": 4.33484944,
+        "role_ridge_xpts": 4.70760115,
         "expected_minutes": 78.24323421,
         "minutes_std": 27.63898829,
         "play_probability": 0.93163819,
@@ -5646,9 +5646,9 @@
         "goal_rate": 0.23472727,
         "assist_rate": 0.28682424,
         "bonus_rate": 0.6969697,
-        "team_expected_goals_for": 2.19681082,
-        "team_expected_goals_against": 1.07799881,
-        "team_clean_probability": 0.3402758,
+        "team_expected_goals_for": 2.20200861,
+        "team_expected_goals_against": 1.1066912,
+        "team_clean_probability": 0.33065121,
         "price": 70.0,
         "selected": 2135000.0,
         "fixture_count": 1.0,
@@ -5671,10 +5671,10 @@
         "price_rise_probability": 0.94785936,
         "price_fall_probability": 0.00043477,
         "competition_pressure": 1.5,
-        "prediction_uncertainty": 0.56245186,
+        "prediction_uncertainty": 0.56260606,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 5.69211454,
+        "component_xpts_structural": 5.68971387,
         "empirical_xpts": 4.87951969,
         "recent_underlying_raw": 8.48333333,
         "long_underlying_raw": 6.05129157,
@@ -5861,8 +5861,8 @@
         "underlying": 0.8645
       },
       "researchFeatures": {
-        "component_xpts": 3.8199239,
-        "role_ridge_xpts": 3.85855976,
+        "component_xpts": 3.81992586,
+        "role_ridge_xpts": 3.85856111,
         "expected_minutes": 80.80891513,
         "minutes_std": 25.99239802,
         "play_probability": 0.92986249,
@@ -5873,9 +5873,9 @@
         "goal_rate": 0.01554545,
         "assist_rate": 0.0634,
         "bonus_rate": 0.60606061,
-        "team_expected_goals_for": 1.57856289,
-        "team_expected_goals_against": 1.32173604,
-        "team_clean_probability": 0.26667195,
+        "team_expected_goals_for": 1.57855931,
+        "team_expected_goals_against": 1.32173054,
+        "team_clean_probability": 0.26667341,
         "price": 60.0,
         "selected": 400000.0,
         "fixture_count": 1.0,
@@ -5898,10 +5898,10 @@
         "price_rise_probability": 0.00073198,
         "price_fall_probability": 0.91521339,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.54515261,
+        "prediction_uncertainty": 0.54515262,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.09865636,
+        "component_xpts_structural": 4.09866304,
         "empirical_xpts": 4.9425196,
         "recent_underlying_raw": 3.93,
         "long_underlying_raw": 2.8496383,
@@ -5941,11 +5941,11 @@
       "price": 6.5,
       "ownership": 19.6,
       "projected": 4.2,
-      "sixWeekProjected": 13.9,
+      "sixWeekProjected": 14.0,
       "expectedMinutes": 81,
       "uncertainty": 0.53,
       "confidence": 47,
-      "valueProjected": 2.14,
+      "valueProjected": 2.15,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -5988,7 +5988,7 @@
         }
       },
       "distribution": {
-        "p10": 2.6,
+        "p10": 2.5,
         "median": 4.2,
         "p90": 5.8,
         "blankProbability": 53,
@@ -6010,8 +6010,8 @@
         "marketRole": 9,
         "roleChallenger": 24,
         "official": 18,
-        "disagreement": 1.14,
-        "roleProjection": 4.34
+        "disagreement": 1.12,
+        "roleProjection": 4.28
       },
       "marketForecast": {
         "priceRiseProbability": 83,
@@ -6019,9 +6019,9 @@
       },
       "teamContext": {
         "expectedGoalsFor": 2.2,
-        "expectedGoalsAgainst": 1.08,
-        "cleanSheetProbability": 34,
-        "horizonExpectedGoalsAgainst": 1.41,
+        "expectedGoalsAgainst": 1.11,
+        "cleanSheetProbability": 33,
+        "horizonExpectedGoalsAgainst": 1.42,
         "horizonCleanSheetProbability": 25,
         "attackRank": 10,
         "defenceRank": 13,
@@ -6030,8 +6030,8 @@
         "regimeShift": 32,
         "marketWinProbability": 65,
         "modelWinProbability": 56,
-        "marketWeight": 72,
-        "marketDisagreement": -10,
+        "marketWeight": 67,
+        "marketDisagreement": -9,
         "optaWinProbability": null,
         "externalWinProbability": 65
       },
@@ -6039,10 +6039,10 @@
         "appearance": 1.69,
         "goals": 1.03,
         "assists": 0.14,
-        "cleanSheet": 1.0,
+        "cleanSheet": 0.98,
         "defence": 0.54,
         "bonus": 0.36,
-        "adjustment": -0.56
+        "adjustment": -0.58
       },
       "history": {
         "matches": 295,
@@ -6060,20 +6060,20 @@
       "comparison": {
         "fixtureRank": 2,
         "fixturePlayers": 38,
-        "positionRank": 7,
+        "positionRank": 6,
         "positionPlayers": 128,
-        "projectionRank": 95,
+        "projectionRank": 96,
         "popularRival": "Szoboszlai",
         "popularRivalOwnership": 42.7,
         "popularRivalProjection": 4.3,
-        "edgeVsPopular": -0.1
+        "edgeVsPopular": -0.2
       },
-      "captainRating": 97,
+      "captainRating": 96,
       "score": 98,
       "strategyScores": {
-        "protect": 0.9649,
-        "balanced": 0.9795,
-        "chase": 0.9185
+        "protect": 0.9657,
+        "balanced": 0.9801,
+        "chase": 0.9181
       },
       "features": {
         "recent": 0.9902,
@@ -6088,8 +6088,8 @@
         "underlying": 0.9465
       },
       "researchFeatures": {
-        "component_xpts": 4.19039834,
-        "role_ridge_xpts": 4.34476179,
+        "component_xpts": 4.16466524,
+        "role_ridge_xpts": 4.27978084,
         "expected_minutes": 80.80891513,
         "minutes_std": 25.99239802,
         "play_probability": 0.92986249,
@@ -6100,15 +6100,15 @@
         "goal_rate": 0.25722222,
         "assist_rate": 0.04664444,
         "bonus_rate": 0.41666667,
-        "team_expected_goals_for": 2.19681082,
-        "team_expected_goals_against": 1.07799881,
-        "team_clean_probability": 0.3402758,
+        "team_expected_goals_for": 2.20200861,
+        "team_expected_goals_against": 1.1066912,
+        "team_clean_probability": 0.33065121,
         "price": 65.0,
         "selected": 980000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
         "fixture_censored": 0.79411765,
-        "fixture_now": 0.92647059,
+        "fixture_now": 0.8872549,
         "team_context": 0.39705882,
         "team_attack": 0.54411765,
         "team_defence": 0.3872549,
@@ -6121,14 +6121,14 @@
         "rotation_volatility": 0.0,
         "team_rating_confidence": 0.71454382,
         "team_regime_shift": 0.32,
-        "transfer_pressure_rank": 0.86111111,
-        "price_rise_probability": 0.82523446,
-        "price_fall_probability": 0.00167173,
+        "transfer_pressure_rank": 0.8627451,
+        "price_rise_probability": 0.82781156,
+        "price_fall_probability": 0.001642,
         "competition_pressure": 0.5,
-        "prediction_uncertainty": 0.52754452,
+        "prediction_uncertainty": 0.52833212,
         "position_id": 2.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.73637264,
+        "component_xpts_structural": 4.6957174,
         "empirical_xpts": 5.12631554,
         "recent_underlying_raw": 5.91666667,
         "long_underlying_raw": 3.32415894,
@@ -6168,11 +6168,11 @@
       "price": 5.5,
       "ownership": 13.5,
       "projected": 3.3,
-      "sixWeekProjected": 15.5,
+      "sixWeekProjected": 15.6,
       "expectedMinutes": 77,
       "uncertainty": 0.61,
       "confidence": 39,
-      "valueProjected": 2.82,
+      "valueProjected": 2.84,
       "verdict": "Watch",
       "setPieces": [
         "Penalties #1",
@@ -6249,7 +6249,7 @@
         "priceFallProbability": 94
       },
       "teamContext": {
-        "expectedGoalsFor": 1.26,
+        "expectedGoalsFor": 1.24,
         "expectedGoalsAgainst": 1.63,
         "cleanSheetProbability": 20,
         "horizonExpectedGoalsAgainst": 1.36,
@@ -6261,15 +6261,15 @@
         "regimeShift": 16,
         "marketWinProbability": 25,
         "modelWinProbability": 37,
-        "marketWeight": 66,
+        "marketWeight": 64,
         "marketDisagreement": 12,
         "optaWinProbability": null,
         "externalWinProbability": 25
       },
       "components": {
-        "appearance": 1.66,
-        "goals": 0.46,
-        "assists": 0.87,
+        "appearance": 1.67,
+        "goals": 0.45,
+        "assists": 0.86,
         "cleanSheet": 0.19,
         "defence": 0.03,
         "bonus": 0.21,
@@ -6304,7 +6304,7 @@
       "strategyScores": {
         "protect": 0.9384,
         "balanced": 0.9788,
-        "chase": 0.8146
+        "chase": 0.8136
       },
       "features": {
         "recent": 0.9478,
@@ -6319,8 +6319,8 @@
         "underlying": 0.9651
       },
       "researchFeatures": {
-        "component_xpts": 3.28910628,
-        "role_ridge_xpts": 3.5590048,
+        "component_xpts": 3.28513995,
+        "role_ridge_xpts": 3.55995434,
         "expected_minutes": 77.46605617,
         "minutes_std": 28.55708515,
         "play_probability": 0.92744444,
@@ -6331,9 +6331,9 @@
         "goal_rate": 0.04145455,
         "assist_rate": 0.27073333,
         "bonus_rate": 0.26515152,
-        "team_expected_goals_for": 1.26296423,
-        "team_expected_goals_against": 1.63164958,
-        "team_clean_probability": 0.19560664,
+        "team_expected_goals_for": 1.23884133,
+        "team_expected_goals_against": 1.62731256,
+        "team_clean_probability": 0.19645683,
         "price": 55.0,
         "selected": 675000.0,
         "fixture_count": 1.0,
@@ -6356,10 +6356,10 @@
         "price_rise_probability": 0.00050197,
         "price_fall_probability": 0.94027775,
         "competition_pressure": 1.0,
-        "prediction_uncertainty": 0.61258205,
+        "prediction_uncertainty": 0.61247986,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 3.67919099,
+        "component_xpts_structural": 3.66171103,
         "empirical_xpts": 4.06809399,
         "recent_underlying_raw": 8.45,
         "long_underlying_raw": 5.58192383,
@@ -6398,12 +6398,12 @@
       "position": "FWD",
       "price": 6.0,
       "ownership": 4.0,
-      "projected": 3.4,
-      "sixWeekProjected": 18.6,
+      "projected": 3.5,
+      "sixWeekProjected": 18.4,
       "expectedMinutes": 71,
       "uncertainty": 0.6,
       "confidence": 40,
-      "valueProjected": 3.11,
+      "valueProjected": 3.06,
       "verdict": "Watch",
       "setPieces": [],
       "riskFlags": [
@@ -6447,7 +6447,7 @@
       },
       "distribution": {
         "p10": 1.8,
-        "median": 3.4,
+        "median": 3.5,
         "p90": 5.1,
         "blankProbability": 69,
         "return5Probability": 35,
@@ -6468,7 +6468,7 @@
         "marketRole": 10,
         "roleChallenger": 24,
         "official": 18,
-        "disagreement": 0.94,
+        "disagreement": 0.95,
         "roleProjection": 3.78
       },
       "marketForecast": {
@@ -6476,7 +6476,7 @@
         "priceFallProbability": 90
       },
       "teamContext": {
-        "expectedGoalsFor": 1.08,
+        "expectedGoalsFor": 1.11,
         "expectedGoalsAgainst": 2.2,
         "cleanSheetProbability": 11,
         "horizonExpectedGoalsAgainst": 2.02,
@@ -6488,14 +6488,14 @@
         "regimeShift": 37,
         "marketWinProbability": 15,
         "modelWinProbability": 24,
-        "marketWeight": 72,
+        "marketWeight": 67,
         "marketDisagreement": 10,
         "optaWinProbability": null,
         "externalWinProbability": 15
       },
       "components": {
-        "appearance": 1.56,
-        "goals": 1.25,
+        "appearance": 1.55,
+        "goals": 1.26,
         "assists": 0.3,
         "cleanSheet": 0.0,
         "defence": 0.0,
@@ -6529,9 +6529,9 @@
       "captainRating": 79,
       "score": 98,
       "strategyScores": {
-        "protect": 0.9241,
-        "balanced": 0.9785,
-        "chase": 0.9342
+        "protect": 0.9232,
+        "balanced": 0.9778,
+        "chase": 0.9367
       },
       "features": {
         "recent": 0.9452,
@@ -6546,8 +6546,8 @@
         "underlying": 0.9244
       },
       "researchFeatures": {
-        "component_xpts": 3.44873667,
-        "role_ridge_xpts": 3.78302187,
+        "component_xpts": 3.45359304,
+        "role_ridge_xpts": 3.78207751,
         "expected_minutes": 70.81142719,
         "minutes_std": 27.35487611,
         "play_probability": 0.92982045,
@@ -6558,9 +6558,9 @@
         "goal_rate": 0.36077633,
         "assist_rate": 0.12110387,
         "bonus_rate": 0.48611111,
-        "team_expected_goals_for": 1.07799881,
-        "team_expected_goals_against": 2.19681082,
-        "team_clean_probability": 0.11115709,
+        "team_expected_goals_for": 1.1066912,
+        "team_expected_goals_against": 2.20200861,
+        "team_clean_probability": 0.11058082,
         "price": 60.0,
         "selected": 200000.0,
         "fixture_count": 1.0,
@@ -6583,10 +6583,10 @@
         "price_rise_probability": 0.00089186,
         "price_fall_probability": 0.89855829,
         "competition_pressure": 0.0,
-        "prediction_uncertainty": 0.59855344,
+        "prediction_uncertainty": 0.59866845,
         "position_id": 4.0,
         "GW": 2.0,
-        "component_xpts_structural": 3.9816156,
+        "component_xpts_structural": 4.0027395,
         "empirical_xpts": 4.21875784,
         "recent_underlying_raw": 9.36699036,
         "long_underlying_raw": 4.94013445,
@@ -6626,11 +6626,11 @@
       "price": 8.0,
       "ownership": 10.1,
       "projected": 3.6,
-      "sixWeekProjected": 19.3,
+      "sixWeekProjected": 19.1,
       "expectedMinutes": 63,
       "uncertainty": 0.66,
       "confidence": 34,
-      "valueProjected": 2.41,
+      "valueProjected": 2.38,
       "verdict": "Watch",
       "setPieces": [
         "Penalties #2",
@@ -6707,7 +6707,7 @@
         "priceFallProbability": 95
       },
       "teamContext": {
-        "expectedGoalsFor": 1.08,
+        "expectedGoalsFor": 1.11,
         "expectedGoalsAgainst": 2.2,
         "cleanSheetProbability": 11,
         "horizonExpectedGoalsAgainst": 2.02,
@@ -6719,14 +6719,14 @@
         "regimeShift": 37,
         "marketWinProbability": 15,
         "modelWinProbability": 24,
-        "marketWeight": 72,
+        "marketWeight": 67,
         "marketDisagreement": 10,
         "optaWinProbability": null,
         "externalWinProbability": 15
       },
       "components": {
         "appearance": 1.53,
-        "goals": 1.39,
+        "goals": 1.4,
         "assists": 0.22,
         "cleanSheet": 0.1,
         "defence": 0.0,
@@ -6770,15 +6770,15 @@
         "recentValue": 0.9925,
         "historyValue": 0.4291,
         "age": 0.8433,
-        "fixture": 0.2481,
+        "fixture": 0.3041,
         "team": 0.3153,
         "crowd": 0.9478,
         "minutes": 0.8769,
         "underlying": 0.9188
       },
       "researchFeatures": {
-        "component_xpts": 3.63042348,
-        "role_ridge_xpts": 3.34428562,
+        "component_xpts": 3.63542075,
+        "role_ridge_xpts": 3.34353566,
         "expected_minutes": 62.59672057,
         "minutes_std": 34.79387783,
         "play_probability": 0.86498595,
@@ -6789,14 +6789,14 @@
         "goal_rate": 0.4224551,
         "assist_rate": 0.15459299,
         "bonus_rate": 0.60606061,
-        "team_expected_goals_for": 1.07799881,
-        "team_expected_goals_against": 2.19681082,
-        "team_clean_probability": 0.11115709,
+        "team_expected_goals_for": 1.1066912,
+        "team_expected_goals_against": 2.20200861,
+        "team_clean_probability": 0.11058082,
         "price": 80.0,
         "selected": 505000.0,
         "fixture_count": 1.0,
         "horizon_weighted_games_censored": 4.26,
-        "fixture_censored": 0.24813433,
+        "fixture_censored": 0.30410448,
         "fixture_now": 0.13619403,
         "team_context": 0.31529851,
         "team_attack": 0.87126866,
@@ -6814,10 +6814,10 @@
         "price_rise_probability": 0.00038339,
         "price_fall_probability": 0.95373846,
         "competition_pressure": 0.75,
-        "prediction_uncertainty": 0.6604055,
+        "prediction_uncertainty": 0.66051144,
         "position_id": 3.0,
         "GW": 2.0,
-        "component_xpts_structural": 4.00785924,
+        "component_xpts_structural": 4.02938298,
         "empirical_xpts": 5.4070514,
         "recent_underlying_raw": 8.97154527,
         "long_underlying_raw": 3.53746284,
@@ -6877,7 +6877,7 @@
       "popularPick": "Calafiori",
       "modelProjection": 3.8,
       "popularProjection": 2.7,
-      "popularOwnership": 41.2,
+      "popularOwnership": 41.1,
       "modelConfidence": 42,
       "edge": 1.1
     },
