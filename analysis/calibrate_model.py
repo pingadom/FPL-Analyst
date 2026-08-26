@@ -373,6 +373,17 @@ GATE_INCUMBENT = "central:Six-GW planner + adaptive banking"
 # selection so a data change can be varied on its own. Empty means decide
 # normally, which is what production does.
 GATE_PIN = os.environ.get("FPL_GATE_PIN", "").strip()
+
+# Which seasons may choose the chip policy.
+#
+# "training" is correct and the default. "all" reproduces the previous behaviour,
+# which picked the best of 48 policies using outcomes from every season —
+# including the eight evaluation seasons that are then reported. Every other
+# selection stage here is training-only (candidate screening, the recursive
+# search, the decision gate); this one was not, so the reported chip contribution
+# was chosen knowing the answer, and the argmax over 48 noisy estimates moved
+# whenever the frame moved.
+CHIP_POLICY_SELECTION = os.environ.get("FPL_CHIP_SELECT", "training").strip()
 GATE_SWITCH_CONFIDENCE = 0.75
 GATE_BOOTSTRAP_SAMPLES = 2000
 GATE_BOOTSTRAP_BLOCK = 4
@@ -9787,7 +9798,14 @@ def main() -> None:
         data, gate_scores, active_strategy, plan_scores=gate_plan_scores
     )
     chip_gains = chip_scores - no_chip_best
-    chip_stability = chip_gains.mean(axis=1) - chip_gains.std(axis=1) * 0.18
+    # Choose on the selecting seasons only. Averaging over every season lets the
+    # eight evaluation seasons pick the policy that is then reported against them.
+    selecting = (
+        chip_gains
+        if CHIP_POLICY_SELECTION == "all"
+        else chip_gains[:, :training_count]
+    )
+    chip_stability = selecting.mean(axis=1) - selecting.std(axis=1) * 0.18
     best_chip_policy_index = int(np.argmax(chip_stability))
     best_chip_policy = chip_policies[best_chip_policy_index]
     best_scores, best_plan_scores, _ = candidate_forecasts(
