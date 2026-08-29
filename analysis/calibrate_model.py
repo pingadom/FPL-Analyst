@@ -52,7 +52,7 @@ CACHE = ROOT / "work" / "fpl-data"
 # from a snapshot archive covering 2021/22 onward. It multiplies start and sub
 # probability directly, and is 4x predictive of the first-week absences the
 # minutes record cannot see.
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-stretch-v10.pkl"
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-news-v8.pkl"
 
 # How much of the closing betting line to fold into team expected goals.
 #
@@ -101,8 +101,21 @@ EUROPEAN_KNOCKOUT_REST_PENALTY = float(
 USE_RECOVERED_TEAM_NAMES = os.environ.get("FPL_TEAM_NAMES", "1") != "0"
 USE_BLANK_FREE_CALIBRATION = os.environ.get("FPL_BLANK_FILTER", "1") != "0"
 # Undo the forecast compression that under-rates premiums by 0.447 points a week
-# and over-rates sub-£4.5m fodder by 0.117. Off restores the compressed forecast.
-USE_PROJECTION_STRETCH = os.environ.get("FPL_STRETCH", "1") != "0"
+# and over-rates sub-£4.5m fodder by 0.117.
+#
+# Off by default, despite working. It fixes the forecast — premium bias -0.447 to
+# -0.061, every band inside 0.061, MAE 1.1984 to 1.1621 — and then loses 35.1
+# points a season through the full pipeline, with season-to-season spread rising
+# from 123.3 to 139.6.
+#
+# The likely reason is already documented in `harness.py`: every points-denominated
+# threshold is rescaled by the forecast's cross-sectional spread. Stretching the
+# projection changes that spread, so un-compressing it silently moves the transfer
+# hurdle, the hold-option value and every chip bar, all of which were searched
+# against the compressed version. The correction is probably right and the pipeline
+# around it is tuned to the defect; making it pay needs the thresholds re-derived,
+# not the stretch abandoned.
+USE_PROJECTION_STRETCH = os.environ.get("FPL_STRETCH", "0") != "0"
 if (
     not USE_RECOVERED_TEAM_NAMES
     or not USE_BLANK_FREE_CALIBRATION
