@@ -470,6 +470,69 @@ repairs themselves: bisecting the frame under a pinned policy showed every repai
 neutral-to-positive, and the pinned comparison itself flips sign depending on which
 champion is pinned. See the two sections below.
 
+### Copying elite behaviour does not work. Fixing our own defects does.
+
+Three behaviours were derived from real manager data and each was tested across
+ten seasons. All three gained on the two training seasons and lost on the eight
+reported ones:
+
+| change | training | evaluation |
+|---|---|---|
+| anchor to history (`recent_share` 0.858 -> 0.10) | +30.0 | **-68.9** |
+| richer bench (`bench_premium_penalty` -> 0) | +89.0 | **-29.8** |
+| bank transfers and burst (`transfer_hurdle` -> 26) | +72.0 | **-86.4** |
+
+Meanwhile the two changes that *did* convert were both repairs to measurable
+errors in this model, not imitations of anyone: the absence calibration axis
+(bias 0.177 -> 0.030, and 2127.1 -> 2177.9 through the full pipeline) and the
+official availability feed (flagged-versus-fit bias 0.106 -> 0.003).
+
+That is the strategic lesson of the exercise. Elite habits are enabled by
+information and reaction speed a backtested model does not have — they decide 17
+hours before the deadline against the field's 42, and put 23.7% of transfers in
+the final three hours. Reproducing the *shape* of their policy without the
+information that justifies it reliably makes things worse.
+
+### Where the points actually are: the first six Gameweeks
+
+Points per Gameweek, this model against 24,041 ranked managers:
+
+| band | GW1-5 | GW6-19 | GW20-38 |
+|---|---|---|---|
+| top100 | 61.9 | 66.2 | 66.9 |
+| top10k | 58.5 | 63.7 | 65.2 |
+| band_1m | 56.4 | 59.0 | 61.0 |
+| band_5m (worst measured) | 52.0 | 52.4 | 51.3 |
+| **this model** | **48.6** | 56.8 | 56.8 |
+
+**The opening five Gameweeks score below the five-millionth-ranked human.** From
+GW6 the model runs at roughly rank 500k. Against top100 the early deficit is 13
+points a Gameweek, about 66 points across those five weeks — a large share of the
+445-point gap sitting in a small, identifiable window.
+
+Per Gameweek it is not the opening squad that fails:
+
+| GW1 | GW2 | GW3 | GW4 | GW5 | GW6 | GW7 |
+|---|---|---|---|---|---|---|
+| 52.9 | **44.8** | 48.7 | 51.1 | 45.6 | 47.9 | 56.0 |
+
+GW1, built entirely from priors with no current-season data, is the *best* of the
+first five. The collapse starts at GW2 — the worst week of the whole season — and
+lasts until GW6. The damage begins when the model starts transferring on one or
+two Gameweeks of evidence.
+
+That rules out the two explanations already tested. It is not the preseason squad,
+and it is not the global form weighting, since shifting `recent_share` toward
+history was monotonically worse. What remains is early-season transfer restraint:
+a hurdle that is high while the sample is small and normal afterwards. Untested as
+yet, and unlike the three failures above it is a defect repair rather than an
+imitation.
+
+For reference, the full-season chip timing that skilled managers share: first
+Wildcard at GW6 in every band from top100 to band_500k, Bench Boost GW33, Free Hit
+GW34. The only chip that separates them is the Triple Captain — GW26 for the top
+three bands against GW33 for everyone else.
+
 ### What the elite actually do: they refuse to update on noise
 
 Fifty managers from the LiveFPL all-time leaderboard, their documented history via
