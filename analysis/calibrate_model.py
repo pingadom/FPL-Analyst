@@ -48,7 +48,11 @@ CACHE = ROOT / "work" / "fpl-data"
 # v6: European knockout proximity means an *upcoming* tie only. The previous
 # implementation also marked league fixtures after a tie and therefore baked a
 # directionally wrong fatigue penalty into the prepared frame.
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-absence-v6.pkl"
+# v7: official pre-deadline availability (chance_of_playing, news flag) joined
+# from a snapshot archive covering 2021/22 onward. It multiplies start and sub
+# probability directly, and is 4x predictive of the first-week absences the
+# minutes record cannot see.
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-news-v8.pkl"
 
 # How much of the closing betting line to fold into team expected goals.
 #
@@ -1097,8 +1101,30 @@ def minutes_calibration_tier(
     # 0.702 predicted against 0.792 realised for a player who played last week,
     # 0.453 against 0.210 for one who missed the last two.
     run = frame["absence_run"].fillna(0).to_numpy(float)
-    absence_tier = np.select([run <= 0, run <= 2], [0, 1], default=2).astype(int)
-    return (price_tier + 3 * absence_tier).astype(int)
+    # Official pre-deadline news joins the same axis rather than adding a fourth
+    # dimension. Crossing it separately would give 3 x 3 x 2 x 4 positions = 72
+    # cells, most of which never reach the minimum row count and so never
+    # calibrate at all. Folding it in keeps nine well-populated cells.
+    #
+    # It belongs here because the flag alone is not enough: after multiplying
+    # start probability by the official chance, flagged players were still
+    # over-rated 0.203 predicted against 0.130 realised. FPL's own number is
+    # optimistic, and the isotonic map can learn that correction from prior
+    # deadlines instead of it being hand-set.
+    if "sig_chance_playing" in frame:
+        chance = frame["sig_chance_playing"].fillna(-1.0).to_numpy(float)
+        news = frame.get("sig_has_news")
+        flagged = (news.fillna(0).to_numpy(float) > 0) if news is not None else False
+        doubtful = (chance >= 0) & (chance <= 25)
+    else:
+        flagged = np.zeros(len(frame), dtype=bool)
+        doubtful = np.zeros(len(frame), dtype=bool)
+    availability_tier = np.select(
+        [(run <= 0) & ~flagged & ~doubtful, (run <= 2) & ~doubtful],
+        [0, 1],
+        default=2,
+    ).astype(int)
+    return (price_tier + 3 * availability_tier).astype(int)
 
 
 def _rebuild_minutes_decomposition(frame: pd.DataFrame) -> None:
@@ -2904,6 +2930,13 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     data = pd.concat(frames, ignore_index=True)
     season_order = {season: index for index, season in enumerate(SEASONS)}
     data["season_order"] = data["season"].map(season_order).astype(int)
+    # Official availability as it stood before each deadline. The archive itself
+    # has none, which is why `absence_run` had to stand in for it — but that only
+    # sees absences already under way. This covers the first week of one, which is
+    # 42% of all missed Gameweeks and 4x more likely when a player carries news.
+    from deadline_news import attach_deadline_news
+
+    data = attach_deadline_news(data)
     data = add_causal_team_strength(data)
     lineup_rows = data[data["starts_observed"] > 0].groupby(
         ["season", "season_order", "team_id", "GW"], sort=True
@@ -3106,6 +3139,24 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     # an extreme market exit, a prior zero/no-show, or a curtailed appearance.
     # The high-precision warning affects minutes/availability—not scoring rate—
     # and is disabled for all-zero or otherwise corrupted xP feeds.
+    # The official pre-deadline flag, where a snapshot exists for that season.
+    #
+    # -1 is "no entry", which on this feed means nothing was reported — its
+    # first-week absence rate is 5.7%, indistinguishable from an explicit 100
+    # (5.8%), so it reads as fit rather than unknown. Anything below 100 is
+    # informative across its whole range, not only at zero: 75 still carries a
+    # 20.5% absence rate against 5.8% for a clean player.
+    #
+    # The flag is a *probability of playing*, so it multiplies directly rather
+    # than through a hand-set penalty. Seasons before 2021/22 have no feed and
+    # keep a multiplier of one, which makes availability a feature whose strength
+    # varies by season — the same shape as the xG-era break, and stated here so it
+    # is not later mistaken for an unexplained regime shift.
+    reported_chance = data["sig_chance_playing"].fillna(-1.0).to_numpy(float)
+    official_chance = np.where(reported_chance < 0, 100.0, reported_chance) / 100.0
+    news_multiplier = np.where(
+        data["has_deadline_news_feed"].to_numpy(float) > 0, official_chance, 1.0
+    )
     start_availability_multiplier = np.select(
         [
             data["severe_availability_warning"],
@@ -3113,7 +3164,7 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ],
         [0.05, 1.0],
         default=1.0,
-    )
+    ) * news_multiplier
     sub_availability_multiplier = np.select(
         [
             data["severe_availability_warning"],
@@ -3121,7 +3172,7 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ],
         [0.15, 1.0],
         default=1.0,
-    )
+    ) * news_multiplier
     data["start_probability"] *= start_availability_multiplier
     data["sub_probability_given_bench"] *= sub_availability_multiplier
     data["start_probability"] = data["start_probability"].clip(0.02, 0.98)
