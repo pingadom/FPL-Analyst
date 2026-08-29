@@ -1,0 +1,1532 @@
+{
+  "schemaVersion": 1,
+  "season": "2026-27",
+  "gameweek": 3,
+  "decisionStatus": "provisional",
+  "snapshotHash": "2f508ec9ecbe3ab9a33ad9b190e736152204c9ad1cf69687f76a14e4c2961c06",
+  "snapshotPath": "analysis/snapshots/2026-27/gw-03/20260829T123743Z-2f508ec9ecbe.json",
+  "generatedAt": "2026-08-29T12:37:43.219202+00:00",
+  "chipRecommendation": "Bench Boost",
+  "managers": [
+    {
+      "id": "structural-control",
+      "name": "Structural control",
+      "planScore": "horizonScore",
+      "lineupScore": "immediateForCaptain",
+      "captainScore": "immediateForCaptain",
+      "chips": false,
+      "transferHurdle": 2.8,
+      "description": "Frozen Lens structural projections; chips disabled.",
+      "chip": "Hold",
+      "bank": 0.4,
+      "freeTransfersNext": 1,
+      "transfers": [],
+      "projectedPoints": 55.8,
+      "squad": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "team": "MCI",
+          "position": "FWD",
+          "price": 15.5,
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
+        },
+        {
+          "id": 368,
+          "name": "Szoboszlai",
+          "team": "LIV",
+          "position": "MID",
+          "price": 7.0,
+          "projected": 4.3,
+          "deadlineMinutes": 78.0
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
+        },
+        {
+          "id": 388,
+          "name": "Guéhi",
+          "team": "MCI",
+          "position": "DEF",
+          "price": 6.0,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 316,
+          "name": "Emersonn",
+          "team": "IPS",
+          "position": "FWD",
+          "price": 5.5,
+          "projected": 3.2,
+          "deadlineMinutes": 36.0
+        },
+        {
+          "id": 12,
+          "name": "Saka",
+          "team": "ARS",
+          "position": "MID",
+          "price": 9.5,
+          "projected": 4.4,
+          "deadlineMinutes": 65.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "team": "ARS",
+          "position": "GK",
+          "price": 6.0,
+          "projected": 3.8,
+          "deadlineMinutes": 83.0
+        },
+        {
+          "id": 332,
+          "name": "Justin",
+          "team": "LEE",
+          "position": "DEF",
+          "price": 4.5,
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
+        },
+        {
+          "id": 115,
+          "name": "De Cuyper",
+          "team": "BHA",
+          "position": "DEF",
+          "price": 4.6,
+          "projected": 4.3,
+          "deadlineMinutes": 63.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
+        }
+      ],
+      "xiIds": [
+        1,
+        586,
+        388,
+        115,
+        279,
+        399,
+        480,
+        565,
+        12,
+        368,
+        411
+      ],
+      "benchIds": [
+        171,
+        55,
+        316,
+        332
+      ],
+      "captainId": 411,
+      "captain": "Haaland",
+      "viceId": 399,
+      "vice": "Cherki",
+      "fieldability": {
+        "hardUnavailableXi": [],
+        "expectedSquadAppearances": 12.39,
+        "expectedXiAppearances": 9.37,
+        "squadWithFixture": 15,
+        "xiWithFixture": 11,
+        "meanXiPlayProbability": 0.8518
+      },
+      "premiumAccessAudit": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "owned": true,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 257.1,
+          "reviewRequired": false
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "owned": false,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": -0.265,
+          "bestLegalPackageValue": 256.6,
+          "reviewRequired": false
+        }
+      ],
+      "highRegimeChangePlayers": [
+        {
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
+          "owned": false
+        }
+      ]
+    },
+    {
+      "id": "structural-scenarios",
+      "name": "Structural + scenarios",
+      "planScore": "riskScore",
+      "lineupScore": "immediateForCaptain",
+      "captainScore": "immediateForCaptain",
+      "chips": true,
+      "transferHurdle": 2.2,
+      "description": "Same projections with downside-aware chip gates and modest upside utility.",
+      "chip": "Bench Boost",
+      "bank": 0.4,
+      "freeTransfersNext": 1,
+      "transfers": [],
+      "projectedPoints": 55.8,
+      "squad": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "team": "MCI",
+          "position": "FWD",
+          "price": 15.5,
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
+        },
+        {
+          "id": 368,
+          "name": "Szoboszlai",
+          "team": "LIV",
+          "position": "MID",
+          "price": 7.0,
+          "projected": 4.3,
+          "deadlineMinutes": 78.0
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
+        },
+        {
+          "id": 388,
+          "name": "Guéhi",
+          "team": "MCI",
+          "position": "DEF",
+          "price": 6.0,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 316,
+          "name": "Emersonn",
+          "team": "IPS",
+          "position": "FWD",
+          "price": 5.5,
+          "projected": 3.2,
+          "deadlineMinutes": 36.0
+        },
+        {
+          "id": 12,
+          "name": "Saka",
+          "team": "ARS",
+          "position": "MID",
+          "price": 9.5,
+          "projected": 4.4,
+          "deadlineMinutes": 65.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "team": "ARS",
+          "position": "GK",
+          "price": 6.0,
+          "projected": 3.8,
+          "deadlineMinutes": 83.0
+        },
+        {
+          "id": 332,
+          "name": "Justin",
+          "team": "LEE",
+          "position": "DEF",
+          "price": 4.5,
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
+        },
+        {
+          "id": 115,
+          "name": "De Cuyper",
+          "team": "BHA",
+          "position": "DEF",
+          "price": 4.6,
+          "projected": 4.3,
+          "deadlineMinutes": 63.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
+        }
+      ],
+      "xiIds": [
+        1,
+        586,
+        388,
+        115,
+        279,
+        399,
+        480,
+        565,
+        12,
+        368,
+        411
+      ],
+      "benchIds": [
+        171,
+        55,
+        316,
+        332
+      ],
+      "captainId": 411,
+      "captain": "Haaland",
+      "viceId": 399,
+      "vice": "Cherki",
+      "fieldability": {
+        "hardUnavailableXi": [],
+        "expectedSquadAppearances": 12.39,
+        "expectedXiAppearances": 9.37,
+        "squadWithFixture": 15,
+        "xiWithFixture": 11,
+        "meanXiPlayProbability": 0.8518
+      },
+      "premiumAccessAudit": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "owned": true,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 260.484,
+          "reviewRequired": false
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "owned": false,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": -0.217,
+          "bestLegalPackageValue": 260.032,
+          "reviewRequired": false
+        }
+      ],
+      "highRegimeChangePlayers": [
+        {
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
+          "owned": false
+        }
+      ]
+    },
+    {
+      "id": "frontier-challenger",
+      "name": "Hybrid challenger",
+      "planScore": "listwiseHorizonScore",
+      "lineupScore": "frontierImmediateScore",
+      "captainScore": "listwiseCaptainScore",
+      "chips": true,
+      "transferHurdle": 2.2,
+      "description": "Frontier next-GW, listwise six-week and captain reranks at frozen blends.",
+      "chip": "Bench Boost",
+      "bank": 0.0,
+      "freeTransfersNext": 1,
+      "transfers": [],
+      "projectedPoints": 51.2,
+      "squad": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "team": "MCI",
+          "position": "FWD",
+          "price": 15.5,
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
+        },
+        {
+          "id": 388,
+          "name": "Guéhi",
+          "team": "MCI",
+          "position": "DEF",
+          "price": 6.0,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "team": "ARS",
+          "position": "DEF",
+          "price": 8.0,
+          "projected": 4.1,
+          "deadlineMinutes": 75.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "team": "ARS",
+          "position": "GK",
+          "price": 6.0,
+          "projected": 3.8,
+          "deadlineMinutes": 83.0
+        },
+        {
+          "id": 346,
+          "name": "Calvert-Lewin",
+          "team": "LEE",
+          "position": "FWD",
+          "price": 6.0,
+          "projected": 2.9,
+          "deadlineMinutes": 73.0
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "team": "BHA",
+          "position": "MID",
+          "price": 5.5,
+          "projected": 3.1,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 332,
+          "name": "Justin",
+          "team": "LEE",
+          "position": "DEF",
+          "price": 4.5,
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
+        },
+        {
+          "id": 13,
+          "name": "Rice",
+          "team": "ARS",
+          "position": "MID",
+          "price": 7.5,
+          "projected": 2.9,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
+        }
+      ],
+      "xiIds": [
+        1,
+        4,
+        388,
+        586,
+        399,
+        124,
+        480,
+        13,
+        411,
+        55,
+        346
+      ],
+      "benchIds": [
+        171,
+        332,
+        565,
+        279
+      ],
+      "captainId": 411,
+      "captain": "Haaland",
+      "viceId": 399,
+      "vice": "Cherki",
+      "fieldability": {
+        "hardUnavailableXi": [],
+        "expectedSquadAppearances": 12.7,
+        "expectedXiAppearances": 9.78,
+        "squadWithFixture": 15,
+        "xiWithFixture": 11,
+        "meanXiPlayProbability": 0.8891
+      },
+      "premiumAccessAudit": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "owned": true,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 239.11,
+          "reviewRequired": false
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "owned": false,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": 5.035,
+          "bestLegalPackageValue": 244.31,
+          "reviewRequired": true
+        }
+      ],
+      "highRegimeChangePlayers": [
+        {
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
+          "owned": false
+        }
+      ]
+    },
+    {
+      "id": "captain-route-consensus",
+      "name": "Scoring-route captain",
+      "planScore": "listwiseHorizonScore",
+      "lineupScore": "frontierImmediateScore",
+      "captainScore": "routeCaptainScore",
+      "chips": true,
+      "transferHurdle": 2.2,
+      "description": "Same squad model as the hybrid challenger; captaincy adds a five-seed scoring-route consensus and conservative defender tie-break.",
+      "chip": "Bench Boost",
+      "bank": 0.0,
+      "freeTransfersNext": 1,
+      "transfers": [],
+      "projectedPoints": 51.2,
+      "squad": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "team": "MCI",
+          "position": "FWD",
+          "price": 15.5,
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
+        },
+        {
+          "id": 388,
+          "name": "Guéhi",
+          "team": "MCI",
+          "position": "DEF",
+          "price": 6.0,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "team": "ARS",
+          "position": "DEF",
+          "price": 8.0,
+          "projected": 4.1,
+          "deadlineMinutes": 75.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "team": "ARS",
+          "position": "GK",
+          "price": 6.0,
+          "projected": 3.8,
+          "deadlineMinutes": 83.0
+        },
+        {
+          "id": 346,
+          "name": "Calvert-Lewin",
+          "team": "LEE",
+          "position": "FWD",
+          "price": 6.0,
+          "projected": 2.9,
+          "deadlineMinutes": 73.0
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "team": "BHA",
+          "position": "MID",
+          "price": 5.5,
+          "projected": 3.1,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 332,
+          "name": "Justin",
+          "team": "LEE",
+          "position": "DEF",
+          "price": 4.5,
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
+        },
+        {
+          "id": 13,
+          "name": "Rice",
+          "team": "ARS",
+          "position": "MID",
+          "price": 7.5,
+          "projected": 2.9,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
+        }
+      ],
+      "xiIds": [
+        1,
+        4,
+        388,
+        586,
+        399,
+        124,
+        480,
+        13,
+        411,
+        55,
+        346
+      ],
+      "benchIds": [
+        171,
+        332,
+        565,
+        279
+      ],
+      "captainId": 411,
+      "captain": "Haaland",
+      "viceId": 399,
+      "vice": "Cherki",
+      "fieldability": {
+        "hardUnavailableXi": [],
+        "expectedSquadAppearances": 12.7,
+        "expectedXiAppearances": 9.78,
+        "squadWithFixture": 15,
+        "xiWithFixture": 11,
+        "meanXiPlayProbability": 0.8891
+      },
+      "premiumAccessAudit": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "owned": true,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 239.11,
+          "reviewRequired": false
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "owned": false,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": 5.035,
+          "bestLegalPackageValue": 244.31,
+          "reviewRequired": true
+        }
+      ],
+      "highRegimeChangePlayers": [
+        {
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
+          "owned": false
+        }
+      ]
+    },
+    {
+      "id": "breakthrough-decision",
+      "name": "Breakthrough decision",
+      "planScore": "listwiseHorizonScore",
+      "lineupScore": "frontierImmediateScore",
+      "captainScore": "routeCaptainScore",
+      "chips": true,
+      "transferHurdle": 2.2,
+      "fieldability": {
+        "hardUnavailableXi": [],
+        "expectedSquadAppearances": 12.7,
+        "expectedXiAppearances": 9.78,
+        "squadWithFixture": 15,
+        "xiWithFixture": 11,
+        "meanXiPlayProbability": 0.8891
+      },
+      "description": "Fieldability-constrained squad, XI and captain with conservative emergency repairs and the leak-free route captain.",
+      "chip": "Bench Boost",
+      "bank": 0.0,
+      "freeTransfersNext": 1,
+      "transfers": [],
+      "projectedPoints": 51.2,
+      "squad": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "team": "MCI",
+          "position": "FWD",
+          "price": 15.5,
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
+        },
+        {
+          "id": 388,
+          "name": "Guéhi",
+          "team": "MCI",
+          "position": "DEF",
+          "price": 6.0,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "team": "ARS",
+          "position": "DEF",
+          "price": 8.0,
+          "projected": 4.1,
+          "deadlineMinutes": 75.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "team": "ARS",
+          "position": "GK",
+          "price": 6.0,
+          "projected": 3.8,
+          "deadlineMinutes": 83.0
+        },
+        {
+          "id": 346,
+          "name": "Calvert-Lewin",
+          "team": "LEE",
+          "position": "FWD",
+          "price": 6.0,
+          "projected": 2.9,
+          "deadlineMinutes": 73.0
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "team": "BHA",
+          "position": "MID",
+          "price": 5.5,
+          "projected": 3.1,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 332,
+          "name": "Justin",
+          "team": "LEE",
+          "position": "DEF",
+          "price": 4.5,
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
+        },
+        {
+          "id": 13,
+          "name": "Rice",
+          "team": "ARS",
+          "position": "MID",
+          "price": 7.5,
+          "projected": 2.9,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
+        }
+      ],
+      "xiIds": [
+        1,
+        4,
+        388,
+        586,
+        399,
+        124,
+        480,
+        13,
+        411,
+        55,
+        346
+      ],
+      "benchIds": [
+        171,
+        332,
+        565,
+        279
+      ],
+      "captainId": 411,
+      "captain": "Haaland",
+      "viceId": 399,
+      "vice": "Cherki",
+      "premiumAccessAudit": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "owned": true,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 239.11,
+          "reviewRequired": false
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "owned": false,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": 5.035,
+          "bestLegalPackageValue": 244.31,
+          "reviewRequired": true
+        }
+      ],
+      "highRegimeChangePlayers": [
+        {
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
+          "owned": false
+        }
+      ]
+    },
+    {
+      "id": "forecast-breakthrough-v2",
+      "name": "Forecast breakthrough v2",
+      "planScore": "listwiseHorizonScore",
+      "lineupScore": "frontierImmediateScore",
+      "captainScore": "forecastV2CaptainScore",
+      "chips": true,
+      "transferHurdle": 2.2,
+      "description": "Frozen large-search winner: route captain plus a 20% exact-capture dynamic match boundary, causal minutes downside protection and separately gated chip policy; falls back safely when market data is unavailable.",
+      "chip": "Bench Boost",
+      "bank": 0.0,
+      "freeTransfersNext": 1,
+      "transfers": [],
+      "projectedPoints": 51.2,
+      "squad": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "team": "MCI",
+          "position": "FWD",
+          "price": 15.5,
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
+        },
+        {
+          "id": 388,
+          "name": "Guéhi",
+          "team": "MCI",
+          "position": "DEF",
+          "price": 6.0,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "team": "ARS",
+          "position": "DEF",
+          "price": 8.0,
+          "projected": 4.1,
+          "deadlineMinutes": 75.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "team": "ARS",
+          "position": "GK",
+          "price": 6.0,
+          "projected": 3.8,
+          "deadlineMinutes": 83.0
+        },
+        {
+          "id": 346,
+          "name": "Calvert-Lewin",
+          "team": "LEE",
+          "position": "FWD",
+          "price": 6.0,
+          "projected": 2.9,
+          "deadlineMinutes": 73.0
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "team": "BHA",
+          "position": "MID",
+          "price": 5.5,
+          "projected": 3.1,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 332,
+          "name": "Justin",
+          "team": "LEE",
+          "position": "DEF",
+          "price": 4.5,
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
+        },
+        {
+          "id": 13,
+          "name": "Rice",
+          "team": "ARS",
+          "position": "MID",
+          "price": 7.5,
+          "projected": 2.9,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
+        }
+      ],
+      "xiIds": [
+        1,
+        4,
+        388,
+        586,
+        399,
+        124,
+        480,
+        13,
+        411,
+        55,
+        346
+      ],
+      "benchIds": [
+        171,
+        332,
+        565,
+        279
+      ],
+      "captainId": 411,
+      "captain": "Haaland",
+      "viceId": 399,
+      "vice": "Cherki",
+      "fieldability": {
+        "hardUnavailableXi": [],
+        "expectedSquadAppearances": 12.7,
+        "expectedXiAppearances": 9.78,
+        "squadWithFixture": 15,
+        "xiWithFixture": 11,
+        "meanXiPlayProbability": 0.8891
+      },
+      "premiumAccessAudit": [
+        {
+          "id": 411,
+          "name": "Haaland",
+          "owned": true,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 239.11,
+          "reviewRequired": false
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "owned": false,
+          "captaincyOptionValue": 0.0,
+          "robustAccessAdvantage": 5.035,
+          "bestLegalPackageValue": 244.31,
+          "reviewRequired": true
+        }
+      ],
+      "highRegimeChangePlayers": [
+        {
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
+          "owned": false
+        },
+        {
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
+          "owned": false
+        },
+        {
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
+          "owned": false
+        },
+        {
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
+          "owned": false
+        }
+      ]
+    }
+  ],
+  "protocol": "All managers receive the same immutable deadline snapshot. Only locked decisions update recursive state; no post-deadline edit is permitted.",
+  "decisionHash": "e1766ec2e60da3d527862817b4746fa0ac435ac1745dac224afbc3b34d18b5a2"
+}

@@ -112,6 +112,48 @@ def refresh_public_audit(result: dict, lens8_artifact: dict) -> None:
     audit["hybridDiagnostic"]["average"] = float(
         result["lens81HybridDiagnostic"]["average"]
     )
+    lens8_delta = round(lens8_average - lens7_average, 1)
+    causal_delta = round(causal_average - lens8_average, 1)
+    audit["status"] = (
+        "Lens 8 is the production research model; the causal retrained stack is "
+        f"a shadow challenger that {'leads' if causal_delta >= 0 else 'trails'} by "
+        f"{abs(causal_delta):.1f}; the legacy 2,212 claim is retired."
+    )
+    audit["accepted"] = [
+        {
+            "name": "Lens 8 integrity repairs",
+            "result": f"{lens8_delta:+.1f} vs Lens 7",
+            "detail": "Single-count fixtures, exact squad MILP, current availability, genuine team anchors, regime priors and XI fieldability survive the corrected replay.",
+        }
+    ]
+    if causal_delta >= 0:
+        audit["accepted"].append(
+            {
+                "name": "Causal retrained shadow",
+                "result": f"{causal_delta:+.1f} vs Lens 8",
+                "detail": "Freshly trained multi-horizon player and captain ordering leads the current research model but remains unpromoted pending the frozen gate.",
+            }
+        )
+    audit["rejected"] = [
+        {
+            "name": "Legacy 2,212 headline",
+            "result": "Retired",
+            "detail": f"The result falls to {repaired_legacy:,.1f} under the repaired engine and schema-aware caches, so it is not a valid comparison target.",
+        },
+        {
+            "name": "Lens 8 chip-policy hybrid",
+            "result": f"{float(result['lens81HybridDiagnostic']['average']):,.1f}",
+            "detail": "Mixing model families is a diagnostic, not a promotable policy, and it trails the coherent Lens 8 research replay.",
+        },
+    ]
+    if causal_delta < 0:
+        audit["rejected"].append(
+            {
+                "name": "Causal retrained shadow",
+                "result": f"{causal_delta:+.1f} vs Lens 8",
+                "detail": "The causally retrained stack is reproducible, but it underperforms Lens 8 and therefore remains a rejected shadow rather than a claimed improvement.",
+            }
+        )
     audit_path.write_text(json.dumps(audit, indent=2) + "\n", encoding="utf-8")
 
 

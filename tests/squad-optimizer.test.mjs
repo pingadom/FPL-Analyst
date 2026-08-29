@@ -14,32 +14,12 @@ const results = JSON.parse(
   await readFile(new URL("../app/data/model-results.json", import.meta.url), "utf8"),
 );
 
-function liveScore(player) {
-  const weights = results.model.weights;
-  const recent = weights.recent / 100;
-  const performance =
-    player.features.recent * recent + player.features.history * (1 - recent);
-  const value =
-    player.features.recentValue * recent + player.features.historyValue * (1 - recent);
-  const lens =
-    performance * (weights.performance / 100) +
-    value * (weights.value / 100) +
-    player.features.age * (weights.age / 100) +
-    player.features.fixture * (weights.fixture / 100) +
-    player.features.team * (weights.team / 100) +
-    player.features.crowd * (weights.crowd / 100) +
-    player.features.minutes * (weights.minutes / 100) +
-    player.features.underlying * (weights.underlying / 100);
-  return (
-    0.58 * lens +
-    0.14 * (player.comparison.projectionRank / 100) +
-    0.10 * (player.confidence / 100) +
-    0.18 * player.strategyScores.balanced
-  );
-}
-
 test("joint optimiser spends the initial budget on the XI and captain", () => {
-  const scored = players.map((player) => ({ ...player, liveScore: liveScore(player) }));
+  const scored = players.map((player) => ({
+    ...player,
+    liveScore: player.strategyScores.balanced,
+    optimizerUtility: player.optimization.lineupUtility.balanced,
+  }));
   const selection = buildOptimizedSquad(scored);
   assert.ok(selection, "expected a legal squad");
   assert.equal(selection.squad.length, 15);
@@ -51,6 +31,11 @@ test("joint optimiser spends the initial budget on the XI and captain", () => {
   assert.equal(selection.solver.optimalityGap, 0);
   assert.ok(selection.solver.candidatePlayers < selection.solver.inputPlayers);
   assert.ok(selection.xi.some((player) => player.id === selection.captain.id));
+  assert.equal(
+    selection.captain.projected,
+    Math.max(...selection.xi.map((player) => player.projected)),
+    "captaincy must go to the selected XI player with the highest projected points",
+  );
   const positionCounts = Object.fromEntries(
     ["GK", "DEF", "MID", "FWD"].map((position) => [
       position,
@@ -64,20 +49,27 @@ test("joint optimiser spends the initial budget on the XI and captain", () => {
   }
   assert.ok([...clubCounts.values()].every((count) => count <= 3));
   const exceptional = selection.xi.filter(
-    (player) =>
-      player.minutesModel.startProbability < 70 ||
-      player.minutesModel.playProbability < 84,
+    (player) => !player.optimization.standardStarterEligible,
   );
   assert.ok(exceptional.length <= 1, "only one exceptional-upside minutes exception is legal");
   assert.ok(
-    exceptional.every(
-      (player) =>
-        player.minutesModel.startProbability >= 70 &&
-        player.minutesModel.playProbability >= 78,
-    ),
+    exceptional.every((player) => player.optimization.exceptionalStarterEligible),
+  );
+  const haaland = scored.find((player) => player.name === "Haaland");
+  assert.ok(haaland, "Haaland must survive the candidate eligibility screen");
+  assert.ok(
+    haaland.minutesModel.startProbability >= 70 &&
+      haaland.minutesModel.playProbability >= 84,
+    "a current-season starter must not inherit an absence streak from the prior season",
   );
   assert.ok(
-    selection.squad.some((player) => player.name === "Haaland"),
-    "the highest immediate projection and captain option should not be displaced by premium substitutes",
+    haaland.projected >= Math.max(...scored.map((player) => player.projected)) - 0.2,
+    "an available premium talisman should remain near the top of the immediate forecast",
   );
+  assert.deepEqual(
+    selection.squad.map((player) => player.id).toSorted((a, b) => a - b),
+    results.squad.map((player) => player.id).toSorted((a, b) => a - b),
+    "the untouched calibrated preset must reproduce the generated Python squad",
+  );
+  assert.equal(selection.captain.id, results.squad.find((player) => player.captain).id);
 });

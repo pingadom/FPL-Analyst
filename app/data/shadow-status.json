@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "season": "2026-27",
-  "gameweek": 1,
+  "gameweek": 3,
   "decisionStatus": "provisional",
-  "snapshotHash": "1be44aa9a995cff21105c43a56c4bd0863437662e2e00b583320f1fdbabb8a0a",
-  "snapshotPath": "analysis/snapshots/2026-27/gw-01/20260820T113838Z-1be44aa9a995.json",
-  "generatedAt": "2026-08-20T11:38:38.124960+00:00",
+  "snapshotHash": "2f508ec9ecbe3ab9a33ad9b190e736152204c9ad1cf69687f76a14e4c2961c06",
+  "snapshotPath": "analysis/snapshots/2026-27/gw-03/20260829T123743Z-2f508ec9ecbe.json",
+  "generatedAt": "2026-08-29T12:37:43.219202+00:00",
   "chipRecommendation": "Bench Boost",
   "managers": [
     {
@@ -18,10 +18,10 @@
       "transferHurdle": 2.8,
       "description": "Frozen Lens structural projections; chips disabled.",
       "chip": "Hold",
-      "bank": 0.0,
+      "bank": 0.4,
       "freeTransfersNext": 1,
       "transfers": [],
-      "projectedPoints": 55.2,
+      "projectedPoints": 55.8,
       "squad": [
         {
           "id": 411,
@@ -29,17 +29,44 @@
           "team": "MCI",
           "position": "FWD",
           "price": 15.5,
-          "projected": 6.2,
-          "deadlineMinutes": 64.0
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
         },
         {
-          "id": 4,
-          "name": "Gabriel",
-          "team": "ARS",
+          "id": 368,
+          "name": "Szoboszlai",
+          "team": "LIV",
+          "position": "MID",
+          "price": 7.0,
+          "projected": 4.3,
+          "deadlineMinutes": 78.0
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
           "position": "DEF",
-          "price": 8.0,
-          "projected": 5.1,
-          "deadlineMinutes": 75.0
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
         },
         {
           "id": 388,
@@ -47,16 +74,7 @@
           "team": "MCI",
           "position": "DEF",
           "price": 6.0,
-          "projected": 4.6,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 1,
-          "name": "Raya",
-          "team": "ARS",
-          "position": "GK",
-          "price": 6.0,
-          "projected": 4.9,
+          "projected": 4.4,
           "deadlineMinutes": 81.0
         },
         {
@@ -64,81 +82,54 @@
           "name": "Cherki",
           "team": "MCI",
           "position": "MID",
-          "price": 7.5,
-          "projected": 4.4,
-          "deadlineMinutes": 55.0
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
         },
         {
-          "id": 55,
-          "name": "Watkins",
-          "team": "AVL",
-          "position": "FWD",
-          "price": 8.0,
-          "projected": 4.1,
-          "deadlineMinutes": 63.0
-        },
-        {
-          "id": 124,
-          "name": "Groß",
-          "team": "BHA",
-          "position": "MID",
-          "price": 5.5,
-          "projected": 4.3,
-          "deadlineMinutes": 71.0
-        },
-        {
-          "id": 109,
-          "name": "Verbruggen",
-          "team": "BHA",
-          "position": "GK",
-          "price": 4.5,
-          "projected": 3.8,
-          "deadlineMinutes": 81.0
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
         },
         {
           "id": 480,
           "name": "Gibbs-White",
           "team": "NFO",
           "position": "MID",
-          "price": 8.0,
-          "projected": 4.2,
-          "deadlineMinutes": 58.0
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
         },
         {
-          "id": 113,
-          "name": "F.Kadıoğlu",
-          "team": "BHA",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 3.6,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 236,
-          "name": "Dewsbury-Hall",
-          "team": "EVE",
-          "position": "MID",
-          "price": 6.5,
-          "projected": 3.9,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 423,
-          "name": "Shaw",
-          "team": "MUN",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 2.7,
-          "deadlineMinutes": 68.0
-        },
-        {
-          "id": 465,
-          "name": "Osula",
-          "team": "NEW",
+          "id": 316,
+          "name": "Emersonn",
+          "team": "IPS",
           "position": "FWD",
+          "price": 5.5,
+          "projected": 3.2,
+          "deadlineMinutes": 36.0
+        },
+        {
+          "id": 12,
+          "name": "Saka",
+          "team": "ARS",
+          "position": "MID",
+          "price": 9.5,
+          "projected": 4.4,
+          "deadlineMinutes": 65.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "team": "ARS",
+          "position": "GK",
           "price": 6.0,
-          "projected": 3.7,
-          "deadlineMinutes": 46.0
+          "projected": 3.8,
+          "deadlineMinutes": 83.0
         },
         {
           "id": 332,
@@ -146,49 +137,58 @@
           "team": "LEE",
           "position": "DEF",
           "price": 4.5,
-          "projected": 2.9,
-          "deadlineMinutes": 73.0
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
         },
         {
-          "id": 102,
-          "name": "Yarmoliuk",
-          "team": "BRE",
-          "position": "MID",
-          "price": 5.0,
-          "projected": 2.8,
-          "deadlineMinutes": 62.0
+          "id": 115,
+          "name": "De Cuyper",
+          "team": "BHA",
+          "position": "DEF",
+          "price": 4.6,
+          "projected": 4.3,
+          "deadlineMinutes": 63.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
         }
       ],
       "xiIds": [
         1,
-        4,
+        586,
         388,
-        113,
+        115,
+        279,
         399,
-        124,
         480,
-        236,
-        411,
-        55,
-        465
+        565,
+        12,
+        368,
+        411
       ],
       "benchIds": [
-        109,
-        332,
-        102,
-        423
+        171,
+        55,
+        316,
+        332
       ],
       "captainId": 411,
       "captain": "Haaland",
-      "viceId": 4,
-      "vice": "Gabriel",
+      "viceId": 399,
+      "vice": "Cherki",
       "fieldability": {
         "hardUnavailableXi": [],
-        "expectedSquadAppearances": 13.21,
-        "expectedXiAppearances": 9.62,
+        "expectedSquadAppearances": 12.39,
+        "expectedXiAppearances": 9.37,
         "squadWithFixture": 15,
         "xiWithFixture": 11,
-        "meanXiPlayProbability": 0.8745
+        "meanXiPlayProbability": 0.8518
       },
       "premiumAccessAudit": [
         {
@@ -196,8 +196,8 @@
           "name": "Haaland",
           "owned": true,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": -0.26,
-          "bestLegalPackageValue": 253.7,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 257.1,
           "reviewRequired": false
         },
         {
@@ -205,58 +205,58 @@
           "name": "B.Fernandes",
           "owned": false,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": 0.59,
-          "bestLegalPackageValue": 254.5,
-          "reviewRequired": true
+          "robustAccessAdvantage": -0.265,
+          "bestLegalPackageValue": 256.6,
+          "reviewRequired": false
         }
       ],
       "highRegimeChangePlayers": [
         {
-          "id": 329,
-          "name": "Rodon",
-          "probability": 0.717,
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 548,
-          "name": "Rigg",
-          "probability": 0.715,
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 300,
-          "name": "Walton",
-          "probability": 0.712,
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 172,
-          "name": "Wilson",
-          "probability": 0.712,
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 320,
-          "name": "Akpom",
-          "probability": 0.712,
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 286,
-          "name": "Belloumi",
-          "probability": 0.712,
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 541,
-          "name": "Meunier",
-          "probability": 0.712,
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 194,
-          "name": "Thomas-Asante",
-          "probability": 0.712,
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
           "owned": false
         }
       ]
@@ -270,11 +270,11 @@
       "chips": true,
       "transferHurdle": 2.2,
       "description": "Same projections with downside-aware chip gates and modest upside utility.",
-      "chip": "Bench Boost",
-      "bank": 0.0,
+      "chip": "Hold",
+      "bank": 0.4,
       "freeTransfersNext": 1,
       "transfers": [],
-      "projectedPoints": 55.2,
+      "projectedPoints": 55.8,
       "squad": [
         {
           "id": 411,
@@ -282,17 +282,44 @@
           "team": "MCI",
           "position": "FWD",
           "price": 15.5,
-          "projected": 6.2,
-          "deadlineMinutes": 64.0
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
         },
         {
-          "id": 4,
-          "name": "Gabriel",
-          "team": "ARS",
+          "id": 368,
+          "name": "Szoboszlai",
+          "team": "LIV",
+          "position": "MID",
+          "price": 7.0,
+          "projected": 4.3,
+          "deadlineMinutes": 78.0
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
           "position": "DEF",
-          "price": 8.0,
-          "projected": 5.1,
-          "deadlineMinutes": 75.0
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
         },
         {
           "id": 388,
@@ -300,16 +327,7 @@
           "team": "MCI",
           "position": "DEF",
           "price": 6.0,
-          "projected": 4.6,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 1,
-          "name": "Raya",
-          "team": "ARS",
-          "position": "GK",
-          "price": 6.0,
-          "projected": 4.9,
+          "projected": 4.4,
           "deadlineMinutes": 81.0
         },
         {
@@ -317,81 +335,54 @@
           "name": "Cherki",
           "team": "MCI",
           "position": "MID",
-          "price": 7.5,
-          "projected": 4.4,
-          "deadlineMinutes": 55.0
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
         },
         {
-          "id": 55,
-          "name": "Watkins",
-          "team": "AVL",
-          "position": "FWD",
-          "price": 8.0,
-          "projected": 4.1,
-          "deadlineMinutes": 63.0
-        },
-        {
-          "id": 124,
-          "name": "Groß",
-          "team": "BHA",
-          "position": "MID",
-          "price": 5.5,
-          "projected": 4.3,
-          "deadlineMinutes": 71.0
-        },
-        {
-          "id": 109,
-          "name": "Verbruggen",
-          "team": "BHA",
-          "position": "GK",
-          "price": 4.5,
-          "projected": 3.8,
-          "deadlineMinutes": 81.0
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
         },
         {
           "id": 480,
           "name": "Gibbs-White",
           "team": "NFO",
           "position": "MID",
-          "price": 8.0,
-          "projected": 4.2,
-          "deadlineMinutes": 58.0
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
         },
         {
-          "id": 113,
-          "name": "F.Kadıoğlu",
-          "team": "BHA",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 3.6,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 236,
-          "name": "Dewsbury-Hall",
-          "team": "EVE",
-          "position": "MID",
-          "price": 6.5,
-          "projected": 3.9,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 423,
-          "name": "Shaw",
-          "team": "MUN",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 2.7,
-          "deadlineMinutes": 68.0
-        },
-        {
-          "id": 465,
-          "name": "Osula",
-          "team": "NEW",
+          "id": 316,
+          "name": "Emersonn",
+          "team": "IPS",
           "position": "FWD",
+          "price": 5.5,
+          "projected": 3.2,
+          "deadlineMinutes": 36.0
+        },
+        {
+          "id": 12,
+          "name": "Saka",
+          "team": "ARS",
+          "position": "MID",
+          "price": 9.5,
+          "projected": 4.4,
+          "deadlineMinutes": 65.0
+        },
+        {
+          "id": 1,
+          "name": "Raya",
+          "team": "ARS",
+          "position": "GK",
           "price": 6.0,
-          "projected": 3.7,
-          "deadlineMinutes": 46.0
+          "projected": 3.8,
+          "deadlineMinutes": 83.0
         },
         {
           "id": 332,
@@ -399,49 +390,58 @@
           "team": "LEE",
           "position": "DEF",
           "price": 4.5,
-          "projected": 2.9,
-          "deadlineMinutes": 73.0
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
         },
         {
-          "id": 102,
-          "name": "Yarmoliuk",
-          "team": "BRE",
-          "position": "MID",
-          "price": 5.0,
-          "projected": 2.8,
-          "deadlineMinutes": 62.0
+          "id": 115,
+          "name": "De Cuyper",
+          "team": "BHA",
+          "position": "DEF",
+          "price": 4.6,
+          "projected": 4.3,
+          "deadlineMinutes": 63.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
         }
       ],
       "xiIds": [
         1,
-        4,
+        586,
         388,
-        113,
+        115,
+        279,
         399,
-        124,
         480,
-        236,
-        411,
-        55,
-        465
+        565,
+        12,
+        368,
+        411
       ],
       "benchIds": [
-        109,
-        332,
-        102,
-        423
+        171,
+        55,
+        316,
+        332
       ],
       "captainId": 411,
       "captain": "Haaland",
-      "viceId": 4,
-      "vice": "Gabriel",
+      "viceId": 399,
+      "vice": "Cherki",
       "fieldability": {
         "hardUnavailableXi": [],
-        "expectedSquadAppearances": 13.21,
-        "expectedXiAppearances": 9.62,
+        "expectedSquadAppearances": 12.39,
+        "expectedXiAppearances": 9.37,
         "squadWithFixture": 15,
         "xiWithFixture": 11,
-        "meanXiPlayProbability": 0.8745
+        "meanXiPlayProbability": 0.8518
       },
       "premiumAccessAudit": [
         {
@@ -449,8 +449,8 @@
           "name": "Haaland",
           "owned": true,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": -0.26,
-          "bestLegalPackageValue": 256.88,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 260.484,
           "reviewRequired": false
         },
         {
@@ -458,58 +458,58 @@
           "name": "B.Fernandes",
           "owned": false,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": 0.506,
-          "bestLegalPackageValue": 257.596,
-          "reviewRequired": true
+          "robustAccessAdvantage": -0.217,
+          "bestLegalPackageValue": 260.032,
+          "reviewRequired": false
         }
       ],
       "highRegimeChangePlayers": [
         {
-          "id": 329,
-          "name": "Rodon",
-          "probability": 0.717,
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 548,
-          "name": "Rigg",
-          "probability": 0.715,
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 300,
-          "name": "Walton",
-          "probability": 0.712,
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 172,
-          "name": "Wilson",
-          "probability": 0.712,
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 320,
-          "name": "Akpom",
-          "probability": 0.712,
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 286,
-          "name": "Belloumi",
-          "probability": 0.712,
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 541,
-          "name": "Meunier",
-          "probability": 0.712,
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 194,
-          "name": "Thomas-Asante",
-          "probability": 0.712,
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
           "owned": false
         }
       ]
@@ -527,7 +527,7 @@
       "bank": 0.0,
       "freeTransfersNext": 1,
       "transfers": [],
-      "projectedPoints": 55.0,
+      "projectedPoints": 51.2,
       "squad": [
         {
           "id": 411,
@@ -535,17 +535,35 @@
           "team": "MCI",
           "position": "FWD",
           "price": 15.5,
-          "projected": 6.2,
-          "deadlineMinutes": 64.0
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
         },
         {
-          "id": 4,
-          "name": "Gabriel",
-          "team": "ARS",
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
           "position": "DEF",
-          "price": 8.0,
-          "projected": 5.1,
-          "deadlineMinutes": 75.0
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
         },
         {
           "id": 388,
@@ -553,7 +571,43 @@
           "team": "MCI",
           "position": "DEF",
           "price": 6.0,
-          "projected": 4.6,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "team": "ARS",
+          "position": "DEF",
+          "price": 8.0,
+          "projected": 4.1,
           "deadlineMinutes": 75.0
         },
         {
@@ -562,80 +616,8 @@
           "team": "ARS",
           "position": "GK",
           "price": 6.0,
-          "projected": 4.9,
-          "deadlineMinutes": 81.0
-        },
-        {
-          "id": 399,
-          "name": "Cherki",
-          "team": "MCI",
-          "position": "MID",
-          "price": 7.5,
-          "projected": 4.4,
-          "deadlineMinutes": 55.0
-        },
-        {
-          "id": 55,
-          "name": "Watkins",
-          "team": "AVL",
-          "position": "FWD",
-          "price": 8.0,
-          "projected": 4.1,
-          "deadlineMinutes": 63.0
-        },
-        {
-          "id": 124,
-          "name": "Groß",
-          "team": "BHA",
-          "position": "MID",
-          "price": 5.5,
-          "projected": 4.3,
-          "deadlineMinutes": 71.0
-        },
-        {
-          "id": 109,
-          "name": "Verbruggen",
-          "team": "BHA",
-          "position": "GK",
-          "price": 4.5,
           "projected": 3.8,
-          "deadlineMinutes": 81.0
-        },
-        {
-          "id": 480,
-          "name": "Gibbs-White",
-          "team": "NFO",
-          "position": "MID",
-          "price": 8.0,
-          "projected": 4.2,
-          "deadlineMinutes": 58.0
-        },
-        {
-          "id": 113,
-          "name": "F.Kadıoğlu",
-          "team": "BHA",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 3.6,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 236,
-          "name": "Dewsbury-Hall",
-          "team": "EVE",
-          "position": "MID",
-          "price": 6.5,
-          "projected": 3.9,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 423,
-          "name": "Shaw",
-          "team": "MUN",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 2.7,
-          "deadlineMinutes": 68.0
+          "deadlineMinutes": 83.0
         },
         {
           "id": 346,
@@ -643,8 +625,17 @@
           "team": "LEE",
           "position": "FWD",
           "price": 6.0,
-          "projected": 3.5,
-          "deadlineMinutes": 76.0
+          "projected": 2.9,
+          "deadlineMinutes": 73.0
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "team": "BHA",
+          "position": "MID",
+          "price": 5.5,
+          "projected": 3.1,
+          "deadlineMinutes": 74.0
         },
         {
           "id": 332,
@@ -652,49 +643,58 @@
           "team": "LEE",
           "position": "DEF",
           "price": 4.5,
-          "projected": 2.9,
-          "deadlineMinutes": 73.0
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
         },
         {
-          "id": 102,
-          "name": "Yarmoliuk",
-          "team": "BRE",
+          "id": 13,
+          "name": "Rice",
+          "team": "ARS",
           "position": "MID",
-          "price": 5.0,
-          "projected": 2.8,
-          "deadlineMinutes": 62.0
+          "price": 7.5,
+          "projected": 2.9,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
         }
       ],
       "xiIds": [
         1,
         4,
         388,
-        113,
+        586,
         399,
         124,
         480,
-        236,
+        13,
         411,
         55,
         346
       ],
       "benchIds": [
-        109,
+        171,
         332,
-        423,
-        102
+        565,
+        279
       ],
       "captainId": 411,
       "captain": "Haaland",
-      "viceId": 4,
-      "vice": "Gabriel",
+      "viceId": 399,
+      "vice": "Cherki",
       "fieldability": {
         "hardUnavailableXi": [],
-        "expectedSquadAppearances": 13.31,
-        "expectedXiAppearances": 9.72,
+        "expectedSquadAppearances": 12.7,
+        "expectedXiAppearances": 9.78,
         "squadWithFixture": 15,
         "xiWithFixture": 11,
-        "meanXiPlayProbability": 0.8836
+        "meanXiPlayProbability": 0.8891
       },
       "premiumAccessAudit": [
         {
@@ -702,8 +702,8 @@
           "name": "Haaland",
           "owned": true,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": -0.26,
-          "bestLegalPackageValue": 252.27,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 239.11,
           "reviewRequired": false
         },
         {
@@ -711,58 +711,58 @@
           "name": "B.Fernandes",
           "owned": false,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": 0.72,
-          "bestLegalPackageValue": 253.2,
+          "robustAccessAdvantage": 5.035,
+          "bestLegalPackageValue": 244.31,
           "reviewRequired": true
         }
       ],
       "highRegimeChangePlayers": [
         {
-          "id": 329,
-          "name": "Rodon",
-          "probability": 0.717,
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 548,
-          "name": "Rigg",
-          "probability": 0.715,
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 300,
-          "name": "Walton",
-          "probability": 0.712,
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 172,
-          "name": "Wilson",
-          "probability": 0.712,
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 320,
-          "name": "Akpom",
-          "probability": 0.712,
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 286,
-          "name": "Belloumi",
-          "probability": 0.712,
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 541,
-          "name": "Meunier",
-          "probability": 0.712,
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 194,
-          "name": "Thomas-Asante",
-          "probability": 0.712,
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
           "owned": false
         }
       ]
@@ -780,7 +780,7 @@
       "bank": 0.0,
       "freeTransfersNext": 1,
       "transfers": [],
-      "projectedPoints": 55.0,
+      "projectedPoints": 51.2,
       "squad": [
         {
           "id": 411,
@@ -788,17 +788,35 @@
           "team": "MCI",
           "position": "FWD",
           "price": 15.5,
-          "projected": 6.2,
-          "deadlineMinutes": 64.0
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
         },
         {
-          "id": 4,
-          "name": "Gabriel",
-          "team": "ARS",
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
           "position": "DEF",
-          "price": 8.0,
-          "projected": 5.1,
-          "deadlineMinutes": 75.0
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
         },
         {
           "id": 388,
@@ -806,7 +824,43 @@
           "team": "MCI",
           "position": "DEF",
           "price": 6.0,
-          "projected": 4.6,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "team": "ARS",
+          "position": "DEF",
+          "price": 8.0,
+          "projected": 4.1,
           "deadlineMinutes": 75.0
         },
         {
@@ -815,80 +869,8 @@
           "team": "ARS",
           "position": "GK",
           "price": 6.0,
-          "projected": 4.9,
-          "deadlineMinutes": 81.0
-        },
-        {
-          "id": 399,
-          "name": "Cherki",
-          "team": "MCI",
-          "position": "MID",
-          "price": 7.5,
-          "projected": 4.4,
-          "deadlineMinutes": 55.0
-        },
-        {
-          "id": 55,
-          "name": "Watkins",
-          "team": "AVL",
-          "position": "FWD",
-          "price": 8.0,
-          "projected": 4.1,
-          "deadlineMinutes": 63.0
-        },
-        {
-          "id": 124,
-          "name": "Groß",
-          "team": "BHA",
-          "position": "MID",
-          "price": 5.5,
-          "projected": 4.3,
-          "deadlineMinutes": 71.0
-        },
-        {
-          "id": 109,
-          "name": "Verbruggen",
-          "team": "BHA",
-          "position": "GK",
-          "price": 4.5,
           "projected": 3.8,
-          "deadlineMinutes": 81.0
-        },
-        {
-          "id": 480,
-          "name": "Gibbs-White",
-          "team": "NFO",
-          "position": "MID",
-          "price": 8.0,
-          "projected": 4.2,
-          "deadlineMinutes": 58.0
-        },
-        {
-          "id": 113,
-          "name": "F.Kadıoğlu",
-          "team": "BHA",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 3.6,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 236,
-          "name": "Dewsbury-Hall",
-          "team": "EVE",
-          "position": "MID",
-          "price": 6.5,
-          "projected": 3.9,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 423,
-          "name": "Shaw",
-          "team": "MUN",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 2.7,
-          "deadlineMinutes": 68.0
+          "deadlineMinutes": 83.0
         },
         {
           "id": 346,
@@ -896,8 +878,17 @@
           "team": "LEE",
           "position": "FWD",
           "price": 6.0,
-          "projected": 3.5,
-          "deadlineMinutes": 76.0
+          "projected": 2.9,
+          "deadlineMinutes": 73.0
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "team": "BHA",
+          "position": "MID",
+          "price": 5.5,
+          "projected": 3.1,
+          "deadlineMinutes": 74.0
         },
         {
           "id": 332,
@@ -905,49 +896,58 @@
           "team": "LEE",
           "position": "DEF",
           "price": 4.5,
-          "projected": 2.9,
-          "deadlineMinutes": 73.0
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
         },
         {
-          "id": 102,
-          "name": "Yarmoliuk",
-          "team": "BRE",
+          "id": 13,
+          "name": "Rice",
+          "team": "ARS",
           "position": "MID",
-          "price": 5.0,
-          "projected": 2.8,
-          "deadlineMinutes": 62.0
+          "price": 7.5,
+          "projected": 2.9,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
         }
       ],
       "xiIds": [
         1,
         4,
         388,
-        113,
+        586,
         399,
         124,
         480,
-        236,
+        13,
         411,
         55,
         346
       ],
       "benchIds": [
-        109,
+        171,
         332,
-        423,
-        102
+        565,
+        279
       ],
       "captainId": 411,
       "captain": "Haaland",
-      "viceId": 4,
-      "vice": "Gabriel",
+      "viceId": 399,
+      "vice": "Cherki",
       "fieldability": {
         "hardUnavailableXi": [],
-        "expectedSquadAppearances": 13.31,
-        "expectedXiAppearances": 9.72,
+        "expectedSquadAppearances": 12.7,
+        "expectedXiAppearances": 9.78,
         "squadWithFixture": 15,
         "xiWithFixture": 11,
-        "meanXiPlayProbability": 0.8836
+        "meanXiPlayProbability": 0.8891
       },
       "premiumAccessAudit": [
         {
@@ -955,8 +955,8 @@
           "name": "Haaland",
           "owned": true,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": -0.26,
-          "bestLegalPackageValue": 252.27,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 239.11,
           "reviewRequired": false
         },
         {
@@ -964,58 +964,58 @@
           "name": "B.Fernandes",
           "owned": false,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": 0.72,
-          "bestLegalPackageValue": 253.2,
+          "robustAccessAdvantage": 5.035,
+          "bestLegalPackageValue": 244.31,
           "reviewRequired": true
         }
       ],
       "highRegimeChangePlayers": [
         {
-          "id": 329,
-          "name": "Rodon",
-          "probability": 0.717,
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 548,
-          "name": "Rigg",
-          "probability": 0.715,
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 300,
-          "name": "Walton",
-          "probability": 0.712,
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 172,
-          "name": "Wilson",
-          "probability": 0.712,
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 320,
-          "name": "Akpom",
-          "probability": 0.712,
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 286,
-          "name": "Belloumi",
-          "probability": 0.712,
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 541,
-          "name": "Meunier",
-          "probability": 0.712,
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 194,
-          "name": "Thomas-Asante",
-          "probability": 0.712,
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
           "owned": false
         }
       ]
@@ -1030,18 +1030,18 @@
       "transferHurdle": 2.2,
       "fieldability": {
         "hardUnavailableXi": [],
-        "expectedSquadAppearances": 13.31,
-        "expectedXiAppearances": 9.72,
+        "expectedSquadAppearances": 12.7,
+        "expectedXiAppearances": 9.78,
         "squadWithFixture": 15,
         "xiWithFixture": 11,
-        "meanXiPlayProbability": 0.8836
+        "meanXiPlayProbability": 0.8891
       },
       "description": "Fieldability-constrained squad, XI and captain with conservative emergency repairs and the leak-free route captain.",
       "chip": "Bench Boost",
       "bank": 0.0,
       "freeTransfersNext": 1,
       "transfers": [],
-      "projectedPoints": 55.0,
+      "projectedPoints": 51.2,
       "squad": [
         {
           "id": 411,
@@ -1049,17 +1049,35 @@
           "team": "MCI",
           "position": "FWD",
           "price": 15.5,
-          "projected": 6.2,
-          "deadlineMinutes": 64.0
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
         },
         {
-          "id": 4,
-          "name": "Gabriel",
-          "team": "ARS",
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
           "position": "DEF",
-          "price": 8.0,
-          "projected": 5.1,
-          "deadlineMinutes": 75.0
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
         },
         {
           "id": 388,
@@ -1067,7 +1085,43 @@
           "team": "MCI",
           "position": "DEF",
           "price": 6.0,
-          "projected": 4.6,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "team": "ARS",
+          "position": "DEF",
+          "price": 8.0,
+          "projected": 4.1,
           "deadlineMinutes": 75.0
         },
         {
@@ -1076,80 +1130,8 @@
           "team": "ARS",
           "position": "GK",
           "price": 6.0,
-          "projected": 4.9,
-          "deadlineMinutes": 81.0
-        },
-        {
-          "id": 399,
-          "name": "Cherki",
-          "team": "MCI",
-          "position": "MID",
-          "price": 7.5,
-          "projected": 4.4,
-          "deadlineMinutes": 55.0
-        },
-        {
-          "id": 55,
-          "name": "Watkins",
-          "team": "AVL",
-          "position": "FWD",
-          "price": 8.0,
-          "projected": 4.1,
-          "deadlineMinutes": 63.0
-        },
-        {
-          "id": 124,
-          "name": "Groß",
-          "team": "BHA",
-          "position": "MID",
-          "price": 5.5,
-          "projected": 4.3,
-          "deadlineMinutes": 71.0
-        },
-        {
-          "id": 109,
-          "name": "Verbruggen",
-          "team": "BHA",
-          "position": "GK",
-          "price": 4.5,
           "projected": 3.8,
-          "deadlineMinutes": 81.0
-        },
-        {
-          "id": 480,
-          "name": "Gibbs-White",
-          "team": "NFO",
-          "position": "MID",
-          "price": 8.0,
-          "projected": 4.2,
-          "deadlineMinutes": 58.0
-        },
-        {
-          "id": 113,
-          "name": "F.Kadıoğlu",
-          "team": "BHA",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 3.6,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 236,
-          "name": "Dewsbury-Hall",
-          "team": "EVE",
-          "position": "MID",
-          "price": 6.5,
-          "projected": 3.9,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 423,
-          "name": "Shaw",
-          "team": "MUN",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 2.7,
-          "deadlineMinutes": 68.0
+          "deadlineMinutes": 83.0
         },
         {
           "id": 346,
@@ -1157,8 +1139,17 @@
           "team": "LEE",
           "position": "FWD",
           "price": 6.0,
-          "projected": 3.5,
-          "deadlineMinutes": 76.0
+          "projected": 2.9,
+          "deadlineMinutes": 73.0
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "team": "BHA",
+          "position": "MID",
+          "price": 5.5,
+          "projected": 3.1,
+          "deadlineMinutes": 74.0
         },
         {
           "id": 332,
@@ -1166,50 +1157,59 @@
           "team": "LEE",
           "position": "DEF",
           "price": 4.5,
-          "projected": 2.9,
-          "deadlineMinutes": 73.0
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
         },
         {
-          "id": 102,
-          "name": "Yarmoliuk",
-          "team": "BRE",
+          "id": 13,
+          "name": "Rice",
+          "team": "ARS",
           "position": "MID",
-          "price": 5.0,
-          "projected": 2.8,
-          "deadlineMinutes": 62.0
+          "price": 7.5,
+          "projected": 2.9,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
         }
       ],
       "xiIds": [
         1,
         4,
         388,
-        113,
+        586,
         399,
         124,
         480,
-        236,
+        13,
         411,
         55,
         346
       ],
       "benchIds": [
-        109,
-        423,
+        171,
         332,
-        102
+        565,
+        279
       ],
       "captainId": 411,
       "captain": "Haaland",
-      "viceId": 4,
-      "vice": "Gabriel",
+      "viceId": 399,
+      "vice": "Cherki",
       "premiumAccessAudit": [
         {
           "id": 411,
           "name": "Haaland",
           "owned": true,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": -0.26,
-          "bestLegalPackageValue": 252.27,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 239.11,
           "reviewRequired": false
         },
         {
@@ -1217,58 +1217,58 @@
           "name": "B.Fernandes",
           "owned": false,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": 0.72,
-          "bestLegalPackageValue": 253.2,
+          "robustAccessAdvantage": 5.035,
+          "bestLegalPackageValue": 244.31,
           "reviewRequired": true
         }
       ],
       "highRegimeChangePlayers": [
         {
-          "id": 329,
-          "name": "Rodon",
-          "probability": 0.717,
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 548,
-          "name": "Rigg",
-          "probability": 0.715,
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 300,
-          "name": "Walton",
-          "probability": 0.712,
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 172,
-          "name": "Wilson",
-          "probability": 0.712,
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 320,
-          "name": "Akpom",
-          "probability": 0.712,
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 286,
-          "name": "Belloumi",
-          "probability": 0.712,
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 541,
-          "name": "Meunier",
-          "probability": 0.712,
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 194,
-          "name": "Thomas-Asante",
-          "probability": 0.712,
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
           "owned": false
         }
       ]
@@ -1286,7 +1286,7 @@
       "bank": 0.0,
       "freeTransfersNext": 1,
       "transfers": [],
-      "projectedPoints": 55.0,
+      "projectedPoints": 51.2,
       "squad": [
         {
           "id": 411,
@@ -1294,17 +1294,35 @@
           "team": "MCI",
           "position": "FWD",
           "price": 15.5,
-          "projected": 6.2,
-          "deadlineMinutes": 64.0
+          "projected": 5.7,
+          "deadlineMinutes": 79.0
         },
         {
-          "id": 4,
-          "name": "Gabriel",
-          "team": "ARS",
+          "id": 55,
+          "name": "Watkins",
+          "team": "AVL",
+          "position": "FWD",
+          "price": 7.9,
+          "projected": 4.0,
+          "deadlineMinutes": 67.0
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "team": "HUL",
           "position": "DEF",
-          "price": 8.0,
-          "projected": 5.1,
-          "deadlineMinutes": 75.0
+          "price": 4.0,
+          "projected": 4.5,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 565,
+          "name": "M.Sangaré",
+          "team": "BRE",
+          "position": "MID",
+          "price": 5.6,
+          "projected": 4.4,
+          "deadlineMinutes": 50.0
         },
         {
           "id": 388,
@@ -1312,7 +1330,43 @@
           "team": "MCI",
           "position": "DEF",
           "price": 6.0,
-          "projected": 4.6,
+          "projected": 4.4,
+          "deadlineMinutes": 81.0
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "team": "MCI",
+          "position": "MID",
+          "price": 7.6,
+          "projected": 5.4,
+          "deadlineMinutes": 66.0
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "team": "HUL",
+          "position": "DEF",
+          "price": 4.0,
+          "projected": 4.2,
+          "deadlineMinutes": 52.0
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "team": "NFO",
+          "position": "MID",
+          "price": 7.9,
+          "projected": 4.7,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "team": "ARS",
+          "position": "DEF",
+          "price": 8.0,
+          "projected": 4.1,
           "deadlineMinutes": 75.0
         },
         {
@@ -1321,80 +1375,8 @@
           "team": "ARS",
           "position": "GK",
           "price": 6.0,
-          "projected": 4.9,
-          "deadlineMinutes": 81.0
-        },
-        {
-          "id": 399,
-          "name": "Cherki",
-          "team": "MCI",
-          "position": "MID",
-          "price": 7.5,
-          "projected": 4.4,
-          "deadlineMinutes": 55.0
-        },
-        {
-          "id": 55,
-          "name": "Watkins",
-          "team": "AVL",
-          "position": "FWD",
-          "price": 8.0,
-          "projected": 4.1,
-          "deadlineMinutes": 63.0
-        },
-        {
-          "id": 124,
-          "name": "Groß",
-          "team": "BHA",
-          "position": "MID",
-          "price": 5.5,
-          "projected": 4.3,
-          "deadlineMinutes": 71.0
-        },
-        {
-          "id": 109,
-          "name": "Verbruggen",
-          "team": "BHA",
-          "position": "GK",
-          "price": 4.5,
           "projected": 3.8,
-          "deadlineMinutes": 81.0
-        },
-        {
-          "id": 480,
-          "name": "Gibbs-White",
-          "team": "NFO",
-          "position": "MID",
-          "price": 8.0,
-          "projected": 4.2,
-          "deadlineMinutes": 58.0
-        },
-        {
-          "id": 113,
-          "name": "F.Kadıoğlu",
-          "team": "BHA",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 3.6,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 236,
-          "name": "Dewsbury-Hall",
-          "team": "EVE",
-          "position": "MID",
-          "price": 6.5,
-          "projected": 3.9,
-          "deadlineMinutes": 75.0
-        },
-        {
-          "id": 423,
-          "name": "Shaw",
-          "team": "MUN",
-          "position": "DEF",
-          "price": 4.5,
-          "projected": 2.7,
-          "deadlineMinutes": 68.0
+          "deadlineMinutes": 83.0
         },
         {
           "id": 346,
@@ -1402,8 +1384,17 @@
           "team": "LEE",
           "position": "FWD",
           "price": 6.0,
-          "projected": 3.5,
-          "deadlineMinutes": 76.0
+          "projected": 2.9,
+          "deadlineMinutes": 73.0
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "team": "BHA",
+          "position": "MID",
+          "price": 5.5,
+          "projected": 3.1,
+          "deadlineMinutes": 74.0
         },
         {
           "id": 332,
@@ -1411,49 +1402,58 @@
           "team": "LEE",
           "position": "DEF",
           "price": 4.5,
-          "projected": 2.9,
-          "deadlineMinutes": 73.0
+          "projected": 3.2,
+          "deadlineMinutes": 72.0
         },
         {
-          "id": 102,
-          "name": "Yarmoliuk",
-          "team": "BRE",
+          "id": 13,
+          "name": "Rice",
+          "team": "ARS",
           "position": "MID",
-          "price": 5.0,
-          "projected": 2.8,
-          "deadlineMinutes": 62.0
+          "price": 7.5,
+          "projected": 2.9,
+          "deadlineMinutes": 74.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "team": "COV",
+          "position": "GK",
+          "price": 4.0,
+          "projected": 1.8,
+          "deadlineMinutes": 54.0
         }
       ],
       "xiIds": [
         1,
         4,
         388,
-        113,
+        586,
         399,
         124,
         480,
-        236,
+        13,
         411,
         55,
         346
       ],
       "benchIds": [
-        109,
+        171,
         332,
-        423,
-        102
+        565,
+        279
       ],
       "captainId": 411,
       "captain": "Haaland",
-      "viceId": 4,
-      "vice": "Gabriel",
+      "viceId": 399,
+      "vice": "Cherki",
       "fieldability": {
         "hardUnavailableXi": [],
-        "expectedSquadAppearances": 13.31,
-        "expectedXiAppearances": 9.72,
+        "expectedSquadAppearances": 12.7,
+        "expectedXiAppearances": 9.78,
         "squadWithFixture": 15,
         "xiWithFixture": 11,
-        "meanXiPlayProbability": 0.8836
+        "meanXiPlayProbability": 0.8891
       },
       "premiumAccessAudit": [
         {
@@ -1461,8 +1461,8 @@
           "name": "Haaland",
           "owned": true,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": -0.26,
-          "bestLegalPackageValue": 252.27,
+          "robustAccessAdvantage": -0.23,
+          "bestLegalPackageValue": 239.11,
           "reviewRequired": false
         },
         {
@@ -1470,66 +1470,66 @@
           "name": "B.Fernandes",
           "owned": false,
           "captaincyOptionValue": 0.0,
-          "robustAccessAdvantage": 0.72,
-          "bestLegalPackageValue": 253.2,
+          "robustAccessAdvantage": 5.035,
+          "bestLegalPackageValue": 244.31,
           "reviewRequired": true
         }
       ],
       "highRegimeChangePlayers": [
         {
-          "id": 329,
-          "name": "Rodon",
-          "probability": 0.717,
+          "id": 562,
+          "name": "Maeda",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 548,
-          "name": "Rigg",
-          "probability": 0.715,
+          "id": 305,
+          "name": "Davis",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 300,
-          "name": "Walton",
-          "probability": 0.712,
+          "id": 306,
+          "name": "Greaves",
+          "probability": 0.778,
           "owned": false
         },
         {
-          "id": 172,
-          "name": "Wilson",
-          "probability": 0.712,
+          "id": 588,
+          "name": "Khalaili",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 320,
-          "name": "Akpom",
-          "probability": 0.712,
+          "id": 173,
+          "name": "Thomas",
+          "probability": 0.777,
           "owned": false
         },
         {
-          "id": 286,
-          "name": "Belloumi",
-          "probability": 0.712,
+          "id": 593,
+          "name": "Dedić",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 541,
-          "name": "Meunier",
-          "probability": 0.712,
+          "id": 566,
+          "name": "Silva",
+          "probability": 0.775,
           "owned": false
         },
         {
-          "id": 194,
-          "name": "Thomas-Asante",
-          "probability": 0.712,
+          "id": 315,
+          "name": "Fatawu",
+          "probability": 0.775,
           "owned": false
         }
       ]
     }
   ],
   "protocol": "All managers receive the same immutable deadline snapshot. Only locked decisions update recursive state; no post-deadline edit is permitted.",
-  "decisionHash": "76a91f5d54b48e08cf2fbd1c96c1c7af4f5784f44d79e8cc1b7d9b130475393e",
-  "decisionPath": "analysis/shadow/2026-27/gw-01/1be44aa9a995-76a91f5d54b4.json",
+  "decisionHash": "4fa223e4e2c671dbcf9e8bb03a3ef349eac0a202c6374114a9db6e13a5c676f7",
+  "decisionPath": "analysis/shadow/2026-27/gw-03/2f508ec9ecbe-4fa223e4e2c6.json",
   "completedGameweeks": 0,
   "cumulative": {
     "structural-control": 0,

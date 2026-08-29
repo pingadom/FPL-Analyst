@@ -1,0 +1,295 @@
+{
+  "generatedAt": "2026-08-29T13:46:51+01:00",
+  "season": "2026/27",
+  "gameweek": 2,
+  "sample": {
+    "source": "LiveFPL Elite: first page of the all-time leaderboard",
+    "sourceUrl": "https://plan.livefpl.net/elite",
+    "officialPicks": "Official FPL public entry/event picks endpoint",
+    "requested": 50,
+    "available": 50,
+    "errors": [],
+    "selectionCaveat": "Current squads of historically selected managers; diagnostic, not a causal training label."
+  },
+  "structure": {
+    "squadSpend": {
+      "mean": 100.17,
+      "median": 100.2,
+      "p10": 100.09,
+      "p90": 100.3
+    },
+    "xiSpend": {
+      "mean": 80.85,
+      "median": 81.2,
+      "p10": 78.79,
+      "p90": 82.2
+    },
+    "benchSpend": {
+      "mean": 19.31,
+      "median": 19.0,
+      "p10": 18.0,
+      "p90": 21.05
+    },
+    "benchPremium": {
+      "mean": 2.76,
+      "median": 2.5,
+      "p10": 1.5,
+      "p90": 4.5
+    },
+    "nearFloorBenchPlayers": {
+      "mean": 2.3,
+      "median": 2.0,
+      "p10": 1.0,
+      "p90": 4.0
+    },
+    "premiumPlayers": {
+      "mean": 1.44,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 2.0
+    },
+    "bank": {
+      "mean": 0.06,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.0
+    },
+    "teamValue": {
+      "mean": 100.2,
+      "median": 100.2,
+      "p10": 100.1,
+      "p90": 100.3
+    },
+    "formations": [
+      {
+        "formation": "3-4-3",
+        "managers": 30,
+        "share": 60.0
+      },
+      {
+        "formation": "3-5-2",
+        "managers": 15,
+        "share": 30.0
+      },
+      {
+        "formation": "4-3-3",
+        "managers": 4,
+        "share": 8.0
+      },
+      {
+        "formation": "4-4-2",
+        "managers": 1,
+        "share": 2.0
+      }
+    ],
+    "meanPositionSquadSpend": {
+      "1": 9.49,
+      "2": 26.03,
+      "3": 39.56,
+      "4": 25.09
+    },
+    "meanPositionXiSpend": {
+      "1": 5.01,
+      "2": 17.33,
+      "3": 35.28,
+      "4": 23.23
+    }
+  },
+  "behaviour": {
+    "meanTransfers": 0.02,
+    "managersTakingHits": 0,
+    "meanHitCost": 0,
+    "chips": [
+      {
+        "chip": "No Chip",
+        "managers": 46,
+        "share": 92.0
+      },
+      {
+        "chip": "bboost",
+        "managers": 4,
+        "share": 8.0
+      }
+    ]
+  },
+  "ownership": [
+    {
+      "id": 165,
+      "name": "João Pedro",
+      "managers": 50,
+      "share": 100.0,
+      "price": 7.6,
+      "position": 4
+    },
+    {
+      "id": 426,
+      "name": "B.Fernandes",
+      "managers": 49,
+      "share": 98.0,
+      "price": 12.0,
+      "position": 3
+    },
+    {
+      "id": 346,
+      "name": "Calvert-Lewin",
+      "managers": 47,
+      "share": 94.0,
+      "price": 6.0,
+      "position": 4
+    },
+    {
+      "id": 418,
+      "name": "Maguire",
+      "managers": 45,
+      "share": 90.0,
+      "price": 5.0,
+      "position": 2
+    },
+    {
+      "id": 427,
+      "name": "Mbeumo",
+      "managers": 43,
+      "share": 86.0,
+      "price": 8.0,
+      "position": 3
+    },
+    {
+      "id": 8,
+      "name": "Calafiori",
+      "managers": 41,
+      "share": 82.0,
+      "price": 5.6,
+      "position": 2
+    },
+    {
+      "id": 368,
+      "name": "Szoboszlai",
+      "managers": 40,
+      "share": 80.0,
+      "price": 7.0,
+      "position": 3
+    },
+    {
+      "id": 109,
+      "name": "Verbruggen",
+      "managers": 36,
+      "share": 72.0,
+      "price": 4.5,
+      "position": 1
+    },
+    {
+      "id": 496,
+      "name": "Kinsky",
+      "managers": 25,
+      "share": 50.0,
+      "price": 4.5,
+      "position": 1
+    },
+    {
+      "id": 411,
+      "name": "Haaland",
+      "managers": 23,
+      "share": 46.0,
+      "price": 15.5,
+      "position": 4
+    },
+    {
+      "id": 237,
+      "name": "Ndiaye",
+      "managers": 23,
+      "share": 46.0,
+      "price": 6.0,
+      "position": 3
+    },
+    {
+      "id": 557,
+      "name": "Tzolis",
+      "managers": 22,
+      "share": 44.0,
+      "price": 6.5,
+      "position": 3
+    },
+    {
+      "id": 10,
+      "name": "White",
+      "managers": 20,
+      "share": 40.0,
+      "price": 5.5,
+      "position": 2
+    },
+    {
+      "id": 4,
+      "name": "Gabriel",
+      "managers": 19,
+      "share": 38.0,
+      "price": 8.0,
+      "position": 2
+    },
+    {
+      "id": 379,
+      "name": "Isak",
+      "managers": 19,
+      "share": 38.0,
+      "price": 9.0,
+      "position": 4
+    },
+    {
+      "id": 304,
+      "name": "O'Shea",
+      "managers": 19,
+      "share": 38.0,
+      "price": 4.0,
+      "position": 2
+    },
+    {
+      "id": 532,
+      "name": "Ballard",
+      "managers": 16,
+      "share": 32.0,
+      "price": 5.0,
+      "position": 2
+    },
+    {
+      "id": 154,
+      "name": "Palmer",
+      "managers": 14,
+      "share": 28.0,
+      "price": 9.6,
+      "position": 3
+    },
+    {
+      "id": 542,
+      "name": "E.Le Fée",
+      "managers": 13,
+      "share": 26.0,
+      "price": 6.0,
+      "position": 3
+    },
+    {
+      "id": 1,
+      "name": "Raya",
+      "managers": 13,
+      "share": 26.0,
+      "price": 6.0,
+      "position": 1
+    }
+  ],
+  "captaincy": [
+    {
+      "id": 426,
+      "name": "B.Fernandes",
+      "managers": 46,
+      "share": 92.0,
+      "price": 12.0,
+      "position": 3
+    },
+    {
+      "id": 411,
+      "name": "Haaland",
+      "managers": 4,
+      "share": 8.0,
+      "price": 15.5,
+      "position": 4
+    }
+  ]
+}

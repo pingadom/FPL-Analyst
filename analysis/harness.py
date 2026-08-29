@@ -142,16 +142,22 @@ def reference_config() -> Config:
         (ROOT / "app" / "data" / "model-results.json").read_text(encoding="utf-8-sig")
     )
     weights = payload["model"]["weights"]
+    exact = weights.get("exact")
+    if exact is None:
+        raise RuntimeError(
+            "The shipped artifact has no exact candidate weights; regenerate it "
+            "before running a pinned experiment"
+        )
     candidate = lens.Candidate(
-        weights["performance"] / 100,
-        weights["value"] / 100,
-        weights["age"] / 100,
-        weights["fixture"] / 100,
-        weights.get("team", 0) / 100,
-        weights["crowd"] / 100,
-        weights["minutes"] / 100,
-        weights["underlying"] / 100,
-        weights["recent"] / 100,
+        float(exact["performance"]),
+        float(exact["value"]),
+        float(exact["age"]),
+        float(exact["fixture"]),
+        float(exact.get("team", 0.0)),
+        float(exact["crowd"]),
+        float(exact["minutes"]),
+        float(exact["underlying"]),
+        float(exact["recent_share"]),
     )
     strategy = (
         lens.JOINT_OPTION_STRATEGY

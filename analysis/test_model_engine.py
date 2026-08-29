@@ -589,12 +589,13 @@ class ModelEngineTests(unittest.TestCase):
 
         rows = pd.DataFrame(
             {
-                "team_id": [43, 43, 43, 1],
+                "team_id": [43, 43, 43, 43, 1],
                 "kickoff_time": pd.to_datetime(
                     [
                         "2024-04-13T11:30:00Z",  # between both quarter-final legs
                         "2023-11-25T15:00:00Z",  # three days before a group tie
                         "2024-02-10T15:00:00Z",  # three days before a last-16 tie
+                        "2024-04-20T14:00:00Z",  # three days after the second leg
                         "2024-04-13T14:00:00Z",  # a club with no European football
                     ],
                     utc=True,
@@ -611,9 +612,10 @@ class ModelEngineTests(unittest.TestCase):
         self.assertEqual(out["european_knockout_soon"].iloc[0], 1.0)
         self.assertEqual(out["european_knockout_soon"].iloc[1], 0.0)
         self.assertEqual(out["european_knockout_soon"].iloc[2], 1.0)
-        # No European football must be "far away", never zero days.
-        self.assertEqual(out["european_days_to"].iloc[3], 99.0)
         self.assertEqual(out["european_knockout_soon"].iloc[3], 0.0)
+        # No European football must be "far away", never zero days.
+        self.assertEqual(out["european_days_to"].iloc[4], 99.0)
+        self.assertEqual(out["european_knockout_soon"].iloc[4], 0.0)
 
     def test_european_season_dates_resolve_across_the_new_year(self):
         """The source states the year once per file; everything else is inferred.
@@ -686,6 +688,95 @@ class ModelEngineTests(unittest.TestCase):
         )
         self.assertTrue(all(0 <= tier <= 2 for tier in legacy))
 
+    def test_live_absence_run_uses_only_current_season_events(self):
+        """A GW1 starter cannot inherit an absence from last season's GW38."""
+        current = pd.DataFrame(
+            {
+                "id": [411, 999, 1000],
+                "team": [1, 1, 2],
+                "minutes": [90, 0, 180],
+            }
+        )
+        fixtures = pd.DataFrame(
+            {
+                "event": [1, 2],
+                "team_h": [1, 1],
+                "team_a": [2, 3],
+            }
+        )
+        live = {
+            1: {
+                "elements": [
+                    {"id": 411, "stats": {"minutes": 90}},
+                    {"id": 999, "stats": {"minutes": 0}},
+                    {"id": 1000, "stats": {"minutes": 90}},
+                ]
+            },
+            2: {
+                "elements": [
+                    {"id": 411, "stats": {"minutes": 0}},
+                    {"id": 1000, "stats": {"minutes": 90}},
+                ]
+            },
+        }
+        runs = lens.current_absence_runs_from_events(current, fixtures, live, [1, 2])
+        self.assertEqual(runs[411], 1.0)
+        self.assertEqual(runs[1000], 0.0)
+        # No season appearance means neutral, not "missed every week".
+        self.assertEqual(runs[999], 0.0)
+        self.assertEqual(
+            lens.season_label_from_deadline("2026-08-14T17:30:00Z"), "2026-27"
+        )
+
+    def test_live_recommendation_skips_a_locked_unfinished_event(self):
+        events = pd.DataFrame(
+            [
+                {
+                    "id": 2,
+                    "deadline_time": "2026-08-28T17:30:00Z",
+                    "finished": False,
+                },
+                {
+                    "id": 3,
+                    "deadline_time": "2026-09-04T17:30:00Z",
+                    "finished": False,
+                },
+            ]
+        )
+        selected = lens.next_recommendation_event(
+            events, as_of="2026-08-29T12:00:00Z"
+        )
+        self.assertEqual(int(selected["id"]), 3)
+
+    def test_gate_does_not_count_candidate_variants_as_extra_seasons(self):
+        """Duplicating a correlated candidate path must not shrink gate error."""
+        incumbent = lens.GATE_INCUMBENT
+        challenger = "central:Joint transfer-chip tree + hold value"
+        base = [float((index % 5) - 2) for index in range(38)]
+        better = [value + (0.4 if index % 3 else -0.2) for index, value in enumerate(base)]
+
+        def payload(paths: int) -> dict:
+            incumbent_stats = [
+                {"weeklyPoints": base} for _ in range(paths) for _ in lens.SEASONS
+            ]
+            challenger_stats = [
+                {"weeklyPoints": better} for _ in range(paths) for _ in lens.SEASONS
+            ]
+            zeros = np.zeros(len(lens.SEASONS))
+            return {
+                incumbent: (zeros, lens.WEEKLY_CHASE_STRATEGY, None, incumbent_stats),
+                challenger: (zeros, lens.JOINT_OPTION_STRATEGY, None, challenger_stats),
+            }
+
+        _, single = lens.select_gate_option(payload(1), len(lens.SEASONS))
+        _, tripled = lens.select_gate_option(payload(3), len(lens.SEASONS))
+        single_result = single["options"][challenger]
+        tripled_result = tripled["options"][challenger]
+        self.assertEqual(single_result["standardError"], tripled_result["standardError"])
+        self.assertEqual(single_result["confidenceVsIncumbent"], tripled_result["confidenceVsIncumbent"])
+        self.assertEqual(tripled["candidateVariantsAveraged"], 3)
+        self.assertIn("season", tripled["evidenceUnit"])
+
     def test_gate_pin_holds_the_selection_and_rejects_unknown_names(self):
         """Pinning the gate is the only way to vary the data on its own.
 
@@ -727,6 +818,27 @@ class ModelEngineTests(unittest.TestCase):
         with mock.patch.object(lens, "GATE_PIN", "central:No such strategy"):
             with self.assertRaises(KeyError):
                 lens.select_gate_option(options, len(lens.SEASONS))
+
+    def test_live_path_hardcodes_no_season_label(self):
+        """The live deadline must derive its seasons, never name one.
+
+        A hardcoded season is invisible to every behaviour test, because it stays
+        correct until the calendar rolls over and then quietly describes the wrong
+        year. That is exactly how the live absence run came to read a finished
+        season's injury streaks as if they described fit players: one literal was
+        copied from the line above it and nothing failed until a new season began.
+
+        Season-specific *rules* elsewhere in the module are legitimate — chip
+        allowances and scoring changes really do differ by year. This guards only
+        the live recommendation path, which should always be talking about now.
+        """
+        import inspect
+        import re
+
+        source = inspect.getsource(lens.current_recommendation)
+        self.assertEqual(re.findall(r'"20\d\d-\d\d"', source), [])
+        # And the archive reference must track the data rather than a literal.
+        self.assertIn("SEASONS[-1]", source)
 
 
 if __name__ == "__main__":

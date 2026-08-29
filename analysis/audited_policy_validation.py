@@ -7,6 +7,7 @@ eight seasons from 2018/19 onward are reported once as untouched evaluation.
 from __future__ import annotations
 
 import json
+from datetime import datetime
 
 import numpy as np
 
@@ -79,7 +80,7 @@ def main() -> None:
         lens.ChipPolicy(75, 25, 16, 21, 0.55, 10, 28),
     ]
     fresh = lens.precompute_fresh_squads(data, plan)
-    free_hits = lens.precompute_fresh_squads(data, scores)
+    free_hits = lens.precompute_fresh_squads(data, scores, one_week_only=True)
     chip_totals = []
     chip_stats = []
     for index, policy in enumerate(policies, start=1):
@@ -131,6 +132,8 @@ def main() -> None:
         )
 
     result = {
+        "generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
+        "provenance": lens.audited_policy_provenance(data),
         "selection": "Frozen on 2016/17 and 2017/18 only",
         "playerFamily": "team_fixture_minutes with role ensemble",
         "weights": candidate.as_dict(),
@@ -152,6 +155,7 @@ def main() -> None:
         "averageMargin": round(float(np.mean([row["margin"] for row in evaluation])), 1),
         "minimum": min(row["points"] for row in evaluation),
     }
+    result["contentFingerprint"] = lens.canonical_payload_hash(result)
     output = lens.ROOT / "analysis" / "data" / "audited_policy_validation.json"
     output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))

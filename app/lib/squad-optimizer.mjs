@@ -17,34 +17,48 @@ const FORMATIONS = [
 export const BENCH_PREMIUM_LIMIT = 2.0;
 export const MIN_XI_START_PROBABILITY = 70;
 export const MIN_XI_PLAY_PROBABILITY = 84;
+const BENCH_PREMIUM_PENALTY = 0.18;
+
+function horizonPerGame(player) {
+  return (
+    Number(player.riskAdjustedHorizonProjected ?? player.sixWeekProjected) /
+    Math.max(1, Number(player.horizonWeightedGames ?? 6))
+  );
+}
 
 function immediateUtility(player) {
+  const exact = Number(player.optimizerUtility);
+  if (Number.isFinite(exact)) return exact;
   return (
     0.68 * Number(player.projected) +
-    0.18 * (Number(player.sixWeekProjected) / 6) +
-    0.14 * (Number(player.liveScore) * 5)
+    0.18 * horizonPerGame(player) +
+    0.10 * (Number(player.liveScore) * 5) +
+    0.04 * (Number(player.confidence) / 100) * Number(player.projected)
   );
 }
 
 function captainUtility(player) {
-  const median = Number(player.distribution?.median ?? player.projected);
-  const startProbability = Number(player.minutesModel?.startProbability ?? 100) / 100;
-  return (
-    0.72 * Number(player.projected) +
-    0.18 * median +
-    0.10 * (Number(player.liveScore) * 5)
-  ) * (0.85 + 0.15 * startProbability);
+  // Captaincy contributes one extra copy of the player's forecast. Minutes and
+  // uncertainty are already inside projected xPts; applying another safety or
+  // user-slider adjustment here would double count them and could move the
+  // armband away from the highest expected return.
+  return Number(player.optimization?.captainUtility ?? player.projected);
 }
 
 function benchUtility(player) {
+  const exact = Number(player.optimization?.benchUtility);
+  if (Number.isFinite(exact)) return exact;
   const playProbability = Number(player.minutesModel?.playProbability ?? 100) / 100;
   return (
-    0.045 * Number(player.sixWeekProjected) / 6 +
+    0.045 * horizonPerGame(player) +
     0.055 * playProbability * Math.min(Number(player.projected), 4.5)
   );
 }
 
 function exceptionalUpside(player, players) {
+  if (typeof player.optimization?.exceptionalStarterEligible === "boolean") {
+    return player.optimization.exceptionalStarterEligible;
+  }
   const startProbability = Number(player.minutesModel?.startProbability ?? 0);
   const playProbability = Number(player.minutesModel?.playProbability ?? 0);
   const immediate = Number(player.projected);
@@ -58,6 +72,9 @@ function exceptionalUpside(player, players) {
 }
 
 function isStandardStarter(player) {
+  if (typeof player.optimization?.standardStarterEligible === "boolean") {
+    return player.optimization.standardStarterEligible;
+  }
   const startProbability = Number(player.minutesModel?.startProbability ?? 0);
   const playProbability = Number(player.minutesModel?.playProbability ?? 0);
   return (
@@ -246,7 +263,7 @@ export function evaluateSquad(squad, playerPool, options = {}) {
   const score =
     lineup.utility +
     rotationOption -
-    0.22 * premium;
+    BENCH_PREMIUM_PENALTY * premium;
 
   return {
     score,
@@ -299,7 +316,7 @@ export function buildOptimizedSquad(players, options = {}) {
     const premium = Math.max(0, Number(player.price) - floors[player.position]);
     const bench = options.benchBoost ? immediateUtility(player) : benchUtility(player);
     variables[`s_${id}`] = {
-      objective: bench - 0.22 * premium,
+      objective: bench - BENCH_PREMIUM_PENALTY * premium,
       budget: Number(player.price),
       squad_total: 1,
       [`squad_${player.position}`]: 1,
@@ -308,7 +325,7 @@ export function buildOptimizedSquad(players, options = {}) {
       [`xi_link_${id}`]: -1,
     };
     variables[`x_${id}`] = {
-      objective: immediateUtility(player) - bench + 0.22 * premium,
+      objective: immediateUtility(player) - bench + BENCH_PREMIUM_PENALTY * premium,
       xi_total: 1,
       [`xi_${player.position}`]: 1,
       bench_premium: -premium,

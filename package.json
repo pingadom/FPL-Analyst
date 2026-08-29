@@ -19,7 +19,7 @@
     "research:plan": "python analysis/chip_scenario_planner.py",
     "research:shadow": "python analysis/run_shadow_cycle.py",
     "research:refresh": "python analysis/calibrate_model.py --refresh-current",
-    "research:cycle": "python analysis/capture_deadline_snapshot.py && python analysis/capture_market_snapshot_v2.py && python analysis/fit_live_market_v2.py && python analysis/fit_live_listwise.py && python analysis/fit_live_regime.py && python analysis/chip_scenario_planner.py && python analysis/run_shadow_cycle.py && python analysis/chip_scenario_planner.py && python analysis/run_shadow_cycle.py",
+    "research:cycle": "python analysis/capture_deadline_snapshot.py && python analysis/capture_market_snapshot_v2.py && python analysis/fit_live_market_v2.py && python analysis/fit_live_listwise.py && python analysis/fit_live_regime.py && python analysis/frontier_ranker_validation.py && python analysis/chip_scenario_planner.py && python analysis/run_shadow_cycle.py && python analysis/chip_scenario_planner.py && python analysis/run_shadow_cycle.py",
     "research:score": "python analysis/score_shadow_cycle.py",
     "db:generate": "drizzle-kit generate"
   },
