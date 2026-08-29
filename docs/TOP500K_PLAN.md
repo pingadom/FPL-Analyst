@@ -470,6 +470,59 @@ repairs themselves: bisecting the frame under a pinned policy showed every repai
 neutral-to-positive, and the pinned comparison itself flips sign depending on which
 champion is pinned. See the two sections below.
 
+### What the elite actually do: they refuse to update on noise
+
+Fifty managers from the LiveFPL all-time leaderboard, their documented history via
+the official entry endpoint, and their current squads against ours.
+
+**Their record.** Twenty seasons of results. Across the eight seasons this model
+reports, their median is roughly **2623 against our 2178** — a gap near 445 a
+season — at median ranks of 8,000 to 22,000. Their *worst decile* beats our best
+season. The sample is selected on the outcome, though: they are on that
+leaderboard because they scored well in those very seasons, so treat it as an
+upper envelope of what is achievable rather than a target.
+
+**What the stats say.** On visible numbers our squad looks better than theirs:
+
+| | mean ownership | points | minutes | xGI | ICT |
+|---|---|---|---|---|---|
+| elite consensus | 36.2% | 6.4 | 108 | 0.51 | 7.2 |
+| model squad | 15.6% | **10.5** | 103 | **0.60** | 5.9 |
+
+They hold players who are failing — Bruno Fernandes on **2 points and form 1.0**
+at 98% ownership and 92% captaincy, Calvert-Lewin on 1, Maguire on 1, Mbeumo on 2.
+We hold early-season overperformers nobody owns: Mendy 16 points at 4.7%, Ajayi 15
+at 2.2%, Kayode 13 at 8.1%, Bijol 10 at 1.0%.
+
+**The mechanism.** Our projection correlates **+0.696 with two Gameweeks of raw
+points and only +0.505 with xGI**; among cheap players, +0.660 against +0.320. The
+model weights the noisiest available signal about twice as heavily as the
+underlying one. The elite do the reverse — they are anchored to season-long
+expectation and treat two Gameweeks as nearly uninformative. That is what their
+edge looks like in data: not better information, but a refusal to update on noise.
+
+**The cost, measured.** If that is right the model should be weakest when the
+current-season sample is smallest, and it is:
+
+| | GW1-5 | GW6+ | gap |
+|---|---|---|---|
+| points per Gameweek | 48.66 | 58.18 | **-9.52** |
+
+**-9.52 +/- 1.70 (-5.6 SE), worse in 10 of 10 seasons** — about 48 points a season,
+entirely hidden by an eight-season mean. Part of it is structural, because an
+opening squad is necessarily uninformed and improves as evidence arrives, so 48 is
+an upper bound on what a fix could recover rather than a free gain.
+
+This also explains findings that looked separate. Four of fifteen squad players
+have **zero career matches**, and zero-history players earn 0.740 points per
+million against 0.587 for established ones — a £4.0m defender who has never played
+projects above a £12.0m midfielder that 98% of the elite own. All of it follows
+from over-weighting a two-game sample.
+
+The concrete direction: shrink current-season form toward prior expectation far
+harder early in a season, and give zero-history players a conservative rather than
+a generous prior.
+
 ### A leak that wasn't, and how the mistake was made
 
 `chip_stability` averages chip gains over every season and takes an argmax over 48

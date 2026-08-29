@@ -275,6 +275,24 @@ class Comparison:
             return "better" if self.delta_training > 0 else "worse"
         if abs(self.delta_training) < self.standard_error:
             return "indistinguishable from noise"
+        # A confident training gain that the evaluation seasons contradict is the
+        # signature of fitting two seasons, not of an improvement. Relaxing the
+        # bench premium penalty scored +89.0 on training and -29.8 on evaluation
+        # at confidence 0.983 — reported as "better", it would have been shipped.
+        # The label has to carry the disagreement, because the number beside it is
+        # the training one and reads like a result.
+        if (
+            self.delta_training > 0
+            and self.delta_evaluation < 0
+            and self.confidence >= 0.75
+        ):
+            return "training-only; evaluation disagrees"
+        if (
+            self.delta_training < 0
+            and self.delta_evaluation > 0
+            and self.confidence <= 0.25
+        ):
+            return "training-only; evaluation disagrees"
         if self.confidence >= 0.75:
             return "better"
         if self.confidence <= 0.25:

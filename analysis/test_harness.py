@@ -92,5 +92,36 @@ class HarnessTests(unittest.TestCase):
         self.assertAlmostEqual(outcome.overall, totals.mean())
 
 
+class VerdictDisagreementTests(unittest.TestCase):
+    def test_confident_training_gain_contradicted_by_evaluation(self):
+        """A training win the evaluation seasons contradict is not a win.
+
+        Measured case: relaxing the bench premium penalty scored +89.0 on the two
+        selecting seasons and -29.8 on the eight reported ones, at confidence
+        0.983. Labelled "better" it would have been shipped.
+        """
+        comparison = harness.Comparison(
+            label="bench_premium_penalty=0.0",
+            delta_training=89.0,
+            delta_evaluation=-29.8,
+            delta_overall=-6.0,
+            standard_error=43.9,
+            confidence=0.983,
+        )
+        self.assertEqual(comparison.verdict, "training-only; evaluation disagrees")
+
+    def test_agreeing_directions_still_read_plainly(self):
+        agreeing = harness.Comparison(
+            label="good", delta_training=50.0, delta_evaluation=20.0,
+            delta_overall=26.0, standard_error=10.0, confidence=0.9,
+        )
+        self.assertEqual(agreeing.verdict, "better")
+        losing = harness.Comparison(
+            label="bad", delta_training=-50.0, delta_evaluation=-20.0,
+            delta_overall=-26.0, standard_error=10.0, confidence=0.1,
+        )
+        self.assertEqual(losing.verdict, "worse")
+
+
 if __name__ == "__main__":
     unittest.main()

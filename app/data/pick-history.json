@@ -1,0 +1,332 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "season": "2026/27",
+      "gameweek": 2,
+      "recordedAt": "2026-08-29T15:16:21+00:00",
+      "deadline": "2026-08-28T17:30:00Z",
+      "formation": "4-4-2",
+      "captain": "B.Fernandes",
+      "vice": "Gabriel",
+      "projectedPoints": 48.9,
+      "players": [
+        {
+          "id": 1,
+          "name": "Raya",
+          "position": "GK",
+          "price": 6.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.9
+        },
+        {
+          "id": 61,
+          "name": "Truffert",
+          "position": "DEF",
+          "price": 5.5,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.0
+        },
+        {
+          "id": 4,
+          "name": "Gabriel",
+          "position": "DEF",
+          "price": 8.0,
+          "starter": true,
+          "captain": false,
+          "vice": true,
+          "projected": 4.4
+        },
+        {
+          "id": 498,
+          "name": "Senesi",
+          "position": "DEF",
+          "price": 6.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.8
+        },
+        {
+          "id": 356,
+          "name": "Virgil",
+          "position": "DEF",
+          "price": 6.5,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.2
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "position": "MID",
+          "price": 12.0,
+          "starter": true,
+          "captain": true,
+          "vice": false,
+          "projected": 4.9
+        },
+        {
+          "id": 368,
+          "name": "Szoboszlai",
+          "position": "MID",
+          "price": 7.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.3
+        },
+        {
+          "id": 123,
+          "name": "Hinshelwood",
+          "position": "MID",
+          "price": 6.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.7
+        },
+        {
+          "id": 427,
+          "name": "Mbeumo",
+          "position": "MID",
+          "price": 8.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.6
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "position": "FWD",
+          "price": 8.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.8
+        },
+        {
+          "id": 106,
+          "name": "Thiago",
+          "position": "FWD",
+          "price": 8.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.4
+        },
+        {
+          "id": 109,
+          "name": "Verbruggen",
+          "position": "GK",
+          "price": 4.5,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 2.8
+        },
+        {
+          "id": 332,
+          "name": "Justin",
+          "position": "DEF",
+          "price": 4.5,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 2.9
+        },
+        {
+          "id": 124,
+          "name": "Groß",
+          "position": "MID",
+          "price": 5.5,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 3.3
+        },
+        {
+          "id": 321,
+          "name": "Walle Egeli",
+          "position": "FWD",
+          "price": 4.5,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 1.4
+        }
+      ],
+      "scored": false,
+      "provenance": "backfilled from 5f8c5ef3, committed 2026-08-26T17:41+01:00"
+    },
+    {
+      "season": "2026/27",
+      "gameweek": 3,
+      "recordedAt": "2026-08-29T15:14:59+00:00",
+      "deadline": "2026-09-04T17:30:00Z",
+      "formation": "3-5-2",
+      "captain": "Haaland",
+      "vice": "Cherki",
+      "projectedPoints": 54.0,
+      "players": [
+        {
+          "id": 1,
+          "name": "Raya",
+          "position": "GK",
+          "price": 6.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.8
+        },
+        {
+          "id": 388,
+          "name": "Guéhi",
+          "position": "DEF",
+          "price": 6.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.4
+        },
+        {
+          "id": 327,
+          "name": "Bijol",
+          "position": "DEF",
+          "price": 5.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.6
+        },
+        {
+          "id": 88,
+          "name": "Kayode",
+          "position": "DEF",
+          "price": 4.6,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.7
+        },
+        {
+          "id": 368,
+          "name": "Szoboszlai",
+          "position": "MID",
+          "price": 7.0,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.3
+        },
+        {
+          "id": 399,
+          "name": "Cherki",
+          "position": "MID",
+          "price": 7.6,
+          "starter": true,
+          "captain": false,
+          "vice": true,
+          "projected": 5.4
+        },
+        {
+          "id": 480,
+          "name": "Gibbs-White",
+          "position": "MID",
+          "price": 7.9,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.7
+        },
+        {
+          "id": 236,
+          "name": "Dewsbury-Hall",
+          "position": "MID",
+          "price": 6.5,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.1
+        },
+        {
+          "id": 12,
+          "name": "Saka",
+          "position": "MID",
+          "price": 9.5,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.4
+        },
+        {
+          "id": 411,
+          "name": "Haaland",
+          "position": "FWD",
+          "price": 15.5,
+          "starter": true,
+          "captain": true,
+          "vice": false,
+          "projected": 5.7
+        },
+        {
+          "id": 55,
+          "name": "Watkins",
+          "position": "FWD",
+          "price": 7.9,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.0
+        },
+        {
+          "id": 171,
+          "name": "Dovin",
+          "position": "GK",
+          "price": 4.0,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 1.8
+        },
+        {
+          "id": 586,
+          "name": "Mendy",
+          "position": "DEF",
+          "price": 4.0,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 4.5
+        },
+        {
+          "id": 279,
+          "name": "Ajayi",
+          "position": "DEF",
+          "price": 4.0,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 4.2
+        },
+        {
+          "id": 321,
+          "name": "Walle Egeli",
+          "position": "FWD",
+          "price": 4.5,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 1.3
+        }
+      ],
+      "scored": false
+    }
+  ]
+}
