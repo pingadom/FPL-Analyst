@@ -438,6 +438,7 @@ def block_bootstrap_season_delta(
 def select_gate_option(
     gate_results: dict[str, tuple],
     seasons_available: int,
+    incumbent_override: str | None = None,
 ) -> tuple[str, dict]:
     """Keep the incumbent policy unless a challenger clears the selection noise.
 
@@ -445,6 +446,15 @@ def select_gate_option(
     frozen gate always passed two, which is why it could never separate policies
     that differ by less than its own standard error. Walking it forward lets a
     later season decide on everything completed before it.
+
+    ``incumbent_override`` is what the walk-forward defends. Without it every
+    season is decided independently against the same fixed constant, so an option
+    sitting near the confidence bar flips back and forth and the run reports a
+    different strategy most years — five changes across ten seasons, cycling
+    through four options. Defending the *previous season's* choice instead gives
+    the decision hysteresis: adopting a challenger requires clearing the bar
+    against what is actually in force, and reverting requires clearing it again
+    in the other direction. Evidence still moves the gate; noise no longer does.
     """
     rng = np.random.default_rng(GATE_BOOTSTRAP_SEED)
     if GATE_PIN:
@@ -469,8 +479,13 @@ def select_gate_option(
             "evidenceUnit": "pinned control; no statistical selection",
             "candidateVariantsAveraged": 0,
         }
-    incumbent = (
+    default_incumbent = (
         GATE_INCUMBENT if GATE_INCUMBENT in gate_results else sorted(gate_results)[0]
+    )
+    incumbent = (
+        incumbent_override
+        if incumbent_override in gate_results
+        else default_incumbent
     )
 
     season_count = len(SEASONS)
@@ -10195,14 +10210,21 @@ def main() -> None:
         )
 
     walk_forward_gate: list[dict] = []
+    # What the gate is currently running. Each season defends this rather than a
+    # fixed constant, so a strategy is only displaced by evidence that beats the
+    # one in force — not by an independent coin flip re-run every August.
+    standing_gate_name: str | None = None
     for season_id, season in enumerate(seasons):
         # Decide this season's policy on every season completed before it. The
         # frozen gate saw two seasons for all eight evaluations; by 2024/25 there
         # are eight, and the extra evidence is what lets a real difference clear
         # the selection noise instead of drowning in it.
         season_gate_name, season_gate_report = select_gate_option(
-            gate_results, max(training_count, season_id)
+            gate_results,
+            max(training_count, season_id),
+            incumbent_override=standing_gate_name,
         )
+        standing_gate_name = season_gate_name
         season_strategy = gate_results[season_gate_name][1]
         season_robust_planning = season_gate_name.startswith("robust:")
         walk_forward_gate.append(

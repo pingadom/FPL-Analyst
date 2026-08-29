@@ -840,6 +840,49 @@ class ModelEngineTests(unittest.TestCase):
         # And the archive reference must track the data rather than a literal.
         self.assertIn("SEASONS[-1]", source)
 
+    def test_gate_defends_the_standing_choice_not_a_constant(self):
+        """The walk-forward gate must have memory, or it oscillates.
+
+        Deciding every season independently against the same fixed constant makes
+        an option near the confidence bar flip back and forth: the run reported
+        five strategy changes across ten seasons, cycling through four options.
+        Defending the previous season's choice means a challenger must beat what
+        is actually in force, and reverting must clear the bar again the other
+        way.
+        """
+        weeks = [1.0] * 38
+        options = {
+            "central:Six-GW planner + adaptive banking": (
+                np.zeros(len(lens.SEASONS)),
+                lens.WEEKLY_CHASE_STRATEGY,
+                None,
+                [{"weeklyPoints": weeks} for _ in lens.SEASONS],
+            ),
+            "central:Joint transfer-chip tree + hold value": (
+                np.zeros(len(lens.SEASONS)),
+                lens.JOINT_OPTION_STRATEGY,
+                None,
+                [{"weeklyPoints": weeks} for _ in lens.SEASONS],
+            ),
+        }
+        challenger = "central:Joint transfer-chip tree + hold value"
+        with mock.patch.object(lens, "GATE_PIN", ""):
+            # With identical evidence nothing can clear the bar, so whichever
+            # option is standing must survive — including one that is not the
+            # module-level incumbent.
+            held, report = lens.select_gate_option(
+                options, len(lens.SEASONS), incumbent_override=challenger
+            )
+            self.assertEqual(held, challenger)
+            self.assertEqual(report["incumbent"], challenger)
+            self.assertFalse(report["switched"])
+            # An unknown standing name must fall back to the default incumbent
+            # rather than crash or silently accept it.
+            fallback, _ = lens.select_gate_option(
+                options, len(lens.SEASONS), incumbent_override="central:Nonexistent"
+            )
+            self.assertEqual(fallback, lens.GATE_INCUMBENT)
+
 
 if __name__ == "__main__":
     unittest.main()
