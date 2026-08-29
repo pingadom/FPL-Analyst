@@ -52,7 +52,7 @@ CACHE = ROOT / "work" / "fpl-data"
 # from a snapshot archive covering 2021/22 onward. It multiplies start and sub
 # probability directly, and is 4x predictive of the first-week absences the
 # minutes record cannot see.
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-news-v8.pkl"
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-stretch-v10.pkl"
 
 # How much of the closing betting line to fold into team expected goals.
 #
@@ -100,6 +100,9 @@ EUROPEAN_KNOCKOUT_REST_PENALTY = float(
 # behaviour; set to 0 to restore the old one.
 USE_RECOVERED_TEAM_NAMES = os.environ.get("FPL_TEAM_NAMES", "1") != "0"
 USE_BLANK_FREE_CALIBRATION = os.environ.get("FPL_BLANK_FILTER", "1") != "0"
+# Undo the forecast compression that under-rates premiums by 0.447 points a week
+# and over-rates sub-£4.5m fodder by 0.117. Off restores the compressed forecast.
+USE_PROJECTION_STRETCH = os.environ.get("FPL_STRETCH", "1") != "0"
 if (
     not USE_RECOVERED_TEAM_NAMES
     or not USE_BLANK_FREE_CALIBRATION
@@ -993,6 +996,14 @@ def calibrate_live_distributions(
 
 
 MINUTES_CALIBRATION_BINS = 20
+# A price band must have this many completed rows before its stretch is trusted.
+#
+# 400, not 4000. The premium band carries only ~4,400 rows across all ten seasons
+# — roughly 440 a year — so a 4,000-row gate left the one band that most needed
+# correcting uncalibrated for almost the entire walk-forward: its bias moved only
+# -0.447 to -0.404 while the cheap band, which has 75,000 rows, was fixed
+# outright. A threshold has to be set against the smallest group it governs.
+PROJECTION_STRETCH_MINIMUM_ROWS = 400.0
 MINUTES_CALIBRATION_MINIMUM_ROWS = 400.0
 # (predicted column, realised numerator, realised denominator, positional prior,
 #  bin scale, output bounds)
@@ -3555,6 +3566,9 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         + data["ensemble_role_weight"] * data[corrected_models[3]]
     ).clip(0.2, 13.5)
     data["component_xpts_base"] = data["component_per_fixture"] * fixture_multiplier
+    data["component_xpts_uncompressed"] = data["component_xpts_base"]
+    if USE_PROJECTION_STRETCH:
+        data["component_xpts_base"] = causal_stretch_projection(data)
     data["component_xpts"] = data["component_xpts_base"] * (
         data["fixture_count"] > 0
     ).astype(float)
@@ -3920,6 +3934,73 @@ def candidate_forecasts(
     return current, robust_plan if robust_planning else horizon, model_score
 
 
+def causal_stretch_projection(data: pd.DataFrame) -> np.ndarray:
+    """Undo the forecast's compression at the top, using prior deadlines only.
+
+    The ensemble regresses everything toward the middle: on the current frame it
+    over-rates sub-£4.5m fodder by 0.117 points a week and under-rates £9m+
+    players by 0.447, monotonically across every band between. A £9m player is
+    therefore worth about 17 points a season more than the model believes, and an
+    optimiser fed that will fill its cheap slots with players it over-values while
+    declining the premiums it under-values.
+
+    The correction is a per-price-band affine stretch, `a + b * forecast`, fitted
+    by least squares on realised points. An affine fit rather than an isotonic map
+    because the defect is a smooth compression rather than a shape problem, and
+    two parameters per band survive thin early-season data where twenty bins would
+    not.
+
+    Fitted strictly on completed deadlines: each Gameweek is scored by the fit
+    from everything before it, and contributes to the fit only afterwards. Bands
+    hold their raw forecast until they have enough history to be worth trusting.
+    """
+    price = data["price"].to_numpy(float) / 10.0
+    forecast = data["component_xpts_base"].to_numpy(float)
+    realised = data["points"].to_numpy(float)
+    scored = data["fixture_count"].to_numpy(int) > 0
+    band = np.select(
+        [price < 4.5, price < 6.0, price < 7.5, price < 9.0],
+        [0, 1, 2, 3],
+        default=4,
+    ).astype(int)
+
+    keys = (
+        data["season_order"].to_numpy(np.int64) * 1000
+        + data["GW"].to_numpy(np.int64)
+    )
+    order = np.argsort(keys, kind="stable")
+    deadlines = np.split(order, np.flatnonzero(np.diff(keys[order])) + 1)
+
+    stats = {b: np.zeros(5) for b in range(5)}  # n, sx, sy, sxx, sxy
+    out = forecast.copy()
+    for deadline in deadlines:
+        active = deadline[scored[deadline]]
+        for b in range(5):
+            local = active[band[active] == b]
+            if not len(local):
+                continue
+            n, sx, sy, sxx, sxy = stats[b]
+            # A band with too little history keeps its raw forecast rather than
+            # being stretched by a slope fitted on noise.
+            if n >= PROJECTION_STRETCH_MINIMUM_ROWS:
+                denominator = n * sxx - sx * sx
+                if denominator > 1e-9:
+                    slope = (n * sxy - sx * sy) / denominator
+                    intercept = (sy - slope * sx) / n
+                    slope = float(np.clip(slope, 0.6, 1.8))
+                    out[local] = intercept + slope * forecast[local]
+        update = deadline[scored[deadline]]
+        for b in range(5):
+            local = update[band[update] == b]
+            if not len(local):
+                continue
+            x, y = forecast[local], realised[local]
+            stats[b] += np.array(
+                [len(local), x.sum(), y.sum(), (x * x).sum(), (x * y).sum()]
+            )
+    return np.clip(out, 0.0, 16.0)
+
+
 def snapshot_replay(
     data: pd.DataFrame, candidates: list[Candidate]
 ) -> tuple[np.ndarray, list[str]]:
@@ -4021,6 +4102,21 @@ class SimulationStrategy:
     # discount, or a learned package adjustment. Keep it at 1.0 unless one of
     # those is active.
     gain_realisation: float = 1.0
+
+    # Extra bar on transfers while the current season is still a small sample.
+    #
+    # GW1 is the model's best of the opening five (52.9 points a week) because it
+    # is built purely from priors and makes no transfers. GW2 is the worst week of
+    # the entire season (44.8) and the deficit runs to GW6. So the damage starts
+    # when the model begins acting on one or two Gameweeks of evidence, not with
+    # the preseason squad and not with the forecast weighting — shifting
+    # `recent_share` toward history was tested and lost 68.9 on evaluation, and
+    # raising the hurdle globally lost 86.4.
+    #
+    # Zero by default: this is a hypothesis with a mechanism behind it, not a
+    # measured gain, and it stays off until a full run says otherwise.
+    early_season_hurdle: float = 0.0
+    early_season_gws: int = 5
 
 
 EXPERT_STRATEGY = SimulationStrategy(
@@ -5301,6 +5397,14 @@ def joint_transfer_plan(
                 strategy.transfer_hurdle
                 + strategy.additional_move_hurdle * (depth - 1)
             )
+            if strategy.early_season_hurdle > 0 and gw <= strategy.early_season_gws:
+                # The champion routes transfers through this planner, not the
+                # greedy path, so the restraint has to live in both. Adding it to
+                # only one is how a sweep comes back exactly +0.0 at every value.
+                remaining = (strategy.early_season_gws - gw + 1) / max(
+                    1, strategy.early_season_gws
+                )
+                hurdle += strategy.early_season_hurdle * remaining
             if stale:
                 hurdle -= strategy.staleness_hurdle_reduction
             if forced_clubs:
@@ -6262,6 +6366,14 @@ def simulate_candidate(
                     move_hurdle = strategy.transfer_hurdle + (
                         4.0 if is_hit else 0.0
                     )
+                    if strategy.early_season_hurdle > 0 and gw <= strategy.early_season_gws:
+                        # Taper it out rather than dropping it in one step, so the
+                        # model does not simply defer every early move to the
+                        # first unrestrained Gameweek.
+                        remaining = (strategy.early_season_gws - gw + 1) / max(
+                            1, strategy.early_season_gws
+                        )
+                        move_hurdle += strategy.early_season_hurdle * remaining
                     if overloaded_clubs:
                         move_hurdle = -math.inf
                     if strategy.phase_banking:
