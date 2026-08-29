@@ -1,5 +1,11 @@
 # Plan: closing the gap to top 500k
 
+> Historical research ledger. Several intermediate headlines below were produced
+> by evaluation-exposed searches, and the old candidate-pooled confidence estimate
+> counted correlated variants too generously. The current production benchmark,
+> corrected evidence unit and remaining gap are in
+> [`FULL_MODEL_AUDIT_2026-08-27.md`](FULL_MODEL_AUDIT_2026-08-27.md).
+
 Target: **2,297 points a season** (mean of the eight measured top-500k cutoffs, each
 anchored to sampled official manager ranks — 2024/25's 2,411 sits at rank 500,469).
 Current model: **2,173.1**. Gap: **124 points**.

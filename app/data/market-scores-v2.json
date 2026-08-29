@@ -1,10 +1,11 @@
 {
   "schemaVersion": 1,
-  "status": "unavailable; forecast-v2 captain falls back to route consensus",
+  "status": "prospective exact-capture shadow input",
   "season": "2026-27",
-  "gameweek": 1,
-  "capturedAt": "2026-08-20T12:20:25.929011+00:00",
-  "deadline": "2026-08-21T17:30:00+00:00",
-  "reason": "HTTPError: HTTP Error 300: Multiple Choices",
+  "gameweek": 3,
+  "capturedAt": "2026-08-29T12:37:50.082176+00:00",
+  "deadline": "2026-09-04T17:30:00+00:00",
+  "sourceSnapshotHash": "1609d161c5b0998a88a76113d65b64a4d3fcfc854081fcbd66d3a47dbeb40025",
+  "historicalWeightArtifact": "analysis/data/dynamic_match_model_v2.json",
   "fixtures": []
 }

@@ -1,5 +1,9 @@
 # FPL Lens — independent model logic audit
 
+> Historical audit record. Its headline metrics and file names are superseded by
+> [`FULL_MODEL_AUDIT_2026-08-27.md`](FULL_MODEL_AUDIT_2026-08-27.md). The defect
+> explanations remain useful, but do not treat the numbers below as current.
+
 Scope: `analysis/calibrate_model.py` (9,178 lines), `app/lib/squad-optimizer.mjs`,
 and the generated `app/data/model-results.json`. Every quantitative claim below was
 verified against the cached feature frame (252,337 player-weeks), not inferred from
@@ -662,6 +666,13 @@ so the live captain is not chosen on the points scale.
 
 **The 2,087-point backtest validates none of this.** Whatever the replay proves, it does
 not apply to the squad the site actually shows.
+
+**Captain repair applied.** Python's live MILP and the browser MILP now put the captain's
+projected points directly in the captain variable. The dashboard uses the captain returned
+by that optimiser instead of sorting the XI by the display-only `captainRating`; vice-captain
+ordering also uses projected points. The broader lineup-objective differences in the table
+remain explicit model variants and must be compared in a pinned experiment rather than
+quietly treated as identical.
 
 ---
 

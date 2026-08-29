@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "season": "2026-27",
+  "gameweek": 3,
+  "capturedAt": "2026-08-29T12:37:50.082176+00:00",
+  "deadline": "2026-09-04T17:30:00+00:00",
+  "status": "provisional",
+  "source": "https://www.football-data.co.uk/mmz4281/2627/E0.csv",
+  "sourceSha256": "26e404d6184b16b84fc7dff45e9db4a7dae70bdefb05abd4cc92bd2fef211812",
+  "oddsPolicy": "No-vig probabilities from first non-closing 1X2 and O/U 2.5 columns only.",
+  "forbiddenClosingColumnsConsumed": [],
+  "fixtures": [
+    {
+      "date": "21/08/2026",
+      "homeTeam": "Arsenal",
+      "awayTeam": "Coventry",
+      "homeProbability": 0.79387928,
+      "drawProbability": 0.13954451,
+      "awayProbability": 0.0665762,
+      "over25Probability": 0.60559796
+    },
+    {
+      "date": "22/08/2026",
+      "homeTeam": "Hull",
+      "awayTeam": "Man United",
+      "homeProbability": 0.11296652,
+      "drawProbability": 0.19179102,
+      "awayProbability": 0.69524246,
+      "over25Probability": 0.57291667
+    },
+    {
+      "date": "22/08/2026",
+      "homeTeam": "Everton",
+      "awayTeam": "Crystal Palace",
+      "homeProbability": 0.42659314,
+      "drawProbability": 0.27979491,
+      "awayProbability": 0.29361195,
+      "over25Probability": 0.48670213
+    },
+    {
+      "date": "22/08/2026",
+      "homeTeam": "Ipswich",
+      "awayTeam": "Sunderland",
+      "homeProbability": 0.35060107,
+      "drawProbability": 0.28666167,
+      "awayProbability": 0.36273726,
+      "over25Probability": 0.48395722
+    },
+    {
+      "date": "22/08/2026",
+      "homeTeam": "Nott'm Forest",
+      "awayTeam": "Leeds",
+      "homeProbability": 0.41496014,
+      "drawProbability": 0.28118195,
+      "awayProbability": 0.30385791,
+      "over25Probability": 0.48930481
+    },
+    {
+      "date": "22/08/2026",
+      "homeTeam": "Brentford",
+      "awayTeam": "Tottenham",
+      "homeProbability": 0.38245737,
+      "drawProbability": 0.26494253,
+      "awayProbability": 0.3526001,
+      "over25Probability": 0.55874674
+    },
+    {
+      "date": "23/08/2026",
+      "homeTeam": "Brighton",
+      "awayTeam": "Aston Villa",
+      "homeProbability": 0.42924294,
+      "drawProbability": 0.2655486,
+      "awayProbability": 0.30520846,
+      "over25Probability": 0.56430446
+    },
+    {
+      "date": "23/08/2026",
+      "homeTeam": "Man City",
+      "awayTeam": "Bournemouth",
+      "homeProbability": 0.64444501,
+      "drawProbability": 0.19797569,
+      "awayProbability": 0.1575793,
+      "over25Probability": 0.66348449
+    },
+    {
+      "date": "23/08/2026",
+      "homeTeam": "Newcastle",
+      "awayTeam": "Liverpool",
+      "homeProbability": 0.26408583,
+      "drawProbability": 0.24487959,
+      "awayProbability": 0.49103459,
+      "over25Probability": 0.62623762
+    },
+    {
+      "date": "24/08/2026",
+      "homeTeam": "Fulham",
+      "awayTeam": "Chelsea",
+      "homeProbability": 0.25576022,
+      "drawProbability": 0.24895809,
+      "awayProbability": 0.49528169,
+      "over25Probability": 0.57963446
+    }
+  ],
+  "snapshotHash": "1609d161c5b0998a88a76113d65b64a4d3fcfc854081fcbd66d3a47dbeb40025"
+}

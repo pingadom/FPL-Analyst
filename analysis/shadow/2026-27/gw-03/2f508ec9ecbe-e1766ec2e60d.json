@@ -270,7 +270,7 @@
       "chips": true,
       "transferHurdle": 2.2,
       "description": "Same projections with downside-aware chip gates and modest upside utility.",
-      "chip": "Hold",
+      "chip": "Bench Boost",
       "bank": 0.4,
       "freeTransfersNext": 1,
       "transfers": [],
@@ -1282,7 +1282,7 @@
       "chips": true,
       "transferHurdle": 2.2,
       "description": "Frozen large-search winner: route captain plus a 20% exact-capture dynamic match boundary, causal minutes downside protection and separately gated chip policy; falls back safely when market data is unavailable.",
-      "chip": "Hold",
+      "chip": "Bench Boost",
       "bank": 0.0,
       "freeTransfersNext": 1,
       "transfers": [],
@@ -1528,15 +1528,5 @@
     }
   ],
   "protocol": "All managers receive the same immutable deadline snapshot. Only locked decisions update recursive state; no post-deadline edit is permitted.",
-  "decisionHash": "4fa223e4e2c671dbcf9e8bb03a3ef349eac0a202c6374114a9db6e13a5c676f7",
-  "decisionPath": "analysis/shadow/2026-27/gw-03/2f508ec9ecbe-4fa223e4e2c6.json",
-  "completedGameweeks": 0,
-  "cumulative": {
-    "structural-control": 0,
-    "structural-scenarios": 0,
-    "frontier-challenger": 0,
-    "captain-route-consensus": 0,
-    "breakthrough-decision": 0,
-    "forecast-breakthrough-v2": 0
-  }
+  "decisionHash": "e1766ec2e60da3d527862817b4746fa0ac435ac1745dac224afbc3b34d18b5a2"
 }

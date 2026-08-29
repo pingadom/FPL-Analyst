@@ -1,25 +1,27 @@
 {
   "schemaVersion": 1,
   "season": "2026-27",
-  "asOf": "2026-08-14T12:00:00Z",
-  "method": "Diagnostic-only consensus set assembled from current elite-manager reveals. Consensus never enters the player forecast or optimiser objective.",
+  "asOf": "2026-08-29T12:45:00Z",
+  "method": "Diagnostic-only consensus assembled from LiveFPL's all-time top 1,000 ownership page and the official GW2 squads of the first 50 all-time managers. Core means at least 65% of the top 1,000 or at least 80% of the top 50. Consensus never enters the player forecast or optimiser objective.",
   "sources": [
-    "https://www.fantasyfootballscout.co.uk/2026/08/10/10-top-managers-reveal-their-fpl-2026-27-teams",
-    "https://www.fantasyfootballfix.com/blog-index/best-fpl-gameweek-1-team-haaland-bruno-fernandes/",
-    "https://www.premierleague.com/en/news/4681709/the-scouts-must-haves-for-start-of-202627-fpl"
+    "https://plan.livefpl.net/elite",
+    "https://plan.livefpl.net/league_stats/elite",
+    "https://fantasy.premierleague.com/api/entry/{entry_id}/event/2/picks/"
   ],
   "players": [
-    { "name": "Haaland", "tier": "core", "position": "FWD" },
-    { "name": "B.Fernandes", "tier": "core", "position": "MID" },
-    { "name": "Mbeumo", "tier": "core", "position": "MID" },
-    { "name": "Semenyo", "tier": "core", "position": "MID" },
-    { "name": "Joao Pedro", "aliases": ["João Pedro"], "tier": "core", "position": "FWD" },
-    { "name": "Gross", "aliases": ["Groß"], "tier": "watch", "position": "MID" },
-    { "name": "Tarkowski", "tier": "watch", "position": "DEF" },
-    { "name": "Shaw", "tier": "watch", "position": "DEF" },
-    { "name": "Rodon", "tier": "watch", "position": "DEF" },
-    { "name": "N.Williams", "tier": "watch", "position": "DEF" },
-    { "name": "van Ewijk", "tier": "watch", "position": "DEF" },
-    { "name": "Calvert-Lewin", "tier": "watch", "position": "FWD" }
+    { "name": "Haaland", "tier": "core", "position": "FWD", "top1000Share": 73.4, "top50Share": 46.0 },
+    { "name": "B.Fernandes", "tier": "core", "position": "MID", "top1000Share": 67.3, "top50Share": 98.0 },
+    { "name": "Joao Pedro", "aliases": ["João Pedro"], "tier": "core", "position": "FWD", "top1000Share": 84.9, "top50Share": 100.0 },
+    { "name": "Calafiori", "tier": "core", "position": "DEF", "top1000Share": 65.4, "top50Share": 82.0 },
+    { "name": "Mbeumo", "tier": "core", "position": "MID", "top1000Share": 55.6, "top50Share": 86.0 },
+    { "name": "Szoboszlai", "tier": "core", "position": "MID", "top1000Share": 49.7, "top50Share": 80.0 },
+    { "name": "Maguire", "tier": "core", "position": "DEF", "top1000Share": 34.4, "top50Share": 90.0 },
+    { "name": "Calvert-Lewin", "tier": "core", "position": "FWD", "top1000Share": 50.0, "top50Share": 94.0 },
+    { "name": "Tzolis", "tier": "watch", "position": "MID", "top1000Share": 48.8, "top50Share": 44.0 },
+    { "name": "Kinsky", "tier": "watch", "position": "GK", "top1000Share": 49.2, "top50Share": 50.0 },
+    { "name": "Ndiaye", "tier": "watch", "position": "MID", "top1000Share": 19.4, "top50Share": 46.0 },
+    { "name": "White", "tier": "watch", "position": "DEF", "top1000Share": 15.8, "top50Share": 40.0 },
+    { "name": "Gabriel", "tier": "watch", "position": "DEF", "top1000Share": 21.1, "top50Share": 38.0 },
+    { "name": "Isak", "tier": "watch", "position": "FWD", "top1000Share": 19.1, "top50Share": 38.0 }
   ]
 }

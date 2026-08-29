@@ -1,5 +1,8 @@
 # Lens 8 performance and reproducibility audit
 
+> Historical Lens 8 comparison. Current audited results and later repairs are in
+> [`FULL_MODEL_AUDIT_2026-08-27.md`](FULL_MODEL_AUDIT_2026-08-27.md).
+
 ## Bottom line
 
 Lens 8 is a real improvement over the previous published model, but the old

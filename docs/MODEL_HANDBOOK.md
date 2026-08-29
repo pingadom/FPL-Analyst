@@ -53,7 +53,7 @@ What *is* recoverable is the shape of an absence: consecutive Gameweeks in which
 
 A player who had missed two Gameweeks was rated to start 45% of the time and actually started 21% — over-rated by more than double, which in practice means the model kept picking injured players. Meanwhile the 56,000 players who *had* played were under-rated by nine points.
 
-The repair adds recent absence as a second axis of the minutes calibration, alongside price. The isotonic map then learns the correction from the data, per position, using only prior deadlines — no hand-set coefficients. Mean absolute bias across those bands falls from about 0.177 to 0.030.
+The repair adds recent absence as a second axis of the minutes calibration, alongside price. The isotonic map then learns the correction from the data, per position, using only prior deadlines — no hand-set coefficients. Mean absolute bias across those bands falls from about 0.177 to 0.030. At a live deadline, the streak is rebuilt from official event histories for the current season. It is never carried across the summer: a player who appears in GW1 cannot be marked injured because he missed the previous season's GW38, and a new player with no current-season appearance receives a neutral absence streak rather than an invented run.
 
 A blank Gameweek counts as neither an absence nor a return, because there was no fixture to miss. Resetting the run on a blank would tell the model an injured player had recovered because his club had a free week.
 
@@ -74,7 +74,7 @@ Comparing each European club against **its own** weeks with no tie nearby holds 
 * **It is anticipation, not fatigue.** Two to three days *after* a European match, players start slightly *more* than predicted (+0.043). The cost lands *before* the tie, when a fit player is simply left out.
 * **Only the knockout rounds matter.** A tie within four days costs 0.075 of start probability in the knockout months, against 0.004 in the group months — 6.5 standard errors versus 0.4. Nobody rests a first-choice forward for a dead November group game.
 
-So the model now carries the European calendar and applies a rest penalty before knockout ties, scaled by how much a squad rotates in the first place. Fixtures come from a free, unauthenticated source covering all ten replayed seasons, and nothing about it is a leak: European draws are made weeks ahead, so a manager at a Saturday deadline already knows about Tuesday.
+The calendar now flags only a knockout tie **after** the league fixture; a match two days after Europe remains available through `days_since` but cannot trigger an anticipatory-rest flag. The measured 0.10 penalty is not in production, because it was estimated using seasons that also appeared in the evaluation. Its production coefficient is zero until a value passes a pre-2018 or genuinely prospective test. This keeps a useful diagnostic without allowing an evaluation-exposed coefficient to improve its own backtest.
 
 Coverage is honest rather than complete. Europa League is available from 2020/21 and the Conference League from 2021/22, so some genuinely congested earlier weeks are still recorded as free. That weakens the feature rather than corrupting it — a missing tie makes the model *less* sure a player will be rested, never more.
 
@@ -87,6 +87,17 @@ The live model adds three external checks:
 Manager changes, major exits, promotion and European workload reduce confidence in carry-over ratings. They do not directly add or subtract fantasy points.
 
 Opta and Matchbook can disagree. That disagreement is displayed. It is not resolved by pretending one source is always right: the exchange receives more current-fixture weight, while Opta supplies an independent model vote.
+
+An Opta fixture snapshot is accepted only when both its season and Gameweek match
+the live deadline. Coverage counts matched home/away fixture keys, not rows in the
+file. This matters because the original audit found a ten-row GW1 file advertised
+as “10/10” on GW2 even though none of those fixtures matched; a stale file now
+reports 0/10 and contributes no fixture probability.
+
+The live target is the first event whose **deadline is still in the future**, not
+merely the first event that has not been marked finished. During a weekend this
+moves the decision room on to the next selectable Gameweek while withholding the
+in-progress round from availability evidence.
 
 The backtest had none of that for a long time, because exchange data does not exist far enough back — which meant any odds-derived idea could be shipped and never checked. `analysis/historical_odds.py` closes the gap with free closing prices covering all ten replayed seasons, and the comparison is not close: implied goals correlate 0.3846 with realised team goals where the model's own expected goals manage 0.2495.
 
@@ -126,6 +137,17 @@ active clubs. Eleven active starters are still mandatory. A persistent squad may
 retain future-value blank players on its bench; a Free Hit instead optimises the
 one-week XI and active autosub depth. Because Free Hit cash disappears after the
 Gameweek, its solver does not force near-£100m expenditure in a tiny blank slate.
+
+The website's **current pool** is narrower than the official registered-player
+universe only for availability: status `a` or `d`, at least 75% official
+availability and a legal price. An earlier version also required prior minutes,
+0.5% ownership or a 2.5 official xP estimate. That removed 146 nominally available
+players and could miss a late signing or breakout before the crowd noticed him.
+The popularity screen has been deleted; every legally available player is now
+forecast before the exact optimiser applies its own minutes and quality controls.
+The pool metadata publishes registered, scored and availability-excluded counts.
+A missing fixture is a separate integrity failure, and the build rejects it rather
+than quietly treating the player as a zero.
 
 ### 5. Build points from scoring routes
 
@@ -175,6 +197,12 @@ The production squad, XI and captain are one binary mixed-integer optimisation p
 
 The Python production solver uses the full eligible pool and must report an optimal solution with zero gap. The interactive browser first retains the immediate, captain, horizon, value, minutes and cheap-enabler frontiers, then solves that declared candidate set exactly. It never falls back to the old greedy builder.
 
+The generated payload carries full-precision lineup, bench and captain utilities,
+the actual censored fixture weight and Python's XI eligibility flags. The untouched
+browser preset uses those fields directly; it does not reconstruct the objective
+from rounded forecasts or display percentages. Moving a slider deliberately
+switches to a custom interactive score.
+
 Bench players still matter for autosubs and Bench Boost, but ordinary bench points are heavily discounted. The optimiser is not rewarded for storing £6m–£8m players outside the XI.
 
 ### 9. Plan transfers and chips recursively
@@ -197,27 +225,38 @@ Holding an unused chip is treated as an option. Playing it today forfeits every 
 A learned prediction cache is valid only for the exact ordered player-week frame,
 feature schema and target definition that created it. Lens 8 fingerprints all
 three. A matching row count is not sufficient. Any mismatch forces a retrain.
-This rule was added after the old 2,212-point research result failed to reproduce
-under the repaired schema.
+The frozen promotion audit is held to the same standard: it records the engine
+source hash, prepared-frame hash, cache schema, evaluation seasons and a hash of
+its own contents. The public build refuses a stale audit rather than silently
+publishing it. This rule was added after the old 2,212-point research result failed
+to reproduce under the repaired schema.
 
 ## How historical testing works
 
 The walk-forward replay starts before 2018/19 for model selection, then reports 2018/19 onward as evaluation seasons. The squad changes week by week using only the evidence available at that point. It scores legal formations, autosubs, captain/vice fallback, transfers, hits and chips under the rules that applied in that season.
 
-Hundreds or thousands of weight settings can be screened cheaply, but only a smaller frozen set receives the expensive recursive replay. A result cannot promote itself merely because it looked good after seeing the evaluation seasons.
+Hundreds or thousands of weight settings can be screened cheaply, but only a smaller frozen set receives the expensive recursive replay. A result cannot promote itself merely because it looked good after seeing the evaluation seasons. When several weight candidates probe the same decision policy, their weekly paths are averaged within each season before the block bootstrap. They are correlated variants of the same football outcomes, not extra seasons; counting them separately would shrink the standard error mechanically and inflate the switch confidence.
 
 Top-500k cutoffs are estimates rather than complete official historical tables. The model publishes the uncertainty and does not translate out-of-range totals into a made-up precise rank.
 
-The repaired replay averages **2,173.1 points**, against 2,087.0 for the
-previous published model on the same eight evaluation seasons. Roughly a third of
-that comes from the forecast repairs and the rest from the decision gate, which
-now pools several candidate weightings before ranking strategies and walks its
-choice forward season by season. Pooling halved the gate's own standard errors,
-which is what let a real difference between policies become visible instead of
-drowning in selection noise. The estimated top-500k shortfall roughly halved, from 210 points to 150
-on average and from 443 to 307 at worst, but the target is still not reached in
-any season. The former 2,212 V3 result stays retired because stale learned-model
-caches made it unreproducible. The earlier Lens 8 comparison is in
+There are now two deliberately separate numbers. The broad, walk-forward
+**research search** averages **2,175.5 points** over 2018/19–2025/26 and clears two
+of eight estimated top-500k pace lines. That is a diagnostic result, not a
+promotion claim: the search saw the evaluation era while comparing candidate
+families. The fingerprinted **frozen audited policy** averages **2,119.9**, clears
+zero of eight pace lines, and sits 176.9 points per season below the estimated
+target. It is the honest production benchmark.
+
+The corrected research result is 2.4 points below the preceding 2,177.9 run,
+which is noise rather than an improvement. The audited policy did improve by
+23.1 points from the stale 2,096.8 artifact after current-schema validation, but
+that older artifact is not a valid head-to-head benchmark because its engine and
+frame fingerprints did not match. Candidate weight paths are averaged within a
+season-week before uncertainty is estimated. This prevents correlated variants
+from masquerading as extra independent football seasons; it does **not** claim
+that adding variants creates new evidence or legitimately halves uncertainty.
+The former 2,212 V3 result stays retired because stale learned-model caches made
+it unreproducible. The earlier Lens 8 comparison is in
 [`PERFORMANCE_AUDIT_LENS8.md`](PERFORMANCE_AUDIT_LENS8.md); the repairs behind
 this number are in [`MODEL_LOGIC_AUDIT.md`](MODEL_LOGIC_AUDIT.md).
 
