@@ -883,6 +883,88 @@ class ModelEngineTests(unittest.TestCase):
             )
             self.assertEqual(fallback, lens.GATE_INCUMBENT)
 
+    def test_one_match_does_not_define_a_rate(self) -> None:
+        """The winner's curse: a single haul must move a rate, not replace it."""
+        frame = pd.DataFrame(
+            {
+                "player_key": ["a"] * 4,
+                "rate_game": [3.0, np.nan, 0.0, 1.0],
+            }
+        )
+        prior = pd.Series(0.5, index=frame.index)
+        shrunk = lens.shrunk_player_rate(frame, "rate_game", prior, 12, 4.0)
+        # No history yet: exactly the prior.
+        self.assertAlmostEqual(shrunk.iloc[0], 0.5)
+        # One appearance of 3.0 against four pseudo-games at 0.5, not 3.0.
+        self.assertAlmostEqual(shrunk.iloc[1], (3.0 + 4 * 0.5) / 5)
+        # A censored week (no appearance) adds neither a game nor a zero.
+        self.assertAlmostEqual(shrunk.iloc[2], shrunk.iloc[1])
+        self.assertAlmostEqual(shrunk.iloc[3], (3.0 + 0.0 + 4 * 0.5) / 6)
+        # Only earlier rows count, so the value is known at the deadline.
+        expanding = lens.shrunk_player_rate(frame, "rate_game", prior, None, 4.0)
+        self.assertAlmostEqual(expanding.iloc[3], shrunk.iloc[3])
+
+    def test_price_prior_is_fitted_on_training_seasons_only(self) -> None:
+        training = lens.TRAINING_SEASONS[0]
+        rows = 300
+        price = np.linspace(40, 130, rows)
+        frame = pd.DataFrame(
+            {
+                "season": [training] * rows + ["2025-26"] * rows,
+                "position_id": [4] * (2 * rows),
+                "price": np.concatenate([price, price]),
+            }
+        )
+        # The evaluation season carries a wildly different relation; if it
+        # leaked into the fit the slope would not come back as 0.01.
+        target = pd.Series(np.concatenate([0.01 * price, 50 - 0.3 * price]))
+        prior = lens.price_informed_prior(frame, target, {4: 0.28})
+        self.assertAlmostEqual(prior.iloc[rows + 10], 0.01 * price[10], places=6)
+        # Positions without enough training rows keep the flat fallback.
+        sparse = frame.iloc[rows - 100 :].assign(position_id=2)
+        flat = lens.price_informed_prior(sparse, target.iloc[rows - 100 :], {2: 0.04})
+        self.assertAlmostEqual(flat.iloc[0], 0.04)
+
+    def test_live_last_match_minutes_skips_blanks_and_splits_doubles(self) -> None:
+        current = pd.DataFrame({"id": [1, 2, 3], "team": [10, 10, 20]})
+        fixtures = pd.DataFrame(
+            {
+                "event": [1, 2, 2, 1],
+                "team_h": [10, 10, 10, 20],
+                "team_a": [11, 12, 13, 21],
+            }
+        )
+        live = {
+            1: {"elements": [{"id": 1, "stats": {"minutes": 90}},
+                             {"id": 3, "stats": {"minutes": 12}}]},
+            2: {"elements": [{"id": 1, "stats": {"minutes": 150}},
+                             {"id": 2, "stats": {"minutes": 0}}]},
+        }
+        last = lens.current_last_match_minutes(current, fixtures, live, [1, 2])
+        # Team 10 played twice in event 2: 150 minutes is 75 a match.
+        self.assertAlmostEqual(last[1], 75.0)
+        # Scheduled and did not play is a zero, not "no match".
+        self.assertAlmostEqual(last[2], 0.0)
+        # Team 20 blanked in event 2, so its last match is event 1.
+        self.assertAlmostEqual(last[3], 12.0)
+
+    def test_last_match_tier_separates_cameos_from_full_matches(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "position_id": [3, 3, 3, 3],
+                "price": [60.0, 60.0, 60.0, 60.0],
+                "absence_run": [0.0, 0.0, 0.0, 0.0],
+                "last_match_minutes": [90.0, 70.0, 10.0, -1.0],
+            }
+        )
+        with mock.patch.object(lens, "USE_LAST_MATCH_TIER", True):
+            tiers = lens.minutes_calibration_tier(frame, ["position_id"])
+        availability = tiers // 3
+        self.assertEqual(list(availability), [0, 4, 3, 0])
+        with mock.patch.object(lens, "USE_LAST_MATCH_TIER", False):
+            legacy = lens.minutes_calibration_tier(frame, ["position_id"])
+        self.assertEqual(list(legacy // 3), [0, 0, 0, 0])
+
 
 if __name__ == "__main__":
     unittest.main()

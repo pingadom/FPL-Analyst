@@ -116,6 +116,59 @@ USE_BLANK_FREE_CALIBRATION = os.environ.get("FPL_BLANK_FILTER", "1") != "0"
 # around it is tuned to the defect; making it pay needs the thresholds re-derived,
 # not the stretch abandoned.
 USE_PROJECTION_STRETCH = os.environ.get("FPL_STRETCH", "0") != "0"
+# Shrink every per-player rate toward a price-informed prior instead of taking
+# small samples at face value.
+#
+# The event rates were a plain rolling mean with `min_periods=1`, so after one
+# appearance a player's goal, clean-sheet and bonus rates *were* that match, and
+# the positional prior applied only at zero appearances. Measured on the players
+# the model actually ranks in its weekly top 25: one appearance in the window
+# over-projects by +2.01 points (5.14 against 3.13 realised), two by +1.16, three
+# by +0.95, and a full window by -0.14. That is the winner's curse, and it lands
+# on exactly the players the model buys and captains — a promoted £4.5m defender
+# projected at 9.2 after one clean sheet and a goal took the armband in 2025/26
+# GW2.
+#
+# The priors were also flat by position, so a £14m striker and a £4m reserve
+# started from the same 0.54 start probability. Nailed starters (80+ minutes the
+# previous match) were given 66 expected minutes and played 74 in every price
+# band, which under-rates premiums most because their points scale hardest with
+# minutes. Price is the market's prior on role and output and is known at every
+# deadline, so the priors here are linear in price, per position, fitted on the
+# two training seasons only.
+#
+# On by default. Full walk-forward runs against the shipped 2157.2:
+#
+#   price prior alone, k = 4                    2184.1   +26.9
+#   price prior + last-match tier, k = 4        2217.8   +60.5  (se 34.7)
+#   price prior + last-match tier, k = 12       2192.5   +35.2  (se 34.0)
+#
+# k = 12 ships although k = 4 scored higher, because k was chosen on the training
+# seasons (top-5, top-15 and correlation all peak there) and the 25-point gap
+# between the two full runs is inside one standard error. Taking k = 4 for its
+# evaluation score would be selecting on the seasons it is scored on.
+USE_PRICE_PRIOR = os.environ.get("FPL_PRICE_PRIOR", "1") != "0"
+PRICE_PRIOR_STRENGTH = float(os.environ.get("FPL_PRICE_PRIOR_STRENGTH", "12.0"))
+# Split the "played last time" calibration tier by how much he played.
+#
+# `absence_run == 0` treats a 90-minute starter and a five-minute cameo as the
+# same evidence, so the isotonic map averaged them: players who played 80+ the
+# previous match were given 66 expected minutes and played 74.5, and players who
+# came on for under half an hour were given 42 and played 29. Every nailed
+# starter was under-rated by about 0.46 points a match and every fringe player
+# over-rated. Last-match minutes are known at the deadline, and splitting the
+# tier into full match / 60-79 / cameo lets the map learn the three separately.
+USE_LAST_MATCH_TIER = os.environ.get("FPL_LAST_MATCH_TIER", "1") != "0"
+if USE_LAST_MATCH_TIER:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem + "-lastmatch" + PREPARED_HISTORY_CACHE.suffix
+    )
+if USE_PRICE_PRIOR:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem
+        + f"-pprior{PRICE_PRIOR_STRENGTH:.1f}".replace(".", "_")
+        + PREPARED_HISTORY_CACHE.suffix
+    )
 if (
     not USE_RECOVERED_TEAM_NAMES
     or not USE_BLANK_FREE_CALIBRATION
@@ -1069,7 +1122,7 @@ MINUTES_CALIBRATION_SPECS: tuple[
 # Three price bands crossed with three absence bands. A cell that never reaches
 # `MINUTES_CALIBRATION_MINIMUM_ROWS` is simply left uncalibrated, which is the
 # behaviour before this axis existed, so the split degrades safely.
-MINUTES_CALIBRATION_TIERS = tuple(range(9))
+MINUTES_CALIBRATION_TIERS = tuple(range(15 if USE_LAST_MATCH_TIER else 9))
 
 
 def _minutes_bins(values: np.ndarray, scale: float) -> np.ndarray:
@@ -1148,6 +1201,16 @@ def minutes_calibration_tier(
         [0, 1],
         default=2,
     ).astype(int)
+    if USE_LAST_MATCH_TIER and "last_match_minutes" in frame:
+        # -1 is "no previous match", which stays in the full-match tier rather
+        # than being read as a cameo.
+        last = frame["last_match_minutes"].fillna(-1.0).to_numpy(float)
+        played = availability_tier == 0
+        availability_tier = np.where(
+            played & (last >= 0) & (last < 60),
+            3,
+            np.where(played & (last >= 60) & (last < 80), 4, availability_tier),
+        ).astype(int)
     return (price_tier + 3 * availability_tier).astype(int)
 
 
@@ -1686,13 +1749,62 @@ def current_absence_runs_from_events(
     return run
 
 
+def current_last_match_minutes(
+    current: pd.DataFrame,
+    fixtures: pd.DataFrame,
+    live_by_event: dict[int, dict],
+    completed_events: list[int],
+) -> dict[int, float]:
+    """Per-match minutes in each player's most recent scheduled club fixture.
+
+    The live counterpart of the historical `last_match_minutes`: blank events
+    are skipped rather than read as a zero, and a Double Gameweek is divided by
+    its fixture count. A player whose club has not yet played gets -1, the same
+    "no previous match" value the historical frame uses.
+    """
+    if current.empty:
+        return {}
+    rows = current.copy()
+    rows["id"] = pd.to_numeric(rows["id"], errors="coerce")
+    rows["team"] = pd.to_numeric(rows["team"], errors="coerce")
+    rows = rows.dropna(subset=["id", "team"])
+    team_of = {int(row.id): int(row.team) for row in rows.itertuples(index=False)}
+    fixtures_per: dict[tuple[int, int], int] = {}
+    if not fixtures.empty:
+        scheduled = fixtures.dropna(subset=["event", "team_h", "team_a"])
+        for fixture in scheduled[["event", "team_h", "team_a"]].itertuples(index=False):
+            for team in (int(fixture.team_h), int(fixture.team_a)):
+                key = (int(fixture.event), team)
+                fixtures_per[key] = fixtures_per.get(key, 0) + 1
+    last = {element: -1.0 for element in team_of}
+    unresolved = set(team_of)
+    for event in sorted({int(value) for value in completed_events}, reverse=True):
+        if not unresolved:
+            break
+        payload = live_by_event.get(event) or {}
+        event_minutes = {
+            int(item["id"]): float((item.get("stats") or {}).get("minutes", 0) or 0)
+            for item in payload.get("elements", [])
+            if item.get("id") is not None
+        }
+        resolved = set()
+        for element in unresolved:
+            count = fixtures_per.get((event, team_of[element]), 0)
+            if count <= 0:
+                continue
+            last[element] = event_minutes.get(element, 0.0) / count
+            resolved.add(element)
+        unresolved.difference_update(resolved)
+    return last
+
+
 def load_current_absence_runs(
     current: pd.DataFrame,
     fixtures: pd.DataFrame,
     events: pd.DataFrame,
     season: str,
     next_event: int,
-) -> tuple[dict[int, float], list[int]]:
+) -> tuple[dict[int, float], list[int], dict[int, float]]:
     """Fetch immutable official event histories and derive the live absence run."""
     completed = sorted(
         int(value)
@@ -1717,6 +1829,7 @@ def load_current_absence_runs(
     return (
         current_absence_runs_from_events(current, fixtures, live_by_event, completed),
         completed,
+        current_last_match_minutes(current, fixtures, live_by_event, completed),
     )
 
 
@@ -2949,6 +3062,62 @@ def add_causal_team_strength(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
+def price_informed_prior(
+    data: pd.DataFrame,
+    target: pd.Series,
+    fallback: dict[int, float],
+    bounds: tuple[float, float | None] = (0.0, None),
+) -> pd.Series:
+    """Per-position linear prior on price, fitted on the training seasons only.
+
+    Fitting on the evaluation seasons would let every replayed season's own
+    outcomes set the prior it is shrunk toward. The two training seasons are
+    enough to learn a slope, and price has meant the same thing since.
+    """
+    position = data["position_id"].to_numpy(int)
+    price = data["price"].to_numpy(float)
+    values = target.to_numpy(float)
+    prior = data["position_id"].map(fallback).astype(float).to_numpy(copy=True)
+    training = data["season"].isin(TRAINING_SEASONS).to_numpy() & np.isfinite(values)
+    for position_id in SQUAD_QUOTAS:
+        fit = training & (position == position_id)
+        if fit.sum() < 200 or np.ptp(price[fit]) <= 0:
+            continue
+        slope, intercept = np.polyfit(price[fit], values[fit], 1)
+        rows = position == position_id
+        prior[rows] = intercept + slope * price[rows]
+    lower, upper = bounds
+    return pd.Series(np.clip(prior, lower, upper), index=data.index)
+
+
+def shrunk_player_rate(
+    data: pd.DataFrame,
+    source: str,
+    prior: pd.Series,
+    window: int | None,
+    strength: float,
+) -> pd.Series:
+    """Causal per-player mean shrunk toward `prior` by `strength` pseudo-games.
+
+    A censored week (NaN) counts as neither a success nor a game, matching the
+    unshrunk rolling mean it replaces. `window=None` means the whole history.
+    """
+    grouped = data.groupby("player_key", sort=False)[source]
+    if window is None:
+        total = grouped.transform(lambda values: values.expanding().sum().shift(1))
+        count = grouped.transform(lambda values: values.expanding().count().shift(1))
+    else:
+        total = grouped.transform(
+            lambda values: values.rolling(window, min_periods=1).sum().shift(1)
+        )
+        count = grouped.transform(
+            lambda values: values.rolling(window, min_periods=1).count().shift(1)
+        )
+    total = total.fillna(0.0)
+    count = count.fillna(0.0)
+    return (total + strength * prior) / (count + strength)
+
+
 def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     """Carry player priors across seasons and build component expected points."""
     data = pd.concat(frames, ignore_index=True)
@@ -3016,6 +3185,20 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         data["minutes"].fillna(0).to_numpy(float),
         data["fixture_count"].to_numpy(int) > 0,
     )
+    # Minutes in the most recent *scheduled* match, per fixture so a Double
+    # Gameweek does not read as a 180-minute match. A blank week carries the
+    # previous value forward, for the same reason it leaves `absence_run` alone.
+    ordered = data.sort_values(["player_key", "season_order", "GW"]).index
+    per_match = (
+        data.loc[ordered, "minutes"].fillna(0)
+        / data.loc[ordered, "fixture_count"].clip(lower=1)
+    ).where(data.loc[ordered, "fixture_count"] > 0)
+    data["last_match_minutes"] = (
+        per_match.groupby(data.loc[ordered, "player_key"], sort=False)
+        .transform(lambda values: values.ffill().shift(1))
+        .reindex(data.index)
+        .fillna(-1.0)
+    )
     previous_minutes_observed = by_player["minutes"].shift(1)
     previous_official_xp = by_player["official_xp"].shift(1)
     previous_xp_trusted = by_player["official_xp_feed_trusted"].shift(1).fillna(False)
@@ -3064,12 +3247,28 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         data["minutes"] / data["fixture_count"].clip(lower=1)
     ).where(data["fixture_count"] > 0)
     by_player = data.groupby("player_key", sort=False)
-    data["long_raw"] = by_player["performance_points"].transform(
-        lambda values: values.expanding().mean().shift(1)
-    ).fillna(points_prior)
-    data["recent_raw"] = by_player["performance_points"].transform(
-        lambda values: values.rolling(6, min_periods=1).mean().shift(1)
-    ).fillna(data["long_raw"])
+    if USE_PRICE_PRIOR:
+        points_prior = price_informed_prior(
+            data,
+            data["performance_points"],
+            {1: 3.2, 2: 2.6, 3: 2.8, 4: 2.6},
+            bounds=(0.5, 9.0),
+        )
+        data["long_raw"] = shrunk_player_rate(
+            data, "performance_points", points_prior, None, PRICE_PRIOR_STRENGTH
+        )
+        # Recent form is shrunk toward the player's own long-run level, so a
+        # single haul moves it by a fraction rather than defining it.
+        data["recent_raw"] = shrunk_player_rate(
+            data, "performance_points", data["long_raw"], 6, PRICE_PRIOR_STRENGTH
+        )
+    else:
+        data["long_raw"] = by_player["performance_points"].transform(
+            lambda values: values.expanding().mean().shift(1)
+        ).fillna(points_prior)
+        data["recent_raw"] = by_player["performance_points"].transform(
+            lambda values: values.rolling(6, min_periods=1).mean().shift(1)
+        ).fillna(data["long_raw"])
     data["past_minutes"] = by_player["performance_minutes"].transform(
         lambda values: values.expanding().mean().shift(1)
     ).fillna(minutes_prior * 90)
@@ -3086,6 +3285,24 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     prior_start = data["position_id"].map({1: 0.68, 2: 0.58, 3: 0.56, 4: 0.54})
     prior_sub = data["position_id"].map({1: 0.05, 2: 0.30, 3: 0.42, 4: 0.43})
     prior_sixty_start = data["position_id"].map({1: 0.95, 2: 0.82, 3: 0.76, 4: 0.72})
+    if USE_PRICE_PRIOR:
+        scheduled = data["fixture_count"] > 0
+        prior_start = price_informed_prior(
+            data,
+            (data["starts_observed"] / data["fixture_count"].clip(lower=1)).where(
+                scheduled
+            ),
+            {1: 0.68, 2: 0.58, 3: 0.56, 4: 0.54},
+            bounds=(0.05, 0.95),
+        )
+        prior_sixty_start = price_informed_prior(
+            data,
+            (
+                data["sixty_observed"] / data["starts_observed"].clip(lower=1)
+            ).where(data["starts_observed"] > 0),
+            {1: 0.95, 2: 0.82, 3: 0.76, 4: 0.72},
+            bounds=(0.40, 0.98),
+        )
     prior_strength = 4.0
     prior_games = rolling_total("fixture_count").fillna(0)
     prior_starts = rolling_total("starts_observed").fillna(0)
@@ -3321,6 +3538,15 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ("penalties_missed_game", "penalty_miss_rate", {1: 0.0, 2: 0.002, 3: 0.01, 4: 0.015}),
         ("own_goals_game", "own_goal_rate", {1: 0.002, 2: 0.008, 3: 0.003, 4: 0.002}),
     ]:
+        if USE_PRICE_PRIOR:
+            data[target] = shrunk_player_rate(
+                data,
+                source,
+                price_informed_prior(data, data[source], prior),
+                12,
+                PRICE_PRIOR_STRENGTH,
+            ).clip(lower=0)
+            continue
         rolling = data.groupby("player_key", sort=False)[source].transform(
             lambda values: values.rolling(12, min_periods=1).mean().shift(1)
         )
@@ -8059,7 +8285,11 @@ def current_recommendation(
     team_name = dict(zip(teams["id"], teams["short_name"]))
     team_full_name = dict(zip(teams["id"], teams["name"]))
     all_current_fixtures = pd.DataFrame(fixtures)
-    absence_by_element, completed_event_ids = load_current_absence_runs(
+    (
+        absence_by_element,
+        completed_event_ids,
+        last_match_by_element,
+    ) = load_current_absence_runs(
         current, all_current_fixtures, events, current_season, gw_number
     )
 
@@ -8974,6 +9204,9 @@ def current_recommendation(
     # run, while blanks and players without a current-season appearance stay
     # neutral.
     current["absence_run"] = current["id"].map(absence_by_element).fillna(0.0)
+    current["last_match_minutes"] = (
+        current["id"].map(last_match_by_element).fillna(-1.0)
+    )
     # Same compression repair as the historical path, using terminal maps fitted
     # on the uncalibrated historical predictor.
     current = calibrate_live_minutes(current, historical)
