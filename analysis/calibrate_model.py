@@ -159,6 +159,33 @@ PRICE_PRIOR_STRENGTH = float(os.environ.get("FPL_PRICE_PRIOR_STRENGTH", "12.0"))
 # over-rated. Last-match minutes are known at the deadline, and splitting the
 # tier into full match / 60-79 / cameo lets the map learn the three separately.
 USE_LAST_MATCH_TIER = os.environ.get("FPL_LAST_MATCH_TIER", "1") != "0"
+# Backfill xG and xA from Understat where FPL published none.
+#
+# FPL's archive carries no expected goals or assists before GW16 of 2022/23, so
+# six of the ten replayed seasons -- both training seasons among them -- built
+# every goal, assist and team-attack rate from actual goals alone, the noisiest
+# signal in the game. The live feed always has xG, so the backtest that tunes the
+# model was built on weaker evidence than the model that picks the squad. See
+# `understat_history.py` for coverage and the rules on where it may be used.
+USE_UNDERSTAT_XG = os.environ.get("FPL_UNDERSTAT", "0") != "0"
+# Half-life, in Gameweeks, for a player's long-run points history. Zero keeps the
+# original undecayed career mean, under which a 2016 match still weighs fully in
+# 2025. Late in a season, this season's form beyond the projection predicts the
+# next four weeks (corr +0.084 on evaluation) and the signal grows with career
+# length -- none below one season of history, +0.08 to +0.13 beyond two -- which
+# is the signature of a stale anchor. The two training seasons cannot see it,
+# because nobody had a long history yet, so it is chosen walk-forward.
+HISTORY_HALFLIFE = float(os.environ.get("FPL_HISTORY_HALFLIFE", "0"))
+if USE_UNDERSTAT_XG:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem + "-understat" + PREPARED_HISTORY_CACHE.suffix
+    )
+if HISTORY_HALFLIFE > 0:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem
+        + f"-half{HISTORY_HALFLIFE:g}"
+        + PREPARED_HISTORY_CACHE.suffix
+    )
 if USE_LAST_MATCH_TIER:
     PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
         PREPARED_HISTORY_CACHE.stem + "-lastmatch" + PREPARED_HISTORY_CACHE.suffix
@@ -732,6 +759,7 @@ AUDITED_POLICY_ENGINE_FILES = (
     "analysis/european_fixtures.py",
     "analysis/historical_odds.py",
     "analysis/team_identity.py",
+    "analysis/understat_history.py",
 )
 
 
@@ -2183,6 +2211,10 @@ def build_season(
     team_fixtures["kickoff_time"] = pd.to_datetime(
         team_fixtures["kickoff_time"], errors="coerce", utc=True
     )
+    if USE_UNDERSTAT_XG:
+        from understat_history import fill_team_xg
+
+        team_fixtures = fill_team_xg(team_fixtures, season, team_names)
     team_fixtures.sort_values(["team_id", "kickoff_time", "GW"], inplace=True)
     team_fixtures["team_rest_days"] = (
         team_fixtures.groupby("team_id")["kickoff_time"].diff().dt.total_seconds()
@@ -3096,14 +3128,32 @@ def shrunk_player_rate(
     prior: pd.Series,
     window: int | None,
     strength: float,
+    halflife: float = 0.0,
 ) -> pd.Series:
     """Causal per-player mean shrunk toward `prior` by `strength` pseudo-games.
 
     A censored week (NaN) counts as neither a success nor a game, matching the
-    unshrunk rolling mean it replaces. `window=None` means the whole history.
+    unshrunk rolling mean it replaces. `window=None` means the whole history;
+    with a positive `halflife` that history is exponentially decayed by row
+    (Gameweek) age instead, and the pseudo-games weigh against the decayed count.
     """
     grouped = data.groupby("player_key", sort=False)[source]
-    if window is None:
+    if window is None and halflife > 0:
+        from scipy.signal import lfilter
+
+        keep = 0.5 ** (1.0 / halflife)
+
+        def decayed(series: pd.Series) -> pd.Series:
+            # S_t = x_t + keep * S_(t-1), then shifted so only earlier rows count.
+            summed = lfilter([1.0], [1.0, -keep], series.to_numpy(float))
+            return pd.Series(summed, index=series.index).shift(1)
+
+        keys = data["player_key"]
+        total = data[source].fillna(0.0).groupby(keys, sort=False).transform(decayed)
+        count = (
+            data[source].notna().astype(float).groupby(keys, sort=False).transform(decayed)
+        )
+    elif window is None:
         total = grouped.transform(lambda values: values.expanding().sum().shift(1))
         count = grouped.transform(lambda values: values.expanding().count().shift(1))
     else:
@@ -3130,6 +3180,10 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     from deadline_news import attach_deadline_news
 
     data = attach_deadline_news(data)
+    if USE_UNDERSTAT_XG:
+        from understat_history import attach_player_backfill
+
+        data = attach_player_backfill(data)
     data = add_causal_team_strength(data)
     lineup_rows = data[data["starts_observed"] > 0].groupby(
         ["season", "season_order", "team_id", "GW"], sort=True
@@ -3255,7 +3309,12 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
             bounds=(0.5, 9.0),
         )
         data["long_raw"] = shrunk_player_rate(
-            data, "performance_points", points_prior, None, PRICE_PRIOR_STRENGTH
+            data,
+            "performance_points",
+            points_prior,
+            None,
+            PRICE_PRIOR_STRENGTH,
+            halflife=HISTORY_HALFLIFE,
         )
         # Recent form is shrunk toward the player's own long-run level, so a
         # single haul moves it by a fraction rather than defining it.
@@ -3473,11 +3532,15 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     appeared = data["appearances_observed"] > 0
     appearance_denominator = data["appearances_observed"].clip(lower=1)
     minute_denominator = data["minutes"].clip(lower=45)
+    # `rate_xg` / `rate_xa` exist only with the Understat backfill: FPL's value
+    # where it published one, Understat's in the weeks it did not.
+    rate_xg = data["rate_xg"] if "rate_xg" in data else data["expected_goals"]
+    rate_xa = data["rate_xa"] if "rate_xa" in data else data["expected_assists"]
     data["goal_signal_game"] = (
         pd.Series(
             np.where(
-                data["expected_goals"] > 0,
-                0.72 * data["expected_goals"] + 0.28 * data["goals"],
+                rate_xg > 0,
+                0.72 * rate_xg + 0.28 * data["goals"],
                 data["goals"],
             ),
             index=data.index,
@@ -3488,8 +3551,8 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     data["assist_signal_game"] = (
         pd.Series(
             np.where(
-                data["expected_assists"] > 0,
-                0.72 * data["expected_assists"] + 0.28 * data["assists"],
+                rate_xa > 0,
+                0.72 * rate_xa + 0.28 * data["assists"],
                 data["assists"],
             ),
             index=data.index,
