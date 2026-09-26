@@ -158,7 +158,20 @@ PRICE_PRIOR_STRENGTH = float(os.environ.get("FPL_PRICE_PRIOR_STRENGTH", "12.0"))
 # starter was under-rated by about 0.46 points a match and every fringe player
 # over-rated. Last-match minutes are known at the deadline, and splitting the
 # tier into full match / 60-79 / cameo lets the map learn the three separately.
-USE_LAST_MATCH_TIER = os.environ.get("FPL_LAST_MATCH_TIER", "1") != "0"
+#
+# Version 2 repairs two things version 1 got wrong. "No previous match" was put
+# in the full-match tier so it would not read as a cameo, which calibrated every
+# debutant like a nailed starter: 0.56 predicted starts against 0.16 realised on
+# the evaluation seasons, mostly GBP4.0-4.5m fringe players the optimiser buys as
+# bench fodder. It now has its own tier, pooled across price because the cells
+# are small, and falls back to the uncalibrated estimate (0.24 against 0.13 for
+# the cheapest) until a cell has enough rows. And 31-59 minutes is split from a
+# 5-minute cameo: that group was under-predicted by 0.09 starts.
+# Version 2 is the default: full run 2217.2 against version 1's 2192.5 (+24.7,
+# 5 of 8 seasons up), with debutants' predicted starts 0.56 -> 0.24 against 0.16
+# realised.
+LAST_MATCH_TIER_VERSION = int(os.environ.get("FPL_LAST_MATCH_TIER", "2"))
+USE_LAST_MATCH_TIER = LAST_MATCH_TIER_VERSION > 0
 # Backfill xG and xA from Understat where FPL published none.
 #
 # FPL's archive carries no expected goals or assists before GW16 of 2022/23, so
@@ -176,6 +189,11 @@ USE_UNDERSTAT_XG = os.environ.get("FPL_UNDERSTAT", "0") != "0"
 # is the signature of a stale anchor. The two training seasons cannot see it,
 # because nobody had a long history yet, so it is chosen walk-forward.
 HISTORY_HALFLIFE = float(os.environ.get("FPL_HISTORY_HALFLIFE", "0"))
+# Rebuild the live points and ICT history from this season's completed
+# Gameweeks instead of reading last season's final values. Live-only: the
+# backtest's rows already include the current season, so this cannot change any
+# replayed score, only the recommendation for the next deadline.
+USE_LIVE_FORM = os.environ.get("FPL_LIVE_FORM", "1") != "0"
 if USE_UNDERSTAT_XG:
     PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
         PREPARED_HISTORY_CACHE.stem + "-understat" + PREPARED_HISTORY_CACHE.suffix
@@ -188,7 +206,9 @@ if HISTORY_HALFLIFE > 0:
     )
 if USE_LAST_MATCH_TIER:
     PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
-        PREPARED_HISTORY_CACHE.stem + "-lastmatch" + PREPARED_HISTORY_CACHE.suffix
+        PREPARED_HISTORY_CACHE.stem
+        + ("-lastmatch" if LAST_MATCH_TIER_VERSION == 1 else f"-lastmatch{LAST_MATCH_TIER_VERSION}")
+        + PREPARED_HISTORY_CACHE.suffix
     )
 if USE_PRICE_PRIOR:
     PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
@@ -1150,7 +1170,9 @@ MINUTES_CALIBRATION_SPECS: tuple[
 # Three price bands crossed with three absence bands. A cell that never reaches
 # `MINUTES_CALIBRATION_MINIMUM_ROWS` is simply left uncalibrated, which is the
 # behaviour before this axis existed, so the split degrades safely.
-MINUTES_CALIBRATION_TIERS = tuple(range(15 if USE_LAST_MATCH_TIER else 9))
+MINUTES_CALIBRATION_TIERS = tuple(
+    range({0: 9, 1: 15}.get(LAST_MATCH_TIER_VERSION, 21))
+)
 
 
 def _minutes_bins(values: np.ndarray, scale: float) -> np.ndarray:
@@ -1234,11 +1256,25 @@ def minutes_calibration_tier(
         # than being read as a cameo.
         last = frame["last_match_minutes"].fillna(-1.0).to_numpy(float)
         played = availability_tier == 0
-        availability_tier = np.where(
-            played & (last >= 0) & (last < 60),
-            3,
-            np.where(played & (last >= 60) & (last < 80), 4, availability_tier),
-        ).astype(int)
+        if LAST_MATCH_TIER_VERSION >= 2:
+            availability_tier = np.select(
+                [
+                    played & (last < 0),
+                    played & (last < 30),
+                    played & (last < 60),
+                    played & (last < 80),
+                ],
+                [6, 3, 5, 4],
+                default=availability_tier,
+            ).astype(int)
+            # Debutants are too few to split by price as well.
+            price_tier = np.where(availability_tier == 6, 0, price_tier)
+        else:
+            availability_tier = np.where(
+                played & (last >= 0) & (last < 60),
+                3,
+                np.where(played & (last >= 60) & (last < 80), 4, availability_tier),
+            ).astype(int)
     return (price_tier + 3 * availability_tier).astype(int)
 
 
@@ -1826,13 +1862,130 @@ def current_last_match_minutes(
     return last
 
 
+FORM_POINTS_PRIOR = {1: 3.2, 2: 2.6, 3: 2.8, 4: 2.6}
+FORM_UNDERLYING_PRIOR = {1: 2.5, 2: 4.0, 3: 6.0, 4: 6.5}
+
+
+def current_season_form_rows(
+    current: pd.DataFrame,
+    fixtures: pd.DataFrame,
+    live_by_event: dict[int, dict],
+) -> pd.DataFrame:
+    """This season's completed Gameweeks, one row per player, from official event data."""
+    code_of = dict(zip(pd.to_numeric(current["id"]), pd.to_numeric(current["code"])))
+    team_of = dict(zip(pd.to_numeric(current["id"]), pd.to_numeric(current["team"])))
+    fixtures_per: dict[tuple[int, int], int] = {}
+    if not fixtures.empty:
+        for fixture in fixtures.dropna(subset=["event", "team_h", "team_a"])[
+            ["event", "team_h", "team_a"]
+        ].itertuples(index=False):
+            for team in (int(fixture.team_h), int(fixture.team_a)):
+                key = (int(fixture.event), team)
+                fixtures_per[key] = fixtures_per.get(key, 0) + 1
+    rows = []
+    for event, payload in sorted(live_by_event.items()):
+        for item in payload.get("elements", []):
+            element = int(item["id"])
+            if element not in code_of:
+                continue
+            stats = item.get("stats") or {}
+            rows.append(
+                {
+                    "player_key": str(int(code_of[element])),
+                    "GW": int(event),
+                    "points": float(stats.get("total_points", 0) or 0),
+                    "minutes": float(stats.get("minutes", 0) or 0),
+                    "ict": float(stats.get("ict_index", 0) or 0),
+                    "fixture_count": fixtures_per.get((int(event), int(team_of[element])), 0),
+                }
+            )
+    return pd.DataFrame(
+        rows, columns=["player_key", "GW", "points", "minutes", "ict", "fixture_count"]
+    )
+
+
+def live_form_history(
+    historical: pd.DataFrame,
+    season_rows: pd.DataFrame,
+    deadline_rows: pd.DataFrame,
+) -> pd.DataFrame:
+    """Points and ICT history at a live deadline, built exactly as the backtest builds it.
+
+    The live path used to read these from the last row of the archived season, so
+    at GW6 the empirical member, the ridge features and the decision multiplier
+    all ranked players on form as of the previous May -- 0.37 points a match
+    adrift of the true value, and further every week after. The backtest never
+    had that problem, because its rows always include the current season. This
+    appends the season's completed Gameweeks to the archive and runs the same
+    shrinkage, which reproduces the archived frame's own values to the bit.
+    """
+    order = int(historical["season_order"].max()) + 1
+    keep = [
+        "player_key", "season", "season_order", "GW", "position_id", "price",
+        "performance_points", "underlying_game",
+    ]
+    new = season_rows.merge(
+        deadline_rows[["player_key", "position_id", "price"]], on="player_key", how="inner"
+    )
+    scheduled = new["fixture_count"] > 0
+    new["performance_points"] = (
+        new["points"] / new["fixture_count"].clip(lower=1)
+    ).where(scheduled)
+    new["underlying_game"] = (
+        new["ict"] / new["minutes"].clip(lower=45) * 90
+    ).clip(0, 35).where(scheduled)
+    new["season"] = "live"
+    new["season_order"] = order
+    deadline = deadline_rows[["player_key", "position_id", "price"]].copy()
+    deadline["season"] = "live"
+    deadline["season_order"] = order
+    deadline["GW"] = int(new["GW"].max()) + 1 if len(new) else 1
+    deadline["performance_points"] = np.nan
+    deadline["underlying_game"] = np.nan
+    deadline["_deadline"] = True
+    frame = pd.concat(
+        [historical[keep], new[keep], deadline[keep + ["_deadline"]]], ignore_index=True
+    )
+    frame["_deadline"] = frame["_deadline"].fillna(False).astype(bool)
+    frame = frame.sort_values(
+        ["player_key", "season_order", "GW"], kind="stable"
+    ).reset_index(drop=True)
+    by_player = frame.groupby("player_key", sort=False)
+    if USE_PRICE_PRIOR:
+        prior = price_informed_prior(
+            frame, frame["performance_points"], FORM_POINTS_PRIOR, bounds=(0.5, 9.0)
+        )
+        frame["long_raw"] = shrunk_player_rate(
+            frame, "performance_points", prior, None, PRICE_PRIOR_STRENGTH,
+            halflife=HISTORY_HALFLIFE,
+        )
+        frame["recent_raw"] = shrunk_player_rate(
+            frame, "performance_points", frame["long_raw"], 6, PRICE_PRIOR_STRENGTH
+        )
+    else:
+        frame["long_raw"] = by_player["performance_points"].transform(
+            lambda values: values.expanding().mean().shift(1)
+        ).fillna(frame["position_id"].map(FORM_POINTS_PRIOR))
+        frame["recent_raw"] = by_player["performance_points"].transform(
+            lambda values: values.rolling(6, min_periods=1).mean().shift(1)
+        ).fillna(frame["long_raw"])
+    frame["long_underlying_raw"] = by_player["underlying_game"].transform(
+        lambda values: values.expanding().mean().shift(1)
+    ).fillna(frame["position_id"].map(FORM_UNDERLYING_PRIOR))
+    frame["recent_underlying_raw"] = by_player["underlying_game"].transform(
+        lambda values: values.rolling(6, min_periods=1).mean().shift(1)
+    ).fillna(frame["long_underlying_raw"])
+    columns = ["recent_raw", "long_raw", "recent_underlying_raw", "long_underlying_raw"]
+    return frame.loc[frame["_deadline"], ["player_key", *columns]]
+
+
 def load_current_absence_runs(
     current: pd.DataFrame,
     fixtures: pd.DataFrame,
     events: pd.DataFrame,
     season: str,
     next_event: int,
-) -> tuple[dict[int, float], list[int], dict[int, float]]:
+) -> tuple[dict[int, float], list[int], dict[int, float], dict[int, dict]]:
     """Fetch immutable official event histories and derive the live absence run."""
     completed = sorted(
         int(value)
@@ -1858,6 +2011,7 @@ def load_current_absence_runs(
         current_absence_runs_from_events(current, fixtures, live_by_event, completed),
         completed,
         current_last_match_minutes(current, fixtures, live_by_event, completed),
+        live_by_event,
     )
 
 
@@ -8352,6 +8506,7 @@ def current_recommendation(
         absence_by_element,
         completed_event_ids,
         last_match_by_element,
+        live_by_event,
     ) = load_current_absence_runs(
         current, all_current_fixtures, events, current_season, gw_number
     )
@@ -8415,6 +8570,20 @@ def current_recommendation(
         )
     )
     prior_summary = prior_summary.merge(tails, on="player_code", how="left")
+    # The last scheduled match of the archived season, per fixture. The
+    # historical `last_match_minutes` carries across a summer, so a player's
+    # first live week must too; without this every player reads as a debutant
+    # until his club has played this season.
+    scheduled_prior = prior[prior["fixture_count"] > 0].sort_values("GW")
+    final_match = (
+        scheduled_prior.assign(
+            previous_last_match_minutes=scheduled_prior["minutes"]
+            / scheduled_prior["fixture_count"].clip(lower=1)
+        )
+        .groupby("player_code", as_index=False)["previous_last_match_minutes"]
+        .last()
+    )
+    prior_summary = prior_summary.merge(final_match, on="player_code", how="left")
 
     first_fixtures = all_current_fixtures.copy()
     first_fixtures = first_fixtures[first_fixtures["event"] == gw_number]
@@ -8528,6 +8697,7 @@ def current_recommendation(
                 "player_code",
                 "previous_points",
                 "previous_minutes",
+                "previous_last_match_minutes",
                 "recent_raw",
                 "long_raw",
                 "recent_underlying_raw",
@@ -8623,6 +8793,25 @@ def current_recommendation(
         f"Gu{chr(0xFFFD)}hi", "Guehi", regex=False
     )
     current["price"] = current["now_cost"].astype(int)
+    if USE_LIVE_FORM and completed_event_ids:
+        deadline_rows = pd.DataFrame(
+            {
+                "player_key": pd.to_numeric(current["code"]).astype("Int64").astype(str),
+                "position_id": current["position_id"].astype(int),
+                "price": current["price"].astype(float),
+            }
+        )
+        form = live_form_history(
+            historical,
+            current_season_form_rows(current, all_current_fixtures, live_by_event),
+            deadline_rows,
+        ).set_index("player_key")
+        keys = deadline_rows["player_key"].to_numpy()
+        for column in ("recent_raw", "long_raw", "recent_underlying_raw", "long_underlying_raw"):
+            rebuilt = form[column].reindex(keys).to_numpy()
+            current[column] = np.where(
+                np.isfinite(rebuilt), rebuilt, current[column].to_numpy(float)
+            )
     current["ownership"] = pd.to_numeric(current["selected_by_percent"], errors="coerce").fillna(0)
     current["ep_next_num"] = pd.to_numeric(current["ep_next"], errors="coerce").fillna(0)
     fallback = current["ep_next_num"].where(current["ep_next_num"] > 0, 2.0)
@@ -9267,8 +9456,13 @@ def current_recommendation(
     # run, while blanks and players without a current-season appearance stay
     # neutral.
     current["absence_run"] = current["id"].map(absence_by_element).fillna(0.0)
+    # This season's last scheduled match where the club has played one, else
+    # last season's final match, else -1 for a genuine debutant: the same
+    # definition the historical frame uses.
+    this_season_last = current["id"].map(last_match_by_element)
+    this_season_last = this_season_last.where(this_season_last >= 0)
     current["last_match_minutes"] = (
-        current["id"].map(last_match_by_element).fillna(-1.0)
+        this_season_last.fillna(current.get("previous_last_match_minutes")).fillna(-1.0)
     )
     # Same compression repair as the historical path, using terminal maps fitted
     # on the uncalibrated historical predictor.

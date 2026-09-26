@@ -1181,3 +1181,54 @@ real managers realise about twice the model's predicted gain in every rank band 
 4.28 for prior top-10k managers). That edge lives in team news, pre-season information
 and live signals, so further gains are likely to come from the live path rather than
 from the backtest.
+
+---
+
+## 9. Two corrections: debutants' minutes, and stale live form
+
+### The last-match tier, version 2 (shipped)
+
+Version 1 of the last-match calibration tier put "no previous match" in the full-match
+group so it would not read as a cameo. That calibrated every debutant like a nailed
+starter: **0.56 predicted starts against 0.16 realised** on the evaluation seasons
+(−34 expected minutes, −0.69 points a match), mostly £4.0–4.5m fringe players the
+optimiser buys as bench fodder. The uncalibrated estimate was already close (0.24 against
+0.13 for the cheapest), so debutants now get their own tier, pooled across price because
+the cells are small, and fall back to it until a cell has 400 rows. The same change splits
+31–59 minutes from a short cameo; that group had been under-predicted by 0.09 starts.
+
+| group | v1 predicted start | v2 predicted start | realised |
+|---|---|---|---|
+| debutants | 0.559 | 0.236 | 0.164 |
+| last match 31–59 | 0.373 | 0.434 | 0.464 |
+| last match 1–29 | 0.320 | 0.287 | 0.274 |
+| last match 80+ | 0.803 | 0.818 | 0.816 |
+
+Full run: **2217.2 against 2192.5** (+24.7; 5 of 8 seasons up; +60.0 against the original
+2157.2). On season points alone that is within noise; it ships because it was a single
+pre-planned repair of a clear calibration defect, not a pick among variants.
+
+### The live model was ranking on last May's form (shipped, live-only)
+
+In `current_recommendation`, `recent_raw`, `long_raw` and the ICT histories came only from
+the final row of the archived season and were never updated with the current season's
+matches. The one-week structural route did use this season's xG and minutes, but three of
+the four forecast inputs (the empirical member, the ridge features and the decision
+multiplier) saw form as of the previous May. At GW6 of 2025/26 that tail value differed
+from the true recent form by **0.37 points a match** (correlation 0.876), and the gap grows
+all season. The backtest could never show this, because its rows always include the
+current season.
+
+`live_form_history` now appends the season's completed Gameweeks, read from the official
+event data the live path already caches, to the archive and runs the same shrinkage. On a
+simulated 2025/26 GW6 deadline it reproduces the archived frame's own values for all 742
+players with **zero difference**. It cannot change any replayed score, only the live
+recommendation (`FPL_LIVE_FORM`, on).
+
+### Next candidate: an empirical member that counts availability once
+
+The empirical member averages points per scheduled fixture, so past injury weeks count as
+zeros, and then multiplies by play probability again. It under-projects nailed starters by
++0.64 to +0.83 a match; the ridge member is unbiased for them. Rebuilding it from points
+per appearance × P(play) improves top-5 (train 5.874 → 5.974, eval 6.158 → 6.244),
+correlation and MAE in both splits, with top-15 slightly lower in both. It needs a full run.
