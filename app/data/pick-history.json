@@ -347,12 +347,12 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-09-26T12:06:09+00:00",
+      "recordedAt": "2026-09-26T14:52:49+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
       "vice": "B.Fernandes",
-      "projectedPoints": 61.7,
+      "projectedPoints": 60.5,
       "players": [
         {
           "id": 572,
@@ -362,7 +362,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.5
+          "projected": 3.9
         },
         {
           "id": 229,
@@ -372,27 +372,27 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.4
+          "projected": 4.7
         },
         {
-          "id": 649,
-          "name": "Maitland-Niles",
+          "id": 115,
+          "name": "De Cuyper",
           "position": "DEF",
-          "price": 4.5,
+          "price": 5.0,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.4
+          "projected": 3.9
         },
         {
-          "id": 305,
-          "name": "Davis",
+          "id": 391,
+          "name": "Gvardiol",
           "position": "DEF",
-          "price": 4.0,
+          "price": 5.7,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.3
+          "projected": 4.1
         },
         {
           "id": 426,
@@ -402,7 +402,7 @@
           "starter": true,
           "captain": false,
           "vice": true,
-          "projected": 6.2
+          "projected": 6.3
         },
         {
           "id": 124,
@@ -412,27 +412,27 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.3
+          "projected": 5.6
         },
         {
-          "id": 286,
-          "name": "Belloumi",
+          "id": 427,
+          "name": "Mbeumo",
           "position": "MID",
-          "price": 5.1,
+          "price": 7.9,
           "starter": true,
           "captain": false,
           "vice": false,
           "projected": 5.1
         },
         {
-          "id": 12,
-          "name": "Saka",
+          "id": 399,
+          "name": "Cherki",
           "position": "MID",
-          "price": 9.5,
+          "price": 7.8,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.9
+          "projected": 4.6
         },
         {
           "id": 94,
@@ -442,7 +442,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.5
+          "projected": 4.8
         },
         {
           "id": 411,
@@ -455,34 +455,24 @@
           "projected": 6.8
         },
         {
-          "id": 379,
-          "name": "Isak",
+          "id": 346,
+          "name": "Calvert-Lewin",
           "position": "FWD",
-          "price": 9.1,
+          "price": 6.0,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.5
+          "projected": 3.9
         },
         {
-          "id": 250,
-          "name": "Leno",
+          "id": 109,
+          "name": "Verbruggen",
           "position": "GK",
           "price": 4.5,
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.2
-        },
-        {
-          "id": 173,
-          "name": "Thomas",
-          "position": "DEF",
-          "price": 4.0,
-          "starter": false,
-          "captain": false,
-          "vice": false,
-          "projected": 4.1
+          "projected": 3.3
         },
         {
           "id": 176,
@@ -492,17 +482,27 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.8
+          "projected": 3.1
         },
         {
-          "id": 651,
-          "name": "J.Angulo",
+          "id": 305,
+          "name": "Davis",
+          "position": "DEF",
+          "price": 4.0,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 3.3
+        },
+        {
+          "id": 664,
+          "name": "Salia",
           "position": "FWD",
           "price": 4.5,
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 1.7
+          "projected": 1.2
         }
       ],
       "scored": false

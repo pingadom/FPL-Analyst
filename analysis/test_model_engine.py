@@ -973,13 +973,81 @@ class ModelEngineTests(unittest.TestCase):
                 "last_match_minutes": [90.0, 70.0, 10.0, -1.0],
             }
         )
-        with mock.patch.object(lens, "USE_LAST_MATCH_TIER", True):
+        with mock.patch.object(lens, "USE_LAST_MATCH_TIER", True),              mock.patch.object(lens, "LAST_MATCH_TIER_VERSION", 1):
             tiers = lens.minutes_calibration_tier(frame, ["position_id"])
         availability = tiers // 3
         self.assertEqual(list(availability), [0, 4, 3, 0])
         with mock.patch.object(lens, "USE_LAST_MATCH_TIER", False):
             legacy = lens.minutes_calibration_tier(frame, ["position_id"])
         self.assertEqual(list(legacy // 3), [0, 0, 0, 0])
+
+    def test_live_form_equals_the_backtest_computation(self) -> None:
+        """Appending this season's weeks live must give the batch frame's value."""
+        rng = np.random.default_rng(3)
+        rows = []
+        for key, position, price in (("11", 3, 80.0), ("22", 2, 45.0)):
+            for season_order, season in ((0, "s0"), (1, "s1")):
+                for gw in range(1, 7):
+                    rows.append(
+                        {
+                            "player_key": key, "season": season, "season_order": season_order,
+                            "GW": gw, "position_id": position, "price": price,
+                            "points": float(rng.integers(0, 12)), "minutes": 90.0,
+                            "ict": float(rng.uniform(0, 15)), "fixture_count": 1,
+                        }
+                    )
+        full = pd.DataFrame(rows)
+        full["performance_points"] = full["points"]
+        full["underlying_game"] = (full["ict"] / 90 * 90).clip(0, 35)
+        # The batch answer: the season-1 GW6 row of a frame that contains it.
+        batch = full.copy()
+        batch.loc[(batch.season == "s1") & (batch.GW == 6), ["performance_points", "underlying_game"]] = np.nan
+        batch = batch.sort_values(["player_key", "season_order", "GW"]).reset_index(drop=True)
+        prior = lens.price_informed_prior(batch, batch["performance_points"], lens.FORM_POINTS_PRIOR, bounds=(0.5, 9.0))
+        long = lens.shrunk_player_rate(batch, "performance_points", prior, None, lens.PRICE_PRIOR_STRENGTH)
+        target = (batch.season == "s1") & (batch.GW == 6)
+        # The live answer: season 0 as history, season 1 weeks 1-5 as event rows.
+        history = full[full.season == "s0"]
+        season_rows = full[(full.season == "s1") & (full.GW <= 5)][
+            ["player_key", "GW", "points", "minutes", "ict", "fixture_count"]
+        ]
+        deadline = pd.DataFrame({"player_key": ["11", "22"], "position_id": [3, 2], "price": [80.0, 45.0]})
+        with mock.patch.object(lens, "USE_PRICE_PRIOR", True), mock.patch.object(lens, "HISTORY_HALFLIFE", 0.0):
+            live = lens.live_form_history(history, season_rows, deadline).set_index("player_key")
+        expected = dict(zip(batch.loc[target, "player_key"], long[target]))
+        for key in ("11", "22"):
+            self.assertAlmostEqual(live.loc[key, "long_raw"], expected[key], places=10)
+
+    def test_current_season_form_rows_read_official_event_data(self) -> None:
+        current = pd.DataFrame({"id": [1, 2], "code": [111, 222], "team": [10, 20]})
+        fixtures = pd.DataFrame({"event": [1, 2, 2], "team_h": [10, 10, 10], "team_a": [20, 11, 12]})
+        live = {
+            1: {"elements": [{"id": 1, "stats": {"total_points": 6, "minutes": 90, "ict_index": "7.5"}},
+                             {"id": 2, "stats": {"total_points": 1, "minutes": 20, "ict_index": "1.0"}}]},
+            2: {"elements": [{"id": 1, "stats": {"total_points": 9, "minutes": 180, "ict_index": "12"}}]},
+        }
+        rows = lens.current_season_form_rows(current, fixtures, live).set_index(["player_key", "GW"])
+        self.assertEqual(rows.loc[("111", 2), "fixture_count"], 2)   # double Gameweek
+        self.assertEqual(rows.loc[("222", 1), "fixture_count"], 1)
+        self.assertAlmostEqual(rows.loc[("111", 1), "ict"], 7.5)
+
+    def test_version_two_gives_debutants_their_own_tier(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "position_id": [3] * 5,
+                "price": [60.0, 60.0, 60.0, 60.0, 90.0],
+                "absence_run": [0.0] * 5,
+                "last_match_minutes": [90.0, 70.0, 45.0, 10.0, -1.0],
+            }
+        )
+        with mock.patch.object(lens, "USE_LAST_MATCH_TIER", True), \
+             mock.patch.object(lens, "LAST_MATCH_TIER_VERSION", 2):
+            tiers = lens.minutes_calibration_tier(frame, ["position_id"])
+        self.assertEqual(list(tiers // 3), [0, 4, 5, 3, 6])
+        # Debutants are pooled across price: a GBP9.0m debutant shares a cell
+        # with a GBP4.0m one rather than borrowing a nailed starter's map.
+        self.assertEqual(int(tiers[4] % 3), 0)
+        self.assertTrue(all(tier < 21 for tier in tiers))
 
 
 if __name__ == "__main__":
