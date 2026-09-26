@@ -1225,10 +1225,15 @@ simulated 2025/26 GW6 deadline it reproduces the archived frame's own values for
 players with **zero difference**. It cannot change any replayed score, only the live
 recommendation (`FPL_LIVE_FORM`, on).
 
-### Next candidate: an empirical member that counts availability once
+### Tested and not adopted: an empirical member that counts availability once
 
 The empirical member averages points per scheduled fixture, so past injury weeks count as
 zeros, and then multiplies by play probability again. It under-projects nailed starters by
 +0.64 to +0.83 a match; the ridge member is unbiased for them. Rebuilding it from points
 per appearance × P(play) improves top-5 (train 5.874 → 5.974, eval 6.158 → 6.244),
-correlation and MAE in both splits, with top-15 slightly lower in both. It needs a full run.
+correlation and MAE in both splits, with top-15 slightly lower in both.
+
+The full run says no: **2197.2 against 2217.2** (−20.0, 4 of 8 seasons up, swings of −118 to
++139). The member is better calibrated, but the pipeline was tuned around it and the gain
+does not survive. That is the same pattern as the projection stretch and stacking, and
+it is recorded here so the idea is not re-run. The code was not kept.
