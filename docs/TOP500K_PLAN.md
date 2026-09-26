@@ -1079,3 +1079,105 @@ The Wildcard trigger (`wildcardGap` 52.5) left both 2025/26 Wildcards unplayed i
 walk-forward. Lowering it was screened: 45 and 38 have **no effect on the training
 seasons** (+6.6 and +23.9 on evaluation), and 30 costs −90.0 on training. The only
 positive evidence is on the evaluation seasons, so the threshold is unchanged.
+
+---
+
+## 8. The gap audit, and what it changed
+
+A meta-analysis on 2026-09-24/25 scored the model's 2025/26 replay on the same
+definitions as the 24,041-manager luck-or-skill study and re-tested every open item.
+The full write-up is published separately ("Where the Points Go"); the durable findings
+are recorded here.
+
+### Where 2025/26 was lost
+
+Against the top-10k median (2,209 against 2,412):
+
+| phase | model vs top 10k |
+|---|---|
+| GW1–5 | +15 |
+| GW6–11 | **−112** |
+| GW12–19 | −51 |
+| GW20–29 | 0 |
+| GW30–38 | −66 |
+
+The weekly craft is elite: hindsight lineup loss is 368 against the top 10k's 360, and
+given the same XIs the expected-points captain rule (269 a season) beats the captain
+ranker (223), the crowd's choice (226) and haul probability (257). The losses are
+upstream, in who is in the squad. At GW6 the model ranked Haaland first of every player,
+but only 1.1 points over six weeks ahead of Salah, whom it held, so the swap never cleared
+the hurdle. 84% of prior top-10k managers owned Haaland and 82% captained him. Forcing an
+early Wildcard does not help (GW6: +1.5 on evaluation, −67.5 on training), and the transfer
+objective already counts captaincy (weight 0.70).
+
+Two first-pass readings were wrong. The study's transfer gain counts Wildcard rebuild
+moves (63 moves for the top 10k against 38 ordinary transfers), so per move the gap is
+4.7 against 3.8. And its zero-minute-starter count contradicts its own autosub count, so
+it is not used.
+
+### "Compression" is a level bias, not a selection gap
+
+The blend's within-Gameweek slope of realised on projected points is 1.10–1.34, but each
+member is close to 1, and **inside the top-80 choice pool the slope is 0.96**. Averaging
+four imperfectly correlated members squeezes the pool against the rest of the field; it
+does not squeeze gaps within the pool. So the Haaland call was an ordinary forecast miss.
+Walk-forward NNLS stacking fixes the calibration (slope 1.23 → 1.08, top-60 bias
++0.44 → +0.12) but picks slightly worse players (top-5 6.166 → 6.092; training top-15
+5.149 → 4.984). Not adopted.
+
+### The test bench, rebuilt
+
+Across 20 recorded experiments, training-season and evaluation-season deltas correlate
+**−0.18**, and none of the 12 changes that improved training improved evaluation. Two
+seasons select nothing. `harness.py walkforward` replaces that for decision knobs: each
+season holds the setting that beat the incumbent on every earlier season at 75%
+confidence (the production gate's rule), and is then scored out of sample.
+
+| knob | walk-forward result |
+|---|---|
+| `transfer_hurdle` 2.5 / 3.5 / 4.25 | never adopted; **+0.0** |
+| `wildcard_gap` 30 / 38 / 45 | adopted after 2019/20; **−1.4 ± 8.0** |
+
+The static "+23.9 at 38" on evaluation does not survive honest selection. Both shipped
+values stand, and so do the rest:
+
+| knob | static evaluation means (shipped first) | walk-forward |
+|---|---|---|
+| `early_price_weight` 0 / 0.5 / 1.1 / 2.0 | 2209 / 2219 / 2230 / 2161 | never adopted, +0.0 |
+| `free_hit_gap` shipped / 20 / 25 / 35 | 2209 / 2184 / 2211 / 2207 | never adopted, +0.0 |
+| `bench_score` shipped / 14 / 24 | 2209 / 2209 / 2210 | never adopted, +0.0 |
+| `triple_score` shipped / 7 / 14 | 2209 / 2209 / 2209 | −2.4 ± 2.8 |
+
+Price awareness (the team-value gap) looks best in a static read, but its seasons swing
+from −77 to +122 and no earlier window ever supports it. The chip thresholds barely move
+the season, so the chip contribution's −45 to +300 swing comes from per-season policy
+re-selection and path effects, not from where the bars sit. **No decision knob beats its
+shipped value under walk-forward selection.** FPL's own pre-deadline `ep_next` was also
+tested as a forecast blend (2020/21+): every weight lowers top-15 selection, and a
+walk-forward choice converges to zero.
+
+### Measured, small, not shipped
+
+| change | switch | effect |
+|---|---|---|
+| walk-forward segment correction (set-piece role, returners, news) | prototype | MAE 1.171 → 1.131, corr +0.005, top-K flat |
+| Understat xG backfill (team xG complete from 2016/17; player xG 39–100%) | `FPL_UNDERSTAT` | corr +0.002–0.003 in every period; training top-15 −0.03 to −0.04 |
+| decayed career history | `FPL_HISTORY_HALFLIFE` | corr better in all 10 seasons (+0.001–0.003, largest recently); walk-forward top-15 +0.003 |
+
+The xG gap was real (no FPL xG before GW16 of 2022/23, six of ten seasons) but it was not
+the hidden constraint: threat, bonus-point and points history already carry most of it.
+The stale career anchor is also real and mechanistic, since late-season form predicts
+the next four weeks only for players with more than a season of history (+0.08 to +0.13),
+but at +1–2 season points it is below what a full run can detect. Both switches stay off.
+
+Penalty order turned out to be a proxy for role importance, not a penalty effect: #2
+takers are under-rated as much as #1 takers, mostly through minutes.
+
+### What this leaves
+
+The measurable defects in the forecast are now mostly repaired. What still separates the
+model from the elite is information the archive does not hold: GW2–6 transfers made by
+real managers realise about twice the model's predicted gain in every rank band (8.41 vs
+4.28 for prior top-10k managers). That edge lives in team news, pre-season information
+and live signals, so further gains are likely to come from the live path rather than
+from the backtest.

@@ -904,6 +904,22 @@ class ModelEngineTests(unittest.TestCase):
         expanding = lens.shrunk_player_rate(frame, "rate_game", prior, None, 4.0)
         self.assertAlmostEqual(expanding.iloc[3], shrunk.iloc[3])
 
+    def test_decayed_history_weights_recent_matches_more(self) -> None:
+        frame = pd.DataFrame(
+            {"player_key": ["a"] * 4, "rate_game": [10.0, np.nan, 0.0, 5.0]}
+        )
+        prior = pd.Series(1.0, index=frame.index)
+        shrunk = lens.shrunk_player_rate(frame, "rate_game", prior, None, 2.0, halflife=1.0)
+        # Half-life of one row: weights halve per row of age, censored rows
+        # still age the history but add no evidence.
+        self.assertAlmostEqual(shrunk.iloc[0], 1.0)
+        self.assertAlmostEqual(shrunk.iloc[1], (10.0 + 2.0) / (1.0 + 2.0))
+        self.assertAlmostEqual(shrunk.iloc[2], (5.0 + 2.0) / (0.5 + 2.0))
+        self.assertAlmostEqual(shrunk.iloc[3], (2.5 + 0.0 + 2.0) / (0.25 + 1.0 + 2.0))
+        # With no half-life the path is the undecayed mean, unchanged.
+        flat = lens.shrunk_player_rate(frame, "rate_game", prior, None, 2.0)
+        self.assertAlmostEqual(flat.iloc[3], (10.0 + 0.0 + 2.0) / (2.0 + 2.0))
+
     def test_price_prior_is_fitted_on_training_seasons_only(self) -> None:
         training = lens.TRAINING_SEASONS[0]
         rows = 300
