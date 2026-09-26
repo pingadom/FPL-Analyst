@@ -59,8 +59,8 @@ def save_history(history: dict) -> None:
     )
 
 
-def record() -> dict:
-    """Append this deadline's squad. Re-running before kick-off refreshes it."""
+def record(now: datetime | None = None) -> dict:
+    """Append this deadline's squad. Re-running before the deadline refreshes it."""
     artifact = json.loads(ARTIFACT.read_text(encoding="utf-8-sig"))
     headline = artifact.get("headline") or {}
     squad = artifact.get("squad") or []
@@ -71,6 +71,18 @@ def record() -> dict:
     gameweek = int(headline.get("gameweek") or 0)
     if not season or not gameweek:
         raise RuntimeError("The artifact does not identify its season and Gameweek")
+    # The same rule `backfill` enforces on git history: a squad written after its
+    # deadline knows something about how the Gameweek went, so it is not a
+    # prospective pick and must never enter the log as one.
+    deadline_text = headline.get("deadline")
+    if not deadline_text:
+        raise RuntimeError("The artifact records no deadline; cannot prove the pick is prospective")
+    deadline = datetime.fromisoformat(str(deadline_text).replace("Z", "+00:00"))
+    if (now or datetime.now(timezone.utc)) >= deadline:
+        raise RuntimeError(
+            f"{season} GW{gameweek} deadline {deadline.isoformat(timespec='minutes')} has "
+            "passed; a pick recorded now is not evidence and will not be recorded"
+        )
 
     entry = {
         "season": season,
@@ -169,7 +181,9 @@ def backfill(commit: str) -> None:
     original = ARTIFACT.read_text(encoding="utf-8-sig")
     try:
         ARTIFACT.write_text(raw, encoding="utf-8")
-        entry = record()
+        # Judged at the moment it was committed, which the check above has
+        # already proved was before the deadline.
+        entry = record(now=written)
     finally:
         ARTIFACT.write_text(original, encoding="utf-8")
     entry_note = f"backfilled from {commit[:8]}, committed {written.isoformat(timespec='minutes')}"
