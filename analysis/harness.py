@@ -69,6 +69,7 @@ Typical use:
     python analysis/harness.py reference
     python analysis/harness.py sweep --field transfer_hurdle --values 5,3,1.5
     python analysis/harness.py compare --field max_hits --values 0,1
+    python analysis/harness.py walkforward --field transfer_hurdle --values 4,8
 """
 
 from __future__ import annotations
@@ -326,6 +327,82 @@ def compare(
     )
 
 
+@dataclass
+class WalkForward:
+    """What tuning one knob *as you go* would actually have scored.
+
+    Choosing on the two training seasons and reporting the other eight was the
+    protocol, and on the record it carries no information: across 20 pinned
+    experiments the training and evaluation deltas correlate -0.18, and none of
+    the 12 that improved training improved evaluation. So instead each season
+    picks its setting from the seasons before it alone, the way the production
+    gate picks a strategy, and the season is then scored out of sample. The
+    first season with a choice has two seasons of history, the last has nine.
+    """
+
+    labels: list[str]
+    chosen: list[str]
+    totals: np.ndarray
+    baseline: np.ndarray
+
+    @property
+    def deltas(self) -> np.ndarray:
+        return self.totals - self.baseline
+
+    @property
+    def mean_delta(self) -> float:
+        return float(self.deltas.mean())
+
+    @property
+    def standard_error(self) -> float:
+        # Seasons are the unit of replication here, not weeks: the whole point
+        # is that a season's path is what a two-season screen could not see.
+        if len(self.deltas) < 2:
+            return 0.0
+        return float(self.deltas.std(ddof=1) / np.sqrt(len(self.deltas)))
+
+
+def walk_forward(
+    baseline: Outcome,
+    variants: list[Outcome],
+    first: int | None = None,
+    confidence: float = lens.GATE_SWITCH_CONFIDENCE,
+) -> WalkForward:
+    """Season by season, hold a setting until an alternative beats it on the past.
+
+    The standing setting starts at the baseline and only changes when a rival
+    beats it on every earlier season's weeks with at least `confidence`, the
+    same hysteresis the production gate uses. Among rivals that clear the bar
+    the one with the largest mean gain wins.
+    """
+    options = [baseline, *variants]
+    first = len(lens.TRAINING_SEASONS) if first is None else first
+    rng = np.random.default_rng(lens.GATE_BOOTSTRAP_SEED)
+    standing = 0
+    chosen: list[str] = []
+    totals: list[float] = []
+    for season in range(first, len(baseline.totals)):
+        best, best_gain = standing, 0.0
+        for index, option in enumerate(options):
+            if index == standing:
+                continue
+            draws = lens.block_bootstrap_season_delta(
+                option.weekly[:season], options[standing].weekly[:season], rng
+            )
+            gain = float(draws.mean())
+            if float(np.mean(draws > 0)) >= confidence and gain > best_gain:
+                best, best_gain = index, gain
+        standing = best
+        chosen.append(options[standing].label)
+        totals.append(float(options[standing].totals[season]))
+    return WalkForward(
+        labels=[option.label for option in options],
+        chosen=chosen,
+        totals=np.asarray(totals, dtype=float),
+        baseline=np.asarray(baseline.totals[first:], dtype=float),
+    )
+
+
 def sweep(
     config: Config, name: str, values: list, data: pd.DataFrame
 ) -> tuple[Outcome, list[tuple[Outcome, Comparison]]]:
@@ -402,7 +479,9 @@ def _parse(value: str):
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "command", choices=["reference", "sweep", "compare"], help="what to run"
+        "command",
+        choices=["reference", "sweep", "compare", "walkforward"],
+        help="what to run",
     )
     parser.add_argument("--field", help="the single field to vary")
     parser.add_argument("--values", help="comma-separated values for that field")
@@ -430,6 +509,38 @@ def main() -> None:
     values = [_parse(item) for item in arguments.values.split(",")]
 
     baseline, results = sweep(config, arguments.field, values, data)
+    if arguments.command == "walkforward":
+        outcome = walk_forward(baseline, [variant for variant, _ in results])
+        seasons = lens.SEASONS[len(lens.SEASONS) - len(outcome.totals) :]
+        print(f"walk-forward over {len(seasons)} seasons, field {arguments.field}")
+        # Every option's own per-season score, so a near-miss is visible and not
+        # just the setting that happened to be held.
+        for option in [baseline, *(variant for variant, _ in results)]:
+            own = option.totals[len(option.totals) - len(seasons) :]
+            print(
+                f"  option {option.label:<30} "
+                + " ".join(f"{value:5.0f}" for value in own)
+                + f"   mean {own.mean():7.1f}"
+            )
+        for season, pick, total, base in zip(
+            seasons, outcome.chosen, outcome.totals, outcome.baseline
+        ):
+            print(f"  {season}  held {pick:<32} {total:7.0f}  ({total - base:+.0f})")
+        print(
+            f"mean {outcome.mean_delta:+.1f} a season, se {outcome.standard_error:.1f}, "
+            f"{int((outcome.deltas > 0).sum())} of {len(outcome.deltas)} seasons up"
+        )
+        _record(
+            {
+                "command": "walkforward",
+                "field": arguments.field,
+                "values": [str(value) for value in values],
+                "chosen": outcome.chosen,
+                "meanDelta": round(outcome.mean_delta, 1),
+                "standardError": round(outcome.standard_error, 1),
+            }
+        )
+        return
     _print_header(baseline)
     for outcome, result in results:
         _print_row(outcome, result)
