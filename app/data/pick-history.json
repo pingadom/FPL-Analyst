@@ -347,7 +347,7 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-09-24T15:56:24+00:00",
+      "recordedAt": "2026-09-26T12:06:09+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
@@ -358,7 +358,7 @@
           "id": 572,
           "name": "Tzolakis",
           "position": "GK",
-          "price": 4.6,
+          "price": 4.7,
           "starter": true,
           "captain": false,
           "vice": false,
@@ -495,14 +495,14 @@
           "projected": 3.8
         },
         {
-          "id": 194,
-          "name": "Thomas-Asante",
+          "id": 651,
+          "name": "J.Angulo",
           "position": "FWD",
-          "price": 5.0,
+          "price": 4.5,
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 2.3
+          "projected": 1.7
         }
       ],
       "scored": false
