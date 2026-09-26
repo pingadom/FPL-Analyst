@@ -123,6 +123,39 @@ class PickHistoryScoringTests(unittest.TestCase):
         self.assertNotIn("realised", history["entries"][0])
 
 
+class PickHistoryRecordTests(unittest.TestCase):
+    ARTIFACT = {
+        "headline": {
+            "season": "2026/27",
+            "gameweek": 6,
+            "deadline": "2026-10-10T10:00:00Z",
+            "formation": "3-5-2",
+            "captain": "Captain",
+        },
+        "squad": [player(1, True, captain=True)],
+    }
+
+    def _record(self, now):
+        saved: dict = {}
+        with mock.patch.object(pick_history.ARTIFACT.__class__, "read_text", return_value=json.dumps(self.ARTIFACT)), \
+             mock.patch.object(pick_history, "load_history", return_value={"schemaVersion": 1, "entries": []}), \
+             mock.patch.object(pick_history, "save_history", saved.update):
+            pick_history.record(now=now)
+        return saved
+
+    def test_a_pick_before_the_deadline_is_recorded(self):
+        from datetime import datetime, timezone
+        saved = self._record(datetime(2026, 10, 9, 18, 0, tzinfo=timezone.utc))
+        self.assertEqual(saved["entries"][0]["gameweek"], 6)
+
+    def test_a_pick_after_the_deadline_is_refused(self):
+        """A squad chosen after kick-off knows how the week began; it is not evidence."""
+        from datetime import datetime, timezone
+        with self.assertRaises(RuntimeError) as caught:
+            self._record(datetime(2026, 10, 10, 10, 0, tzinfo=timezone.utc))
+        self.assertIn("has passed", str(caught.exception))
+
+
 class PickHistoryProvenanceTests(unittest.TestCase):
     def test_backfill_refuses_an_artifact_written_after_its_deadline(self):
         """The rule that makes the log evidence rather than a scrapbook."""
