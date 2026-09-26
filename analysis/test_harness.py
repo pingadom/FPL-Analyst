@@ -123,5 +123,45 @@ class VerdictDisagreementTests(unittest.TestCase):
         self.assertEqual(losing.verdict, "worse")
 
 
+def synthetic(label: str, weekly_edge: list[float]) -> harness.Outcome:
+    """Ten seasons of 38 weeks; each season's weeks sit `edge` above a noisy base."""
+    rng = np.random.default_rng(7)
+    base = rng.normal(55, 15, size=(10, 38))
+    weekly = [list(base[s] + weekly_edge[s]) for s in range(10)]
+    return harness.Outcome(
+        label=label,
+        totals=np.array([sum(week) for week in weekly]),
+        weekly=weekly,
+        stats=[],
+    )
+
+
+class WalkForwardTests(unittest.TestCase):
+    def test_a_rival_that_is_better_everywhere_is_adopted_and_scored(self) -> None:
+        baseline = synthetic("base", [0.0] * 10)
+        better = synthetic("better", [3.0] * 10)
+        result = harness.walk_forward(baseline, [better])
+        self.assertEqual(result.chosen, ["better"] * 8)
+        self.assertAlmostEqual(result.mean_delta, 3.0 * 38, places=6)
+
+    def test_a_training_only_winner_is_dropped_once_later_seasons_disagree(self) -> None:
+        """The failure mode the old protocol could not see: good on the first
+        two seasons, bad afterwards. Walk-forward adopts it, pays for it, then
+        lets it go as evidence accumulates, and the score reflects all of that."""
+        baseline = synthetic("base", [0.0] * 10)
+        mirage = synthetic("mirage", [4.0, 4.0] + [-4.0] * 8)
+        result = harness.walk_forward(baseline, [mirage])
+        self.assertEqual(result.chosen[0], "mirage")
+        self.assertEqual(result.chosen[-1], "base")
+        self.assertLess(result.mean_delta, 0.0)
+
+    def test_no_evidence_keeps_the_incumbent(self) -> None:
+        baseline = synthetic("base", [0.0] * 10)
+        same = synthetic("same", [0.0] * 10)
+        result = harness.walk_forward(baseline, [same])
+        self.assertEqual(result.chosen, ["base"] * 8)
+        self.assertEqual(result.mean_delta, 0.0)
+
+
 if __name__ == "__main__":
     unittest.main()
