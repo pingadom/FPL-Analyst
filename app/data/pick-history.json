@@ -347,12 +347,12 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-09-26T14:52:49+00:00",
+      "recordedAt": "2026-09-27T13:16:47+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
       "vice": "B.Fernandes",
-      "projectedPoints": 60.5,
+      "projectedPoints": 60.7,
       "players": [
         {
           "id": 572,
@@ -372,7 +372,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.7
+          "projected": 5.0
         },
         {
           "id": 115,
@@ -382,7 +382,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 3.9
+          "projected": 3.7
         },
         {
           "id": 391,
@@ -392,7 +392,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.1
+          "projected": 3.9
         },
         {
           "id": 426,
@@ -412,7 +412,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.6
+          "projected": 5.8
         },
         {
           "id": 427,
@@ -432,7 +432,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.6
+          "projected": 4.5
         },
         {
           "id": 94,
@@ -442,7 +442,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.8
+          "projected": 5.1
         },
         {
           "id": 411,
@@ -452,7 +452,7 @@
           "starter": true,
           "captain": true,
           "vice": false,
-          "projected": 6.8
+          "projected": 6.7
         },
         {
           "id": 346,
@@ -462,7 +462,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 3.9
+          "projected": 4.0
         },
         {
           "id": 109,
@@ -472,7 +472,7 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.3
+          "projected": 3.0
         },
         {
           "id": 176,
@@ -492,7 +492,7 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.3
+          "projected": 3.2
         },
         {
           "id": 664,

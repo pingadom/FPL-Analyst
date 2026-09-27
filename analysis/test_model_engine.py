@@ -1018,6 +1018,55 @@ class ModelEngineTests(unittest.TestCase):
         for key in ("11", "22"):
             self.assertAlmostEqual(live.loc[key, "long_raw"], expected[key], places=10)
 
+    def test_live_team_strength_equals_the_backtest_team_model(self) -> None:
+        """Appending this season's matches live must give the batch panel's ratings."""
+        rng = np.random.default_rng(11)
+        rows = []
+        for season_order, season in ((0, "s0"), (1, "s1")):
+            for gw in range(1, 9):
+                for team_id, name in ((1, "Alpha"), (2, "Beta")):
+                    scored, conceded = int(rng.integers(0, 4)), int(rng.integers(0, 4))
+                    rows.append(
+                        {
+                            "season": season, "season_order": season_order, "GW": gw,
+                            "team_id": team_id, "team_name": name, "team_games": 1,
+                            "team_goals": scored, "team_xg": float(rng.uniform(0.3, 2.5)),
+                            "team_goals_against": conceded, "team_xga": float(rng.uniform(0.3, 2.5)),
+                            "team_clean_sheets": int(conceded == 0),
+                            "team_result_points": 3 if scored > conceded else int(scored == conceded),
+                        }
+                    )
+        panel = pd.DataFrame(rows)
+        deadline_gw = 6
+        # Batch: the season-1 panel up to the deadline, deadline row blank.
+        batch = panel[(panel.season == "s0") | (panel.GW <= deadline_gw)].copy()
+        blank = (batch.season == "s1") & (batch.GW == deadline_gw)
+        batch.loc[blank, ["team_games", "team_goals", "team_xg", "team_goals_against",
+                          "team_xga", "team_clean_sheets", "team_result_points"]] = 0
+        batch["opponent_team"] = np.nan
+        batch["was_home"] = False
+        rated = lens.add_causal_team_strength(batch)
+        expected = rated[(rated.season == "s1") & (rated.GW == deadline_gw)].set_index("team_id")
+        live = lens.live_team_strength(
+            panel[panel.season == "s0"],
+            panel[(panel.season == "s1") & (panel.GW < deadline_gw)],
+            {1: "Alpha", 2: "Beta"},
+        )
+        for column in lens.LIVE_TEAM_RATINGS:
+            for team_id in (1, 2):
+                self.assertAlmostEqual(live.loc[team_id, column], expected.loc[team_id, column], places=10)
+
+    def test_a_player_without_minutes_this_season_keeps_his_prior_rate(self) -> None:
+        """Numerator and denominator must describe the same sample."""
+        minutes = pd.Series([0.0, 450.0])
+        prior = 0.44
+        season_goals_signal = pd.Series([0.0, 3.0])
+        rate = (season_goals_signal + 5 * prior) / lens.live_rate_denominator(minutes)
+        # No minutes this season: the rate is the prior, not a fraction of it.
+        self.assertAlmostEqual(rate.iloc[0], prior)
+        # Five nineties this season: an even blend of the season and the prior.
+        self.assertAlmostEqual(rate.iloc[1], (3.0 + 5 * prior) / 10)
+
     def test_current_season_form_rows_read_official_event_data(self) -> None:
         current = pd.DataFrame({"id": [1, 2], "code": [111, 222], "team": [10, 20]})
         fixtures = pd.DataFrame({"event": [1, 2, 2], "team_h": [10, 10, 10], "team_a": [20, 11, 12]})
