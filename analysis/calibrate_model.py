@@ -8,6 +8,7 @@ weight sets, and writes a compact JSON artifact consumed by the website.
 from __future__ import annotations
 
 import json
+import hashlib
 import math
 import os
 import sys
@@ -44,7 +45,14 @@ CACHE = ROOT / "work" / "fpl-data"
 # archive has no weekly availability feed, so consecutive missed Gameweeks is the
 # only injury signal available, and the model was over-rating absent players by
 # more than 2x (0.453 predicted against 0.210 realised after two missed weeks).
-PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-absence-v5.pkl"
+# v6: European knockout proximity means an *upcoming* tie only. The previous
+# implementation also marked league fixtures after a tie and therefore baked a
+# directionally wrong fatigue penalty into the prepared frame.
+# v7: official pre-deadline availability (chance_of_playing, news flag) joined
+# from a snapshot archive covering 2021/22 onward. It multiplies start and sub
+# probability directly, and is 4x predictive of the first-week absences the
+# minutes record cannot see.
+PREPARED_HISTORY_CACHE = CACHE / "prepared-history-lens9-news-v8.pkl"
 
 # How much of the closing betting line to fold into team expected goals.
 #
@@ -74,21 +82,14 @@ MARKET_BLEND_WEIGHT = float(os.environ.get("FPL_MARKET_BLEND", "0.0"))
 
 # How hard a looming European knockout tie pushes a start probability down.
 #
-# Measured within European clubs only, each compared against its *own* weeks with
-# no tie nearby, so club quality and squad depth are held fixed. A tie within four
-# days costs 0.075 of start probability in the knockout months and an
-# indistinguishable 0.004 in the group months (6.5 SE against 0.4) — managers rest
-# players before a quarter-final, not before a dead group game.
-#
-# The effect is anticipation, not fatigue: 2-3 days *after* a European match the
-# residual is +0.043, if anything slightly above par. So this keys on the tie
-# ahead, never the one behind.
-#
-# Scaled by rotation volatility in the same idiom as the rest and competition
-# penalties: a settled side rests nobody, and the squads that rotate for Europe
-# are the squads that already rotate.
+# The earlier 0.10 default was estimated on the same post-2018 seasons used for
+# evaluation and therefore could not pass the frozen promotion protocol. The
+# calendar remains a diagnostic feature, but its production penalty is zero until
+# a value is selected on pre-2018 data or a genuinely prospective sample. This is
+# intentionally conservative: an unvalidated effect must not improve its own
+# backtest.
 EUROPEAN_KNOCKOUT_REST_PENALTY = float(
-    os.environ.get("FPL_EUROPEAN_PENALTY", "0.10")
+    os.environ.get("FPL_EUROPEAN_PENALTY", "0.0")
 )
 
 # Bisect switches. The v3 repairs — recovered club names for the two nameless
@@ -99,10 +100,138 @@ EUROPEAN_KNOCKOUT_REST_PENALTY = float(
 # behaviour; set to 0 to restore the old one.
 USE_RECOVERED_TEAM_NAMES = os.environ.get("FPL_TEAM_NAMES", "1") != "0"
 USE_BLANK_FREE_CALIBRATION = os.environ.get("FPL_BLANK_FILTER", "1") != "0"
+# Undo the forecast compression that under-rates premiums by 0.447 points a week
+# and over-rates sub-£4.5m fodder by 0.117.
+#
+# Off by default, despite working. It fixes the forecast — premium bias -0.447 to
+# -0.061, every band inside 0.061, MAE 1.1984 to 1.1621 — and then loses 35.1
+# points a season through the full pipeline, with season-to-season spread rising
+# from 123.3 to 139.6.
+#
+# The likely reason is already documented in `harness.py`: every points-denominated
+# threshold is rescaled by the forecast's cross-sectional spread. Stretching the
+# projection changes that spread, so un-compressing it silently moves the transfer
+# hurdle, the hold-option value and every chip bar, all of which were searched
+# against the compressed version. The correction is probably right and the pipeline
+# around it is tuned to the defect; making it pay needs the thresholds re-derived,
+# not the stretch abandoned.
+USE_PROJECTION_STRETCH = os.environ.get("FPL_STRETCH", "0") != "0"
+# Shrink every per-player rate toward a price-informed prior instead of taking
+# small samples at face value.
+#
+# The event rates were a plain rolling mean with `min_periods=1`, so after one
+# appearance a player's goal, clean-sheet and bonus rates *were* that match, and
+# the positional prior applied only at zero appearances. Measured on the players
+# the model actually ranks in its weekly top 25: one appearance in the window
+# over-projects by +2.01 points (5.14 against 3.13 realised), two by +1.16, three
+# by +0.95, and a full window by -0.14. That is the winner's curse, and it lands
+# on exactly the players the model buys and captains — a promoted £4.5m defender
+# projected at 9.2 after one clean sheet and a goal took the armband in 2025/26
+# GW2.
+#
+# The priors were also flat by position, so a £14m striker and a £4m reserve
+# started from the same 0.54 start probability. Nailed starters (80+ minutes the
+# previous match) were given 66 expected minutes and played 74 in every price
+# band, which under-rates premiums most because their points scale hardest with
+# minutes. Price is the market's prior on role and output and is known at every
+# deadline, so the priors here are linear in price, per position, fitted on the
+# two training seasons only.
+#
+# On by default. Full walk-forward runs against the shipped 2157.2:
+#
+#   price prior alone, k = 4                    2184.1   +26.9
+#   price prior + last-match tier, k = 4        2217.8   +60.5  (se 34.7)
+#   price prior + last-match tier, k = 12       2192.5   +35.2  (se 34.0)
+#
+# k = 12 ships although k = 4 scored higher, because k was chosen on the training
+# seasons (top-5, top-15 and correlation all peak there) and the 25-point gap
+# between the two full runs is inside one standard error. Taking k = 4 for its
+# evaluation score would be selecting on the seasons it is scored on.
+USE_PRICE_PRIOR = os.environ.get("FPL_PRICE_PRIOR", "1") != "0"
+PRICE_PRIOR_STRENGTH = float(os.environ.get("FPL_PRICE_PRIOR_STRENGTH", "12.0"))
+# Split the "played last time" calibration tier by how much he played.
+#
+# `absence_run == 0` treats a 90-minute starter and a five-minute cameo as the
+# same evidence, so the isotonic map averaged them: players who played 80+ the
+# previous match were given 66 expected minutes and played 74.5, and players who
+# came on for under half an hour were given 42 and played 29. Every nailed
+# starter was under-rated by about 0.46 points a match and every fringe player
+# over-rated. Last-match minutes are known at the deadline, and splitting the
+# tier into full match / 60-79 / cameo lets the map learn the three separately.
+#
+# Version 2 repairs two things version 1 got wrong. "No previous match" was put
+# in the full-match tier so it would not read as a cameo, which calibrated every
+# debutant like a nailed starter: 0.56 predicted starts against 0.16 realised on
+# the evaluation seasons, mostly GBP4.0-4.5m fringe players the optimiser buys as
+# bench fodder. It now has its own tier, pooled across price because the cells
+# are small, and falls back to the uncalibrated estimate (0.24 against 0.13 for
+# the cheapest) until a cell has enough rows. And 31-59 minutes is split from a
+# 5-minute cameo: that group was under-predicted by 0.09 starts.
+# Version 2 is the default: full run 2217.2 against version 1's 2192.5 (+24.7,
+# 5 of 8 seasons up), with debutants' predicted starts 0.56 -> 0.24 against 0.16
+# realised.
+LAST_MATCH_TIER_VERSION = int(os.environ.get("FPL_LAST_MATCH_TIER", "2"))
+USE_LAST_MATCH_TIER = LAST_MATCH_TIER_VERSION > 0
+# Backfill xG and xA from Understat where FPL published none.
+#
+# FPL's archive carries no expected goals or assists before GW16 of 2022/23, so
+# six of the ten replayed seasons -- both training seasons among them -- built
+# every goal, assist and team-attack rate from actual goals alone, the noisiest
+# signal in the game. The live feed always has xG, so the backtest that tunes the
+# model was built on weaker evidence than the model that picks the squad. See
+# `understat_history.py` for coverage and the rules on where it may be used.
+USE_UNDERSTAT_XG = os.environ.get("FPL_UNDERSTAT", "0") != "0"
+# Half-life, in Gameweeks, for a player's long-run points history. Zero keeps the
+# original undecayed career mean, under which a 2016 match still weighs fully in
+# 2025. Late in a season, this season's form beyond the projection predicts the
+# next four weeks (corr +0.084 on evaluation) and the signal grows with career
+# length -- none below one season of history, +0.08 to +0.13 beyond two -- which
+# is the signature of a stale anchor. The two training seasons cannot see it,
+# because nobody had a long history yet, so it is chosen walk-forward.
+HISTORY_HALFLIFE = float(os.environ.get("FPL_HISTORY_HALFLIFE", "0"))
+# Rebuild the live points and ICT history from this season's completed
+# Gameweeks instead of reading last season's final values. Live-only: the
+# backtest's rows already include the current season, so this cannot change any
+# replayed score, only the recommendation for the next deadline.
+USE_LIVE_FORM = os.environ.get("FPL_LIVE_FORM", "1") != "0"
+# Rebuild live team ratings with this season's finished matches. The live path
+# carried each club's final rating from the archived season and never read a
+# finished score, so every clean-sheet and goal expectation ignored the current
+# season: at GW6 of 2025/26 the carried ratings were 0.36 (attack) and 0.39
+# (defence) goals a game away from the backtest's own values. Live-only.
+USE_LIVE_TEAM_STRENGTH = os.environ.get("FPL_LIVE_TEAM_STRENGTH", "1") != "0"
+# The pre-season Opta anchor fades as this season's matches accumulate: full
+# weight at GW1, half after six matches. The backtest has no Opta data, so the
+# fade moves the live model toward the validated behaviour as evidence arrives
+# rather than away from it.
+OPTA_ANCHOR_WEIGHT = 0.48
+OPTA_ANCHOR_HALF_GAMES = 6.0
+if USE_UNDERSTAT_XG:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem + "-understat" + PREPARED_HISTORY_CACHE.suffix
+    )
+if HISTORY_HALFLIFE > 0:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem
+        + f"-half{HISTORY_HALFLIFE:g}"
+        + PREPARED_HISTORY_CACHE.suffix
+    )
+if USE_LAST_MATCH_TIER:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem
+        + ("-lastmatch" if LAST_MATCH_TIER_VERSION == 1 else f"-lastmatch{LAST_MATCH_TIER_VERSION}")
+        + PREPARED_HISTORY_CACHE.suffix
+    )
+if USE_PRICE_PRIOR:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem
+        + f"-pprior{PRICE_PRIOR_STRENGTH:.1f}".replace(".", "_")
+        + PREPARED_HISTORY_CACHE.suffix
+    )
 if (
     not USE_RECOVERED_TEAM_NAMES
     or not USE_BLANK_FREE_CALIBRATION
-    or EUROPEAN_KNOCKOUT_REST_PENALTY != 0.10
+    or EUROPEAN_KNOCKOUT_REST_PENALTY != 0.0
 ):
     # A bisect arm must never be reachable under the default cache name. The
     # penalty belongs in the key too: it is baked into `start_probability` during
@@ -141,6 +270,7 @@ BASE = "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/
 REEP_URL = "https://raw.githubusercontent.com/withqwerty/reep/main/data/people.csv"
 CURRENT_BOOTSTRAP = "https://fantasy.premierleague.com/api/bootstrap-static/"
 CURRENT_FIXTURES = "https://fantasy.premierleague.com/api/fixtures/"
+CURRENT_EVENT_LIVE = "https://fantasy.premierleague.com/api/event/{event}/live/"
 TRIALS = 2400
 # The cheap snapshot stage covers 2,400 mixtures. Eighty diverse candidates
 # then receive a stateful screen before the 20 exact-policy finalists. Profiling
@@ -440,6 +570,7 @@ def block_bootstrap_season_delta(
 def select_gate_option(
     gate_results: dict[str, tuple],
     seasons_available: int,
+    incumbent_override: str | None = None,
 ) -> tuple[str, dict]:
     """Keep the incumbent policy unless a challenger clears the selection noise.
 
@@ -447,6 +578,15 @@ def select_gate_option(
     frozen gate always passed two, which is why it could never separate policies
     that differ by less than its own standard error. Walking it forward lets a
     later season decide on everything completed before it.
+
+    ``incumbent_override`` is what the walk-forward defends. Without it every
+    season is decided independently against the same fixed constant, so an option
+    sitting near the confidence bar flips back and forth and the run reports a
+    different strategy most years — five changes across ten seasons, cycling
+    through four options. Defending the *previous season's* choice instead gives
+    the decision hysteresis: adopting a challenger requires clearing the bar
+    against what is actually in force, and reverting requires clearing it again
+    in the other direction. Evidence still moves the gate; noise no longer does.
     """
     rng = np.random.default_rng(GATE_BOOTSTRAP_SEED)
     if GATE_PIN:
@@ -468,9 +608,16 @@ def select_gate_option(
             "seasonsAvailable": int(seasons_available),
             "seasonsUsed": [],
             "regimeMatched": False,
+            "evidenceUnit": "pinned control; no statistical selection",
+            "candidateVariantsAveraged": 0,
         }
-    incumbent = (
+    default_incumbent = (
         GATE_INCUMBENT if GATE_INCUMBENT in gate_results else sorted(gate_results)[0]
+    )
+    incumbent = (
+        incumbent_override
+        if incumbent_override in gate_results
+        else default_incumbent
     )
 
     season_count = len(SEASONS)
@@ -487,17 +634,33 @@ def select_gate_option(
     )
 
     def weeks(name: str) -> list[list[float]]:
-        # Stats are pooled candidate-major, season-minor: one block of seasons
-        # per candidate the gate probed. Pairing survives because every option
-        # is probed in the same order.
+        # Stats arrive candidate-major, season-minor. Candidate variants are
+        # correlated views of the same season, not independent seasons. Average
+        # their weekly paths *within each season* before bootstrapping. Sampling a
+        # shared block from this mean path is equivalent to applying the same
+        # resample to every candidate and then averaging, so neither candidate
+        # count nor independent block draws can manufacture confidence.
         stats = gate_results[name][3]
         blocks = max(1, len(stats) // season_count)
-        return [
-            list(stats[block * season_count + index]["weeklyPoints"])
-            for block in range(blocks)
-            for index in usable
-            if block * season_count + index < len(stats)
-        ]
+        collapsed: list[list[float]] = []
+        for season_index in usable:
+            paths = [
+                np.asarray(
+                    stats[block_index * season_count + season_index]["weeklyPoints"],
+                    dtype=float,
+                )
+                for block_index in range(blocks)
+                if block_index * season_count + season_index < len(stats)
+            ]
+            if not paths:
+                continue
+            lengths = {len(path) for path in paths}
+            if len(lengths) != 1:
+                raise ValueError(
+                    f"Gate candidate paths disagree on season length: {sorted(lengths)}"
+                )
+            collapsed.append(np.mean(np.vstack(paths), axis=0).tolist())
+        return collapsed
 
     incumbent_weeks = weeks(incumbent)
     report: dict = {
@@ -533,6 +696,10 @@ def select_gate_option(
     report["seasonsAvailable"] = int(seasons_available)
     report["seasonsUsed"] = [SEASONS[index] for index in usable]
     report["regimeMatched"] = bool(usable and usable[0] >= modern_from)
+    report["evidenceUnit"] = "season; candidate variants averaged within week"
+    report["candidateVariantsAveraged"] = max(
+        1, len(gate_results[incumbent][3]) // season_count
+    )
     return selected, report
 
 
@@ -584,6 +751,105 @@ def frame_fingerprint(
         f"{schema}:{len(data)}:{int(hashed.sum(dtype=np.uint64))}:"
         f"{int(np.bitwise_xor.reduce(hashed, initial=np.uint64(0)))}"
     )
+
+
+AUDITED_POLICY_SCHEMA_VERSION = 2
+AUDITED_POLICY_FRAME_COLUMNS = (
+    "season",
+    "GW",
+    "element",
+    "player_code",
+    "team_id",
+    "position_id",
+    "price",
+    "points",
+    "points_current_rules",
+    "minutes",
+    "fixture_count",
+    "team_games",
+    "component_xpts",
+    "component_horizon_censored",
+    "ensemble_xpts_current_rules",
+    "component_horizon_current_rules_censored",
+    "prediction_uncertainty",
+    "recent",
+    "long",
+    "recent_value",
+    "long_value",
+    "age_score",
+    "fixture_censored",
+    "team_context",
+    "crowd",
+    "minutes_security",
+    "recent_underlying",
+    "long_underlying",
+)
+AUDITED_POLICY_ENGINE_FILES = (
+    "analysis/calibrate_model.py",
+    "analysis/audited_policy_validation.py",
+    "analysis/domestic_cups.py",
+    "analysis/european_fixtures.py",
+    "analysis/historical_odds.py",
+    "analysis/team_identity.py",
+    "analysis/understat_history.py",
+)
+
+
+def canonical_payload_hash(payload: dict) -> str:
+    """SHA-256 for a JSON payload, independent of whitespace and key order."""
+    return hashlib.sha256(
+        json.dumps(
+            payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode("utf-8")
+    ).hexdigest()
+
+
+def audited_policy_provenance(data: pd.DataFrame) -> dict:
+    """Fingerprint the exact engine and prepared frame used by a frozen audit."""
+    engine = hashlib.sha256()
+    for relative in AUDITED_POLICY_ENGINE_FILES:
+        path = ROOT / relative
+        engine.update(relative.encode("utf-8"))
+        engine.update(path.read_bytes())
+    return {
+        "schemaVersion": AUDITED_POLICY_SCHEMA_VERSION,
+        "engineFingerprint": engine.hexdigest(),
+        "frameFingerprint": frame_fingerprint(
+            data,
+            AUDITED_POLICY_FRAME_COLUMNS,
+            f"audited-policy-frame-v{AUDITED_POLICY_SCHEMA_VERSION}",
+        ),
+        "preparedCache": PREPARED_HISTORY_CACHE.name,
+        "evaluationSeasons": list(EVALUATION_SEASONS),
+    }
+
+
+def load_validated_frozen_audit(path: Path, data: pd.DataFrame) -> dict:
+    """Load a promotion audit only when engine, frame and content all match."""
+    if not path.exists():
+        raise RuntimeError(
+            "Frozen promotion audit is missing; run analysis/audited_policy_validation.py"
+        )
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    expected = audited_policy_provenance(data)
+    actual = payload.get("provenance")
+    if actual != expected:
+        raise RuntimeError(
+            "Frozen promotion audit is stale for this engine or data frame; "
+            "rerun analysis/audited_policy_validation.py before publishing"
+        )
+    recorded_hash = payload.get("contentFingerprint")
+    unsigned = {key: value for key, value in payload.items() if key != "contentFingerprint"}
+    if recorded_hash != canonical_payload_hash(unsigned):
+        raise RuntimeError(
+            "Frozen promotion audit content fingerprint does not match its payload"
+        )
+    seasons = [str(row.get("season", "")).replace("/", "-") for row in payload.get("evaluation", [])]
+    if seasons != list(EVALUATION_SEASONS):
+        raise RuntimeError(
+            f"Frozen promotion audit seasons are {seasons}, expected {EVALUATION_SEASONS}"
+        )
+    return payload
 
 
 def poisson_tail(
@@ -856,6 +1122,14 @@ def calibrate_live_distributions(
 
 
 MINUTES_CALIBRATION_BINS = 20
+# A price band must have this many completed rows before its stretch is trusted.
+#
+# 400, not 4000. The premium band carries only ~4,400 rows across all ten seasons
+# — roughly 440 a year — so a 4,000-row gate left the one band that most needed
+# correcting uncalibrated for almost the entire walk-forward: its bias moved only
+# -0.447 to -0.404 while the cheap band, which has 75,000 rows, was fixed
+# outright. A threshold has to be set against the smallest group it governs.
+PROJECTION_STRETCH_MINIMUM_ROWS = 400.0
 MINUTES_CALIBRATION_MINIMUM_ROWS = 400.0
 # (predicted column, realised numerator, realised denominator, positional prior,
 #  bin scale, output bounds)
@@ -908,7 +1182,9 @@ MINUTES_CALIBRATION_SPECS: tuple[
 # Three price bands crossed with three absence bands. A cell that never reaches
 # `MINUTES_CALIBRATION_MINIMUM_ROWS` is simply left uncalibrated, which is the
 # behaviour before this axis existed, so the split degrades safely.
-MINUTES_CALIBRATION_TIERS = tuple(range(9))
+MINUTES_CALIBRATION_TIERS = tuple(
+    range({0: 9, 1: 15}.get(LAST_MATCH_TIER_VERSION, 21))
+)
 
 
 def _minutes_bins(values: np.ndarray, scale: float) -> np.ndarray:
@@ -964,8 +1240,54 @@ def minutes_calibration_tier(
     # 0.702 predicted against 0.792 realised for a player who played last week,
     # 0.453 against 0.210 for one who missed the last two.
     run = frame["absence_run"].fillna(0).to_numpy(float)
-    absence_tier = np.select([run <= 0, run <= 2], [0, 1], default=2).astype(int)
-    return (price_tier + 3 * absence_tier).astype(int)
+    # Official pre-deadline news joins the same axis rather than adding a fourth
+    # dimension. Crossing it separately would give 3 x 3 x 2 x 4 positions = 72
+    # cells, most of which never reach the minimum row count and so never
+    # calibrate at all. Folding it in keeps nine well-populated cells.
+    #
+    # It belongs here because the flag alone is not enough: after multiplying
+    # start probability by the official chance, flagged players were still
+    # over-rated 0.203 predicted against 0.130 realised. FPL's own number is
+    # optimistic, and the isotonic map can learn that correction from prior
+    # deadlines instead of it being hand-set.
+    if "sig_chance_playing" in frame:
+        chance = frame["sig_chance_playing"].fillna(-1.0).to_numpy(float)
+        news = frame.get("sig_has_news")
+        flagged = (news.fillna(0).to_numpy(float) > 0) if news is not None else False
+        doubtful = (chance >= 0) & (chance <= 25)
+    else:
+        flagged = np.zeros(len(frame), dtype=bool)
+        doubtful = np.zeros(len(frame), dtype=bool)
+    availability_tier = np.select(
+        [(run <= 0) & ~flagged & ~doubtful, (run <= 2) & ~doubtful],
+        [0, 1],
+        default=2,
+    ).astype(int)
+    if USE_LAST_MATCH_TIER and "last_match_minutes" in frame:
+        # -1 is "no previous match", which stays in the full-match tier rather
+        # than being read as a cameo.
+        last = frame["last_match_minutes"].fillna(-1.0).to_numpy(float)
+        played = availability_tier == 0
+        if LAST_MATCH_TIER_VERSION >= 2:
+            availability_tier = np.select(
+                [
+                    played & (last < 0),
+                    played & (last < 30),
+                    played & (last < 60),
+                    played & (last < 80),
+                ],
+                [6, 3, 5, 4],
+                default=availability_tier,
+            ).astype(int)
+            # Debutants are too few to split by price as well.
+            price_tier = np.where(availability_tier == 6, 0, price_tier)
+        else:
+            availability_tier = np.where(
+                played & (last >= 0) & (last < 60),
+                3,
+                np.where(played & (last >= 60) & (last < 80), 4, availability_tier),
+            ).astype(int)
+    return (price_tier + 3 * availability_tier).astype(int)
 
 
 def _rebuild_minutes_decomposition(frame: pd.DataFrame) -> None:
@@ -1408,6 +1730,443 @@ def get_json(url: str) -> dict | list:
         return json.load(response)
 
 
+def season_label_from_deadline(deadline: object) -> str:
+    """Return the archive-style season containing an official FPL deadline."""
+    stamp = pd.Timestamp(deadline)
+    if pd.isna(stamp):
+        raise ValueError(f"Cannot derive season from deadline {deadline!r}")
+    start_year = int(stamp.year if stamp.month >= 7 else stamp.year - 1)
+    return f"{start_year}-{str(start_year + 1)[-2:]}"
+
+
+def next_recommendation_event(
+    events: pd.DataFrame, as_of: object | None = None
+) -> pd.Series:
+    """Select the first deadline still open, not the first unfinished event."""
+    if events.empty or "deadline_time" not in events:
+        raise ValueError("Official FPL events contain no deadlines")
+    now = pd.Timestamp.now(tz="UTC") if as_of is None else pd.Timestamp(as_of)
+    if now.tzinfo is None:
+        now = now.tz_localize("UTC")
+    else:
+        now = now.tz_convert("UTC")
+    deadlines = pd.to_datetime(events["deadline_time"], utc=True, errors="coerce")
+    future = events.loc[deadlines > now].copy()
+    if future.empty:
+        unfinished = events.loc[~events["finished"].astype(bool)].copy()
+        if unfinished.empty:
+            raise RuntimeError("The official FPL feed contains no future deadline")
+        return unfinished.sort_values("id", kind="stable").iloc[0]
+    future["_deadline"] = deadlines.loc[future.index]
+    return future.sort_values(["_deadline", "id"], kind="stable").iloc[0]
+
+
+def current_absence_runs_from_events(
+    current: pd.DataFrame,
+    fixtures: pd.DataFrame,
+    live_by_event: dict[int, dict],
+    completed_events: list[int],
+) -> dict[int, float]:
+    """Consecutive current-season fixture misses from official event data.
+
+    A previous season is never consulted. Players with no current-season minutes
+    receive a neutral zero: for a new signing or academy player, non-appearance
+    before registration is not evidence of an injury. For players who have
+    appeared, the run walks backward through completed club fixtures until their
+    most recent appearance. Blank events do not increment it.
+    """
+    if current.empty:
+        return {}
+    rows = current.copy()
+    rows["id"] = pd.to_numeric(rows["id"], errors="coerce")
+    rows["team"] = pd.to_numeric(rows["team"], errors="coerce")
+    minute_values = (
+        rows["minutes"]
+        if "minutes" in rows
+        else pd.Series(0.0, index=rows.index)
+    )
+    rows["minutes"] = pd.to_numeric(minute_values, errors="coerce").fillna(0)
+    rows = rows.dropna(subset=["id", "team"])
+    identity = {
+        int(row.id): (int(row.team), float(row.minutes))
+        for row in rows[["id", "team", "minutes"]].itertuples(index=False)
+    }
+    run = {element: 0.0 for element in identity}
+    unresolved = {
+        element for element, (_, season_minutes) in identity.items() if season_minutes > 0
+    }
+    fixture_events: set[tuple[int, int]] = set()
+    if not fixtures.empty:
+        scheduled = fixtures.dropna(subset=["event", "team_h", "team_a"])
+        for fixture in scheduled[["event", "team_h", "team_a"]].itertuples(index=False):
+            event = int(fixture.event)
+            fixture_events.add((event, int(fixture.team_h)))
+            fixture_events.add((event, int(fixture.team_a)))
+
+    for event in sorted({int(value) for value in completed_events}, reverse=True):
+        if not unresolved:
+            break
+        payload = live_by_event.get(event) or {}
+        event_minutes = {
+            int(item["id"]): float((item.get("stats") or {}).get("minutes", 0) or 0)
+            for item in payload.get("elements", [])
+            if item.get("id") is not None
+        }
+        resolved: set[int] = set()
+        for element in unresolved:
+            team, _ = identity[element]
+            if (event, team) not in fixture_events or element not in event_minutes:
+                continue
+            if event_minutes[element] > 0:
+                resolved.add(element)
+            else:
+                run[element] += 1.0
+        unresolved.difference_update(resolved)
+    return run
+
+
+def current_last_match_minutes(
+    current: pd.DataFrame,
+    fixtures: pd.DataFrame,
+    live_by_event: dict[int, dict],
+    completed_events: list[int],
+) -> dict[int, float]:
+    """Per-match minutes in each player's most recent scheduled club fixture.
+
+    The live counterpart of the historical `last_match_minutes`: blank events
+    are skipped rather than read as a zero, and a Double Gameweek is divided by
+    its fixture count. A player whose club has not yet played gets -1, the same
+    "no previous match" value the historical frame uses.
+    """
+    if current.empty:
+        return {}
+    rows = current.copy()
+    rows["id"] = pd.to_numeric(rows["id"], errors="coerce")
+    rows["team"] = pd.to_numeric(rows["team"], errors="coerce")
+    rows = rows.dropna(subset=["id", "team"])
+    team_of = {int(row.id): int(row.team) for row in rows.itertuples(index=False)}
+    fixtures_per: dict[tuple[int, int], int] = {}
+    if not fixtures.empty:
+        scheduled = fixtures.dropna(subset=["event", "team_h", "team_a"])
+        for fixture in scheduled[["event", "team_h", "team_a"]].itertuples(index=False):
+            for team in (int(fixture.team_h), int(fixture.team_a)):
+                key = (int(fixture.event), team)
+                fixtures_per[key] = fixtures_per.get(key, 0) + 1
+    last = {element: -1.0 for element in team_of}
+    unresolved = set(team_of)
+    for event in sorted({int(value) for value in completed_events}, reverse=True):
+        if not unresolved:
+            break
+        payload = live_by_event.get(event) or {}
+        event_minutes = {
+            int(item["id"]): float((item.get("stats") or {}).get("minutes", 0) or 0)
+            for item in payload.get("elements", [])
+            if item.get("id") is not None
+        }
+        resolved = set()
+        for element in unresolved:
+            count = fixtures_per.get((event, team_of[element]), 0)
+            if count <= 0:
+                continue
+            last[element] = event_minutes.get(element, 0.0) / count
+            resolved.add(element)
+        unresolved.difference_update(resolved)
+    return last
+
+
+FORM_POINTS_PRIOR = {1: 3.2, 2: 2.6, 3: 2.8, 4: 2.6}
+FORM_UNDERLYING_PRIOR = {1: 2.5, 2: 4.0, 3: 6.0, 4: 6.5}
+
+
+LIVE_RATE_PRIOR_NINETIES = 5.0
+
+
+def live_rate_denominator(season_minutes: pd.Series) -> pd.Series:
+    """Denominator for the live per-90 rates: this season's nineties plus the prior's.
+
+    Every live rate is (this season's count + 5 x last season's rate) divided by
+    this. The denominator used to substitute *last* season's minutes whenever a
+    player had none this season, while the numerator still counted only this
+    season's output, so a player with no minutes yet had every rate divided by his
+    whole previous season: Watkins' goal rate read 0.060 against a prior of 0.439,
+    and the same collapse hit 38 established players with no minutes this season
+    (14-30% of their true rates). A returning star would never have been bought
+    back. With no minutes this season the rate is now exactly the prior.
+    """
+    minutes = pd.to_numeric(season_minutes, errors="coerce").fillna(0.0).clip(lower=0)
+    return minutes / 90 + LIVE_RATE_PRIOR_NINETIES
+
+
+LIVE_TEAM_COLUMNS = [
+    "season", "season_order", "GW", "team_id", "team_name", "team_games",
+    "team_goals", "team_xg", "team_goals_against", "team_xga",
+    "team_clean_sheets", "team_result_points",
+]
+LIVE_TEAM_RATINGS = [
+    "team_attack_rating", "team_defence_rating", "team_form_rating",
+    "team_clean_rating", "team_rating_confidence", "team_regime_shift",
+]
+
+
+def current_season_team_rows(
+    current: pd.DataFrame,
+    fixtures: pd.DataFrame,
+    live_by_event: dict[int, dict],
+    team_names: dict[int, str],
+) -> pd.DataFrame:
+    """This season's finished club matches, one row per club per Gameweek.
+
+    Built the way the archive builds them: goals from the final score, team xG
+    as the sum of the club's players' xG, xGA as the largest expected-goals-
+    conceded figure among its players, per Gameweek.
+    """
+    columns = [c for c in LIVE_TEAM_COLUMNS if c not in ("season", "season_order")]
+    if fixtures.empty or "finished" not in fixtures:
+        return pd.DataFrame(columns=columns)
+    finished = fixtures[
+        fixtures["finished"].fillna(False).astype(bool)
+        & fixtures["event"].notna()
+        & fixtures["team_h_score"].notna()
+    ]
+    records = []
+    for fixture in finished.itertuples(index=False):
+        home_goals, away_goals = int(fixture.team_h_score), int(fixture.team_a_score)
+        for team, scored, conceded in (
+            (int(fixture.team_h), home_goals, away_goals),
+            (int(fixture.team_a), away_goals, home_goals),
+        ):
+            records.append(
+                {
+                    "GW": int(fixture.event),
+                    "team_id": team,
+                    "team_games": 1,
+                    "team_goals": scored,
+                    "team_goals_against": conceded,
+                    "team_clean_sheets": int(conceded == 0),
+                    "team_result_points": 3 if scored > conceded else int(scored == conceded),
+                }
+            )
+    if not records:
+        return pd.DataFrame(columns=columns)
+    rows = pd.DataFrame(records).groupby(["GW", "team_id"], as_index=False).sum()
+    team_of = dict(zip(pd.to_numeric(current["id"]), pd.to_numeric(current["team"])))
+    expected = []
+    for event, payload in live_by_event.items():
+        for item in payload.get("elements", []):
+            team = team_of.get(int(item["id"]))
+            if team is None:
+                continue
+            stats = item.get("stats") or {}
+            expected.append(
+                {
+                    "GW": int(event),
+                    "team_id": int(team),
+                    "xg": float(stats.get("expected_goals", 0) or 0),
+                    "xgc": float(stats.get("expected_goals_conceded", 0) or 0),
+                }
+            )
+    if expected:
+        per_team = pd.DataFrame(expected).groupby(["GW", "team_id"], as_index=False).agg(
+            team_xg=("xg", "sum"), team_xga=("xgc", "max")
+        )
+        rows = rows.merge(per_team, on=["GW", "team_id"], how="left")
+    else:
+        rows["team_xg"] = 0.0
+        rows["team_xga"] = 0.0
+    rows[["team_xg", "team_xga"]] = rows[["team_xg", "team_xga"]].fillna(0.0)
+    rows["team_name"] = rows["team_id"].map(team_names)
+    return rows[columns]
+
+
+def live_team_strength(
+    historical: pd.DataFrame,
+    season_rows: pd.DataFrame,
+    team_names: dict[int, str],
+) -> pd.DataFrame:
+    """Team ratings at the next deadline, via the backtest's own team model.
+
+    Appends this season's finished matches to the archived team panel and runs
+    `add_causal_team_strength` unchanged, then reads the ratings on a blank
+    deadline row. On a simulated 2025/26 GW6 deadline this reproduces the
+    archived ratings for all 20 clubs with zero difference.
+    """
+    order = int(historical["season_order"].max()) + 1
+    hist = historical[LIVE_TEAM_COLUMNS].drop_duplicates(["season", "GW", "team_id"])
+    new = season_rows.copy()
+    new["season"] = "live"
+    new["season_order"] = order
+    deadline = pd.DataFrame(
+        {"team_id": list(team_names), "team_name": list(team_names.values())}
+    )
+    deadline["season"] = "live"
+    deadline["season_order"] = order
+    deadline["GW"] = int(new["GW"].max()) + 1 if len(new) else 1
+    for column in (
+        "team_games", "team_goals", "team_xg", "team_goals_against",
+        "team_xga", "team_clean_sheets", "team_result_points",
+    ):
+        deadline[column] = 0.0
+    frame = pd.concat(
+        [hist, new[LIVE_TEAM_COLUMNS], deadline[LIVE_TEAM_COLUMNS]], ignore_index=True
+    )
+    frame["opponent_team"] = np.nan
+    frame["was_home"] = False
+    rated = add_causal_team_strength(frame)
+    at_deadline = rated[
+        (rated["season"] == "live") & (rated["GW"] == deadline["GW"].iloc[0])
+    ]
+    return at_deadline.drop_duplicates("team_id").set_index("team_id")[LIVE_TEAM_RATINGS]
+
+
+def current_season_form_rows(
+    current: pd.DataFrame,
+    fixtures: pd.DataFrame,
+    live_by_event: dict[int, dict],
+) -> pd.DataFrame:
+    """This season's completed Gameweeks, one row per player, from official event data."""
+    code_of = dict(zip(pd.to_numeric(current["id"]), pd.to_numeric(current["code"])))
+    team_of = dict(zip(pd.to_numeric(current["id"]), pd.to_numeric(current["team"])))
+    fixtures_per: dict[tuple[int, int], int] = {}
+    if not fixtures.empty:
+        for fixture in fixtures.dropna(subset=["event", "team_h", "team_a"])[
+            ["event", "team_h", "team_a"]
+        ].itertuples(index=False):
+            for team in (int(fixture.team_h), int(fixture.team_a)):
+                key = (int(fixture.event), team)
+                fixtures_per[key] = fixtures_per.get(key, 0) + 1
+    rows = []
+    for event, payload in sorted(live_by_event.items()):
+        for item in payload.get("elements", []):
+            element = int(item["id"])
+            if element not in code_of:
+                continue
+            stats = item.get("stats") or {}
+            rows.append(
+                {
+                    "player_key": str(int(code_of[element])),
+                    "GW": int(event),
+                    "points": float(stats.get("total_points", 0) or 0),
+                    "minutes": float(stats.get("minutes", 0) or 0),
+                    "ict": float(stats.get("ict_index", 0) or 0),
+                    "fixture_count": fixtures_per.get((int(event), int(team_of[element])), 0),
+                }
+            )
+    return pd.DataFrame(
+        rows, columns=["player_key", "GW", "points", "minutes", "ict", "fixture_count"]
+    )
+
+
+def live_form_history(
+    historical: pd.DataFrame,
+    season_rows: pd.DataFrame,
+    deadline_rows: pd.DataFrame,
+) -> pd.DataFrame:
+    """Points and ICT history at a live deadline, built exactly as the backtest builds it.
+
+    The live path used to read these from the last row of the archived season, so
+    at GW6 the empirical member, the ridge features and the decision multiplier
+    all ranked players on form as of the previous May -- 0.37 points a match
+    adrift of the true value, and further every week after. The backtest never
+    had that problem, because its rows always include the current season. This
+    appends the season's completed Gameweeks to the archive and runs the same
+    shrinkage, which reproduces the archived frame's own values to the bit.
+    """
+    order = int(historical["season_order"].max()) + 1
+    keep = [
+        "player_key", "season", "season_order", "GW", "position_id", "price",
+        "performance_points", "underlying_game",
+    ]
+    new = season_rows.merge(
+        deadline_rows[["player_key", "position_id", "price"]], on="player_key", how="inner"
+    )
+    scheduled = new["fixture_count"] > 0
+    new["performance_points"] = (
+        new["points"] / new["fixture_count"].clip(lower=1)
+    ).where(scheduled)
+    new["underlying_game"] = (
+        new["ict"] / new["minutes"].clip(lower=45) * 90
+    ).clip(0, 35).where(scheduled)
+    new["season"] = "live"
+    new["season_order"] = order
+    deadline = deadline_rows[["player_key", "position_id", "price"]].copy()
+    deadline["season"] = "live"
+    deadline["season_order"] = order
+    deadline["GW"] = int(new["GW"].max()) + 1 if len(new) else 1
+    deadline["performance_points"] = np.nan
+    deadline["underlying_game"] = np.nan
+    deadline["_deadline"] = True
+    frame = pd.concat(
+        [historical[keep], new[keep], deadline[keep + ["_deadline"]]], ignore_index=True
+    )
+    frame["_deadline"] = frame["_deadline"].fillna(False).astype(bool)
+    frame = frame.sort_values(
+        ["player_key", "season_order", "GW"], kind="stable"
+    ).reset_index(drop=True)
+    by_player = frame.groupby("player_key", sort=False)
+    if USE_PRICE_PRIOR:
+        prior = price_informed_prior(
+            frame, frame["performance_points"], FORM_POINTS_PRIOR, bounds=(0.5, 9.0)
+        )
+        frame["long_raw"] = shrunk_player_rate(
+            frame, "performance_points", prior, None, PRICE_PRIOR_STRENGTH,
+            halflife=HISTORY_HALFLIFE,
+        )
+        frame["recent_raw"] = shrunk_player_rate(
+            frame, "performance_points", frame["long_raw"], 6, PRICE_PRIOR_STRENGTH
+        )
+    else:
+        frame["long_raw"] = by_player["performance_points"].transform(
+            lambda values: values.expanding().mean().shift(1)
+        ).fillna(frame["position_id"].map(FORM_POINTS_PRIOR))
+        frame["recent_raw"] = by_player["performance_points"].transform(
+            lambda values: values.rolling(6, min_periods=1).mean().shift(1)
+        ).fillna(frame["long_raw"])
+    frame["long_underlying_raw"] = by_player["underlying_game"].transform(
+        lambda values: values.expanding().mean().shift(1)
+    ).fillna(frame["position_id"].map(FORM_UNDERLYING_PRIOR))
+    frame["recent_underlying_raw"] = by_player["underlying_game"].transform(
+        lambda values: values.rolling(6, min_periods=1).mean().shift(1)
+    ).fillna(frame["long_underlying_raw"])
+    columns = ["recent_raw", "long_raw", "recent_underlying_raw", "long_underlying_raw"]
+    return frame.loc[frame["_deadline"], ["player_key", *columns]]
+
+
+def load_current_absence_runs(
+    current: pd.DataFrame,
+    fixtures: pd.DataFrame,
+    events: pd.DataFrame,
+    season: str,
+    next_event: int,
+) -> tuple[dict[int, float], list[int], dict[int, float], dict[int, dict]]:
+    """Fetch immutable official event histories and derive the live absence run."""
+    completed = sorted(
+        int(value)
+        for value in events.loc[
+            events["finished"].astype(bool) & (events["id"].astype(int) < next_event),
+            "id",
+        ].tolist()
+    )
+    live_by_event: dict[int, dict] = {}
+    cache_dir = CACHE / "current" / season
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    for event in completed:
+        target = cache_dir / f"event-{event}-live.json"
+        if target.exists() and target.stat().st_size > 0:
+            payload = json.loads(target.read_text(encoding="utf-8"))
+        else:
+            payload = get_json(CURRENT_EVENT_LIVE.format(event=event))
+            if not isinstance(payload, dict):
+                raise TypeError(f"Official event {event} response is not an object")
+            target.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+        live_by_event[event] = payload
+    return (
+        current_absence_runs_from_events(current, fixtures, live_by_event, completed),
+        completed,
+        current_last_match_minutes(current, fixtures, live_by_event, completed),
+        live_by_event,
+    )
+
+
 def percentile(series: pd.Series) -> pd.Series:
     if series.notna().sum() < 2:
         return pd.Series(0.5, index=series.index)
@@ -1758,6 +2517,10 @@ def build_season(
     team_fixtures["kickoff_time"] = pd.to_datetime(
         team_fixtures["kickoff_time"], errors="coerce", utc=True
     )
+    if USE_UNDERSTAT_XG:
+        from understat_history import fill_team_xg
+
+        team_fixtures = fill_team_xg(team_fixtures, season, team_names)
     team_fixtures.sort_values(["team_id", "kickoff_time", "GW"], inplace=True)
     team_fixtures["team_rest_days"] = (
         team_fixtures.groupby("team_id")["kickoff_time"].diff().dt.total_seconds()
@@ -2637,11 +3400,96 @@ def add_causal_team_strength(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
+def price_informed_prior(
+    data: pd.DataFrame,
+    target: pd.Series,
+    fallback: dict[int, float],
+    bounds: tuple[float, float | None] = (0.0, None),
+) -> pd.Series:
+    """Per-position linear prior on price, fitted on the training seasons only.
+
+    Fitting on the evaluation seasons would let every replayed season's own
+    outcomes set the prior it is shrunk toward. The two training seasons are
+    enough to learn a slope, and price has meant the same thing since.
+    """
+    position = data["position_id"].to_numpy(int)
+    price = data["price"].to_numpy(float)
+    values = target.to_numpy(float)
+    prior = data["position_id"].map(fallback).astype(float).to_numpy(copy=True)
+    training = data["season"].isin(TRAINING_SEASONS).to_numpy() & np.isfinite(values)
+    for position_id in SQUAD_QUOTAS:
+        fit = training & (position == position_id)
+        if fit.sum() < 200 or np.ptp(price[fit]) <= 0:
+            continue
+        slope, intercept = np.polyfit(price[fit], values[fit], 1)
+        rows = position == position_id
+        prior[rows] = intercept + slope * price[rows]
+    lower, upper = bounds
+    return pd.Series(np.clip(prior, lower, upper), index=data.index)
+
+
+def shrunk_player_rate(
+    data: pd.DataFrame,
+    source: str,
+    prior: pd.Series,
+    window: int | None,
+    strength: float,
+    halflife: float = 0.0,
+) -> pd.Series:
+    """Causal per-player mean shrunk toward `prior` by `strength` pseudo-games.
+
+    A censored week (NaN) counts as neither a success nor a game, matching the
+    unshrunk rolling mean it replaces. `window=None` means the whole history;
+    with a positive `halflife` that history is exponentially decayed by row
+    (Gameweek) age instead, and the pseudo-games weigh against the decayed count.
+    """
+    grouped = data.groupby("player_key", sort=False)[source]
+    if window is None and halflife > 0:
+        from scipy.signal import lfilter
+
+        keep = 0.5 ** (1.0 / halflife)
+
+        def decayed(series: pd.Series) -> pd.Series:
+            # S_t = x_t + keep * S_(t-1), then shifted so only earlier rows count.
+            summed = lfilter([1.0], [1.0, -keep], series.to_numpy(float))
+            return pd.Series(summed, index=series.index).shift(1)
+
+        keys = data["player_key"]
+        total = data[source].fillna(0.0).groupby(keys, sort=False).transform(decayed)
+        count = (
+            data[source].notna().astype(float).groupby(keys, sort=False).transform(decayed)
+        )
+    elif window is None:
+        total = grouped.transform(lambda values: values.expanding().sum().shift(1))
+        count = grouped.transform(lambda values: values.expanding().count().shift(1))
+    else:
+        total = grouped.transform(
+            lambda values: values.rolling(window, min_periods=1).sum().shift(1)
+        )
+        count = grouped.transform(
+            lambda values: values.rolling(window, min_periods=1).count().shift(1)
+        )
+    total = total.fillna(0.0)
+    count = count.fillna(0.0)
+    return (total + strength * prior) / (count + strength)
+
+
 def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     """Carry player priors across seasons and build component expected points."""
     data = pd.concat(frames, ignore_index=True)
     season_order = {season: index for index, season in enumerate(SEASONS)}
     data["season_order"] = data["season"].map(season_order).astype(int)
+    # Official availability as it stood before each deadline. The archive itself
+    # has none, which is why `absence_run` had to stand in for it — but that only
+    # sees absences already under way. This covers the first week of one, which is
+    # 42% of all missed Gameweeks and 4x more likely when a player carries news.
+    from deadline_news import attach_deadline_news
+
+    data = attach_deadline_news(data)
+    if USE_UNDERSTAT_XG:
+        from understat_history import attach_player_backfill
+
+        data = attach_player_backfill(data)
     data = add_causal_team_strength(data)
     lineup_rows = data[data["starts_observed"] > 0].groupby(
         ["season", "season_order", "team_id", "GW"], sort=True
@@ -2697,6 +3545,20 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         data["minutes"].fillna(0).to_numpy(float),
         data["fixture_count"].to_numpy(int) > 0,
     )
+    # Minutes in the most recent *scheduled* match, per fixture so a Double
+    # Gameweek does not read as a 180-minute match. A blank week carries the
+    # previous value forward, for the same reason it leaves `absence_run` alone.
+    ordered = data.sort_values(["player_key", "season_order", "GW"]).index
+    per_match = (
+        data.loc[ordered, "minutes"].fillna(0)
+        / data.loc[ordered, "fixture_count"].clip(lower=1)
+    ).where(data.loc[ordered, "fixture_count"] > 0)
+    data["last_match_minutes"] = (
+        per_match.groupby(data.loc[ordered, "player_key"], sort=False)
+        .transform(lambda values: values.ffill().shift(1))
+        .reindex(data.index)
+        .fillna(-1.0)
+    )
     previous_minutes_observed = by_player["minutes"].shift(1)
     previous_official_xp = by_player["official_xp"].shift(1)
     previous_xp_trusted = by_player["official_xp_feed_trusted"].shift(1).fillna(False)
@@ -2745,12 +3607,33 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         data["minutes"] / data["fixture_count"].clip(lower=1)
     ).where(data["fixture_count"] > 0)
     by_player = data.groupby("player_key", sort=False)
-    data["long_raw"] = by_player["performance_points"].transform(
-        lambda values: values.expanding().mean().shift(1)
-    ).fillna(points_prior)
-    data["recent_raw"] = by_player["performance_points"].transform(
-        lambda values: values.rolling(6, min_periods=1).mean().shift(1)
-    ).fillna(data["long_raw"])
+    if USE_PRICE_PRIOR:
+        points_prior = price_informed_prior(
+            data,
+            data["performance_points"],
+            {1: 3.2, 2: 2.6, 3: 2.8, 4: 2.6},
+            bounds=(0.5, 9.0),
+        )
+        data["long_raw"] = shrunk_player_rate(
+            data,
+            "performance_points",
+            points_prior,
+            None,
+            PRICE_PRIOR_STRENGTH,
+            halflife=HISTORY_HALFLIFE,
+        )
+        # Recent form is shrunk toward the player's own long-run level, so a
+        # single haul moves it by a fraction rather than defining it.
+        data["recent_raw"] = shrunk_player_rate(
+            data, "performance_points", data["long_raw"], 6, PRICE_PRIOR_STRENGTH
+        )
+    else:
+        data["long_raw"] = by_player["performance_points"].transform(
+            lambda values: values.expanding().mean().shift(1)
+        ).fillna(points_prior)
+        data["recent_raw"] = by_player["performance_points"].transform(
+            lambda values: values.rolling(6, min_periods=1).mean().shift(1)
+        ).fillna(data["long_raw"])
     data["past_minutes"] = by_player["performance_minutes"].transform(
         lambda values: values.expanding().mean().shift(1)
     ).fillna(minutes_prior * 90)
@@ -2767,6 +3650,24 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     prior_start = data["position_id"].map({1: 0.68, 2: 0.58, 3: 0.56, 4: 0.54})
     prior_sub = data["position_id"].map({1: 0.05, 2: 0.30, 3: 0.42, 4: 0.43})
     prior_sixty_start = data["position_id"].map({1: 0.95, 2: 0.82, 3: 0.76, 4: 0.72})
+    if USE_PRICE_PRIOR:
+        scheduled = data["fixture_count"] > 0
+        prior_start = price_informed_prior(
+            data,
+            (data["starts_observed"] / data["fixture_count"].clip(lower=1)).where(
+                scheduled
+            ),
+            {1: 0.68, 2: 0.58, 3: 0.56, 4: 0.54},
+            bounds=(0.05, 0.95),
+        )
+        prior_sixty_start = price_informed_prior(
+            data,
+            (
+                data["sixty_observed"] / data["starts_observed"].clip(lower=1)
+            ).where(data["starts_observed"] > 0),
+            {1: 0.95, 2: 0.82, 3: 0.76, 4: 0.72},
+            bounds=(0.40, 0.98),
+        )
     prior_strength = 4.0
     prior_games = rolling_total("fixture_count").fillna(0)
     prior_starts = rolling_total("starts_observed").fillna(0)
@@ -2844,6 +3745,24 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     # an extreme market exit, a prior zero/no-show, or a curtailed appearance.
     # The high-precision warning affects minutes/availability—not scoring rate—
     # and is disabled for all-zero or otherwise corrupted xP feeds.
+    # The official pre-deadline flag, where a snapshot exists for that season.
+    #
+    # -1 is "no entry", which on this feed means nothing was reported — its
+    # first-week absence rate is 5.7%, indistinguishable from an explicit 100
+    # (5.8%), so it reads as fit rather than unknown. Anything below 100 is
+    # informative across its whole range, not only at zero: 75 still carries a
+    # 20.5% absence rate against 5.8% for a clean player.
+    #
+    # The flag is a *probability of playing*, so it multiplies directly rather
+    # than through a hand-set penalty. Seasons before 2021/22 have no feed and
+    # keep a multiplier of one, which makes availability a feature whose strength
+    # varies by season — the same shape as the xG-era break, and stated here so it
+    # is not later mistaken for an unexplained regime shift.
+    reported_chance = data["sig_chance_playing"].fillna(-1.0).to_numpy(float)
+    official_chance = np.where(reported_chance < 0, 100.0, reported_chance) / 100.0
+    news_multiplier = np.where(
+        data["has_deadline_news_feed"].to_numpy(float) > 0, official_chance, 1.0
+    )
     start_availability_multiplier = np.select(
         [
             data["severe_availability_warning"],
@@ -2851,7 +3770,7 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ],
         [0.05, 1.0],
         default=1.0,
-    )
+    ) * news_multiplier
     sub_availability_multiplier = np.select(
         [
             data["severe_availability_warning"],
@@ -2859,7 +3778,7 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ],
         [0.15, 1.0],
         default=1.0,
-    )
+    ) * news_multiplier
     data["start_probability"] *= start_availability_multiplier
     data["sub_probability_given_bench"] *= sub_availability_multiplier
     data["start_probability"] = data["start_probability"].clip(0.02, 0.98)
@@ -2919,11 +3838,15 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     appeared = data["appearances_observed"] > 0
     appearance_denominator = data["appearances_observed"].clip(lower=1)
     minute_denominator = data["minutes"].clip(lower=45)
+    # `rate_xg` / `rate_xa` exist only with the Understat backfill: FPL's value
+    # where it published one, Understat's in the weeks it did not.
+    rate_xg = data["rate_xg"] if "rate_xg" in data else data["expected_goals"]
+    rate_xa = data["rate_xa"] if "rate_xa" in data else data["expected_assists"]
     data["goal_signal_game"] = (
         pd.Series(
             np.where(
-                data["expected_goals"] > 0,
-                0.72 * data["expected_goals"] + 0.28 * data["goals"],
+                rate_xg > 0,
+                0.72 * rate_xg + 0.28 * data["goals"],
                 data["goals"],
             ),
             index=data.index,
@@ -2934,8 +3857,8 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     data["assist_signal_game"] = (
         pd.Series(
             np.where(
-                data["expected_assists"] > 0,
-                0.72 * data["expected_assists"] + 0.28 * data["assists"],
+                rate_xa > 0,
+                0.72 * rate_xa + 0.28 * data["assists"],
                 data["assists"],
             ),
             index=data.index,
@@ -2984,6 +3907,15 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         ("penalties_missed_game", "penalty_miss_rate", {1: 0.0, 2: 0.002, 3: 0.01, 4: 0.015}),
         ("own_goals_game", "own_goal_rate", {1: 0.002, 2: 0.008, 3: 0.003, 4: 0.002}),
     ]:
+        if USE_PRICE_PRIOR:
+            data[target] = shrunk_player_rate(
+                data,
+                source,
+                price_informed_prior(data, data[source], prior),
+                12,
+                PRICE_PRIOR_STRENGTH,
+            ).clip(lower=0)
+            continue
         rolling = data.groupby("player_key", sort=False)[source].transform(
             lambda values: values.rolling(12, min_periods=1).mean().shift(1)
         )
@@ -3242,6 +4174,9 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
         + data["ensemble_role_weight"] * data[corrected_models[3]]
     ).clip(0.2, 13.5)
     data["component_xpts_base"] = data["component_per_fixture"] * fixture_multiplier
+    data["component_xpts_uncompressed"] = data["component_xpts_base"]
+    if USE_PROJECTION_STRETCH:
+        data["component_xpts_base"] = causal_stretch_projection(data)
     data["component_xpts"] = data["component_xpts_base"] * (
         data["fixture_count"] > 0
     ).astype(float)
@@ -3607,6 +4542,73 @@ def candidate_forecasts(
     return current, robust_plan if robust_planning else horizon, model_score
 
 
+def causal_stretch_projection(data: pd.DataFrame) -> np.ndarray:
+    """Undo the forecast's compression at the top, using prior deadlines only.
+
+    The ensemble regresses everything toward the middle: on the current frame it
+    over-rates sub-£4.5m fodder by 0.117 points a week and under-rates £9m+
+    players by 0.447, monotonically across every band between. A £9m player is
+    therefore worth about 17 points a season more than the model believes, and an
+    optimiser fed that will fill its cheap slots with players it over-values while
+    declining the premiums it under-values.
+
+    The correction is a per-price-band affine stretch, `a + b * forecast`, fitted
+    by least squares on realised points. An affine fit rather than an isotonic map
+    because the defect is a smooth compression rather than a shape problem, and
+    two parameters per band survive thin early-season data where twenty bins would
+    not.
+
+    Fitted strictly on completed deadlines: each Gameweek is scored by the fit
+    from everything before it, and contributes to the fit only afterwards. Bands
+    hold their raw forecast until they have enough history to be worth trusting.
+    """
+    price = data["price"].to_numpy(float) / 10.0
+    forecast = data["component_xpts_base"].to_numpy(float)
+    realised = data["points"].to_numpy(float)
+    scored = data["fixture_count"].to_numpy(int) > 0
+    band = np.select(
+        [price < 4.5, price < 6.0, price < 7.5, price < 9.0],
+        [0, 1, 2, 3],
+        default=4,
+    ).astype(int)
+
+    keys = (
+        data["season_order"].to_numpy(np.int64) * 1000
+        + data["GW"].to_numpy(np.int64)
+    )
+    order = np.argsort(keys, kind="stable")
+    deadlines = np.split(order, np.flatnonzero(np.diff(keys[order])) + 1)
+
+    stats = {b: np.zeros(5) for b in range(5)}  # n, sx, sy, sxx, sxy
+    out = forecast.copy()
+    for deadline in deadlines:
+        active = deadline[scored[deadline]]
+        for b in range(5):
+            local = active[band[active] == b]
+            if not len(local):
+                continue
+            n, sx, sy, sxx, sxy = stats[b]
+            # A band with too little history keeps its raw forecast rather than
+            # being stretched by a slope fitted on noise.
+            if n >= PROJECTION_STRETCH_MINIMUM_ROWS:
+                denominator = n * sxx - sx * sx
+                if denominator > 1e-9:
+                    slope = (n * sxy - sx * sy) / denominator
+                    intercept = (sy - slope * sx) / n
+                    slope = float(np.clip(slope, 0.6, 1.8))
+                    out[local] = intercept + slope * forecast[local]
+        update = deadline[scored[deadline]]
+        for b in range(5):
+            local = update[band[update] == b]
+            if not len(local):
+                continue
+            x, y = forecast[local], realised[local]
+            stats[b] += np.array(
+                [len(local), x.sum(), y.sum(), (x * x).sum(), (x * y).sum()]
+            )
+    return np.clip(out, 0.0, 16.0)
+
+
 def snapshot_replay(
     data: pd.DataFrame, candidates: list[Candidate]
 ) -> tuple[np.ndarray, list[str]]:
@@ -3708,6 +4710,21 @@ class SimulationStrategy:
     # discount, or a learned package adjustment. Keep it at 1.0 unless one of
     # those is active.
     gain_realisation: float = 1.0
+
+    # Extra bar on transfers while the current season is still a small sample.
+    #
+    # GW1 is the model's best of the opening five (52.9 points a week) because it
+    # is built purely from priors and makes no transfers. GW2 is the worst week of
+    # the entire season (44.8) and the deficit runs to GW6. So the damage starts
+    # when the model begins acting on one or two Gameweeks of evidence, not with
+    # the preseason squad and not with the forecast weighting — shifting
+    # `recent_share` toward history was tested and lost 68.9 on evaluation, and
+    # raising the hurdle globally lost 86.4.
+    #
+    # Zero by default: this is a hypothesis with a mechanism behind it, not a
+    # measured gain, and it stays off until a full run says otherwise.
+    early_season_hurdle: float = 0.0
+    early_season_gws: int = 5
 
 
 EXPERT_STRATEGY = SimulationStrategy(
@@ -4988,6 +6005,14 @@ def joint_transfer_plan(
                 strategy.transfer_hurdle
                 + strategy.additional_move_hurdle * (depth - 1)
             )
+            if strategy.early_season_hurdle > 0 and gw <= strategy.early_season_gws:
+                # The champion routes transfers through this planner, not the
+                # greedy path, so the restraint has to live in both. Adding it to
+                # only one is how a sweep comes back exactly +0.0 at every value.
+                remaining = (strategy.early_season_gws - gw + 1) / max(
+                    1, strategy.early_season_gws
+                )
+                hurdle += strategy.early_season_hurdle * remaining
             if stale:
                 hurdle -= strategy.staleness_hurdle_reduction
             if forced_clubs:
@@ -5949,6 +6974,14 @@ def simulate_candidate(
                     move_hurdle = strategy.transfer_hurdle + (
                         4.0 if is_hit else 0.0
                     )
+                    if strategy.early_season_hurdle > 0 and gw <= strategy.early_season_gws:
+                        # Taper it out rather than dropping it in one step, so the
+                        # model does not simply defer every early move to the
+                        # first unrestrained Gameweek.
+                        remaining = (strategy.early_season_gws - gw + 1) / max(
+                            1, strategy.early_season_gws
+                        )
+                        move_hurdle += strategy.early_season_hurdle * remaining
                     if overloaded_clubs:
                         move_hurdle = -math.inf
                     if strategy.phase_banking:
@@ -7614,14 +8647,33 @@ def current_recommendation(
     teams = pd.DataFrame(bootstrap["teams"])
     current = pd.DataFrame(bootstrap["elements"])
     events = pd.DataFrame(bootstrap["events"])
-    next_event = events.loc[~events["finished"].astype(bool)].iloc[0]
+    next_event = next_recommendation_event(events)
     gw_number = int(next_event["id"])
     deadline = str(next_event["deadline_time"])
+    current_season = season_label_from_deadline(deadline)
     team_name = dict(zip(teams["id"], teams["short_name"]))
     team_full_name = dict(zip(teams["id"], teams["name"]))
+    # FPL's own club names, which is what the archive's team panel is keyed on.
+    team_name_by_id = {int(k): str(v) for k, v in team_full_name.items()}
+    all_current_fixtures = pd.DataFrame(fixtures)
+    (
+        absence_by_element,
+        completed_event_ids,
+        last_match_by_element,
+        live_by_event,
+    ) = load_current_absence_runs(
+        current, all_current_fixtures, events, current_season, gw_number
+    )
 
-    prior = historical[historical["season"] == "2025-26"].copy()
-    raw_prior_path = CACHE / "2025-26" / "merged_gw.csv"
+    # The most recent *archived* season, not a fixed label. These features are
+    # last season's form carried into the new one, and the archive is always a
+    # season behind the live deadline. Hardcoding the year is how the live
+    # absence run came to read a finished season's injury streaks as if they
+    # described fit players today; the same literal appeared in three places and
+    # only one of them was noticed.
+    archived_season = SEASONS[-1]
+    prior = historical[historical["season"] == archived_season].copy()
+    raw_prior_path = CACHE / archived_season / "merged_gw.csv"
     raw_prior = pd.read_csv(raw_prior_path, encoding="latin-1", low_memory=False)
     prior_summary = (
         raw_prior.sort_values("GW")
@@ -7632,10 +8684,14 @@ def current_recommendation(
             previous_name=("name", "last"),
         )
     )
-    players_2526 = pd.read_csv(
-        CACHE / "2025-26" / "players_raw.csv", encoding="latin-1", low_memory=False
+    archived_players = pd.read_csv(
+        CACHE / archived_season / "players_raw.csv",
+        encoding="latin-1",
+        low_memory=False,
     )[["id", "code"]]
-    prior_summary = prior_summary.merge(players_2526, left_on="element", right_on="id", how="left")
+    prior_summary = prior_summary.merge(
+        archived_players, left_on="element", right_on="id", how="left"
+    )
     prior_summary = prior_summary.rename(columns={"code": "player_code"})
     tails = (
         prior.sort_values("GW")
@@ -7668,8 +8724,22 @@ def current_recommendation(
         )
     )
     prior_summary = prior_summary.merge(tails, on="player_code", how="left")
+    # The last scheduled match of the archived season, per fixture. The
+    # historical `last_match_minutes` carries across a summer, so a player's
+    # first live week must too; without this every player reads as a debutant
+    # until his club has played this season.
+    scheduled_prior = prior[prior["fixture_count"] > 0].sort_values("GW")
+    final_match = (
+        scheduled_prior.assign(
+            previous_last_match_minutes=scheduled_prior["minutes"]
+            / scheduled_prior["fixture_count"].clip(lower=1)
+        )
+        .groupby("player_code", as_index=False)["previous_last_match_minutes"]
+        .last()
+    )
+    prior_summary = prior_summary.merge(final_match, on="player_code", how="left")
 
-    first_fixtures = pd.DataFrame(fixtures)
+    first_fixtures = all_current_fixtures.copy()
     first_fixtures = first_fixtures[first_fixtures["event"] == gw_number]
     first_fixtures = first_fixtures.sort_values("kickoff_time", kind="stable")
     # A club can hold two fixtures in one Gameweek. Keep every one of them:
@@ -7781,6 +8851,7 @@ def current_recommendation(
                 "player_code",
                 "previous_points",
                 "previous_minutes",
+                "previous_last_match_minutes",
                 "recent_raw",
                 "long_raw",
                 "recent_underlying_raw",
@@ -7876,6 +8947,25 @@ def current_recommendation(
         f"Gu{chr(0xFFFD)}hi", "Guehi", regex=False
     )
     current["price"] = current["now_cost"].astype(int)
+    if USE_LIVE_FORM and completed_event_ids:
+        deadline_rows = pd.DataFrame(
+            {
+                "player_key": pd.to_numeric(current["code"]).astype("Int64").astype(str),
+                "position_id": current["position_id"].astype(int),
+                "price": current["price"].astype(float),
+            }
+        )
+        form = live_form_history(
+            historical,
+            current_season_form_rows(current, all_current_fixtures, live_by_event),
+            deadline_rows,
+        ).set_index("player_key")
+        keys = deadline_rows["player_key"].to_numpy()
+        for column in ("recent_raw", "long_raw", "recent_underlying_raw", "long_underlying_raw"):
+            rebuilt = form[column].reindex(keys).to_numpy()
+            current[column] = np.where(
+                np.isfinite(rebuilt), rebuilt, current[column].to_numpy(float)
+            )
     current["ownership"] = pd.to_numeric(current["selected_by_percent"], errors="coerce").fillna(0)
     current["ep_next_num"] = pd.to_numeric(current["ep_next"], errors="coerce").fillna(0)
     fallback = current["ep_next_num"].where(current["ep_next_num"] > 0, 2.0)
@@ -7931,6 +9021,20 @@ def current_recommendation(
             (home_team, False, horizon_weight[event], event)
         )
     league_goal_rate = 1.40
+    games_this_season: dict[int, float] = {}
+    if USE_LIVE_TEAM_STRENGTH and completed_event_ids:
+        season_team_rows = current_season_team_rows(
+            current, all_current_fixtures, live_by_event, team_name_by_id
+        )
+        games_this_season = (
+            season_team_rows.groupby("team_id")["team_games"].sum().to_dict()
+            if len(season_team_rows)
+            else {}
+        )
+        live_ratings = live_team_strength(historical, season_team_rows, team_name_by_id)
+        for column in LIVE_TEAM_RATINGS:
+            rebuilt = current["team_id"].astype(int).map(live_ratings[column])
+            current[column] = rebuilt.where(rebuilt.notna(), current[column])
     current["team_attack_rating"] = current["team_attack_rating"].fillna(
         league_goal_rate
     )
@@ -7995,7 +9099,14 @@ def current_recommendation(
         historical_defence = float(current.loc[mask, "team_defence_rating"].iloc[0])
         anchor_attack = league_goal_rate * strength_index
         anchor_defence = league_goal_rate / strength_index
-        opta_weight = 0.48 if probability is not None else 0.0
+        season_games = float(games_this_season.get(int(team_id), 0.0))
+        opta_weight = (
+            OPTA_ANCHOR_WEIGHT
+            * OPTA_ANCHOR_HALF_GAMES
+            / (OPTA_ANCHOR_HALF_GAMES + season_games)
+            if probability is not None
+            else 0.0
+        )
         anchored_attack = (1 - opta_weight) * historical_attack + opta_weight * anchor_attack
         anchored_defence = (1 - opta_weight) * historical_defence + opta_weight * anchor_defence
         carry_weight = float(np.clip(1 - 0.62 * regime_prior, 0.35, 1.0))
@@ -8124,7 +9235,26 @@ def current_recommendation(
     matchbook_payload = fetch_matchbook_signals(expected_market_fixtures)
     matchbook_lookup = external_fixture_lookup(matchbook_payload)
     opta_fixture_payload = load_opta_fixture_predictions()
-    opta_fixture_lookup = opta_fixture_payload.get("lookup", {})
+    opta_snapshot_matches_deadline = bool(
+        str(opta_fixture_payload.get("season", "")) == current_season
+        and int(opta_fixture_payload.get("gameweek", -1)) == gw_number
+    )
+    # A fixture file from a prior Gameweek is not current Opta coverage.  It
+    # must neither enter the forecast nor be advertised as 10/10 simply because
+    # it happens to contain ten old matches.
+    opta_fixture_lookup = (
+        opta_fixture_payload.get("lookup", {})
+        if opta_snapshot_matches_deadline
+        else {}
+    )
+    opta_matched_fixture_count = sum(
+        (
+            normalize_external_team(home),
+            normalize_external_team(away),
+        )
+        in opta_fixture_lookup
+        for home, away in expected_market_fixtures
+    )
     immediate_fixture_rates: dict[int, list[tuple[float, float, float]]] = {}
     market_team_detail: dict[int, dict] = {}
     for fixture in first_fixtures.itertuples(index=False):
@@ -8383,8 +9513,10 @@ def current_recommendation(
         current_minutes > 0, current["previous_minutes"].fillna(0)
     )
     nineties = (previous_minutes / 90).clip(lower=0)
+    # Display only: a returning player's last-season sample still counts as
+    # evidence when flagging "Small sample".
     current["sample_nineties"] = nineties
-    rate_denominator = nineties + 5.0
+    rate_denominator = live_rate_denominator(current_minutes)
 
     def numeric_current(column: str) -> pd.Series:
         if column not in current:
@@ -8434,7 +9566,7 @@ def current_recommendation(
             )
     if upcoming_rows:
         european_frame = attach_european_proximity(
-            pd.DataFrame(upcoming_rows), "2025-26", team_full_name
+            pd.DataFrame(upcoming_rows), current_season, team_full_name
         )
         knockout_map = dict(
             zip(
@@ -8495,26 +9627,20 @@ def current_recommendation(
     current["minutes_if_bench"] = current["minutes_if_bench"].fillna(
         current["position_id"].map({1: 5.0, 2: 16.0, 3: 20.0, 4: 22.0})
     )
-    # The absence axis the causal path calibrates on, rebuilt for this deadline.
-    # Without it the live frame would be scored by maps fitted under a different
-    # tier definition, which is the train/serve skew this model keeps hitting.
-    # A blank Gameweek leaves the run untouched, exactly as in the causal build.
-    live_season = historical[historical["season"] == "2025-26"]
-    absence_state: dict[object, float] = {}
-    for code, group in live_season.sort_values("GW").groupby(
-        "player_code", sort=False
-    ):
-        streak = 0.0
-        for minutes, fixtures in zip(
-            group["minutes"].fillna(0).to_numpy(float),
-            group["fixture_count"].fillna(0).to_numpy(int),
-        ):
-            if minutes > 0:
-                streak = 0.0
-            elif fixtures > 0:
-                streak += 1.0
-        absence_state[code] = streak
-    current["absence_run"] = current["player_code"].map(absence_state).fillna(0.0)
+    # The absence calibration axis must describe this season at this deadline.
+    # Carrying the previous season's terminal streak into August falsely labelled
+    # players who started GW1 as injured. Official event histories now supply the
+    # run, while blanks and players without a current-season appearance stay
+    # neutral.
+    current["absence_run"] = current["id"].map(absence_by_element).fillna(0.0)
+    # This season's last scheduled match where the club has played one, else
+    # last season's final match, else -1 for a genuine debutant: the same
+    # definition the historical frame uses.
+    this_season_last = current["id"].map(last_match_by_element)
+    this_season_last = this_season_last.where(this_season_last >= 0)
+    current["last_match_minutes"] = (
+        this_season_last.fillna(current.get("previous_last_match_minutes")).fillna(-1.0)
+    )
     # Same compression repair as the historical path, using terminal maps fitted
     # on the uncalibrated historical predictor.
     current = calibrate_live_minutes(current, historical)
@@ -9012,11 +10138,6 @@ def current_recommendation(
         (current["status"].isin(["a", "d"]))
         & (current["availability"] >= 75)
         & (current["price"] >= 35)
-        & (
-            (current["previous_minutes"].fillna(0) >= 180)
-            | (current["ownership"] >= 0.5)
-            | (current["ep_next_num"] >= 2.5)
-        )
     ].copy()
     pool.reset_index(drop=True, inplace=True)
     pool["fixture_id"] = pool["team_id"].map(
@@ -9122,6 +10243,8 @@ def current_recommendation(
         "correlation": "Team clean-sheet outcomes share a 22% scenario shock.",
     }
 
+    live_exception_threshold = float(pool["raw_projection"].quantile(0.95))
+
     def player_payload(index: int, row: pd.Series) -> dict:
         fixture = fixture_map.get(int(row["team_id"]), {})
         opponent_id = fixture.get("opponent")
@@ -9166,7 +10289,33 @@ def current_recommendation(
             risk_flags.append("Wide projection")
         if not risk_flags:
             risk_flags.append("No major flag")
-        confidence = round(float(row["confidence"]))
+        confidence_exact = float(row["confidence"])
+        confidence = round(confidence_exact)
+        projected_exact = float(row["raw_projection"])
+        horizon_exact = float(row["horizon_projection"])
+        weighted_games_exact = max(
+            1.0, float(row["horizon_weighted_games_censored"])
+        )
+        horizon_per_game_exact = float(row["risk_adjusted_horizon"]) / weighted_games_exact
+
+        def exact_lineup_utility(profile: str) -> float:
+            return (
+                0.68 * projected_exact
+                + 0.18 * horizon_per_game_exact
+                + 0.10 * float(row[f"{profile}_utility"]) * 5
+                + 0.04 * (confidence_exact / 100) * projected_exact
+            )
+
+        standard_starter = bool(
+            float(row["start_probability"]) >= 0.70
+            and float(row["play_probability"]) >= 0.84
+        )
+        exceptional_starter = bool(
+            not standard_starter
+            and float(row["start_probability"]) >= 0.70
+            and float(row["play_probability"]) >= 0.78
+            and projected_exact >= live_exception_threshold
+        )
         projection_percentile = float(row["projection_percentile"])
         verdict = (
             "Priority"
@@ -9201,6 +10350,8 @@ def current_recommendation(
             "ownership": round(float(row["ownership"]), 1),
             "projected": round(float(row["raw_projection"]), 1),
             "sixWeekProjected": round(float(row["horizon_projection"]), 1),
+            "riskAdjustedHorizonProjected": float(row["risk_adjusted_horizon"]),
+            "horizonWeightedGames": float(row["horizon_weighted_games_censored"]),
             "expectedMinutes": round(float(row["expected_minutes"])),
             "uncertainty": round(float(row["uncertainty"]), 2),
             "confidence": confidence,
@@ -9417,6 +10568,25 @@ def current_recommendation(
                 "balanced": round(float(row["balanced_utility"]), 4),
                 "chase": round(float(row["chase_utility"]), 4),
             },
+            # Full-precision coefficients used by the live MILP. These keep the
+            # browser's untouched preset byte-for-byte on the same objective even
+            # though the human-facing forecasts and sliders are rounded.
+            "optimization": {
+                "lineupUtility": {
+                    "protect": exact_lineup_utility("protect"),
+                    "balanced": exact_lineup_utility("balanced"),
+                    "chase": exact_lineup_utility("chase"),
+                },
+                "benchUtility": (
+                    0.045 * horizon_per_game_exact
+                    + 0.055
+                    * float(row["play_probability"])
+                    * min(projected_exact, 4.5)
+                ),
+                "captainUtility": projected_exact,
+                "standardStarterEligible": standard_starter,
+                "exceptionalStarterEligible": exceptional_starter,
+            },
             "features": {
                 "recent": round(float(row["recent"]), 4),
                 "history": round(float(row["long"]), 4),
@@ -9492,7 +10662,7 @@ def current_recommendation(
 
     headline = {
         "gameweek": gw_number,
-        "season": "2026/27",
+        "season": current_season.replace("-", "/"),
         "deadline": deadline,
         "budget": round(float(selected["price"].sum()) / 10, 1),
         "projected": round(float(pool.loc[xi, "raw_projection"].sum()) + float(pool.loc[captain, "raw_projection"]), 1),
@@ -9584,7 +10754,10 @@ def current_recommendation(
         )
     ]
     current_meta = {
+        "officialPlayersRegistered": int(len(current)),
         "playersScored": int(len(pool)),
+        "playersExcludedByAvailability": int(len(current) - len(pool)),
+        "playerEligibility": "All status-a/d players with at least 75% official availability and a legal FPL price; no minutes, ownership or public-xP popularity screen.",
         "fixturesScored": int(len(first_fixtures)),
         "historicalSeasons": int(historical["season"].nunique()),
         "componentModel": "Single-count fixture components + Opta/regime team priors + Matchbook Poisson + role ensemble + coverage-aware defender DC/BPS",
@@ -9592,6 +10765,12 @@ def current_recommendation(
         "managerPopulation": int(bootstrap.get("total_players", 0)),
         "officialRankImport": True,
         "publicProjectionEndpoint": "/api/projections",
+        "availabilityRefresh": {
+            "season": current_season.replace("-", "/"),
+            "officialCompletedEvents": completed_event_ids,
+            "source": "Official current-season FPL event histories and live availability",
+            "previousSeasonAbsenceCarryover": False,
+        },
         "defensiveEventCoverage": round(
             100 * float(historical.loc[historical["position_id"].isin([2, 3, 4]), "defensive_exact"].mean())
         ),
@@ -9616,7 +10795,8 @@ def current_recommendation(
         "externalTeamSignals": {
             "optaAsOf": team_prior_payload.get("asOf"),
             "optaFixtureAsOf": opta_fixture_payload.get("asOf"),
-            "optaFixtureCoverage": f"{len(opta_fixture_payload.get('fixtures', []))}/{len(first_fixtures)}",
+            "optaFixtureCoverage": f"{opta_matched_fixture_count}/{len(first_fixtures)}",
+            "optaFixtureSnapshotMatchesDeadline": opta_snapshot_matches_deadline,
             "matchbookStatus": matchbook_payload.get("status"),
             "matchbookCapturedAt": matchbook_payload.get("capturedAt"),
             "matchbookCoverage": f"{matchbook_payload.get('fixtureCount', 0)}/{matchbook_payload.get('expectedFixtureCount', len(first_fixtures))}",
@@ -9873,14 +11053,21 @@ def main() -> None:
         )
 
     walk_forward_gate: list[dict] = []
+    # What the gate is currently running. Each season defends this rather than a
+    # fixed constant, so a strategy is only displaced by evidence that beats the
+    # one in force — not by an independent coin flip re-run every August.
+    standing_gate_name: str | None = None
     for season_id, season in enumerate(seasons):
         # Decide this season's policy on every season completed before it. The
         # frozen gate saw two seasons for all eight evaluations; by 2024/25 there
         # are eight, and the extra evidence is what lets a real difference clear
         # the selection noise instead of drowning in it.
         season_gate_name, season_gate_report = select_gate_option(
-            gate_results, max(training_count, season_id)
+            gate_results,
+            max(training_count, season_id),
+            incumbent_override=standing_gate_name,
         )
+        standing_gate_name = season_gate_name
         season_strategy = gate_results[season_gate_name][1]
         season_robust_planning = season_gate_name.startswith("robust:")
         walk_forward_gate.append(
@@ -10219,20 +11406,10 @@ def main() -> None:
         float(np.mean([item["points"] for item in walk_forward])), 1
     )
     frozen_audit_path = ROOT / "analysis" / "data" / "audited_policy_validation.json"
-    frozen_audit = (
-        json.loads(frozen_audit_path.read_text(encoding="utf-8"))
-        if frozen_audit_path.exists()
-        else None
-    )
-    frozen_average = (
-        float(frozen_audit["average"]) if frozen_audit else challenger_average
-    )
-    frozen_hits = int(frozen_audit["targetHits"]) if frozen_audit else rank_target["hits"]
-    frozen_margin = (
-        float(frozen_audit["averageMargin"])
-        if frozen_audit
-        else float(rank_target["averageMargin"])
-    )
+    frozen_audit = load_validated_frozen_audit(frozen_audit_path, data)
+    frozen_average = float(frozen_audit["average"])
+    frozen_hits = int(frozen_audit["targetHits"])
+    frozen_margin = float(frozen_audit["averageMargin"])
     target_average = round(
         float(np.mean([item["top500Target"] for item in walk_forward])), 1
     )
@@ -10252,11 +11429,11 @@ def main() -> None:
             "playerWeeks": int(len(data)),
             "bestTrial": best_index + 1,
             "weights": best.as_dict(),
-            "method": "Leak-free walk-forward replay with single-count fixtures, lineup-scenario minutes, exact squad MILP, role-specific online ridge challengers, regime-aware team Poisson rates, coverage-aware defender events and a jointly gated transfer-chip tree. Live team rates add timestamped Opta and Matchbook anchors.",
+            "method": "Deadline-causal walk-forward research replay with single-count fixtures, lineup-scenario minutes, exact squad MILP, role-specific online ridge challengers, regime-aware team Poisson rates, coverage-aware defender events and a jointly gated transfer-chip tree. The broader search is diagnostic; only the separately fingerprinted frozen policy can pass promotion governance. Live team rates add timestamped Opta and Matchbook anchors.",
             "objective": (
-                "Maximise legal autosubbed XI, captain and chip points; a training-only gate selected the downside/price/upside six-GW objective."
+                "Maximise legal autosubbed XI, captain and chip points; the research gate walks forward using only seasons completed before each replayed season, while the promotion audit stays frozen on 2016/17 and 2017/18."
                 if robust_planning_enabled
-                else "Maximise legal autosubbed XI, captain and chip points; a training-only gate rejected the risk overlay and retained central six-GW expected points."
+                else "Maximise legal autosubbed XI, captain and chip points; the research gate walks forward using only seasons completed before each replayed season, while the promotion audit stays frozen on 2016/17 and 2017/18."
             ),
             "robustPlanningEnabled": robust_planning_enabled,
             "strategy": active_strategy.name,
@@ -10273,7 +11450,7 @@ def main() -> None:
             "walkForward": walk_forward_gate,
         },
         "championGovernance": {
-            "decisionChampion": "Lens 8.0" if decision_promoted else "Research baseline",
+            "decisionChampion": "Frozen audited policy" if decision_promoted else "No promoted champion",
             "decisionChallenger": "Frozen audited policy",
             "decisionPromoted": decision_promoted,
             "reason": (
@@ -10281,25 +11458,27 @@ def main() -> None:
                 if decision_promoted
                 else "Research-only: the frozen pre-2018 audit has not demonstrated consistent top-500k performance."
             ),
-            "incumbentAveragePoints": target_average,
-            "challengerAveragePoints": round(frozen_average, 1),
-            "incumbentTop500Hits": 6,
-            "challengerTop500Hits": frozen_hits,
+            "targetAveragePoints": target_average,
+            "targetRequiredHits": 6,
+            "auditedPolicyAveragePoints": round(frozen_average, 1),
+            "auditedPolicyTop500Hits": frozen_hits,
+            "researchSearchAveragePoints": challenger_average,
             "playerLayerPromoted": decision_promoted,
-            "incumbentPlayerMae": None,
-            "challengerPlayerMae": calibration_diagnostics["mae"],
+            "researchPlayerMae": calibration_diagnostics["mae"],
             "promotionRule": "Promotion requires at least 6/8 top-500k cutoff hits and a non-negative average cutoff margin under a policy frozen on 2016/17 and 2017/18; later searches remain diagnostics.",
         },
         "frozenAudit": {
-            "available": frozen_audit is not None,
-            "selection": frozen_audit["selection"] if frozen_audit else "Not generated",
+            "available": True,
+            "valid": True,
+            "generatedAt": frozen_audit["generatedAt"],
+            "contentFingerprint": frozen_audit["contentFingerprint"],
+            "provenance": frozen_audit["provenance"],
+            "selection": frozen_audit["selection"],
             "averagePoints": round(frozen_average, 1),
             "top500Hits": frozen_hits,
             "averageMargin": round(frozen_margin, 1),
-            "minimumPoints": int(frozen_audit["minimum"]) if frozen_audit else None,
-            "averageChipDelta": (
-                float(frozen_audit["averageChipDelta"]) if frozen_audit else None
-            ),
+            "minimumPoints": int(frozen_audit["minimum"]),
+            "averageChipDelta": float(frozen_audit["averageChipDelta"]),
             "researchSearchAverage": challenger_average,
             "method": "The promotion benchmark is selected only on 2016/17 and 2017/18. The broader recursive search is shown for research transparency but cannot promote itself after exposure to later-season results.",
         },
@@ -10478,6 +11657,7 @@ def main() -> None:
         "notes": [
             "Every historical GW is recursive: the prior squad, bank and season-correct free-transfer cap carry forward; transfers use contemporaneous prices and FPL selling-price rules.",
             "Minutes are explicit lineup scenarios: start, bench appearance and no appearance are conditioned on manager rotation, positional competition, fixture congestion, availability and substitution history.",
+            "Live absence streaks come only from official completed events in the current season; prior-season terminal absences never carry across the summer, and players without a current-season appearance remain neutral on the injury axis.",
             "Four causal forecasts are blended by prior out-of-sample error, including an online ridge challenger fitted separately by scoring role; current official xPts joins only as a live external vote.",
             "The replay selects a legal formation, orders the bench, applies autosubs and hands the armband to the vice-captain when required.",
             "Transfers and chips share a six-GW decision layer. Historical future blank/double assignments are censored because announcement snapshots are unavailable; only the confirmed current slate can trigger a structural Free Hit, Bench Boost or Triple Captain signal.",
@@ -10489,7 +11669,11 @@ def main() -> None:
             "Defensive-contribution forecasts use exact event counts where public feeds contain them and role-level shrinkage where they do not; the post-match proxy is isolated to the current-rules counterfactual.",
             "Live squads are evaluated in 5,000 correlated scenarios and exposed as Protect, Balanced and Chase profiles; the deterministic legal squad constraints remain binding in every profile.",
             "The current XV is solved as an exact binary mixed-integer programme with a zero optimality gap, £99.5m minimum spend, £2.0m maximum bench premium and an XI availability floor; at most one top-five-percent upside exception is permitted and disclosed.",
+            "Captaincy is one extra copy of projected points in both the Python and browser optimisers. The 0-100 captain rating is explanatory only and never overrides the optimiser's armband.",
             "Fixture difficulty has a neutral opponent component and one venue component. Opponent difficulty enters each forecast once; the horizon uses a relative current-to-future adjustment rather than a second absolute multiplier.",
+            "European proximity flags only an upcoming knockout tie. Its production rest coefficient is zero until a value clears a pre-2018 or genuinely prospective test.",
+            "Decision-gate uncertainty treats the season as the evidence unit: correlated weight-candidate paths are averaged within each Gameweek before shared-block resampling.",
+            "The frozen promotion audit is accepted only when its engine, prepared-frame, season-list and content fingerprints match this build.",
             "Current team rates blend causal historical strength, published Opta season and match forecasts, verified manager/transfer/promotion regimes and no-vig Matchbook probabilities. Opta-market and elite-manager disagreements are displayed diagnostically and never silently force a pick.",
             "Price-rise and fall probabilities use transfer pressure as an option-value tiebreaker, not as a substitute for expected points.",
             "Age is an availability/consistency prior, not a claim that younger or older players are inherently better.",
@@ -10518,33 +11702,35 @@ def refresh_current_artifact() -> None:
     result.pop("currentPlayers", None)
     weights = result["model"]["weights"]
     exact = weights.get("exact")
-    if exact is not None:
-        best = Candidate(
-            float(exact["performance"]),
-            float(exact["value"]),
-            float(exact["age"]),
-            float(exact["fixture"]),
-            float(exact.get("team", 0.0)),
-            float(exact["crowd"]),
-            float(exact["minutes"]),
-            float(exact["underlying"]),
-            float(exact["recent_share"]),
+    if exact is None:
+        raise RuntimeError(
+            "The shipped artifact has no exact candidate weights; run the full "
+            "calibration before refreshing current recommendations"
         )
-    else:
-        # Artifacts written before the exact weights were stored carry only the
-        # rounded display percentages. Approximate rather than refuse to run.
-        best = Candidate(
-            weights["performance"] / 100,
-            weights["value"] / 100,
-            weights["age"] / 100,
-            weights["fixture"] / 100,
-            weights.get("team", 0) / 100,
-            weights["crowd"] / 100,
-            weights["minutes"] / 100,
-            weights["underlying"] / 100,
-            weights["recent"] / 100,
-        )
+    best = Candidate(
+        float(exact["performance"]),
+        float(exact["value"]),
+        float(exact["age"]),
+        float(exact["fixture"]),
+        float(exact.get("team", 0.0)),
+        float(exact["crowd"]),
+        float(exact["minutes"]),
+        float(exact["underlying"]),
+        float(exact["recent_share"]),
+    )
     historical, _ = load_or_build_prepared_history()
+    frozen_audit = load_validated_frozen_audit(
+        ROOT / "analysis" / "data" / "audited_policy_validation.json",
+        historical,
+    )
+    if (
+        result.get("frozenAudit", {}).get("contentFingerprint")
+        != frozen_audit["contentFingerprint"]
+    ):
+        raise RuntimeError(
+            "The live artifact and frozen promotion audit were produced by different "
+            "engine versions; run the full calibration before --refresh-current"
+        )
     result["fixtureIntegrity"] = fixture_integrity_audit(historical)
     stored_strategy = str(result["model"].get("strategy", ""))
     active_strategy = (

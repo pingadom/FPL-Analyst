@@ -24,84 +24,84 @@
     ]
   },
   "repairedShadow": {
-    "average": 2081.1,
+    "average": 2087.4,
     "points": [
-      1896,
-      1957,
-      2077,
-      1982,
-      2235,
-      2278,
-      2188,
-      2036
+      2018,
+      1973,
+      2159,
+      2176,
+      2146,
+      2125,
+      2170,
+      1932
     ],
-    "noChipAverage": 2069.1,
-    "chipGain": 12.0,
-    "averageTransfers": 29.0,
+    "noChipAverage": 2047.5,
+    "chipGain": 39.9,
+    "averageTransfers": 29.8,
     "averageHits": 0.0
   },
   "causalRepairedShadow": {
-    "average": 2087.2,
+    "average": 2082.8,
     "points": [
-      1898,
-      1958,
-      2059,
-      2001,
-      2247,
-      2295,
-      2191,
-      2049
+      1995,
+      1979,
+      2148,
+      2148,
+      2153,
+      2130,
+      2170,
+      1939
     ],
-    "noChipAverage": 2073.2,
-    "chipGain": 14.0,
-    "averageTransfers": 29.0,
+    "noChipAverage": 2043.9,
+    "chipGain": 38.9,
+    "averageTransfers": 29.8,
     "averageHits": 0.0
   },
   "lens81HybridDiagnostic": {
-    "average": 2125.1,
+    "average": 2078.2,
     "points": [
-      1962,
-      1986,
-      2183,
-      2094,
-      2214,
-      2160,
-      2315,
-      2087
+      1886,
+      1999,
+      2153,
+      2006,
+      2254,
+      2192,
+      2209,
+      1927
     ],
-    "chipGain": 51.9,
-    "averageTransfers": 25.9,
+    "chipGain": 34.4,
+    "averageTransfers": 25.8,
     "averageHits": 0.0,
     "warning": "Diagnostic only: Lens 8 chip policy was selected on the broader historical search and must pass a frozen walk-forward gate before promotion."
   },
   "lens8": {
-    "average": 2177.9,
+    "average": 2175.5,
     "points": [
-      2112,
-      2062,
-      2277,
-      2296,
-      2168,
-      2281,
-      2265,
-      1962
+      2018,
+      2205,
+      2352,
+      2192,
+      2128,
+      2239,
+      2283,
+      1987
     ]
   },
   "deltas": {
-    "repairedShadowVsRecordedLegacy": -130.9,
-    "lens8VsRepairedShadow": 92.0,
-    "lens8VsCausalRepairedShadow": 85.9,
-    "hybridVsLens8": -48.0,
-    "lens8VsRecordedLegacy": -38.9,
+    "repairedShadowVsRecordedLegacy": -124.6,
+    "lens8VsRepairedShadow": 88.1,
+    "lens8VsCausalRepairedShadow": 92.8,
+    "hybridVsLens8": -97.2,
+    "lens8VsRecordedLegacy": -36.5,
     "lens8VsRepairedShadowBySeason": [
-      216,
-      73,
-      61,
-      319,
-      37,
-      -31,
-      164,
-      -103
+      0,
+      232,
+      193,
+      16,
+      -18,
+      114,
+      113,
+      55
     ]
   },
   "dynamicMarketAudit": {
@@ -115,10 +115,10 @@
     "metrics": {
       "teamMatches": 5643,
       "structural": {
-        "goalsForMae": 0.9623,
-        "goalsForPoissonDeviance": 1.2323,
-        "goalsAgainstMae": 0.9722,
-        "cleanSheetBrier": 0.23529
+        "goalsForMae": 0.962,
+        "goalsForPoissonDeviance": 1.2326,
+        "goalsAgainstMae": 0.9718,
+        "cleanSheetBrier": 0.23491
       },
       "market": {
         "goalsForMae": 0.9055,
@@ -127,10 +127,10 @@
         "cleanSheetBrier": 0.22495
       },
       "dynamic": {
-        "goalsForMae": 0.907,
-        "goalsForPoissonDeviance": 1.116,
-        "goalsAgainstMae": 0.9165,
-        "cleanSheetBrier": 0.22573
+        "goalsForMae": 0.9068,
+        "goalsForPoissonDeviance": 1.1156,
+        "goalsAgainstMae": 0.9162,
+        "cleanSheetBrier": 0.2256
       }
     },
     "weights": [
@@ -155,7 +155,7 @@
         "priorTeamMatches": 1462,
         "attackMarketWeight": 0.8969,
         "defenceMarketWeight": 0.8969,
-        "cleanMarketWeight": 0.8572,
+        "cleanMarketWeight": 0.8175,
         "testTeamMatches": 673
       },
       {
@@ -163,7 +163,7 @@
         "priorTeamMatches": 2135,
         "attackMarketWeight": 0.9245,
         "defenceMarketWeight": 0.9245,
-        "cleanMarketWeight": 0.882,
+        "cleanMarketWeight": 0.8396,
         "testTeamMatches": 638
       },
       {
@@ -171,22 +171,22 @@
         "priorTeamMatches": 2773,
         "attackMarketWeight": 0.9397,
         "defenceMarketWeight": 0.9397,
-        "cleanMarketWeight": 0.8958,
+        "cleanMarketWeight": 0.8518,
         "testTeamMatches": 676
       },
       {
         "season": "2023-24",
         "priorTeamMatches": 3449,
-        "attackMarketWeight": 0.9504,
+        "attackMarketWeight": 0.9053,
         "defenceMarketWeight": 0.9504,
-        "cleanMarketWeight": 0.9504,
+        "cleanMarketWeight": 0.9053,
         "testTeamMatches": 714
       },
       {
         "season": "2024-25",
         "priorTeamMatches": 4163,
         "attackMarketWeight": 0.9124,
-        "defenceMarketWeight": 0.9582,
+        "defenceMarketWeight": 0.9124,
         "cleanMarketWeight": 0.9582,
         "testTeamMatches": 740
       },
@@ -320,49 +320,49 @@
       "trainingSeasons": 3,
       "trainingRows": 114,
       "testRows": 38,
-      "priorResidualScale": 9.099
+      "priorResidualScale": 8.038
     },
     {
       "season": "2020-21",
       "trainingSeasons": 4,
       "trainingRows": 152,
       "testRows": 38,
-      "priorResidualScale": 9.544
+      "priorResidualScale": 10.02
     },
     {
       "season": "2021-22",
       "trainingSeasons": 5,
       "trainingRows": 190,
       "testRows": 38,
-      "priorResidualScale": 10.977
+      "priorResidualScale": 10.725
     },
     {
       "season": "2022-23",
       "trainingSeasons": 6,
       "trainingRows": 228,
       "testRows": 37,
-      "priorResidualScale": 11.163
+      "priorResidualScale": 11.144
     },
     {
       "season": "2023-24",
       "trainingSeasons": 7,
       "trainingRows": 265,
       "testRows": 38,
-      "priorResidualScale": 11.904
+      "priorResidualScale": 10.885
     },
     {
       "season": "2024-25",
       "trainingSeasons": 8,
       "trainingRows": 303,
       "testRows": 38,
-      "priorResidualScale": 11.989
+      "priorResidualScale": 12.069
     },
     {
       "season": "2025-26",
       "trainingSeasons": 9,
       "trainingRows": 341,
       "testRows": 38,
-      "priorResidualScale": 12.708
+      "priorResidualScale": 11.671
     }
   ],
   "fixtureIntegrity": {

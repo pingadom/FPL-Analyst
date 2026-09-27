@@ -1,5 +1,11 @@
 # Plan: closing the gap to top 500k
 
+> Historical research ledger. Several intermediate headlines below were produced
+> by evaluation-exposed searches, and the old candidate-pooled confidence estimate
+> counted correlated variants too generously. The current production benchmark,
+> corrected evidence unit and remaining gap are in
+> [`FULL_MODEL_AUDIT_2026-08-27.md`](FULL_MODEL_AUDIT_2026-08-27.md).
+
 Target: **2,297 points a season** (mean of the eight measured top-500k cutoffs, each
 anchored to sampled official manager ranks — 2024/25's 2,411 sits at rank 500,469).
 Current model: **2,173.1**. Gap: **124 points**.
@@ -464,6 +470,122 @@ repairs themselves: bisecting the frame under a pinned policy showed every repai
 neutral-to-positive, and the pinned comparison itself flips sign depending on which
 champion is pinned. See the two sections below.
 
+### Copying elite behaviour does not work. Fixing our own defects does.
+
+Three behaviours were derived from real manager data and each was tested across
+ten seasons. All three gained on the two training seasons and lost on the eight
+reported ones:
+
+| change | training | evaluation |
+|---|---|---|
+| anchor to history (`recent_share` 0.858 -> 0.10) | +30.0 | **-68.9** |
+| richer bench (`bench_premium_penalty` -> 0) | +89.0 | **-29.8** |
+| bank transfers and burst (`transfer_hurdle` -> 26) | +72.0 | **-86.4** |
+
+Meanwhile the two changes that *did* convert were both repairs to measurable
+errors in this model, not imitations of anyone: the absence calibration axis
+(bias 0.177 -> 0.030, and 2127.1 -> 2177.9 through the full pipeline) and the
+official availability feed (flagged-versus-fit bias 0.106 -> 0.003).
+
+That is the strategic lesson of the exercise. Elite habits are enabled by
+information and reaction speed a backtested model does not have — they decide 17
+hours before the deadline against the field's 42, and put 23.7% of transfers in
+the final three hours. Reproducing the *shape* of their policy without the
+information that justifies it reliably makes things worse.
+
+### Where the points actually are: the first six Gameweeks
+
+Points per Gameweek, this model against 24,041 ranked managers:
+
+| band | GW1-5 | GW6-19 | GW20-38 |
+|---|---|---|---|
+| top100 | 61.9 | 66.2 | 66.9 |
+| top10k | 58.5 | 63.7 | 65.2 |
+| band_1m | 56.4 | 59.0 | 61.0 |
+| band_5m (worst measured) | 52.0 | 52.4 | 51.3 |
+| **this model** | **48.6** | 56.8 | 56.8 |
+
+**The opening five Gameweeks score below the five-millionth-ranked human.** From
+GW6 the model runs at roughly rank 500k. Against top100 the early deficit is 13
+points a Gameweek, about 66 points across those five weeks — a large share of the
+445-point gap sitting in a small, identifiable window.
+
+Per Gameweek it is not the opening squad that fails:
+
+| GW1 | GW2 | GW3 | GW4 | GW5 | GW6 | GW7 |
+|---|---|---|---|---|---|---|
+| 52.9 | **44.8** | 48.7 | 51.1 | 45.6 | 47.9 | 56.0 |
+
+GW1, built entirely from priors with no current-season data, is the *best* of the
+first five. The collapse starts at GW2 — the worst week of the whole season — and
+lasts until GW6. The damage begins when the model starts transferring on one or
+two Gameweeks of evidence.
+
+That rules out the two explanations already tested. It is not the preseason squad,
+and it is not the global form weighting, since shifting `recent_share` toward
+history was monotonically worse. What remains is early-season transfer restraint:
+a hurdle that is high while the sample is small and normal afterwards. Untested as
+yet, and unlike the three failures above it is a defect repair rather than an
+imitation.
+
+For reference, the full-season chip timing that skilled managers share: first
+Wildcard at GW6 in every band from top100 to band_500k, Bench Boost GW33, Free Hit
+GW34. The only chip that separates them is the Triple Captain — GW26 for the top
+three bands against GW33 for everyone else.
+
+### What the elite actually do: they refuse to update on noise
+
+Fifty managers from the LiveFPL all-time leaderboard, their documented history via
+the official entry endpoint, and their current squads against ours.
+
+**Their record.** Twenty seasons of results. Across the eight seasons this model
+reports, their median is roughly **2623 against our 2178** — a gap near 445 a
+season — at median ranks of 8,000 to 22,000. Their *worst decile* beats our best
+season. The sample is selected on the outcome, though: they are on that
+leaderboard because they scored well in those very seasons, so treat it as an
+upper envelope of what is achievable rather than a target.
+
+**What the stats say.** On visible numbers our squad looks better than theirs:
+
+| | mean ownership | points | minutes | xGI | ICT |
+|---|---|---|---|---|---|
+| elite consensus | 36.2% | 6.4 | 108 | 0.51 | 7.2 |
+| model squad | 15.6% | **10.5** | 103 | **0.60** | 5.9 |
+
+They hold players who are failing — Bruno Fernandes on **2 points and form 1.0**
+at 98% ownership and 92% captaincy, Calvert-Lewin on 1, Maguire on 1, Mbeumo on 2.
+We hold early-season overperformers nobody owns: Mendy 16 points at 4.7%, Ajayi 15
+at 2.2%, Kayode 13 at 8.1%, Bijol 10 at 1.0%.
+
+**The mechanism.** Our projection correlates **+0.696 with two Gameweeks of raw
+points and only +0.505 with xGI**; among cheap players, +0.660 against +0.320. The
+model weights the noisiest available signal about twice as heavily as the
+underlying one. The elite do the reverse — they are anchored to season-long
+expectation and treat two Gameweeks as nearly uninformative. That is what their
+edge looks like in data: not better information, but a refusal to update on noise.
+
+**The cost, measured.** If that is right the model should be weakest when the
+current-season sample is smallest, and it is:
+
+| | GW1-5 | GW6+ | gap |
+|---|---|---|---|
+| points per Gameweek | 48.66 | 58.18 | **-9.52** |
+
+**-9.52 +/- 1.70 (-5.6 SE), worse in 10 of 10 seasons** — about 48 points a season,
+entirely hidden by an eight-season mean. Part of it is structural, because an
+opening squad is necessarily uninformed and improves as evidence arrives, so 48 is
+an upper bound on what a fix could recover rather than a free gain.
+
+This also explains findings that looked separate. Four of fifteen squad players
+have **zero career matches**, and zero-history players earn 0.740 points per
+million against 0.587 for established ones — a £4.0m defender who has never played
+projects above a £12.0m midfielder that 98% of the elite own. All of it follows
+from over-weighting a two-game sample.
+
+The concrete direction: shrink current-season form toward prior expectation far
+harder early in a season, and give zero-history players a conservative rather than
+a generous prior.
+
 ### A leak that wasn't, and how the mistake was made
 
 `chip_stability` averages chip gains over every season and takes an argmax over 48
@@ -821,3 +943,327 @@ alone) but scores worse through the gate (2107.1 against 2147.2). It is kept bec
 reverting it to recover the higher published number would be selecting on the evaluation
 seasons — the exact error this codebase is otherwise careful to avoid. Step 1.1 resolves
 the ambiguity honestly.
+
+---
+
+## 7. What was actually holding the model back: small samples and nailed minutes
+
+A reset on 2026-09-24 went looking for the single largest defect instead of another
+decision-layer tweak. Three candidates were measured and ruled out first:
+
+* **The forecast is not weak.** Against FPL's own pre-deadline `ep_next` (Randdalf
+  snapshots, 136,328 rows, 2020/21–2025/26) the blended projection wins in every season:
+  its weekly top 15 realise 5.15 points a player against 4.73.
+* **The crowd adds almost nothing.** Ownership and transfer flow inside the model's own
+  top-80 pool move the top-15 realised score by about +0.04 a player-week, with the sign
+  changing by season.
+* **New signings are not a blind spot.** The model finds them within a week (Haaland
+  2022/23 was ranked first from GW2).
+
+What the 2025/26 replay did show was a captaincy collapse. The captain returned **163**
+base points across the season, against 303 for the median top-10k manager and 221 for the
+rank-5-million band. In GW2 the armband went to a promoted £4.5m defender projected at
+**9.2** after one match, and Haaland was projected at **3.26** in GW1 on 56 expected
+minutes, despite 114 matches of history. Both come from two structural faults in the
+prepared frame, not in the decision layer.
+
+### Fault 1 — rates took one match at face value
+
+Every event rate was `rolling(12, min_periods=1).mean()`, so after a single appearance a
+player's goal, clean-sheet and bonus rates *were* that match. The positional prior was
+used only at zero appearances. On the players the model actually ranked in its weekly
+top 25:
+
+| appearances in window | over-projection before | after (k = 4) |
+|---|---|---|
+| 1 | +2.00 | +0.76 |
+| 2 | +1.24 | +0.15 |
+| 3 | +0.94 | −0.16 |
+
+That is the winner's curse, and it lands precisely on the transfers and captains the model
+chooses. The live path had always shrunk (five pseudo-appearances toward last season), so
+the backtest that tunes every weight and threshold was built differently from the model
+that makes live picks.
+
+**Fix (`FPL_PRICE_PRIOR`):** every rate, and the long and recent points history, is now a
+shrunk mean `(sum + k·prior) / (n + k)`. The prior is linear in price per position,
+because price is the market's view of role and output and a £8.5m striker is not a £4.5m
+defender. It is fitted on the two training seasons only. The start and 60-minute priors
+are price-informed the same way.
+
+### Fault 2 — nailed starters were given a cameo player's minutes
+
+The minutes calibration's "played last week" tier did not distinguish a 90-minute start
+from a five-minute cameo:
+
+| last match | predicted minutes | actual | predicted pts | actual pts |
+|---|---|---|---|---|
+| 80+ | 66.4 | 74.5 | 2.50 | 2.97 |
+| 1–30 | 41.9 | 29.1 | 1.57 | 1.48 |
+
+Every nailed starter was under-rated by about 0.46 points a match and every fringe player
+over-rated. This, not a scale problem, is the "premiums are under-rated" symptom, which is
+why stretching the projection (section 5) fixed the level and still lost points.
+
+**Fix (`FPL_LAST_MATCH_TIER`):** the tier is split into full match (80+), 60–79, and
+cameo (<60), using `last_match_minutes`, which is per fixture, skips blanks, and is built
+the same way live from official event data. The 80+ group now predicts 70.0 minutes and
+the cameo group 31.2.
+
+### Results
+
+Forecast, top-15 realised per player-week, by evaluation season:
+
+| | 18/19 | 19/20 | 20/21 | 21/22 | 22/23 | 23/24 | 24/25 | 25/26 |
+|---|---|---|---|---|---|---|---|---|
+| before | 5.004 | 4.907 | 5.028 | 5.233 | 5.362 | 5.349 | 5.230 | 4.584 |
+| both fixes, k = 4 | 5.060 | 5.165 | 5.074 | 5.525 | 5.528 | 5.512 | 5.332 | 4.853 |
+
+Up in all eight seasons.
+
+Full walk-forward runs (the only decisive test):
+
+| run | mean | vs shipped K (2157.2) | gap to top-500k cut |
+|---|---|---|---|
+| price prior, k = 4 | 2184.1 | +26.9 (se 36) | −113 |
+| price prior + last-match tier, k = 4 | 2217.8 | +60.5 (se 34.7), 6 of 8 seasons up | −79 |
+| price prior + last-match tier, **k = 12 (shipped)** | **2192.5** | **+35.2 (se 34.0)**, 5 of 8 seasons up | −104 |
+
+With both fixes, chips are positive in every season (7 to 232). Previously 2021/22 lost 263
+points to chip play, because the chip policy was acting on the same inflated projections.
+
+### Choosing k without looking at the answer
+
+The strength `k` was screened on the frame alone. Selection quality rises with k up to
+about 12 and then flattens, while MAE worsens slowly. The **training seasons alone** peak
+at k = 12 on top-5, top-15 and correlation, which is what makes k = 12 a legitimate
+choice rather than one fitted to the seasons it is scored on.
+
+k = 12 ships, although its full run scored 25 points below k = 4. That gap is inside one
+standard error. Choosing k = 4 *because* it scored higher on the evaluation seasons is the
+same move this document refused over the Wildcard floor. k = 12 is also the steadier
+model (season-to-season sd 65.5 against 83.4) and the stronger one on the latest season
+(2,219 against 2,091 in 2025/26). To revert, set `FPL_PRICE_PRIOR_STRENGTH=4`.
+
+### Tested and not adopted
+
+`market_role_xpts` is a price-blind formula at about 12% ensemble weight. After levelling
+it is +0.42 for £4.5m players and −2.38 for £10m+, which is almost all of the remaining
+premium level bias. Dropping it removes that bias (−0.31 → −0.00), but ranking does not
+improve and the training seasons get slightly worse (top-15 5.222 → 5.202), so it stays.
+It is a known level bias, not a ranking fault.
+
+### After the fix: where the remaining gap is
+
+Pinned replay of the new champion, 2025/26 against the 24,041-manager bands:
+
+* The season rises from 1,992 to 2,209, and the running deficit to the top-10k median
+  halves (−431 to −214).
+* **The early season is solved.** After GW5 the model is +15 ahead of the top-10k
+  median, where it had been −55. The armband goes to Salah rather than a
+  one-match defender. Captain points rise 163 → 213 in 2025/26 and 251 → 262 on average
+  across the evaluation seasons.
+* The bleed now starts at GW6. That was the elite Wildcard week, and the model carried
+  Salah rather than Haaland through Salah's slump.
+
+A squad rebuilt from scratch every week off the same forecast would still score about
+**155 points a season more** than the squad the model holds (the projected gap is 5–13
+points a week). That is an unreachable ceiling, because it assumes unlimited free
+transfers, but it is the largest pool left. **Paid hits do not reach it:** one hit a week
+screens at −152.5 on training and −54.4 on evaluation, identical at every immediate-gain
+hurdle (the joint planner's hit path does not consult that hurdle). Most of the fresh
+squad's edge is week-to-week forecast noise that a held squad cannot, and should not,
+chase.
+
+The Wildcard trigger (`wildcardGap` 52.5) left both 2025/26 Wildcards unplayed in the
+walk-forward. Lowering it was screened: 45 and 38 have **no effect on the training
+seasons** (+6.6 and +23.9 on evaluation), and 30 costs −90.0 on training. The only
+positive evidence is on the evaluation seasons, so the threshold is unchanged.
+
+---
+
+## 8. The gap audit, and what it changed
+
+A meta-analysis on 2026-09-24/25 scored the model's 2025/26 replay on the same
+definitions as the 24,041-manager luck-or-skill study and re-tested every open item.
+The full write-up is published separately ("Where the Points Go"); the durable findings
+are recorded here.
+
+### Where 2025/26 was lost
+
+Against the top-10k median (2,209 against 2,412):
+
+| phase | model vs top 10k |
+|---|---|
+| GW1–5 | +15 |
+| GW6–11 | **−112** |
+| GW12–19 | −51 |
+| GW20–29 | 0 |
+| GW30–38 | −66 |
+
+The weekly craft is elite: hindsight lineup loss is 368 against the top 10k's 360, and
+given the same XIs the expected-points captain rule (269 a season) beats the captain
+ranker (223), the crowd's choice (226) and haul probability (257). The losses are
+upstream, in who is in the squad. At GW6 the model ranked Haaland first of every player,
+but only 1.1 points over six weeks ahead of Salah, whom it held, so the swap never cleared
+the hurdle. 84% of prior top-10k managers owned Haaland and 82% captained him. Forcing an
+early Wildcard does not help (GW6: +1.5 on evaluation, −67.5 on training), and the transfer
+objective already counts captaincy (weight 0.70).
+
+Two first-pass readings were wrong. The study's transfer gain counts Wildcard rebuild
+moves (63 moves for the top 10k against 38 ordinary transfers), so per move the gap is
+4.7 against 3.8. And its zero-minute-starter count contradicts its own autosub count, so
+it is not used.
+
+### "Compression" is a level bias, not a selection gap
+
+The blend's within-Gameweek slope of realised on projected points is 1.10–1.34, but each
+member is close to 1, and **inside the top-80 choice pool the slope is 0.96**. Averaging
+four imperfectly correlated members squeezes the pool against the rest of the field; it
+does not squeeze gaps within the pool. So the Haaland call was an ordinary forecast miss.
+Walk-forward NNLS stacking fixes the calibration (slope 1.23 → 1.08, top-60 bias
++0.44 → +0.12) but picks slightly worse players (top-5 6.166 → 6.092; training top-15
+5.149 → 4.984). Not adopted.
+
+### The test bench, rebuilt
+
+Across 20 recorded experiments, training-season and evaluation-season deltas correlate
+**−0.18**, and none of the 12 changes that improved training improved evaluation. Two
+seasons select nothing. `harness.py walkforward` replaces that for decision knobs: each
+season holds the setting that beat the incumbent on every earlier season at 75%
+confidence (the production gate's rule), and is then scored out of sample.
+
+| knob | walk-forward result |
+|---|---|
+| `transfer_hurdle` 2.5 / 3.5 / 4.25 | never adopted; **+0.0** |
+| `wildcard_gap` 30 / 38 / 45 | adopted after 2019/20; **−1.4 ± 8.0** |
+
+The static "+23.9 at 38" on evaluation does not survive honest selection. Both shipped
+values stand, and so do the rest:
+
+| knob | static evaluation means (shipped first) | walk-forward |
+|---|---|---|
+| `early_price_weight` 0 / 0.5 / 1.1 / 2.0 | 2209 / 2219 / 2230 / 2161 | never adopted, +0.0 |
+| `free_hit_gap` shipped / 20 / 25 / 35 | 2209 / 2184 / 2211 / 2207 | never adopted, +0.0 |
+| `bench_score` shipped / 14 / 24 | 2209 / 2209 / 2210 | never adopted, +0.0 |
+| `triple_score` shipped / 7 / 14 | 2209 / 2209 / 2209 | −2.4 ± 2.8 |
+
+Price awareness (the team-value gap) looks best in a static read, but its seasons swing
+from −77 to +122 and no earlier window ever supports it. The chip thresholds barely move
+the season, so the chip contribution's −45 to +300 swing comes from per-season policy
+re-selection and path effects, not from where the bars sit. **No decision knob beats its
+shipped value under walk-forward selection.** FPL's own pre-deadline `ep_next` was also
+tested as a forecast blend (2020/21+): every weight lowers top-15 selection, and a
+walk-forward choice converges to zero.
+
+### Measured, small, not shipped
+
+| change | switch | effect |
+|---|---|---|
+| walk-forward segment correction (set-piece role, returners, news) | prototype | MAE 1.171 → 1.131, corr +0.005, top-K flat |
+| Understat xG backfill (team xG complete from 2016/17; player xG 39–100%) | `FPL_UNDERSTAT` | corr +0.002–0.003 in every period; training top-15 −0.03 to −0.04 |
+| decayed career history | `FPL_HISTORY_HALFLIFE` | corr better in all 10 seasons (+0.001–0.003, largest recently); walk-forward top-15 +0.003 |
+
+The xG gap was real (no FPL xG before GW16 of 2022/23, six of ten seasons) but it was not
+the hidden constraint: threat, bonus-point and points history already carry most of it.
+The stale career anchor is also real and mechanistic, since late-season form predicts
+the next four weeks only for players with more than a season of history (+0.08 to +0.13),
+but at +1–2 season points it is below what a full run can detect. Both switches stay off.
+
+Penalty order turned out to be a proxy for role importance, not a penalty effect: #2
+takers are under-rated as much as #1 takers, mostly through minutes.
+
+### What this leaves
+
+The measurable defects in the forecast are now mostly repaired. What still separates the
+model from the elite is information the archive does not hold: GW2–6 transfers made by
+real managers realise about twice the model's predicted gain in every rank band (8.41 vs
+4.28 for prior top-10k managers). That edge lives in team news, pre-season information
+and live signals, so further gains are likely to come from the live path rather than
+from the backtest.
+
+---
+
+## 9. Two corrections: debutants' minutes, and stale live form
+
+### The last-match tier, version 2 (shipped)
+
+Version 1 of the last-match calibration tier put "no previous match" in the full-match
+group so it would not read as a cameo. That calibrated every debutant like a nailed
+starter: **0.56 predicted starts against 0.16 realised** on the evaluation seasons
+(−34 expected minutes, −0.69 points a match), mostly £4.0–4.5m fringe players the
+optimiser buys as bench fodder. The uncalibrated estimate was already close (0.24 against
+0.13 for the cheapest), so debutants now get their own tier, pooled across price because
+the cells are small, and fall back to it until a cell has 400 rows. The same change splits
+31–59 minutes from a short cameo; that group had been under-predicted by 0.09 starts.
+
+| group | v1 predicted start | v2 predicted start | realised |
+|---|---|---|---|
+| debutants | 0.559 | 0.236 | 0.164 |
+| last match 31–59 | 0.373 | 0.434 | 0.464 |
+| last match 1–29 | 0.320 | 0.287 | 0.274 |
+| last match 80+ | 0.803 | 0.818 | 0.816 |
+
+Full run: **2217.2 against 2192.5** (+24.7; 5 of 8 seasons up; +60.0 against the original
+2157.2). On season points alone that is within noise; it ships because it was a single
+pre-planned repair of a clear calibration defect, not a pick among variants.
+
+### The live model was ranking on last May's form (shipped, live-only)
+
+In `current_recommendation`, `recent_raw`, `long_raw` and the ICT histories came only from
+the final row of the archived season and were never updated with the current season's
+matches. The one-week structural route did use this season's xG and minutes, but three of
+the four forecast inputs (the empirical member, the ridge features and the decision
+multiplier) saw form as of the previous May. At GW6 of 2025/26 that tail value differed
+from the true recent form by **0.37 points a match** (correlation 0.876), and the gap grows
+all season. The backtest could never show this, because its rows always include the
+current season.
+
+`live_form_history` now appends the season's completed Gameweeks, read from the official
+event data the live path already caches, to the archive and runs the same shrinkage. On a
+simulated 2025/26 GW6 deadline it reproduces the archived frame's own values for all 742
+players with **zero difference**. It cannot change any replayed score, only the live
+recommendation (`FPL_LIVE_FORM`, on).
+
+### Tested and not adopted: an empirical member that counts availability once
+
+The empirical member averages points per scheduled fixture, so past injury weeks count as
+zeros, and then multiplies by play probability again. It under-projects nailed starters by
++0.64 to +0.83 a match; the ridge member is unbiased for them. Rebuilding it from points
+per appearance × P(play) improves top-5 (train 5.874 → 5.974, eval 6.158 → 6.244),
+correlation and MAE in both splits, with top-15 slightly lower in both.
+
+The full run says no: **2197.2 against 2217.2** (−20.0, 4 of 8 seasons up, swings of −118 to
++139). The member is better calibrated, but the pipeline was tuned around it and the gain
+does not survive. That is the same pattern as the projection stretch and stacking, and
+it is recorded here so the idea is not re-run. The code was not kept.
+
+---
+
+## 10. More live/backtest mismatches, and one input that did not matter
+
+### Fixed (live-only; the backtest reproduces 2217.2)
+
+* **Collapsed live rates.** Every live per-90 rate divided this season's output by *last*
+  season's minutes whenever a player had none this season. 38 established players read at
+  14–30% of their true rates (Watkins' goal rate 0.060 against a prior of 0.439), so a
+  returning star would never have been bought back. With no minutes the rate is now the prior.
+* **Stale live team strength.** The live path carried each club's final rating from last
+  season and never read a finished score (0.36 attack / 0.39 defence goals a game adrift of
+  the backtest's own GW6 values). `live_team_strength` appends this season's matches and runs
+  `add_causal_team_strength` unchanged, matching the archive exactly for all 20 clubs. The
+  pre-season Opta anchor now fades with matches played (half weight after six).
+
+### Checked and left alone
+
+* **Live minutes estimator.** It is built differently from the backtest's (season-to-date
+  starts, calibrated prior, weight 6 against a rolling 10 with weight 4), but across ten
+  simulated deadlines its accuracy is within a hair of the backtest's (Brier 0.0826 against
+  0.0822, minutes error 13.98 against 13.80). No change.
+* **Opponent vulnerability carried across seasons.** The backtest measured it inside each
+  season only, and the live path used last season's final value all year. Last season's
+  value predicts goals conceded better at every stage, and a blend with k = 16 Gameweeks of
+  carry (chosen on the training season) improves the input's correlation with goals
+  conceded from 0.206 to 0.262. But the input enters the projection as a capped multiplier,
+  and the final forecast barely moves (correlation +0.0005; top-15 −0.01 to −0.03). It is
+  not worth a full run, and the code was not kept.

@@ -1,5 +1,9 @@
 # Availability and held-player audit
 
+> Historical investigation. The absence-axis diagnosis remains valid, but the
+> current live carry-over repair and final benchmark are documented in
+> [`FULL_MODEL_AUDIT_2026-08-27.md`](FULL_MODEL_AUDIT_2026-08-27.md).
+
 ## What this audit asked
 
 The model can be wrong for two very different reasons:

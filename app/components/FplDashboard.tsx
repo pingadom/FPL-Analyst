@@ -30,6 +30,8 @@ type Player = {
   ownership: number;
   projected: number;
   sixWeekProjected: number;
+  riskAdjustedHorizonProjected: number;
+  horizonWeightedGames: number;
   expectedMinutes: number;
   uncertainty: number;
   confidence: number;
@@ -140,6 +142,13 @@ type Player = {
   captainRating: number;
   score: number;
   strategyScores: Record<RiskMode, number>;
+  optimization: {
+    lineupUtility: Record<RiskMode, number>;
+    benchUtility: number;
+    captainUtility: number;
+    standardStarterEligible: boolean;
+    exceptionalStarterEligible: boolean;
+  };
   opponent: string;
   venue: string;
   starter: boolean;
@@ -160,7 +169,7 @@ type Player = {
   };
 };
 
-type ScoredPlayer = Player & { liveScore: number };
+type ScoredPlayer = Player & { liveScore: number; optimizerUtility?: number };
 
 type ImportedTeam = {
   manager: {
@@ -277,7 +286,7 @@ function calculateScore(
 
 function buildSquad(players: ScoredPlayer[]) {
   const optimized = buildOptimizedSquad(players) as
-    | { squad: ScoredPlayer[]; xi: ScoredPlayer[] }
+    | { squad: ScoredPlayer[]; xi: ScoredPlayer[]; captain: ScoredPlayer }
     | null;
   if (optimized) return optimized;
 
@@ -286,6 +295,9 @@ function buildSquad(players: ScoredPlayer[]) {
   return {
     squad,
     xi: squad.filter((player) => player.starter),
+    captain:
+      squad.find((player) => player.starter && player.captain) ??
+      squad.filter((player) => player.starter).toSorted((a, b) => b.projected - a.projected)[0],
   };
 }
 
@@ -390,13 +402,28 @@ export default function FplDashboard() {
     return () => controller.abort();
   }, []);
 
+  const weightsAreCalibrated =
+    recentShare === calibrated.recent &&
+    (Object.keys(weightLabels) as WeightKey[]).every(
+      (key) => weights[key] === (calibrated[key] ?? 0),
+    );
+
   const scoredPlayers = useMemo(
     () =>
       playerPool.map((player) => ({
         ...player,
-        liveScore: calculateScore(player, weights, recentShare, riskMode),
+        // The generated strategy score retains the exact fitted coefficients;
+        // the sliders expose rounded percentages for humans.  Rebuilding the
+        // default from those rounded values made the browser disagree with the
+        // Python artifact before a user touched any control.
+        liveScore: weightsAreCalibrated
+          ? player.strategyScores[riskMode]
+          : calculateScore(player, weights, recentShare, riskMode),
+        optimizerUtility: weightsAreCalibrated
+          ? player.optimization.lineupUtility[riskMode]
+          : undefined,
       })),
-    [playerPool, weights, recentShare, riskMode],
+    [playerPool, weights, recentShare, riskMode, weightsAreCalibrated],
   );
   const selection = useMemo(() => buildSquad(scoredPlayers), [scoredPlayers]);
   const xiIds = useMemo(
@@ -417,12 +444,14 @@ export default function FplDashboard() {
         .sort((a, b) => b.liveScore - a.liveScore),
     [selection.squad, xiIds],
   );
-  const captainOrder = useMemo(
-    () => [...starters].sort((a, b) => b.captainRating - a.captainRating),
-    [starters],
+  const captain = selection.captain;
+  const vice = useMemo(
+    () =>
+      [...starters]
+        .filter((player) => player.id !== captain?.id)
+        .sort((a, b) => b.projected - a.projected)[0],
+    [captain?.id, starters],
   );
-  const captain = captainOrder[0];
-  const vice = captainOrder[1];
   const spend = selection.squad.reduce((sum, player) => sum + player.price, 0);
   const projected =
     starters.reduce((sum, player) => sum + player.projected, 0) +
@@ -538,7 +567,7 @@ export default function FplDashboard() {
         <span>{results.rankTarget.averageProbability}% AVG TARGET PROBABILITY</span>
         <span>{results.rankTarget.averageEstimatedRank === null ? "RANK OUTSIDE LOCAL CALIBRATION" : `EST. AVG RANK ${results.rankTarget.averageEstimatedRank.toLocaleString()}`}</span>
         <span>{results.model.playerWeeks.toLocaleString()} PLAYER-WEEKS</span>
-        <span>{results.currentMeta.playersScored} CURRENT PLAYERS SCORED</span>
+        <span>{results.currentMeta.playersScored} ELIGIBLE PLAYERS SCORED</span>
         <span>{results.headline.scenario.simulations.toLocaleString()} CORRELATED SQUAD SCENARIOS</span>
         <span>LAST REFRESH {new Date(results.generatedAt).toLocaleDateString("en-GB")}</span>
       </div>
@@ -547,11 +576,12 @@ export default function FplDashboard() {
         <div className="breakthrough-lead">
           <div className="section-label light"><span>08</span> REPRODUCIBILITY AUDIT</div>
           <p className="breakthrough-kicker">CORRECTED BENCHMARK · INVALID RESULTS RETIRED</p>
-          <h2 id="breakthrough-title">The repaired model wins.<br />The old headline does not.</h2>
+          <h2 id="breakthrough-title">The repaired model improves.<br />The old headline does not.</h2>
           <p>
             Lens 8 adds {modelAudit.lens8.deltaVsLens7} points per season over the previous production model.
-            A freshly retrained causal shadow adds another {modelAudit.causalChallenger.deltaVsLens8}, but remains
-            research-only. The former 2,212 claim reused stale predictions and is formally retired.
+            The retrained causal shadow {modelAudit.causalChallenger.deltaVsLens8 >= 0 ? "adds" : "trails by"}{" "}
+            {Math.abs(modelAudit.causalChallenger.deltaVsLens8)} and remains research-only. The former 2,212
+            claim reused stale predictions and is formally retired.
           </p>
           <div className="breakthrough-status">
             <span>STATUS</span>
@@ -563,7 +593,7 @@ export default function FplDashboard() {
         <div className="breakthrough-evidence">
           <div className="breakthrough-scoreboard">
             <article><span>LENS 8 AVERAGE</span><strong>{modelAudit.lens8.average.toLocaleString()}</strong><small>+{modelAudit.lens8.deltaVsLens7} vs Lens 7</small></article>
-            <article><span>CAUSAL SHADOW</span><strong>{modelAudit.causalChallenger.average.toLocaleString()}</strong><small>+{modelAudit.causalChallenger.deltaVsLens8} vs Lens 8</small></article>
+            <article><span>CAUSAL SHADOW</span><strong>{modelAudit.causalChallenger.average.toLocaleString()}</strong><small>{modelAudit.causalChallenger.deltaVsLens8 >= 0 ? "+" : ""}{modelAudit.causalChallenger.deltaVsLens8} vs Lens 8</small></article>
             <article><span>LEGACY REPLAY</span><strong>{modelAudit.legacyBreakthrough.reproducedAverage.toLocaleString()}</strong><small>not the claimed {modelAudit.legacyBreakthrough.average.toLocaleString()}</small></article>
             <article><span>TOP-500K TEST</span><strong>{modelAudit.lens8.top500Hits}/{modelAudit.lens8.seasons}</strong><small>no rank guarantee</small></article>
           </div>
@@ -609,9 +639,9 @@ export default function FplDashboard() {
           <p>{results.championGovernance.reason}</p>
         </div>
         <div className="governance-metrics">
-          <div><strong>{results.championGovernance.incumbentAveragePoints}</strong><span>avg target pts</span></div>
-          <div><strong>{results.championGovernance.challengerAveragePoints}</strong><span>model avg pts</span></div>
-          <div><strong>{results.championGovernance.challengerPlayerMae}</strong><span>new player MAE</span></div>
+          <div><strong>{results.championGovernance.targetAveragePoints}</strong><span>avg pace line</span></div>
+          <div><strong>{results.championGovernance.auditedPolicyAveragePoints}</strong><span>frozen-policy avg</span></div>
+          <div><strong>{results.championGovernance.auditedPolicyTop500Hits}/{results.rankTarget.seasons}</strong><span>frozen target hits</span></div>
         </div>
         <small>{results.championGovernance.promotionRule}</small>
       </section>
@@ -999,8 +1029,8 @@ export default function FplDashboard() {
           <h2>Wait for the<br />fixture to bend.</h2>
           <p>
             Chips are scored inside the recursive replay. Each decision compares
-            today’s edge with the discounted option value of known future blanks,
-            doubles and the chip-window expiry.
+            today’s confirmed slate with a schedule-censored hold value and the
+            chip-window expiry. Historical rescheduling is never revealed early.
           </p>
           <div className="current-chip-call">
             <span>GW{results.chipStrategy.current.gameweek} CALL</span>
@@ -1027,7 +1057,7 @@ export default function FplDashboard() {
           <div className="chip-history">
             <div className="chip-history-heading">
               <span>WALK-FORWARD DECISIONS</span>
-              <p>Only information available before that deadline. Green seasons beat the identical no-chip run.</p>
+              <p>Season deltas compare two independently evolving recursive paths, so they include downstream Wildcard and transfer effects; card gains above are immediate only.</p>
             </div>
             {results.backtest.map((season) => (
               <div className="chip-season-row" key={season.season}>
@@ -1074,7 +1104,7 @@ export default function FplDashboard() {
             <div><span>DEADLINE REVIEW</span><strong>{deadlineStatus.lateNewsCount}</strong><small>minutes/news flags</small></div>
             <div><span>SHADOW GWS</span><strong>{shadowStatus.completedGameweeks}</strong><small>officially scored</small></div>
             <div><span>CHIP CALL</span><strong>{chipScenarios.recommendation}</strong><small>{chipScenarios.simulationCount.toLocaleString()} paired draws</small></div>
-            <div><span>REPRODUCIBLE LIFT</span><strong>+{modelAudit.causalChallenger.deltaVsLens8.toFixed(1)}</strong><small>causal shadow vs Lens 8 · unpromoted</small></div>
+            <div><span>REPRODUCIBLE DELTA</span><strong>{modelAudit.causalChallenger.deltaVsLens8 >= 0 ? "+" : ""}{modelAudit.causalChallenger.deltaVsLens8.toFixed(1)}</strong><small>causal shadow vs Lens 8 · unpromoted</small></div>
           </div>
 
           <div className="research-heading">
@@ -1116,7 +1146,7 @@ export default function FplDashboard() {
             <div className="frontier-comparison">
               <div><span>PREVIOUS PRODUCTION</span><strong>{modelAudit.lens7.average}</strong><small>Lens 7 recursive average</small></div>
               <div><span>REPAIRED LENS 8</span><strong>{modelAudit.lens8.average}</strong><small>+{modelAudit.lens8.deltaVsLens7} points</small></div>
-              <div><span>CAUSAL SHADOW</span><strong>{modelAudit.causalChallenger.average}</strong><small>+{modelAudit.causalChallenger.deltaVsLens8} more · not promoted</small></div>
+              <div><span>CAUSAL SHADOW</span><strong>{modelAudit.causalChallenger.average}</strong><small>{modelAudit.causalChallenger.deltaVsLens8 >= 0 ? "+" : ""}{modelAudit.causalChallenger.deltaVsLens8} vs Lens 8 · not promoted</small></div>
             </div>
           </div>
 
@@ -1267,7 +1297,7 @@ export default function FplDashboard() {
         <div className="method-footer">
           <div><span>AGE COVERAGE</span><strong>{Math.min(...results.dataSummary.map((item) => item.ageCoverage))}%+</strong></div>
           <div><span>CALIBRATION ROWS</span><strong>{results.model.playerWeeks.toLocaleString()}</strong></div>
-          <div><span>CURRENT POOL</span><strong>{results.currentMeta.playersScored}</strong></div>
+          <div><span>ELIGIBLE CURRENT POOL</span><strong>{results.currentMeta.playersScored}</strong></div>
           <div className="source-links">
             {results.sources.map((source) => <a href={source.url} target="_blank" rel="noreferrer" key={source.url}>{source.label} ↗</a>)}
           </div>
