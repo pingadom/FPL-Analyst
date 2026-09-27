@@ -1237,3 +1237,33 @@ The full run says no: **2197.2 against 2217.2** (−20.0, 4 of 8 seasons up, swi
 +139). The member is better calibrated, but the pipeline was tuned around it and the gain
 does not survive. That is the same pattern as the projection stretch and stacking, and
 it is recorded here so the idea is not re-run. The code was not kept.
+
+---
+
+## 10. More live/backtest mismatches, and one input that did not matter
+
+### Fixed (live-only; the backtest reproduces 2217.2)
+
+* **Collapsed live rates.** Every live per-90 rate divided this season's output by *last*
+  season's minutes whenever a player had none this season. 38 established players read at
+  14–30% of their true rates (Watkins' goal rate 0.060 against a prior of 0.439), so a
+  returning star would never have been bought back. With no minutes the rate is now the prior.
+* **Stale live team strength.** The live path carried each club's final rating from last
+  season and never read a finished score (0.36 attack / 0.39 defence goals a game adrift of
+  the backtest's own GW6 values). `live_team_strength` appends this season's matches and runs
+  `add_causal_team_strength` unchanged, matching the archive exactly for all 20 clubs. The
+  pre-season Opta anchor now fades with matches played (half weight after six).
+
+### Checked and left alone
+
+* **Live minutes estimator.** It is built differently from the backtest's (season-to-date
+  starts, calibrated prior, weight 6 against a rolling 10 with weight 4), but across ten
+  simulated deadlines its accuracy is within a hair of the backtest's (Brier 0.0826 against
+  0.0822, minutes error 13.98 against 13.80). No change.
+* **Opponent vulnerability carried across seasons.** The backtest measured it inside each
+  season only, and the live path used last season's final value all year. Last season's
+  value predicts goals conceded better at every stage, and a blend with k = 16 Gameweeks of
+  carry (chosen on the training season) improves the input's correlation with goals
+  conceded from 0.206 to 0.262. But the input enters the projection as a capped multiplier,
+  and the final forecast barely moves (correlation +0.0005; top-15 −0.01 to −0.03). It is
+  not worth a full run, and the code was not kept.
