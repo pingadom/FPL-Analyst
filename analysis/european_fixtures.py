@@ -67,6 +67,7 @@ SEASON_COMPETITIONS: dict[str, tuple[str, ...]] = {
     "2023-24": ("cl", "el", "conf"),
     "2024-25": ("cl", "el", "conf"),
     "2025-26": ("cl",),
+    "2026-27": ("cl",),
 }
 
 # The source writes full club names; the model keys on FPL's short ones. Only the
@@ -284,7 +285,11 @@ def attach_european_proximity(
             days_to[index] = float(after.min())
         if len(before):
             days_since[index] = float(-before.max())
-        near = dates[np.abs(deltas) <= 4]
+        # Only a tie *after* the league fixture can cause anticipatory rotation.
+        # The previous absolute-value test also flagged two-to-four days after a
+        # European match, despite the measured post-Europe residual having the
+        # opposite sign. `days_since` remains available as a diagnostic.
+        near = dates[(deltas > 0) & (deltas <= 4)]
         if len(near) and any(
             pd.Timestamp(value).month in KNOCKOUT_MONTHS for value in near
         ):

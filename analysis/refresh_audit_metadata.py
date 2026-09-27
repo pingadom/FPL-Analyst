@@ -84,8 +84,19 @@ def main() -> None:
         "model seasons. Rank is withheld outside a 50-point local calibration "
         "window rather than extrapolating the cutoff curve into unsupported ranks."
     )
-    audit_path = lens.ROOT / "analysis" / "data" / "audited_policy_validation.json"
-    audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    historical, _ = lens.load_or_build_prepared_history()
+    audit = lens.load_validated_frozen_audit(
+        lens.ROOT / "analysis" / "data" / "audited_policy_validation.json",
+        historical,
+    )
+    if (
+        result.get("frozenAudit", {}).get("contentFingerprint")
+        != audit["contentFingerprint"]
+    ):
+        raise RuntimeError(
+            "The public artifact and frozen audit have different fingerprints; "
+            "run the full calibration instead of refreshing metadata"
+        )
     average = float(audit["average"])
     hits = int(audit["targetHits"])
     margin = float(audit["averageMargin"])
@@ -101,7 +112,7 @@ def main() -> None:
         1,
     )
     result["championGovernance"] = {
-        "decisionChampion": "Lens 7.0" if promoted else "Research baseline",
+        "decisionChampion": "Frozen audited policy" if promoted else "No promoted champion",
         "decisionChallenger": "Frozen audited policy",
         "decisionPromoted": promoted,
         "reason": (
@@ -109,17 +120,21 @@ def main() -> None:
             if promoted
             else "Research-only: the frozen pre-2018 audit has not demonstrated consistent top-500k performance."
         ),
-        "incumbentAveragePoints": target_average,
-        "challengerAveragePoints": round(average, 1),
-        "incumbentTop500Hits": 6,
-        "challengerTop500Hits": hits,
+        "targetAveragePoints": target_average,
+        "targetRequiredHits": 6,
+        "auditedPolicyAveragePoints": round(average, 1),
+        "auditedPolicyTop500Hits": hits,
+        "researchSearchAveragePoints": research_average,
         "playerLayerPromoted": promoted,
-        "incumbentPlayerMae": None,
-        "challengerPlayerMae": result["calibrationDiagnostics"]["mae"],
+        "researchPlayerMae": result["calibrationDiagnostics"]["mae"],
         "promotionRule": "Promotion requires at least 6/8 top-500k cutoff hits and a non-negative average cutoff margin under a policy frozen on 2016/17 and 2017/18; later searches remain diagnostics.",
     }
     result["frozenAudit"] = {
         "available": True,
+        "valid": True,
+        "generatedAt": audit["generatedAt"],
+        "contentFingerprint": audit["contentFingerprint"],
+        "provenance": audit["provenance"],
         "selection": audit["selection"],
         "averagePoints": round(average, 1),
         "top500Hits": hits,

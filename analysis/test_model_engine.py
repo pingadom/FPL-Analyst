@@ -589,12 +589,13 @@ class ModelEngineTests(unittest.TestCase):
 
         rows = pd.DataFrame(
             {
-                "team_id": [43, 43, 43, 1],
+                "team_id": [43, 43, 43, 43, 1],
                 "kickoff_time": pd.to_datetime(
                     [
                         "2024-04-13T11:30:00Z",  # between both quarter-final legs
                         "2023-11-25T15:00:00Z",  # three days before a group tie
                         "2024-02-10T15:00:00Z",  # three days before a last-16 tie
+                        "2024-04-20T14:00:00Z",  # three days after the second leg
                         "2024-04-13T14:00:00Z",  # a club with no European football
                     ],
                     utc=True,
@@ -611,9 +612,10 @@ class ModelEngineTests(unittest.TestCase):
         self.assertEqual(out["european_knockout_soon"].iloc[0], 1.0)
         self.assertEqual(out["european_knockout_soon"].iloc[1], 0.0)
         self.assertEqual(out["european_knockout_soon"].iloc[2], 1.0)
-        # No European football must be "far away", never zero days.
-        self.assertEqual(out["european_days_to"].iloc[3], 99.0)
         self.assertEqual(out["european_knockout_soon"].iloc[3], 0.0)
+        # No European football must be "far away", never zero days.
+        self.assertEqual(out["european_days_to"].iloc[4], 99.0)
+        self.assertEqual(out["european_knockout_soon"].iloc[4], 0.0)
 
     def test_european_season_dates_resolve_across_the_new_year(self):
         """The source states the year once per file; everything else is inferred.
@@ -686,6 +688,95 @@ class ModelEngineTests(unittest.TestCase):
         )
         self.assertTrue(all(0 <= tier <= 2 for tier in legacy))
 
+    def test_live_absence_run_uses_only_current_season_events(self):
+        """A GW1 starter cannot inherit an absence from last season's GW38."""
+        current = pd.DataFrame(
+            {
+                "id": [411, 999, 1000],
+                "team": [1, 1, 2],
+                "minutes": [90, 0, 180],
+            }
+        )
+        fixtures = pd.DataFrame(
+            {
+                "event": [1, 2],
+                "team_h": [1, 1],
+                "team_a": [2, 3],
+            }
+        )
+        live = {
+            1: {
+                "elements": [
+                    {"id": 411, "stats": {"minutes": 90}},
+                    {"id": 999, "stats": {"minutes": 0}},
+                    {"id": 1000, "stats": {"minutes": 90}},
+                ]
+            },
+            2: {
+                "elements": [
+                    {"id": 411, "stats": {"minutes": 0}},
+                    {"id": 1000, "stats": {"minutes": 90}},
+                ]
+            },
+        }
+        runs = lens.current_absence_runs_from_events(current, fixtures, live, [1, 2])
+        self.assertEqual(runs[411], 1.0)
+        self.assertEqual(runs[1000], 0.0)
+        # No season appearance means neutral, not "missed every week".
+        self.assertEqual(runs[999], 0.0)
+        self.assertEqual(
+            lens.season_label_from_deadline("2026-08-14T17:30:00Z"), "2026-27"
+        )
+
+    def test_live_recommendation_skips_a_locked_unfinished_event(self):
+        events = pd.DataFrame(
+            [
+                {
+                    "id": 2,
+                    "deadline_time": "2026-08-28T17:30:00Z",
+                    "finished": False,
+                },
+                {
+                    "id": 3,
+                    "deadline_time": "2026-09-04T17:30:00Z",
+                    "finished": False,
+                },
+            ]
+        )
+        selected = lens.next_recommendation_event(
+            events, as_of="2026-08-29T12:00:00Z"
+        )
+        self.assertEqual(int(selected["id"]), 3)
+
+    def test_gate_does_not_count_candidate_variants_as_extra_seasons(self):
+        """Duplicating a correlated candidate path must not shrink gate error."""
+        incumbent = lens.GATE_INCUMBENT
+        challenger = "central:Joint transfer-chip tree + hold value"
+        base = [float((index % 5) - 2) for index in range(38)]
+        better = [value + (0.4 if index % 3 else -0.2) for index, value in enumerate(base)]
+
+        def payload(paths: int) -> dict:
+            incumbent_stats = [
+                {"weeklyPoints": base} for _ in range(paths) for _ in lens.SEASONS
+            ]
+            challenger_stats = [
+                {"weeklyPoints": better} for _ in range(paths) for _ in lens.SEASONS
+            ]
+            zeros = np.zeros(len(lens.SEASONS))
+            return {
+                incumbent: (zeros, lens.WEEKLY_CHASE_STRATEGY, None, incumbent_stats),
+                challenger: (zeros, lens.JOINT_OPTION_STRATEGY, None, challenger_stats),
+            }
+
+        _, single = lens.select_gate_option(payload(1), len(lens.SEASONS))
+        _, tripled = lens.select_gate_option(payload(3), len(lens.SEASONS))
+        single_result = single["options"][challenger]
+        tripled_result = tripled["options"][challenger]
+        self.assertEqual(single_result["standardError"], tripled_result["standardError"])
+        self.assertEqual(single_result["confidenceVsIncumbent"], tripled_result["confidenceVsIncumbent"])
+        self.assertEqual(tripled["candidateVariantsAveraged"], 3)
+        self.assertIn("season", tripled["evidenceUnit"])
+
     def test_gate_pin_holds_the_selection_and_rejects_unknown_names(self):
         """Pinning the gate is the only way to vary the data on its own.
 
@@ -727,6 +818,285 @@ class ModelEngineTests(unittest.TestCase):
         with mock.patch.object(lens, "GATE_PIN", "central:No such strategy"):
             with self.assertRaises(KeyError):
                 lens.select_gate_option(options, len(lens.SEASONS))
+
+    def test_live_path_hardcodes_no_season_label(self):
+        """The live deadline must derive its seasons, never name one.
+
+        A hardcoded season is invisible to every behaviour test, because it stays
+        correct until the calendar rolls over and then quietly describes the wrong
+        year. That is exactly how the live absence run came to read a finished
+        season's injury streaks as if they described fit players: one literal was
+        copied from the line above it and nothing failed until a new season began.
+
+        Season-specific *rules* elsewhere in the module are legitimate — chip
+        allowances and scoring changes really do differ by year. This guards only
+        the live recommendation path, which should always be talking about now.
+        """
+        import inspect
+        import re
+
+        source = inspect.getsource(lens.current_recommendation)
+        self.assertEqual(re.findall(r'"20\d\d-\d\d"', source), [])
+        # And the archive reference must track the data rather than a literal.
+        self.assertIn("SEASONS[-1]", source)
+
+    def test_gate_defends_the_standing_choice_not_a_constant(self):
+        """The walk-forward gate must have memory, or it oscillates.
+
+        Deciding every season independently against the same fixed constant makes
+        an option near the confidence bar flip back and forth: the run reported
+        five strategy changes across ten seasons, cycling through four options.
+        Defending the previous season's choice means a challenger must beat what
+        is actually in force, and reverting must clear the bar again the other
+        way.
+        """
+        weeks = [1.0] * 38
+        options = {
+            "central:Six-GW planner + adaptive banking": (
+                np.zeros(len(lens.SEASONS)),
+                lens.WEEKLY_CHASE_STRATEGY,
+                None,
+                [{"weeklyPoints": weeks} for _ in lens.SEASONS],
+            ),
+            "central:Joint transfer-chip tree + hold value": (
+                np.zeros(len(lens.SEASONS)),
+                lens.JOINT_OPTION_STRATEGY,
+                None,
+                [{"weeklyPoints": weeks} for _ in lens.SEASONS],
+            ),
+        }
+        challenger = "central:Joint transfer-chip tree + hold value"
+        with mock.patch.object(lens, "GATE_PIN", ""):
+            # With identical evidence nothing can clear the bar, so whichever
+            # option is standing must survive — including one that is not the
+            # module-level incumbent.
+            held, report = lens.select_gate_option(
+                options, len(lens.SEASONS), incumbent_override=challenger
+            )
+            self.assertEqual(held, challenger)
+            self.assertEqual(report["incumbent"], challenger)
+            self.assertFalse(report["switched"])
+            # An unknown standing name must fall back to the default incumbent
+            # rather than crash or silently accept it.
+            fallback, _ = lens.select_gate_option(
+                options, len(lens.SEASONS), incumbent_override="central:Nonexistent"
+            )
+            self.assertEqual(fallback, lens.GATE_INCUMBENT)
+
+    def test_one_match_does_not_define_a_rate(self) -> None:
+        """The winner's curse: a single haul must move a rate, not replace it."""
+        frame = pd.DataFrame(
+            {
+                "player_key": ["a"] * 4,
+                "rate_game": [3.0, np.nan, 0.0, 1.0],
+            }
+        )
+        prior = pd.Series(0.5, index=frame.index)
+        shrunk = lens.shrunk_player_rate(frame, "rate_game", prior, 12, 4.0)
+        # No history yet: exactly the prior.
+        self.assertAlmostEqual(shrunk.iloc[0], 0.5)
+        # One appearance of 3.0 against four pseudo-games at 0.5, not 3.0.
+        self.assertAlmostEqual(shrunk.iloc[1], (3.0 + 4 * 0.5) / 5)
+        # A censored week (no appearance) adds neither a game nor a zero.
+        self.assertAlmostEqual(shrunk.iloc[2], shrunk.iloc[1])
+        self.assertAlmostEqual(shrunk.iloc[3], (3.0 + 0.0 + 4 * 0.5) / 6)
+        # Only earlier rows count, so the value is known at the deadline.
+        expanding = lens.shrunk_player_rate(frame, "rate_game", prior, None, 4.0)
+        self.assertAlmostEqual(expanding.iloc[3], shrunk.iloc[3])
+
+    def test_decayed_history_weights_recent_matches_more(self) -> None:
+        frame = pd.DataFrame(
+            {"player_key": ["a"] * 4, "rate_game": [10.0, np.nan, 0.0, 5.0]}
+        )
+        prior = pd.Series(1.0, index=frame.index)
+        shrunk = lens.shrunk_player_rate(frame, "rate_game", prior, None, 2.0, halflife=1.0)
+        # Half-life of one row: weights halve per row of age, censored rows
+        # still age the history but add no evidence.
+        self.assertAlmostEqual(shrunk.iloc[0], 1.0)
+        self.assertAlmostEqual(shrunk.iloc[1], (10.0 + 2.0) / (1.0 + 2.0))
+        self.assertAlmostEqual(shrunk.iloc[2], (5.0 + 2.0) / (0.5 + 2.0))
+        self.assertAlmostEqual(shrunk.iloc[3], (2.5 + 0.0 + 2.0) / (0.25 + 1.0 + 2.0))
+        # With no half-life the path is the undecayed mean, unchanged.
+        flat = lens.shrunk_player_rate(frame, "rate_game", prior, None, 2.0)
+        self.assertAlmostEqual(flat.iloc[3], (10.0 + 0.0 + 2.0) / (2.0 + 2.0))
+
+    def test_price_prior_is_fitted_on_training_seasons_only(self) -> None:
+        training = lens.TRAINING_SEASONS[0]
+        rows = 300
+        price = np.linspace(40, 130, rows)
+        frame = pd.DataFrame(
+            {
+                "season": [training] * rows + ["2025-26"] * rows,
+                "position_id": [4] * (2 * rows),
+                "price": np.concatenate([price, price]),
+            }
+        )
+        # The evaluation season carries a wildly different relation; if it
+        # leaked into the fit the slope would not come back as 0.01.
+        target = pd.Series(np.concatenate([0.01 * price, 50 - 0.3 * price]))
+        prior = lens.price_informed_prior(frame, target, {4: 0.28})
+        self.assertAlmostEqual(prior.iloc[rows + 10], 0.01 * price[10], places=6)
+        # Positions without enough training rows keep the flat fallback.
+        sparse = frame.iloc[rows - 100 :].assign(position_id=2)
+        flat = lens.price_informed_prior(sparse, target.iloc[rows - 100 :], {2: 0.04})
+        self.assertAlmostEqual(flat.iloc[0], 0.04)
+
+    def test_live_last_match_minutes_skips_blanks_and_splits_doubles(self) -> None:
+        current = pd.DataFrame({"id": [1, 2, 3], "team": [10, 10, 20]})
+        fixtures = pd.DataFrame(
+            {
+                "event": [1, 2, 2, 1],
+                "team_h": [10, 10, 10, 20],
+                "team_a": [11, 12, 13, 21],
+            }
+        )
+        live = {
+            1: {"elements": [{"id": 1, "stats": {"minutes": 90}},
+                             {"id": 3, "stats": {"minutes": 12}}]},
+            2: {"elements": [{"id": 1, "stats": {"minutes": 150}},
+                             {"id": 2, "stats": {"minutes": 0}}]},
+        }
+        last = lens.current_last_match_minutes(current, fixtures, live, [1, 2])
+        # Team 10 played twice in event 2: 150 minutes is 75 a match.
+        self.assertAlmostEqual(last[1], 75.0)
+        # Scheduled and did not play is a zero, not "no match".
+        self.assertAlmostEqual(last[2], 0.0)
+        # Team 20 blanked in event 2, so its last match is event 1.
+        self.assertAlmostEqual(last[3], 12.0)
+
+    def test_last_match_tier_separates_cameos_from_full_matches(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "position_id": [3, 3, 3, 3],
+                "price": [60.0, 60.0, 60.0, 60.0],
+                "absence_run": [0.0, 0.0, 0.0, 0.0],
+                "last_match_minutes": [90.0, 70.0, 10.0, -1.0],
+            }
+        )
+        with mock.patch.object(lens, "USE_LAST_MATCH_TIER", True),              mock.patch.object(lens, "LAST_MATCH_TIER_VERSION", 1):
+            tiers = lens.minutes_calibration_tier(frame, ["position_id"])
+        availability = tiers // 3
+        self.assertEqual(list(availability), [0, 4, 3, 0])
+        with mock.patch.object(lens, "USE_LAST_MATCH_TIER", False):
+            legacy = lens.minutes_calibration_tier(frame, ["position_id"])
+        self.assertEqual(list(legacy // 3), [0, 0, 0, 0])
+
+    def test_live_form_equals_the_backtest_computation(self) -> None:
+        """Appending this season's weeks live must give the batch frame's value."""
+        rng = np.random.default_rng(3)
+        rows = []
+        for key, position, price in (("11", 3, 80.0), ("22", 2, 45.0)):
+            for season_order, season in ((0, "s0"), (1, "s1")):
+                for gw in range(1, 7):
+                    rows.append(
+                        {
+                            "player_key": key, "season": season, "season_order": season_order,
+                            "GW": gw, "position_id": position, "price": price,
+                            "points": float(rng.integers(0, 12)), "minutes": 90.0,
+                            "ict": float(rng.uniform(0, 15)), "fixture_count": 1,
+                        }
+                    )
+        full = pd.DataFrame(rows)
+        full["performance_points"] = full["points"]
+        full["underlying_game"] = (full["ict"] / 90 * 90).clip(0, 35)
+        # The batch answer: the season-1 GW6 row of a frame that contains it.
+        batch = full.copy()
+        batch.loc[(batch.season == "s1") & (batch.GW == 6), ["performance_points", "underlying_game"]] = np.nan
+        batch = batch.sort_values(["player_key", "season_order", "GW"]).reset_index(drop=True)
+        prior = lens.price_informed_prior(batch, batch["performance_points"], lens.FORM_POINTS_PRIOR, bounds=(0.5, 9.0))
+        long = lens.shrunk_player_rate(batch, "performance_points", prior, None, lens.PRICE_PRIOR_STRENGTH)
+        target = (batch.season == "s1") & (batch.GW == 6)
+        # The live answer: season 0 as history, season 1 weeks 1-5 as event rows.
+        history = full[full.season == "s0"]
+        season_rows = full[(full.season == "s1") & (full.GW <= 5)][
+            ["player_key", "GW", "points", "minutes", "ict", "fixture_count"]
+        ]
+        deadline = pd.DataFrame({"player_key": ["11", "22"], "position_id": [3, 2], "price": [80.0, 45.0]})
+        with mock.patch.object(lens, "USE_PRICE_PRIOR", True), mock.patch.object(lens, "HISTORY_HALFLIFE", 0.0):
+            live = lens.live_form_history(history, season_rows, deadline).set_index("player_key")
+        expected = dict(zip(batch.loc[target, "player_key"], long[target]))
+        for key in ("11", "22"):
+            self.assertAlmostEqual(live.loc[key, "long_raw"], expected[key], places=10)
+
+    def test_live_team_strength_equals_the_backtest_team_model(self) -> None:
+        """Appending this season's matches live must give the batch panel's ratings."""
+        rng = np.random.default_rng(11)
+        rows = []
+        for season_order, season in ((0, "s0"), (1, "s1")):
+            for gw in range(1, 9):
+                for team_id, name in ((1, "Alpha"), (2, "Beta")):
+                    scored, conceded = int(rng.integers(0, 4)), int(rng.integers(0, 4))
+                    rows.append(
+                        {
+                            "season": season, "season_order": season_order, "GW": gw,
+                            "team_id": team_id, "team_name": name, "team_games": 1,
+                            "team_goals": scored, "team_xg": float(rng.uniform(0.3, 2.5)),
+                            "team_goals_against": conceded, "team_xga": float(rng.uniform(0.3, 2.5)),
+                            "team_clean_sheets": int(conceded == 0),
+                            "team_result_points": 3 if scored > conceded else int(scored == conceded),
+                        }
+                    )
+        panel = pd.DataFrame(rows)
+        deadline_gw = 6
+        # Batch: the season-1 panel up to the deadline, deadline row blank.
+        batch = panel[(panel.season == "s0") | (panel.GW <= deadline_gw)].copy()
+        blank = (batch.season == "s1") & (batch.GW == deadline_gw)
+        batch.loc[blank, ["team_games", "team_goals", "team_xg", "team_goals_against",
+                          "team_xga", "team_clean_sheets", "team_result_points"]] = 0
+        batch["opponent_team"] = np.nan
+        batch["was_home"] = False
+        rated = lens.add_causal_team_strength(batch)
+        expected = rated[(rated.season == "s1") & (rated.GW == deadline_gw)].set_index("team_id")
+        live = lens.live_team_strength(
+            panel[panel.season == "s0"],
+            panel[(panel.season == "s1") & (panel.GW < deadline_gw)],
+            {1: "Alpha", 2: "Beta"},
+        )
+        for column in lens.LIVE_TEAM_RATINGS:
+            for team_id in (1, 2):
+                self.assertAlmostEqual(live.loc[team_id, column], expected.loc[team_id, column], places=10)
+
+    def test_a_player_without_minutes_this_season_keeps_his_prior_rate(self) -> None:
+        """Numerator and denominator must describe the same sample."""
+        minutes = pd.Series([0.0, 450.0])
+        prior = 0.44
+        season_goals_signal = pd.Series([0.0, 3.0])
+        rate = (season_goals_signal + 5 * prior) / lens.live_rate_denominator(minutes)
+        # No minutes this season: the rate is the prior, not a fraction of it.
+        self.assertAlmostEqual(rate.iloc[0], prior)
+        # Five nineties this season: an even blend of the season and the prior.
+        self.assertAlmostEqual(rate.iloc[1], (3.0 + 5 * prior) / 10)
+
+    def test_current_season_form_rows_read_official_event_data(self) -> None:
+        current = pd.DataFrame({"id": [1, 2], "code": [111, 222], "team": [10, 20]})
+        fixtures = pd.DataFrame({"event": [1, 2, 2], "team_h": [10, 10, 10], "team_a": [20, 11, 12]})
+        live = {
+            1: {"elements": [{"id": 1, "stats": {"total_points": 6, "minutes": 90, "ict_index": "7.5"}},
+                             {"id": 2, "stats": {"total_points": 1, "minutes": 20, "ict_index": "1.0"}}]},
+            2: {"elements": [{"id": 1, "stats": {"total_points": 9, "minutes": 180, "ict_index": "12"}}]},
+        }
+        rows = lens.current_season_form_rows(current, fixtures, live).set_index(["player_key", "GW"])
+        self.assertEqual(rows.loc[("111", 2), "fixture_count"], 2)   # double Gameweek
+        self.assertEqual(rows.loc[("222", 1), "fixture_count"], 1)
+        self.assertAlmostEqual(rows.loc[("111", 1), "ict"], 7.5)
+
+    def test_version_two_gives_debutants_their_own_tier(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "position_id": [3] * 5,
+                "price": [60.0, 60.0, 60.0, 60.0, 90.0],
+                "absence_run": [0.0] * 5,
+                "last_match_minutes": [90.0, 70.0, 45.0, 10.0, -1.0],
+            }
+        )
+        with mock.patch.object(lens, "USE_LAST_MATCH_TIER", True), \
+             mock.patch.object(lens, "LAST_MATCH_TIER_VERSION", 2):
+            tiers = lens.minutes_calibration_tier(frame, ["position_id"])
+        self.assertEqual(list(tiers // 3), [0, 4, 5, 3, 6])
+        # Debutants are pooled across price: a GBP9.0m debutant shares a cell
+        # with a GBP4.0m one rather than borrowing a nailed starter's map.
+        self.assertEqual(int(tiers[4] % 3), 0)
+        self.assertTrue(all(tier < 21 for tier in tiers))
 
 
 if __name__ == "__main__":

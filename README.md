@@ -9,7 +9,8 @@ The product includes:
 - adjustable performance, value, age, fixture, market, and form-memory weights;
 - current 2026/27 FPL player prices, ownership, and fixtures;
 - 2,400 historical weight trials with walk-forward season checks; and
-- a reproducible, leak-free analysis pipeline in `analysis/calibrate_model.py`.
+- a deadline-causal research pipeline plus a separately fingerprinted frozen
+  promotion audit in `analysis/calibrate_model.py`.
 
 ## Local development
 
@@ -42,6 +43,10 @@ repaired schema and cache rules.
 
 For a non-technical explanation of every analytics layer, read
 [`docs/MODEL_HANDBOOK.md`](docs/MODEL_HANDBOOK.md). The explanation-driven
+current full audit, including every defect found and the honest research/frozen
+benchmarks, is in
+[`docs/FULL_MODEL_AUDIT_2026-08-27.md`](docs/FULL_MODEL_AUDIT_2026-08-27.md).
+The explanation-driven
 legacy review and Lens 8 acceptance gate are in
 [`docs/DECISION_AUDIT_LENS8.md`](docs/DECISION_AUDIT_LENS8.md).
 The fair Lens 7/Lens 8/causal-shadow comparison and the stale-cache root cause

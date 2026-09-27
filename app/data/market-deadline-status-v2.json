@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "season": "2026-27",
-  "gameweek": 1,
-  "capturedAt": "2026-08-20T12:20:25.929011+00:00",
-  "deadline": "2026-08-21T17:30:00+00:00",
-  "status": "unavailable",
-  "source": "https://www.football-data.co.uk/mmz4281/2627/E0.csv",
-  "reason": "HTTPError: HTTP Error 300: Multiple Choices",
-  "fixtureCount": 0
+  "gameweek": 3,
+  "capturedAt": "2026-08-29T12:37:50.082176+00:00",
+  "deadline": "2026-09-04T17:30:00+00:00",
+  "status": "provisional",
+  "snapshotHash": "1609d161c5b0998a88a76113d65b64a4d3fcfc854081fcbd66d3a47dbeb40025",
+  "snapshotPath": "analysis/snapshots/2026-27/gw-03/market-20260829T123750Z-1609d161c5b0.json",
+  "fixtureCount": 10
 }

@@ -44,3 +44,6 @@ __pycache__/
 
 # harness experiment log (regenerated locally)
 analysis/data/harness_runs.json
+
+# audit run log (regenerated locally)
+analysis/*.latest.log
