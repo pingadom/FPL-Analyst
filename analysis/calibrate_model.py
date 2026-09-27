@@ -194,6 +194,18 @@ HISTORY_HALFLIFE = float(os.environ.get("FPL_HISTORY_HALFLIFE", "0"))
 # backtest's rows already include the current season, so this cannot change any
 # replayed score, only the recommendation for the next deadline.
 USE_LIVE_FORM = os.environ.get("FPL_LIVE_FORM", "1") != "0"
+# Rebuild live team ratings with this season's finished matches. The live path
+# carried each club's final rating from the archived season and never read a
+# finished score, so every clean-sheet and goal expectation ignored the current
+# season: at GW6 of 2025/26 the carried ratings were 0.36 (attack) and 0.39
+# (defence) goals a game away from the backtest's own values. Live-only.
+USE_LIVE_TEAM_STRENGTH = os.environ.get("FPL_LIVE_TEAM_STRENGTH", "1") != "0"
+# The pre-season Opta anchor fades as this season's matches accumulate: full
+# weight at GW1, half after six matches. The backtest has no Opta data, so the
+# fade moves the live model toward the validated behaviour as evidence arrives
+# rather than away from it.
+OPTA_ANCHOR_WEIGHT = 0.48
+OPTA_ANCHOR_HALF_GAMES = 6.0
 if USE_UNDERSTAT_XG:
     PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
         PREPARED_HISTORY_CACHE.stem + "-understat" + PREPARED_HISTORY_CACHE.suffix
@@ -1864,6 +1876,146 @@ def current_last_match_minutes(
 
 FORM_POINTS_PRIOR = {1: 3.2, 2: 2.6, 3: 2.8, 4: 2.6}
 FORM_UNDERLYING_PRIOR = {1: 2.5, 2: 4.0, 3: 6.0, 4: 6.5}
+
+
+LIVE_RATE_PRIOR_NINETIES = 5.0
+
+
+def live_rate_denominator(season_minutes: pd.Series) -> pd.Series:
+    """Denominator for the live per-90 rates: this season's nineties plus the prior's.
+
+    Every live rate is (this season's count + 5 x last season's rate) divided by
+    this. The denominator used to substitute *last* season's minutes whenever a
+    player had none this season, while the numerator still counted only this
+    season's output, so a player with no minutes yet had every rate divided by his
+    whole previous season: Watkins' goal rate read 0.060 against a prior of 0.439,
+    and the same collapse hit 38 established players with no minutes this season
+    (14-30% of their true rates). A returning star would never have been bought
+    back. With no minutes this season the rate is now exactly the prior.
+    """
+    minutes = pd.to_numeric(season_minutes, errors="coerce").fillna(0.0).clip(lower=0)
+    return minutes / 90 + LIVE_RATE_PRIOR_NINETIES
+
+
+LIVE_TEAM_COLUMNS = [
+    "season", "season_order", "GW", "team_id", "team_name", "team_games",
+    "team_goals", "team_xg", "team_goals_against", "team_xga",
+    "team_clean_sheets", "team_result_points",
+]
+LIVE_TEAM_RATINGS = [
+    "team_attack_rating", "team_defence_rating", "team_form_rating",
+    "team_clean_rating", "team_rating_confidence", "team_regime_shift",
+]
+
+
+def current_season_team_rows(
+    current: pd.DataFrame,
+    fixtures: pd.DataFrame,
+    live_by_event: dict[int, dict],
+    team_names: dict[int, str],
+) -> pd.DataFrame:
+    """This season's finished club matches, one row per club per Gameweek.
+
+    Built the way the archive builds them: goals from the final score, team xG
+    as the sum of the club's players' xG, xGA as the largest expected-goals-
+    conceded figure among its players, per Gameweek.
+    """
+    columns = [c for c in LIVE_TEAM_COLUMNS if c not in ("season", "season_order")]
+    if fixtures.empty or "finished" not in fixtures:
+        return pd.DataFrame(columns=columns)
+    finished = fixtures[
+        fixtures["finished"].fillna(False).astype(bool)
+        & fixtures["event"].notna()
+        & fixtures["team_h_score"].notna()
+    ]
+    records = []
+    for fixture in finished.itertuples(index=False):
+        home_goals, away_goals = int(fixture.team_h_score), int(fixture.team_a_score)
+        for team, scored, conceded in (
+            (int(fixture.team_h), home_goals, away_goals),
+            (int(fixture.team_a), away_goals, home_goals),
+        ):
+            records.append(
+                {
+                    "GW": int(fixture.event),
+                    "team_id": team,
+                    "team_games": 1,
+                    "team_goals": scored,
+                    "team_goals_against": conceded,
+                    "team_clean_sheets": int(conceded == 0),
+                    "team_result_points": 3 if scored > conceded else int(scored == conceded),
+                }
+            )
+    if not records:
+        return pd.DataFrame(columns=columns)
+    rows = pd.DataFrame(records).groupby(["GW", "team_id"], as_index=False).sum()
+    team_of = dict(zip(pd.to_numeric(current["id"]), pd.to_numeric(current["team"])))
+    expected = []
+    for event, payload in live_by_event.items():
+        for item in payload.get("elements", []):
+            team = team_of.get(int(item["id"]))
+            if team is None:
+                continue
+            stats = item.get("stats") or {}
+            expected.append(
+                {
+                    "GW": int(event),
+                    "team_id": int(team),
+                    "xg": float(stats.get("expected_goals", 0) or 0),
+                    "xgc": float(stats.get("expected_goals_conceded", 0) or 0),
+                }
+            )
+    if expected:
+        per_team = pd.DataFrame(expected).groupby(["GW", "team_id"], as_index=False).agg(
+            team_xg=("xg", "sum"), team_xga=("xgc", "max")
+        )
+        rows = rows.merge(per_team, on=["GW", "team_id"], how="left")
+    else:
+        rows["team_xg"] = 0.0
+        rows["team_xga"] = 0.0
+    rows[["team_xg", "team_xga"]] = rows[["team_xg", "team_xga"]].fillna(0.0)
+    rows["team_name"] = rows["team_id"].map(team_names)
+    return rows[columns]
+
+
+def live_team_strength(
+    historical: pd.DataFrame,
+    season_rows: pd.DataFrame,
+    team_names: dict[int, str],
+) -> pd.DataFrame:
+    """Team ratings at the next deadline, via the backtest's own team model.
+
+    Appends this season's finished matches to the archived team panel and runs
+    `add_causal_team_strength` unchanged, then reads the ratings on a blank
+    deadline row. On a simulated 2025/26 GW6 deadline this reproduces the
+    archived ratings for all 20 clubs with zero difference.
+    """
+    order = int(historical["season_order"].max()) + 1
+    hist = historical[LIVE_TEAM_COLUMNS].drop_duplicates(["season", "GW", "team_id"])
+    new = season_rows.copy()
+    new["season"] = "live"
+    new["season_order"] = order
+    deadline = pd.DataFrame(
+        {"team_id": list(team_names), "team_name": list(team_names.values())}
+    )
+    deadline["season"] = "live"
+    deadline["season_order"] = order
+    deadline["GW"] = int(new["GW"].max()) + 1 if len(new) else 1
+    for column in (
+        "team_games", "team_goals", "team_xg", "team_goals_against",
+        "team_xga", "team_clean_sheets", "team_result_points",
+    ):
+        deadline[column] = 0.0
+    frame = pd.concat(
+        [hist, new[LIVE_TEAM_COLUMNS], deadline[LIVE_TEAM_COLUMNS]], ignore_index=True
+    )
+    frame["opponent_team"] = np.nan
+    frame["was_home"] = False
+    rated = add_causal_team_strength(frame)
+    at_deadline = rated[
+        (rated["season"] == "live") & (rated["GW"] == deadline["GW"].iloc[0])
+    ]
+    return at_deadline.drop_duplicates("team_id").set_index("team_id")[LIVE_TEAM_RATINGS]
 
 
 def current_season_form_rows(
@@ -8501,6 +8653,8 @@ def current_recommendation(
     current_season = season_label_from_deadline(deadline)
     team_name = dict(zip(teams["id"], teams["short_name"]))
     team_full_name = dict(zip(teams["id"], teams["name"]))
+    # FPL's own club names, which is what the archive's team panel is keyed on.
+    team_name_by_id = {int(k): str(v) for k, v in team_full_name.items()}
     all_current_fixtures = pd.DataFrame(fixtures)
     (
         absence_by_element,
@@ -8867,6 +9021,20 @@ def current_recommendation(
             (home_team, False, horizon_weight[event], event)
         )
     league_goal_rate = 1.40
+    games_this_season: dict[int, float] = {}
+    if USE_LIVE_TEAM_STRENGTH and completed_event_ids:
+        season_team_rows = current_season_team_rows(
+            current, all_current_fixtures, live_by_event, team_name_by_id
+        )
+        games_this_season = (
+            season_team_rows.groupby("team_id")["team_games"].sum().to_dict()
+            if len(season_team_rows)
+            else {}
+        )
+        live_ratings = live_team_strength(historical, season_team_rows, team_name_by_id)
+        for column in LIVE_TEAM_RATINGS:
+            rebuilt = current["team_id"].astype(int).map(live_ratings[column])
+            current[column] = rebuilt.where(rebuilt.notna(), current[column])
     current["team_attack_rating"] = current["team_attack_rating"].fillna(
         league_goal_rate
     )
@@ -8931,7 +9099,14 @@ def current_recommendation(
         historical_defence = float(current.loc[mask, "team_defence_rating"].iloc[0])
         anchor_attack = league_goal_rate * strength_index
         anchor_defence = league_goal_rate / strength_index
-        opta_weight = 0.48 if probability is not None else 0.0
+        season_games = float(games_this_season.get(int(team_id), 0.0))
+        opta_weight = (
+            OPTA_ANCHOR_WEIGHT
+            * OPTA_ANCHOR_HALF_GAMES
+            / (OPTA_ANCHOR_HALF_GAMES + season_games)
+            if probability is not None
+            else 0.0
+        )
         anchored_attack = (1 - opta_weight) * historical_attack + opta_weight * anchor_attack
         anchored_defence = (1 - opta_weight) * historical_defence + opta_weight * anchor_defence
         carry_weight = float(np.clip(1 - 0.62 * regime_prior, 0.35, 1.0))
@@ -9338,8 +9513,10 @@ def current_recommendation(
         current_minutes > 0, current["previous_minutes"].fillna(0)
     )
     nineties = (previous_minutes / 90).clip(lower=0)
+    # Display only: a returning player's last-season sample still counts as
+    # evidence when flagging "Small sample".
     current["sample_nineties"] = nineties
-    rate_denominator = nineties + 5.0
+    rate_denominator = live_rate_denominator(current_minutes)
 
     def numeric_current(column: str) -> pd.Series:
         if column not in current:

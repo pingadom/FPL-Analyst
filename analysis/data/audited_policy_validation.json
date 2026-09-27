@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-26T14:55:32+01:00",
+  "generatedAt": "2026-09-27T13:22:19+01:00",
   "provenance": {
     "schemaVersion": 2,
-    "engineFingerprint": "122a9e39f2a7d014df57c67534e66e7f6042a825a1c677954be13e273c4f7fa8",
+    "engineFingerprint": "5ba1661a6c436ee428ba51ecd628e0162a6cfa584f791afc54d06b4df9cf25a3",
     "frameFingerprint": "audited-policy-frame-v2:252337:17086858939719421399:9332454548219379409",
     "preparedCache": "prepared-history-lens9-news-v8-lastmatch2-pprior12_0.pkl",
     "evaluationSeasons": [
@@ -441,5 +441,5 @@
   "targetHits": 1,
   "averageMargin": -181.6,
   "minimum": 1916,
-  "contentFingerprint": "0d3cef5f556272e610010e06b7999da24188e84d685bbb2a3180470e240cdada"
+  "contentFingerprint": "9f644e7a477c97af868e5d390422d3dcb423f96f59d8b5ec363e15437a7b598a"
 }
