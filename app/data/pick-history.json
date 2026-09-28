@@ -347,22 +347,25 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-09-27T13:16:47+00:00",
+      "recordedAt": "2026-09-28T19:00:06+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
       "vice": "B.Fernandes",
       "projectedPoints": 60.7,
+      "teamMode": "initial",
+      "transfers": [],
       "players": [
         {
-          "id": 572,
-          "name": "Tzolakis",
+          "id": 350,
+          "name": "A.Becker",
           "position": "GK",
-          "price": 4.7,
+          "price": 5.5,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 3.9
+          "projected": 4.2,
+          "purchasePrice": 55
         },
         {
           "id": 229,
@@ -372,17 +375,19 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.0
+          "projected": 4.8,
+          "purchasePrice": 61
         },
         {
-          "id": 115,
-          "name": "De Cuyper",
+          "id": 356,
+          "name": "Virgil",
           "position": "DEF",
-          "price": 5.0,
+          "price": 6.5,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 3.7
+          "projected": 4.3,
+          "purchasePrice": 65
         },
         {
           "id": 391,
@@ -392,7 +397,8 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 3.9
+          "projected": 4.0,
+          "purchasePrice": 57
         },
         {
           "id": 426,
@@ -402,7 +408,8 @@
           "starter": true,
           "captain": false,
           "vice": true,
-          "projected": 6.3
+          "projected": 6.3,
+          "purchasePrice": 119
         },
         {
           "id": 124,
@@ -412,7 +419,8 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.8
+          "projected": 5.8,
+          "purchasePrice": 58
         },
         {
           "id": 427,
@@ -422,17 +430,19 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.1
+          "projected": 5.1,
+          "purchasePrice": 79
         },
         {
-          "id": 399,
-          "name": "Cherki",
+          "id": 286,
+          "name": "Belloumi",
           "position": "MID",
-          "price": 7.8,
+          "price": 5.1,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.5
+          "projected": 4.2,
+          "purchasePrice": 51
         },
         {
           "id": 94,
@@ -442,7 +452,8 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.1
+          "projected": 5.1,
+          "purchasePrice": 62
         },
         {
           "id": 411,
@@ -452,7 +463,8 @@
           "starter": true,
           "captain": true,
           "vice": false,
-          "projected": 6.7
+          "projected": 6.5,
+          "purchasePrice": 156
         },
         {
           "id": 346,
@@ -462,7 +474,8 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.0
+          "projected": 4.0,
+          "purchasePrice": 60
         },
         {
           "id": 109,
@@ -472,7 +485,8 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.0
+          "projected": 3.0,
+          "purchasePrice": 45
         },
         {
           "id": 176,
@@ -482,7 +496,8 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.1
+          "projected": 3.2,
+          "purchasePrice": 40
         },
         {
           "id": 305,
@@ -492,20 +507,24 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.2
+          "projected": 3.2,
+          "purchasePrice": 40
         },
         {
-          "id": 664,
-          "name": "Salia",
+          "id": 194,
+          "name": "Thomas-Asante",
           "position": "FWD",
-          "price": 4.5,
+          "price": 5.0,
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 1.2
+          "projected": 2.2,
+          "purchasePrice": 50
         }
       ],
-      "scored": false
+      "scored": false,
+      "bank": 2,
+      "freeTransfersNext": 1
     }
   ]
 }

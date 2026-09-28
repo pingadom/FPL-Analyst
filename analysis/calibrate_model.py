@@ -204,6 +204,11 @@ USE_LIVE_TEAM_STRENGTH = os.environ.get("FPL_LIVE_TEAM_STRENGTH", "1") != "0"
 # weight at GW1, half after six matches. The backtest has no Opta data, so the
 # fade moves the live model toward the validated behaviour as evidence arrives
 # rather than away from it.
+# The live recommendation manages one persistent team through free transfers
+# and the replay's hurdle, instead of re-optimising a fresh squad every week (in
+# effect a Wildcard every Gameweek: 11 of 15 players changed between GW2 and
+# GW3). The pick log is the ledger; see `live_team_state`.
+USE_PERSISTENT_TEAM = os.environ.get("FPL_PERSISTENT_TEAM", "1") != "0"
 OPTA_ANCHOR_WEIGHT = 0.48
 OPTA_ANCHOR_HALF_GAMES = 6.0
 if USE_UNDERSTAT_XG:
@@ -8478,10 +8483,110 @@ def build_calibration_diagnostics(data: pd.DataFrame, backtest: list[dict]) -> d
     }
 
 
+PICK_HISTORY_PATH = ROOT / "app" / "data" / "pick-history.json"
+
+
+def live_team_state(season: str, deadline: str) -> dict | None:
+    """The model team as it stood after the last *passed* deadline, from the pick log.
+
+    Only entries that carry the ledger (bank and purchase prices) count, so the
+    persistent team starts at the first deadline recorded with them; nothing
+    before it is reconstructed. Free transfers accrue one per deadline passed
+    since that entry, capped at five.
+    """
+    if not PICK_HISTORY_PATH.exists():
+        return None
+    history = json.loads(PICK_HISTORY_PATH.read_text(encoding="utf-8-sig"))
+    due = datetime.fromisoformat(str(deadline).replace("Z", "+00:00"))
+    ledger = [
+        entry
+        for entry in history.get("entries", [])
+        if str(entry.get("season", "")).replace("/", "-") == str(season).replace("/", "-")
+        and "bank" in entry
+        and entry.get("deadline")
+        and datetime.fromisoformat(str(entry["deadline"]).replace("Z", "+00:00")) < due
+    ]
+    if not ledger:
+        return None
+    last = max(ledger, key=lambda entry: int(entry["gameweek"]))
+    return {
+        "gameweek": int(last["gameweek"]),
+        "bank": int(last["bank"]),
+        "free_transfers_next": int(last.get("freeTransfersNext", 1)),
+        "players": [
+            {"id": int(player["id"]), "purchase": int(player.get("purchasePrice", round(float(player["price"]) * 10)))}
+            for player in last["players"]
+        ],
+    }
+
+
+def persistent_team_transfers(
+    held: list[dict],
+    bank: int,
+    free_transfers: int,
+    pool: pd.DataFrame,
+    hurdle: float,
+) -> tuple[list[dict], int, list[dict]]:
+    """The engine's greedy transfer step for the shipped strategy, on the live pool.
+
+    Up to the available free transfers (hits are off), take the best
+    same-position swap by six-week plan gain that is affordable at selling
+    price and keeps three per club, and stop when the best gain does not clear
+    the hurdle. A held player missing from the pool (injured, suspended or
+    departed) is valued at -0.30, as the replay values an excluded player.
+    """
+    plan = dict(zip(pool["id"].astype(int), pool["risk_adjusted_horizon"].astype(float)))
+    price = dict(zip(pool["id"].astype(int), pool["price"].astype(int)))
+    position = dict(zip(pool["id"].astype(int), pool["position_id"].astype(int)))
+    club = dict(zip(pool["id"].astype(int), pool["team_id"].astype(int)))
+    squad = {int(player["id"]): dict(player) for player in held}
+    moves: list[dict] = []
+    for _ in range(max(0, int(free_transfers))):
+        counts: dict[int, int] = {}
+        for element, state in squad.items():
+            counts[state["team"]] = counts.get(state["team"], 0) + 1
+        best = None
+        for outgoing, state in squad.items():
+            out_value = plan.get(outgoing, -0.30)
+            sale = selling_price(int(state["purchase"]), int(state["price"]))
+            for incoming, value in plan.items():
+                if incoming in squad or position[incoming] != state["position"]:
+                    continue
+                if price[incoming] > bank + sale:
+                    continue
+                if club[incoming] != state["team"] and counts.get(club[incoming], 0) >= 3:
+                    continue
+                gain = value - out_value
+                if best is None or gain > best[0]:
+                    best = (gain, outgoing, incoming, sale)
+        if best is None or best[0] <= hurdle:
+            break
+        gain, outgoing, incoming, sale = best
+        bank += sale - price[incoming]
+        del squad[outgoing]
+        squad[incoming] = {
+            "id": incoming,
+            "purchase": price[incoming],
+            "price": price[incoming],
+            "position": position[incoming],
+            "team": club[incoming],
+        }
+        moves.append({"out": int(outgoing), "in": int(incoming), "gain": round(float(gain), 2)})
+    return list(squad.values()), int(bank), moves
+
+
 def pick_squad(
-    players: pd.DataFrame, budget_limit: int = 1000
+    players: pd.DataFrame,
+    budget_limit: int = 1000,
+    fixed_squad: set[int] | None = None,
 ) -> tuple[list[int], list[int]]:
-    """Solve the legal squad, XI and captain jointly as an exact binary MILP."""
+    """Solve the legal squad, XI and captain jointly as an exact binary MILP.
+
+    With `fixed_squad` (frame index labels) the fifteen are given and only the
+    XI and captain are chosen. A held squad can legitimately cost more than the
+    budget after price rises or hold four from one club after a real transfer,
+    so those squad-building constraints are dropped for it.
+    """
     from scipy.optimize import Bounds, LinearConstraint, milp
 
     if players.empty:
@@ -8558,10 +8663,12 @@ def pick_squad(
     lower: list[float] = []
     upper: list[float] = []
 
-    budget = np.concatenate([prices, np.zeros(2 * count)])
-    rows.append(budget)
-    lower.append(max(0, budget_limit - 5))
-    upper.append(budget_limit)
+    holding = fixed_squad is not None
+    if not holding:
+        budget = np.concatenate([prices, np.zeros(2 * count)])
+        rows.append(budget)
+        lower.append(max(0, budget_limit - 5))
+        upper.append(budget_limit)
     squad_total = np.zeros(3 * count)
     squad_total[:count] = 1
     rows.append(squad_total)
@@ -8573,7 +8680,7 @@ def pick_squad(
         rows.append(row)
         lower.append(quota)
         upper.append(quota)
-    for club in np.unique(clubs):
+    for club in np.unique(clubs) if not holding else []:
         row = np.zeros(3 * count)
         row[:count] = (clubs == club).astype(float)
         rows.append(row)
@@ -8608,10 +8715,11 @@ def pick_squad(
     rows.append(captain_total)
     lower.append(1)
     upper.append(1)
-    bench_premium = np.concatenate([premiums, -premiums, np.zeros(count)])
-    rows.append(bench_premium)
-    lower.append(0)
-    upper.append(20)
+    if not holding:
+        bench_premium = np.concatenate([premiums, -premiums, np.zeros(count)])
+        rows.append(bench_premium)
+        lower.append(0)
+        upper.append(20)
     exception_count = np.zeros(3 * count)
     exception_count[count : 2 * count] = exceptional_xi.astype(float)
     rows.append(exception_count)
@@ -8621,13 +8729,28 @@ def pick_squad(
     variable_upper = np.ones(3 * count)
     variable_upper[count : 2 * count] = allowed_xi.astype(float)
     variable_upper[2 * count :] = allowed_xi.astype(float)
-    result = milp(
-        c=objective,
-        integrality=np.ones(3 * count),
-        bounds=Bounds(np.zeros(3 * count), variable_upper),
-        constraints=LinearConstraint(np.vstack(rows), np.asarray(lower), np.asarray(upper)),
-        options={"time_limit": 30.0, "mip_rel_gap": 0.0},
-    )
+    variable_lower = np.zeros(3 * count)
+    if holding:
+        held = np.isin(frame_indices, list(fixed_squad)).astype(float)
+        variable_lower[:count] = held
+        variable_upper[:count] = held
+
+    def solve(upper_bounds: np.ndarray):
+        return milp(
+            c=objective,
+            integrality=np.ones(3 * count),
+            bounds=Bounds(variable_lower, upper_bounds),
+            constraints=LinearConstraint(np.vstack(rows), np.asarray(lower), np.asarray(upper)),
+            options={"time_limit": 30.0, "mip_rel_gap": 0.0},
+        )
+
+    result = solve(variable_upper)
+    if holding and (not result.success or result.x is None):
+        # Too many doubts in a held squad to field a legal XI from fit players
+        # alone: let any of the fifteen start rather than fail the deadline.
+        relaxed = variable_upper.copy()
+        relaxed[count:] = np.concatenate([held, held])
+        result = solve(relaxed)
     if not result.success or result.x is None:
         raise RuntimeError(f"Exact live squad MILP failed: {result.message}")
     chosen = frame_indices[np.flatnonzero(result.x[:count] > 0.5)].astype(int).tolist()
@@ -10134,10 +10257,15 @@ def current_recommendation(
         + 0.38 * current["risk_adjusted_horizon"].rank(pct=True)
         + 0.20 * current["risk_adjusted_projection"].rank(pct=True)
     )
+    team_state = live_team_state(current_season, deadline) if USE_PERSISTENT_TEAM else None
+    held_ids = {int(player["id"]) for player in team_state["players"]} if team_state else set()
     pool = current[
-        (current["status"].isin(["a", "d"]))
-        & (current["availability"] >= 75)
-        & (current["price"] >= 35)
+        (
+            (current["status"].isin(["a", "d"]))
+            & (current["availability"] >= 75)
+            & (current["price"] >= 35)
+        )
+        | current["id"].astype(int).isin(held_ids)
     ].copy()
     pool.reset_index(drop=True, inplace=True)
     pool["fixture_id"] = pool["team_id"].map(
@@ -10179,7 +10307,57 @@ def current_recommendation(
         + 0.20 * pool["minutes_security"]
         + 0.06 * pool["crowd"]
     )
-    chosen, xi = pick_squad(pool)
+    team_transfers: list[dict] = []
+    free_transfers_now = 1
+    available = pool[
+        (pool["status"].isin(["a", "d"]))
+        & (pool["availability"] >= 75)
+        & (pool["price"] >= 35)
+    ]
+    # The replay's hurdle, rescaled to this deadline's spread of six-week plan
+    # values exactly as `rescale_decision_thresholds` rescales it in the backtest.
+    plan_spread = float(available["risk_adjusted_horizon"].std())
+    live_hurdle = strategy.transfer_hurdle * plan_spread / REFERENCE_PLAN_SPREAD
+    if team_state:
+        gameweeks_passed = max(1, gw_number - int(team_state["gameweek"]))
+        free_transfers_now = min(
+            int(strategy.bank_limit),
+            int(team_state["free_transfers_next"]) + gameweeks_passed - 1,
+        )
+        by_id = pool.set_index(pool["id"].astype(int))
+        held = []
+        for player in team_state["players"]:
+            if player["id"] not in by_id.index:
+                continue
+            row = by_id.loc[player["id"]]
+            held.append(
+                {
+                    "id": int(player["id"]),
+                    "purchase": int(player["purchase"]),
+                    "price": int(row["price"]),
+                    "position": int(row["position_id"]),
+                    "team": int(row["team_id"]),
+                }
+            )
+        final_squad, team_bank, team_transfers = persistent_team_transfers(
+            held,
+            int(team_state["bank"]),
+            free_transfers_now,
+            available,
+            live_hurdle,
+        )
+        purchase_by_id = {player["id"]: player["purchase"] for player in final_squad}
+        fixed = set(pool.index[pool["id"].astype(int).isin(purchase_by_id)])
+        chosen, xi = pick_squad(pool, fixed_squad=fixed)
+    else:
+        chosen, xi = pick_squad(pool)
+        purchase_by_id = {
+            int(pool.loc[index, "id"]): int(pool.loc[index, "price"]) for index in chosen
+        }
+        team_bank = 1000 - int(sum(purchase_by_id.values()))
+    free_transfers_next = min(
+        int(strategy.bank_limit), max(0, free_transfers_now - len(team_transfers)) + 1
+    ) if team_state else 1
     strategy_profiles: list[dict] = []
     for profile_name, utility_column in [
         ("Protect", "protect_utility"),
@@ -10616,6 +10794,7 @@ def current_recommendation(
             "starter": index in xi_set,
             "captain": index == captain,
             "vice": index == vice,
+            "purchasePrice": purchase_by_id.get(int(row["id"])),
             "trend": "up"
             if float(row["recent_raw"]) > float(row["long_raw"]) + 0.35
             else "down"
@@ -10670,6 +10849,20 @@ def current_recommendation(
         "captain": str(pool.loc[captain, "display_name"]),
         "vice": str(pool.loc[vice, "display_name"]),
         "scenario": scenario_summary,
+        # The persistent model team's ledger: what the pick log carries forward.
+        "teamMode": "persistent" if team_state else "initial",
+        "bank": int(team_bank),
+        "freeTransfers": int(free_transfers_now),
+        "freeTransfersNext": int(free_transfers_next),
+        "transferHurdle": round(float(live_hurdle), 2),
+        "transfers": [
+            {
+                "out": str(current.loc[current["id"].astype(int) == move["out"], "web_name"].iloc[0]),
+                "in": str(current.loc[current["id"].astype(int) == move["in"], "web_name"].iloc[0]),
+                "gain": move["gain"],
+            }
+            for move in team_transfers
+        ],
     }
     def normalise_player_name(value: str) -> str:
         decomposed = unicodedata.normalize("NFKD", str(value))
