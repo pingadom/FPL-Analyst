@@ -93,6 +93,10 @@ def record(now: datetime | None = None) -> dict:
         "captain": headline.get("captain"),
         "vice": headline.get("vice"),
         "projectedPoints": headline.get("projected"),
+        # The model team's ledger. The next deadline's recommendation starts from
+        # the last passed deadline's entry, so these are what carry it forward.
+        "teamMode": headline.get("teamMode"),
+        "transfers": headline.get("transfers") or [],
         "players": [
             {
                 "id": int(player["id"]),
@@ -103,11 +107,15 @@ def record(now: datetime | None = None) -> dict:
                 "captain": bool(player.get("captain")),
                 "vice": bool(player.get("vice")),
                 "projected": player.get("projected"),
+                "purchasePrice": player.get("purchasePrice"),
             }
             for player in squad
         ],
         "scored": False,
     }
+    if headline.get("bank") is not None:
+        entry["bank"] = int(headline["bank"])
+        entry["freeTransfersNext"] = int(headline.get("freeTransfersNext", 1))
 
     history = load_history()
     kept = [

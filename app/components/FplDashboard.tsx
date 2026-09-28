@@ -186,6 +186,7 @@ type ImportedTeam = {
   picksEvent: number;
   owned: Array<{ element: number; multiplier: number; selling_price: number; player: Player }>;
   suggestions: Array<{ sell: Player; buy: Player; horizonGain: number; affordable: boolean }>;
+  transferPolicy?: { hurdle: number; freeTransfers: number; note: string };
   forecast: {
     teamProjection: number;
     modelProjection: number;
@@ -804,7 +805,7 @@ export default function FplDashboard() {
             <div className="import-empty-state">
               <span>OFFICIAL FPL CONNECTION</span>
               <strong>No team imported yet.</strong>
-              <p>Lens will calculate your exact percentile, modelled rank range and up to three affordable transfer paths.</p>
+              <p>Lens will calculate your exact percentile, modelled rank range and the transfers that clear the model's own hurdle with your free transfers.</p>
             </div>
           ) : (
             <>
@@ -833,6 +834,11 @@ export default function FplDashboard() {
                   </div>
                 )) : (
                   <div className="hold-call"><strong>Bank the transfer</strong><p>No affordable same-position move clears the six-week improvement hurdle.</p></div>
+                )}
+                {importedTeam.transferPolicy && (
+                  <p className="rank-method">
+                    Moves must gain more than {importedTeam.transferPolicy.hurdle.toFixed(1)} six-GW xPts, the hurdle the model's own team uses, and are limited to your {importedTeam.transferPolicy.freeTransfers} estimated free transfer{importedTeam.transferPolicy.freeTransfers === 1 ? "" : "s"}. {importedTeam.transferPolicy.note}
+                  </p>
                 )}
               </div>
             </>
