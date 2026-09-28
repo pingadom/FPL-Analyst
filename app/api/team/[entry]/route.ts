@@ -21,6 +21,35 @@ type Pick = {
   selling_price: number;
 };
 
+type HistoryRow = {
+  event: number;
+  points: number;
+  total_points: number;
+  overall_rank: number;
+  event_transfers?: number;
+};
+
+// Free transfers are not in the public API, so they are rebuilt from the
+// manager's own history under the 2024/25+ rules: one more after every
+// Gameweek, at most five, and a Wildcard or Free Hit week preserves them.
+function estimateFreeTransfers(
+  rows: HistoryRow[],
+  chips: Array<{ name: string; event: number }>,
+): number {
+  const chipWeeks = new Set(
+    chips
+      .filter((chip) => chip.name === "wildcard" || chip.name === "freehit")
+      .map((chip) => chip.event),
+  );
+  const ordered = [...rows].sort((a, b) => a.event - b.event);
+  let free = 1;
+  for (const row of ordered.slice(1)) {
+    const used = chipWeeks.has(row.event) ? 0 : row.event_transfers ?? 0;
+    free = Math.min(5, Math.max(0, free - used) + 1);
+  }
+  return ordered.length ? free : 1;
+}
+
 async function officialJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
     headers: { "User-Agent": "FPL-Lens/7.0" },
@@ -43,10 +72,14 @@ export async function GET(
   try {
     const [manager, history, bootstrap] = await Promise.all([
       officialJson<EntrySummary>(`https://fantasy.premierleague.com/api/entry/${entry}/`),
-      officialJson<{ current: Array<{ event: number; points: number; total_points: number; overall_rank: number }> }>(
+      officialJson<{ current: HistoryRow[]; chips?: Array<{ name: string; event: number }> }>(
         `https://fantasy.premierleague.com/api/entry/${entry}/history/`,
       ),
-      officialJson<{ total_players: number }>(
+      officialJson<{
+        total_players: number;
+        elements: Array<{ id: number; web_name: string; team: number; element_type: number; now_cost: number }>;
+        teams: Array<{ id: number; short_name: string }>;
+      }>(
         "https://fantasy.premierleague.com/api/bootstrap-static/",
       ),
     ]);
@@ -78,44 +111,82 @@ export async function GET(
         return player ? { ...pick, player } : null;
       })
       .filter((item): item is NonNullable<typeof item> => item !== null);
-    const ownedIds = new Set(owned.map((item) => item.element));
+    // Injured, suspended and departed players are not in the projection file,
+    // but they are exactly the ones to sell. The replay values a held player
+    // who cannot play at -0.30, so they are kept as exits at that value.
+    const positionName: Record<number, string> = { 1: "GK", 2: "DEF", 3: "MID", 4: "FWD" };
+    const clubName = new Map(bootstrap.teams.map((team) => [team.id, team.short_name]));
+    const officialById = new Map(bootstrap.elements.map((element) => [element.id, element]));
+    const unavailable = picks
+      .filter((pick) => !projectionById.has(pick.element))
+      .map((pick) => {
+        const official = officialById.get(pick.element);
+        if (!official) return null;
+        const player = {
+          id: official.id,
+          name: official.web_name,
+          team: clubName.get(official.team) ?? "",
+          position: positionName[official.element_type] ?? "",
+          price: official.now_cost / 10,
+          projected: 0,
+          sixWeekProjected: -0.3,
+        } as unknown as (typeof currentPlayers)[number];
+        return { ...pick, player };
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null);
     const bank = (manager.last_deadline_bank ?? 0) / 10;
+    // The same transfer rule the model's replay was validated with: take the
+    // single best affordable same-position swap by six-week gain, up to the free
+    // transfers available, and only while it clears the published hurdle. That
+    // hurdle is large on purpose -- only about 37% of a predicted transfer gain
+    // is realised -- so marginal swaps are banked rather than suggested.
+    const hurdle =
+      (results.headline as { transferHurdle?: number }).transferHurdle ?? 4.3;
+    const freeTransfers = estimateFreeTransfers(history.current, history.chips ?? []);
     const suggestions: Array<{
       sell: (typeof currentPlayers)[number];
       buy: (typeof currentPlayers)[number];
       horizonGain: number;
       affordable: boolean;
     }> = [];
-    const targets = currentPlayers
-      .filter((player) => !ownedIds.has(player.id))
-      .sort((a, b) => b.sixWeekProjected - a.sixWeekProjected);
-    const exits = [...owned].sort(
-      (a, b) => a.player.sixWeekProjected - b.player.sixWeekProjected,
-    );
-    const usedTargets = new Set<number>();
-    const ownedClubCounts = owned.reduce<Record<string, number>>((counts, item) => {
+    let budget = bank;
+    const squad = [...owned, ...unavailable];
+    const held = new Map(squad.map((item) => [item.element, item]));
+    const clubCounts = squad.reduce<Record<string, number>>((counts, item) => {
       counts[item.player.team] = (counts[item.player.team] ?? 0) + 1;
       return counts;
     }, {});
-    for (const exit of exits) {
-      const target = targets.find(
-        (candidate) =>
-          !usedTargets.has(candidate.id) &&
-          candidate.position === exit.player.position &&
-          (ownedClubCounts[candidate.team] ?? 0) -
-            (candidate.team === exit.player.team ? 1 : 0) < 3 &&
-          candidate.price <= exit.selling_price / 10 + bank &&
-          candidate.sixWeekProjected > exit.player.sixWeekProjected + 1.5,
-      );
-      if (!target) continue;
-      usedTargets.add(target.id);
+    for (let move = 0; move < Math.min(freeTransfers, 5); move += 1) {
+      let best: { exitId: number; target: (typeof currentPlayers)[number]; gain: number } | null = null;
+      for (const exit of held.values()) {
+        for (const target of currentPlayers) {
+          if (held.has(target.id) || target.position !== exit.player.position) continue;
+          if (target.price > exit.selling_price / 10 + budget) continue;
+          const sameClub = target.team === exit.player.team;
+          if (!sameClub && (clubCounts[target.team] ?? 0) >= 3) continue;
+          const gain = target.sixWeekProjected - exit.player.sixWeekProjected;
+          if (!best || gain > best.gain) best = { exitId: exit.element, target, gain };
+        }
+      }
+      if (!best || best.gain <= hurdle) break;
+      const exit = held.get(best.exitId);
+      if (!exit) break;
+      budget += exit.selling_price / 10 - best.target.price;
+      clubCounts[exit.player.team] -= 1;
+      clubCounts[best.target.team] = (clubCounts[best.target.team] ?? 0) + 1;
+      held.delete(best.exitId);
+      held.set(best.target.id, {
+        ...exit,
+        element: best.target.id,
+        selling_price: Math.round(best.target.price * 10),
+        player: best.target,
+      });
       suggestions.push({
         sell: exit.player,
-        buy: target,
-        horizonGain: Number((target.sixWeekProjected - exit.player.sixWeekProjected).toFixed(1)),
+        buy: best.target,
+        horizonGain: Number(best.gain.toFixed(1)),
         affordable: true,
       });
-      if (suggestions.length === 3) break;
     }
 
     const formations = [
@@ -174,6 +245,11 @@ export async function GET(
         picksEvent,
         owned,
         suggestions,
+        transferPolicy: {
+          hurdle,
+          freeTransfers,
+          note: "Free transfers are estimated from your public history; FPL does not publish them without a login.",
+        },
         forecast: {
           teamProjection: Number(teamProjection.toFixed(1)),
           modelProjection,

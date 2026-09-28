@@ -1267,3 +1267,50 @@ it is recorded here so the idea is not re-run. The code was not kept.
   conceded from 0.206 to 0.262. But the input enters the projection as a capped multiplier,
   and the final forecast barely moves (correlation +0.0005; top-15 −0.01 to −0.03). It is
   not worth a full run, and the code was not kept.
+
+---
+
+## 11. The live model now manages a team
+
+### The problem
+
+The replay that scores 2217.2 manages **one persistent team**: free transfers, a hurdle
+rescaled to the forecast's spread, banking up to five. The live recommendation did not. It
+re-optimised a fresh squad every week, in effect a Wildcard every Gameweek (11 of 15
+players changed from GW2 to GW3). Following it would have cost roughly 40 points a week in
+hits, and the prospective pick log was scoring a policy nobody could play.
+
+The advisor for a user's own team had the same flaw from the other side. It suggested any
+same-position swap gaining more than **+1.5** six-week points, up to three a week,
+regardless of free transfers. The replay's hurdle is several times larger because only
+about 37% of a predicted transfer gain materialises, so the advisor recommended exactly the
+marginal churn the backtest shows loses points. It also could not see injured players,
+because they are left out of the projection file.
+
+### The fix
+
+* **The pick log is the model team's ledger.** Each recorded deadline now stores the bank,
+  purchase prices and the free transfers carried to the next deadline. The next
+  recommendation starts from the last *passed* deadline's entry (`live_team_state`), so
+  re-running before a deadline never compounds transfers. The team starts at GW6 from that
+  week's optimal squad; GW4–5 were never recorded, and nothing before the ledger is
+  reconstructed.
+* **The replay's transfer rule for the shipped strategy** (`persistent_team_transfers`):
+  up to the free transfers available, take the best affordable same-position swap by
+  six-week plan gain at selling price, keeping three per club, and stop when the gain does
+  not clear `transfer_hurdle × (this week's plan spread / 5.6529)`, the same rescaling
+  `rescale_decision_thresholds` applies in the backtest (4.29 six-week points at GW6).
+  A held player who cannot play is valued at −0.30, as in the replay.
+* **XI and captain from the held squad**: `pick_squad(fixed_squad=...)` pins the fifteen and
+  solves only the lineup, relaxing the budget and club limits a held squad can legitimately
+  break after price rises or a real transfer.
+* **The user's advisor** now uses the published hurdle, limits itself to the manager's free
+  transfers (estimated from public history, since FPL does not publish them without a
+  login), picks moves by the same greedy rule, and includes unavailable players as exits.
+
+Checked on a stale squad (the GW3 picks with two free transfers), the rule sold Watkins
+(injured) for Calvert-Lewin (+21.5 six-week points) and Dúbravka for Becker (+17.9), and kept
+the other 13. The projection for that team is 49.9 against 60.7 for a fresh squad. That gap
+is the honest cost of managing a real team, which the live numbers previously hid.
+
+Live-only: the backtest is unchanged.

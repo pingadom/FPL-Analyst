@@ -1018,6 +1018,54 @@ class ModelEngineTests(unittest.TestCase):
         for key in ("11", "22"):
             self.assertAlmostEqual(live.loc[key, "long_raw"], expected[key], places=10)
 
+    def test_persistent_team_makes_only_moves_that_clear_the_hurdle(self) -> None:
+        pool = pd.DataFrame(
+            {
+                "id": [1, 2, 3, 4],
+                "price": [60, 60, 55, 90],
+                "position_id": [3, 3, 3, 3],
+                "team_id": [10, 11, 12, 13],
+                "risk_adjusted_horizon": [20.0, 29.0, 22.0, 40.0],
+            }
+        )
+        held = [
+            {"id": 1, "purchase": 60, "price": 60, "position": 3, "team": 10},
+            {"id": 9, "purchase": 50, "price": 50, "position": 3, "team": 14},  # injured: not in pool
+        ]
+        squad, bank, moves = lens.persistent_team_transfers(held, 5, 2, pool, hurdle=5.0)
+        # The unavailable player is sold first (valued at -0.30). Selling him
+        # raises 50 + 5 in the bank, so the best affordable option is id 3.
+        self.assertEqual((moves[0]["out"], moves[0]["in"]), (9, 3))
+        # Then 1 -> 2 gains 29 - 20 = 9, which clears a hurdle of 5.
+        self.assertEqual((moves[1]["out"], moves[1]["in"]), (1, 2))
+        self.assertEqual(bank, 5 + 50 - 55 + 60 - 60)
+        self.assertEqual(sorted(player["id"] for player in squad), [2, 3])
+        # With a hurdle of 10 the second move is banked instead.
+        _, _, cautious = lens.persistent_team_transfers(held, 5, 2, pool, hurdle=10.0)
+        self.assertEqual(len(cautious), 1)
+
+    def test_live_team_state_reads_only_passed_ledger_entries(self) -> None:
+        import json
+        import tempfile
+
+        history = {
+            "entries": [
+                {"season": "2026/27", "gameweek": 3, "deadline": "2026-09-04T17:30:00Z",
+                 "players": [{"id": 1, "price": 5.0}]},  # no ledger: ignored
+                {"season": "2026/27", "gameweek": 6, "deadline": "2026-10-10T10:00:00Z", "bank": 7,
+                 "freeTransfersNext": 1, "players": [{"id": 2, "price": 6.0, "purchasePrice": 58}]},
+            ]
+        }
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "pick-history.json"
+            path.write_text(json.dumps(history), encoding="utf-8")
+            with mock.patch.object(lens, "PICK_HISTORY_PATH", path):
+                self.assertIsNone(lens.live_team_state("2026-27", "2026-10-10T10:00:00Z"))
+                state = lens.live_team_state("2026-27", "2026-10-17T10:00:00Z")
+        self.assertEqual(state["gameweek"], 6)
+        self.assertEqual(state["bank"], 7)
+        self.assertEqual(state["players"], [{"id": 2, "purchase": 58}])
+
     def test_live_team_strength_equals_the_backtest_team_model(self) -> None:
         """Appending this season's matches live must give the batch panel's ratings."""
         rng = np.random.default_rng(11)
