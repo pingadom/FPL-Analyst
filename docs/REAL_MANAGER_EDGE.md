@@ -92,21 +92,25 @@ without their information does not help, and the backtest confirms it. Where it 
 moving), it is real, but the historical archive does not contain it, so it can only be
 captured and measured live.
 
-## Recommendation
+## Recommendation (revised after testing)
 
-1. **Add an elite-ownership signal to the live path, as a warning rather than a forecast
-   input.** Each week, compare the model's squad and captain with a sample of proven managers
-   (for example the elite sample on plan.livefpl.net, or FPL Review's Elite 1000). When at
-   least 75% of them own or captain a player the model rates within a hurdle of its own
-   pick, flag it in the recommendation. That would have raised Haaland at GW6. It cannot be
-   backtested, so it should be measured through the pick log before it is allowed to change
-   picks.
+1. **Do not add an elite-ownership signal.** This note first recommended one, and it was
+   tested before being built. FPL reveals a manager's picks only after each deadline, so at
+   any deadline the usable signal is what proven managers owned at the *previous* one. Over
+   GW2–6 of 2025/26 that ownership carries no information beyond the model: within the
+   model's top-80 choice pool its correlation with how far players beat their projection is
+   −0.047 (elite minus crowd −0.071; elite captaincy −0.034). The players at least 70% of
+   proven managers owned were Palmer (0 and 0), Dúbravka, Salah (already owned) and João
+   Pedro. Haaland never appears: the elite moved into him *at* the GW6 deadline, which is
+   exactly the decision no pre-deadline feed can see. Proven managers' 1,000 entry IDs are
+   public (plan.livefpl.net/elite), and their picks come from the official API, so the
+   signal is easy to build. It just does not help.
 2. **Keep the decision layer as it is.** Every elite *behaviour* tested so far (anchoring,
    banking, bench, early Wildcards, hits, chip thresholds) has failed out of sample, and
    `harness.py walkforward` confirms the shipped settings.
-3. **Judge it on the live log.** Scored weeks so far: GW2 82 (average 81), GW3 44 (average
-   51). Proven managers' edge of roughly 35–40 points a season is about one point a week, so
-   it takes most of a season of live weeks to see it.
+3. **Judge the model on the live log.** Scored weeks so far: GW2 82 (average 81), GW3 44
+   (average 51). Proven managers' edge of roughly 35–40 points a season is about one point a
+   week, so it takes most of a season of live weeks to see it.
 
 ## Caveats
 
