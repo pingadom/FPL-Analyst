@@ -1314,3 +1314,29 @@ the other 13. The projection for that team is 49.9 against 60.7 for a fresh squa
 is the honest cost of managing a real team, which the live numbers previously hid.
 
 Live-only: the backtest is unchanged.
+
+### Live chips (the persistent team plays them the replay's way)
+
+Chips were the one part of the replay's policy the live team still lacked; the live
+recommendation printed a fixed "Hold" message instead. `live_chip_decision` now ports the
+replay's rule:
+
+| chip | live signal | bar before the ramp |
+|---|---|---|
+| Wildcard | six-week utility of a fresh squad minus the held squad's | `wildcard_gap` × plan scale |
+| Free Hit | best one-week XI (within the squad's selling value) minus the held XI, + 0.22 × extra blanks + 0.12 × doubles, minus the value of this week's transfers it forfeits | `free_hit_gap` × weekly scale |
+| Bench Boost | projected points of the bench | `bench_score` × weekly scale |
+| Triple Captain | captain's projected points | `triple_score` × weekly scale |
+
+The bar ramps as in the replay, `threshold × (expiry_share + (1 + 0.55 − expiry_share) ×
+(1 − e^(−weeks left / 6)))`. A structural trigger is required (3+ blanks or 5+ doubles for
+the Free Hit, a doubled bench for the Bench Boost, a doubled captain for the Triple
+Captain), except in a window's last legal week. Same-week chips compete on points, and a
+Wildcard on its ratio to the bar. There are two of each chip per season, one per half. The
+thresholds are the calibrated `chipStrategy.policy` the artifact ships (at present: first
+Wildcard from GW10, Wildcard 35.0, Free Hit 20.9, Bench Boost 13.5, Triple Captain 8.1).
+
+The ledger records the chip. A Free Hit also stores the permanent squad, which carries on
+the next week, and the scorer counts a Bench Boost bench and a Triple Captain's third copy.
+On the GW6 slate (single fixtures, no blanks) nothing fires: Free Hit −28.6 against 21.7,
+Bench Boost 8.7 against 14.0, Triple Captain 6.5 against 8.3.
