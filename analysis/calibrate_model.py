@@ -209,6 +209,18 @@ USE_LIVE_TEAM_STRENGTH = os.environ.get("FPL_LIVE_TEAM_STRENGTH", "1") != "0"
 # effect a Wildcard every Gameweek: 11 of 15 players changed between GW2 and
 # GW3). The pick log is the ledger; see `live_team_state`.
 USE_PERSISTENT_TEAM = os.environ.get("FPL_PERSISTENT_TEAM", "1") != "0"
+# Official starts only in Gameweeks that recorded any. FPL added the "starts"
+# field partway through 2022/23 (GW16), and the archive's column is zero for
+# every player in GW1-15, so the season read as a run of non-starts: at GW16 the
+# starters of that week averaged a raw start probability of 0.12, and only 12
+# players in the league cleared the live fit-to-start bar. Weeks without the
+# field fall back to 45+ minutes, which agrees with the official stat on 96.5%
+# of appearances where both exist (2023/24, 2024/25).
+USE_STARTS_REPAIR = os.environ.get("FPL_STARTS_REPAIR", "1") != "0"
+if USE_STARTS_REPAIR:
+    PREPARED_HISTORY_CACHE = PREPARED_HISTORY_CACHE.with_name(
+        PREPARED_HISTORY_CACHE.stem + "-starts" + PREPARED_HISTORY_CACHE.suffix
+    )
 OPTA_ANCHOR_WEIGHT = 0.48
 OPTA_ANCHOR_HALF_GAMES = 6.0
 if USE_UNDERSTAT_XG:
@@ -2435,11 +2447,17 @@ def build_season(
             "tackles",
         }.issubset(gw.columns)
     )
-    raw["start_observed"] = (
-        raw["starts"].clip(0, 1)
-        if starts_available
-        else (raw["minutes"] >= 45).astype(float)
-    )
+    minutes_proxy = (raw["minutes"] >= 45).astype(float)
+    if starts_available and USE_STARTS_REPAIR:
+        recorded = pd.to_numeric(raw["starts"], errors="coerce")
+        week_has_starts = recorded.fillna(0).groupby(raw["GW"]).transform("sum") > 0
+        raw["start_observed"] = recorded.clip(0, 1).where(
+            week_has_starts & recorded.notna(), minutes_proxy
+        )
+    else:
+        raw["start_observed"] = (
+            raw["starts"].clip(0, 1) if starts_available else minutes_proxy
+        )
     raw["appearance_observed"] = (raw["minutes"] > 0).astype(float)
     raw["sixty_observed"] = (raw["minutes"] >= 60).astype(float)
     raw["bench_appearance_observed"] = (
@@ -8812,6 +8830,12 @@ def pick_squad(
         )
 
     result = solve(variable_upper)
+    if not holding and (not result.success or result.x is None):
+        # A week in which too few players clear the fit-to-start bar (the first
+        # deadline after a long break, say) must still produce a squad.
+        relaxed = variable_upper.copy()
+        relaxed[count:] = 1.0
+        result = solve(relaxed)
     if holding and (not result.success or result.x is None):
         # Too many doubts in a held squad to field a legal XI from fit players
         # alone: let any of the fifteen start rather than fail the deadline.
