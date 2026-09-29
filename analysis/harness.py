@@ -78,6 +78,7 @@ import argparse
 import json
 from dataclasses import dataclass, field, replace
 from pathlib import Path
+from typing import Callable
 
 import numpy as np
 import pandas as pd
@@ -107,6 +108,9 @@ class Config:
     robust_planning: bool = False
     schedule_censored: bool = True
     label: str = "reference"
+    # An experiment on the forecast rather than on a decision field: called as
+    # transform(data, scores, plan) -> (scores, plan) after the forecast is built.
+    forecast_transform: Callable | None = None
 
     def with_field(self, name: str, value: object) -> "Config":
         """Return a copy with one field changed, wherever that field lives."""
@@ -234,6 +238,8 @@ def evaluate(config: Config, data: pd.DataFrame) -> Outcome:
         robust_planning=config.robust_planning,
         schedule_censored=config.schedule_censored,
     )
+    if config.forecast_transform is not None:
+        scores, plan = config.forecast_transform(data, scores, plan)
     keywords: dict = {"plan_scores": plan}
     if config.chip_policy is not None:
         keywords.update(
@@ -403,6 +409,122 @@ def walk_forward(
     )
 
 
+# ---------------------------------------------------------------------------
+# Ensemble comparison: averaging out path luck
+# ---------------------------------------------------------------------------
+# A pinned replay is one path through a season, and paths are chaotic: one
+# Wildcard a week earlier moves a season by 100 points either way. Correcting a
+# real, stable price bias in the forecast scored -193 in 2020/21 and +120 in
+# 2024/25 on the single shipped candidate: path luck, not signal. Replaying the
+# same change under several nearby weight mixtures gives each season several
+# partly independent paths, so the luck averages down while a real effect, which
+# every mixture shares, survives.
+
+
+ENSEMBLE_SEED = 20260929
+
+
+def jittered_candidates(
+    candidate: lens.Candidate,
+    count: int,
+    seed: int = ENSEMBLE_SEED,
+    concentration: float = 150.0,
+    recent_spread: float = 0.03,
+) -> list[lens.Candidate]:
+    """The candidate itself, then `count - 1` Dirichlet neighbours of it.
+
+    The eight weights are redrawn around their current shares (a concentration
+    of 150 moves a 0.30 weight by about +/-0.04) and keep their total; the
+    recent/history split moves by a few points.
+    """
+    names = ("performance", "value", "age", "fixture", "team", "crowd", "minutes", "underlying")
+    weights = np.asarray([getattr(candidate, name) for name in names], dtype=float)
+    total = float(weights.sum())
+    shares = np.clip(weights / total, 1e-4, None)
+    rng = np.random.default_rng(seed)
+    result = [candidate]
+    for _ in range(count - 1):
+        drawn = rng.dirichlet(shares * concentration) * total
+        recent = float(
+            np.clip(candidate.recent_share + rng.normal(0.0, recent_spread), 0.40, 0.95)
+        )
+        result.append(lens.Candidate(*drawn.tolist(), recent))
+    return result
+
+
+@dataclass
+class EnsembleComparison:
+    """Paired deltas, one row per candidate and one column per season."""
+
+    label: str
+    deltas: np.ndarray
+
+    @property
+    def per_season(self) -> np.ndarray:
+        return self.deltas.mean(axis=0)
+
+    @property
+    def delta_training(self) -> float:
+        return float(self.per_season[: len(lens.TRAINING_SEASONS)].mean())
+
+    @property
+    def delta_evaluation(self) -> float:
+        return float(self.per_season[len(lens.TRAINING_SEASONS) :].mean())
+
+    @property
+    def delta_overall(self) -> float:
+        return float(self.per_season.mean())
+
+    @property
+    def standard_error(self) -> float:
+        """Seasons as the unit, after averaging candidates within each season."""
+        if self.deltas.shape[1] < 2:
+            return 0.0
+        return float(self.per_season.std(ddof=1) / np.sqrt(self.deltas.shape[1]))
+
+    @property
+    def candidates_up(self) -> int:
+        return int((self.deltas.mean(axis=1) > 0).sum())
+
+
+def ensemble_compare(
+    config: Config,
+    challengers: list[Config],
+    data: pd.DataFrame,
+    count: int = 8,
+) -> list[EnsembleComparison]:
+    """Replay the baseline and each challenger under `count` nearby candidates.
+
+    Each challenger differs from `config` in something other than the candidate
+    (a decision field or a forecast transform); the candidate is what the
+    ensemble varies.
+    """
+    candidates = jittered_candidates(config.candidate, count)
+    rows: list[list[np.ndarray]] = [[] for _ in challengers]
+    for index, candidate in enumerate(candidates):
+        baseline = evaluate(replace(config, candidate=candidate), data)
+        for position, challenger in enumerate(challengers):
+            outcome = evaluate(replace(challenger, candidate=candidate), data)
+            rows[position].append(outcome.totals - baseline.totals)
+        print(f"ensemble candidate {index + 1}/{count} done", flush=True)
+    return [
+        EnsembleComparison(label=challenger.label, deltas=np.vstack(deltas))
+        for challenger, deltas in zip(challengers, rows)
+    ]
+
+
+def print_ensemble(results: list[EnsembleComparison], count: int) -> None:
+    print(f"ensemble of {count} candidates; mean delta per season:")
+    for result in results:
+        print(
+            f"  {result.label:<30} "
+            + " ".join(f"{value:+5.0f}" for value in result.per_season)
+            + f"   train {result.delta_training:+6.1f}  eval {result.delta_evaluation:+6.1f}"
+            + f"  overall {result.delta_overall:+6.1f} se {result.standard_error:4.1f}"
+            + f"  candidates up {result.candidates_up}/{count}"
+        )
+
+
 def sweep(
     config: Config, name: str, values: list, data: pd.DataFrame
 ) -> tuple[Outcome, list[tuple[Outcome, Comparison]]]:
@@ -486,6 +608,12 @@ def main() -> None:
     parser.add_argument("--field", help="the single field to vary")
     parser.add_argument("--values", help="comma-separated values for that field")
     parser.add_argument(
+        "--ensemble",
+        type=int,
+        default=0,
+        help="compare under this many nearby candidates and average (sweep/compare)",
+    )
+    parser.add_argument(
         "--evaluation",
         action="store_true",
         help="bootstrap on all seasons rather than training only (reporting only)",
@@ -507,6 +635,30 @@ def main() -> None:
     if not arguments.field or not arguments.values:
         parser.error("--field and --values are required for sweep/compare")
     values = [_parse(item) for item in arguments.values.split(",")]
+
+    if arguments.ensemble and arguments.command in {"sweep", "compare"}:
+        challengers = [config.with_field(arguments.field, value) for value in values]
+        ensemble = ensemble_compare(config, challengers, data, arguments.ensemble)
+        print_ensemble(ensemble, arguments.ensemble)
+        _record(
+            {
+                "command": f"{arguments.command}-ensemble",
+                "field": arguments.field,
+                "count": arguments.ensemble,
+                "variants": [
+                    {
+                        "label": result.label,
+                        "deltaTraining": round(result.delta_training, 1),
+                        "deltaEvaluation": round(result.delta_evaluation, 1),
+                        "deltaOverall": round(result.delta_overall, 1),
+                        "standardError": round(result.standard_error, 1),
+                        "candidatesUp": result.candidates_up,
+                    }
+                    for result in ensemble
+                ],
+            }
+        )
+        return
 
     baseline, results = sweep(config, arguments.field, values, data)
     if arguments.command == "walkforward":
