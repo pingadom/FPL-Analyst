@@ -1340,3 +1340,52 @@ The ledger records the chip. A Free Hit also stores the permanent squad, which c
 the next week, and the scorer counts a Bench Boost bench and a Triple Captain's third copy.
 On the GW6 slate (single fixtures, no blanks) nothing fires: Free Hit −28.6 against 21.7,
 Bench Boost 8.7 against 14.0, Triple Captain 6.5 against 8.3.
+
+## 12. 2022/23 had no starts before GW16, and three leads that went nowhere
+
+### The defect
+
+FPL added the `starts` field partway through 2022/23. In the archive the column exists for
+the whole season but is zero for every player in GW1-15, so the model read the first
+fifteen weeks as a run of non-starts. By GW16 that week's actual starters had a mean start
+probability of 0.12, and only 12 players in the league cleared the fit-to-start bar.
+Player and team xG have the same gap, but every consumer of xG already falls back to goals
+where xG is zero, so only starts was live.
+
+The repair (`FPL_STARTS_REPAIR`, on) uses official starts only in weeks that recorded any,
+and 45+ minutes elsewhere. The proxy agrees with the official stat on 96.5% of appearances
+in 2023/24 and 2024/25. The live squad builder also gets a fallback: if too few players
+clear the fit-to-start bar for a fresh squad, any player may start rather than the deadline
+failing.
+
+| | before | after |
+|---|---|---|
+| frozen audit average | 2115.1 | 2141.8 (+26.7) |
+| audit worst season | 1916 | 2010 |
+| pipeline backtest mean | 2217.2 | **2208.1** (−9.1, se 26.6) |
+| seasons over the top-500k line | 0 | 1 (2025/26, +29) |
+
+The two stages disagree within noise. The swings are path effects: 2022/23 gains 66 points
+before chips but loses a 76-point Free Hit when the chip path moves; 2024/25, whose data
+did not change, drops 128 as its decision path diverges. Shipped, because the data it
+corrects is plainly wrong and the net across both stages is positive.
+
+### Tested and rejected
+
+- **The live squad builder for Wildcards and the opening squad.** A six-week best-XI proxy
+  had it beating the replay's builder by 8.9 ± 4.4 points per build. In full-season replays
+  with the shipped model and chip policy it loses: Wildcards alone −8.5 a season on
+  evaluation (0.0 on training); Wildcards plus the opening squad −18.5 on training and −48.6
+  on evaluation. A squad's value depends on the transfers and chips that follow it, which a
+  fixed six-week window cannot see. Do not revisit with a proxy; use `simulate_candidate`
+  with `initial_squads` / `fresh_squads`.
+- **Captaincy.** The replay's captain beats "captain the priciest XI player" by 30.6 points a
+  season. It is not where the gap is.
+- **Autosubs.** About 22 XI players a season record no minutes, but the replay already
+  applies autosubs.
+
+### Still open
+
+News coverage varies by season: the severe-availability warning fires in 35 Gameweeks of
+2020/21 but in only 3-7 of each season from 2016/17 to 2019/20. How much the minutes model
+trusts news may therefore be fitted on uneven evidence.
