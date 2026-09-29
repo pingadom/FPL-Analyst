@@ -163,5 +163,33 @@ class WalkForwardTests(unittest.TestCase):
         self.assertEqual(result.mean_delta, 0.0)
 
 
+class EnsembleTests(unittest.TestCase):
+    CANDIDATE = lens.Candidate(0.30, 0.06, 0.00, 0.13, 0.17, 0.03, 0.18, 0.13, 0.78)
+
+    def test_the_ensemble_starts_with_the_reference_and_is_reproducible(self):
+        first = harness.jittered_candidates(self.CANDIDATE, 5)
+        again = harness.jittered_candidates(self.CANDIDATE, 5)
+        self.assertEqual(first[0], self.CANDIDATE)
+        self.assertEqual(first, again)
+        self.assertEqual(len(set(first)), 5)
+
+    def test_neighbours_keep_the_weight_total_and_stay_close(self):
+        names = ("performance", "value", "age", "fixture", "team", "crowd", "minutes", "underlying")
+        total = sum(getattr(self.CANDIDATE, name) for name in names)
+        for neighbour in harness.jittered_candidates(self.CANDIDATE, 8)[1:]:
+            self.assertAlmostEqual(sum(getattr(neighbour, name) for name in names), total)
+            self.assertLess(abs(neighbour.performance - self.CANDIDATE.performance), 0.15)
+            self.assertTrue(0.40 <= neighbour.recent_share <= 0.95)
+
+    def test_candidates_are_averaged_within_a_season_before_seasons_are_compared(self):
+        # Two candidates whose path luck cancels season by season: the real effect
+        # (+10 everywhere) is what survives the average.
+        deltas = np.array([[110.0, -90.0, 10.0], [-90.0, 110.0, 10.0]])
+        result = harness.EnsembleComparison("x", deltas)
+        np.testing.assert_allclose(result.per_season, [10.0, 10.0, 10.0])
+        self.assertEqual(result.standard_error, 0.0)
+        self.assertEqual(result.candidates_up, 2)
+
+
 if __name__ == "__main__":
     unittest.main()
