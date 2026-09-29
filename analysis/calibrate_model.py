@@ -8509,15 +8509,82 @@ def live_team_state(season: str, deadline: str) -> dict | None:
     if not ledger:
         return None
     last = max(ledger, key=lambda entry: int(entry["gameweek"]))
+    # A Free Hit squad reverts after its week: the permanent fifteen carry on.
+    permanent = last.get("permanentPlayers") or last["players"]
     return {
         "gameweek": int(last["gameweek"]),
         "bank": int(last["bank"]),
         "free_transfers_next": int(last.get("freeTransfersNext", 1)),
         "players": [
             {"id": int(player["id"]), "purchase": int(player.get("purchasePrice", round(float(player["price"]) * 10)))}
-            for player in last["players"]
+            for player in permanent
+        ],
+        "chips_used": [
+            (str(entry["chip"]), int(entry["gameweek"]))
+            for entry in ledger
+            if entry.get("chip")
         ],
     }
+
+
+LIVE_CHIP_NAMES = ("Wildcard", "Free Hit", "Bench Boost", "Triple Captain")
+
+
+def live_chip_windows(policy: "ChipPolicy", used: list[tuple[str, int]]) -> list[dict]:
+    """Two of each chip, one per half-season, as in the 2025/26+ rules the replay uses."""
+    windows = [
+        {"chip": "Wildcard", "start": max(1, int(policy.first_wildcard_min_gw)), "end": 19},
+        {"chip": "Wildcard", "start": max(20, int(policy.second_wildcard_min_gw)), "end": 38},
+    ]
+    for chip in ("Free Hit", "Bench Boost", "Triple Captain"):
+        windows.extend(
+            [{"chip": chip, "start": 1, "end": 19}, {"chip": chip, "start": 20, "end": 38}]
+        )
+    for window in windows:
+        window["used"] = any(
+            name == window["chip"] and window["start"] <= gw <= window["end"]
+            for name, gw in used
+        )
+    return windows
+
+
+def live_chip_decision(
+    gw: int,
+    windows: list[dict],
+    metrics: dict[str, float],
+    structural: dict[str, bool],
+    thresholds: dict[str, float],
+) -> tuple[str | None, dict]:
+    """The replay's chip rule: an optimal-stopping bar per window, one chip a week.
+
+    Same bar as `simulate_candidate`: the searched threshold scaled by
+    expiry_share + (1 + CHIP_HOLD_VALUE - expiry_share) x (1 - exp(-weeks left /
+    CHIP_HOLD_DECAY_GWS)), a structural signal required except in a window's
+    last legal week, and same-week chips compared on points (Wildcard by ratio).
+    """
+    candidates = []
+    report = {}
+    for window in windows:
+        chip = str(window["chip"])
+        if window["used"] or not (int(window["start"]) <= gw <= int(window["end"])):
+            continue
+        remaining = max(0, int(window["end"]) - gw)
+        horizon_share = 1.0 - math.exp(-remaining / CHIP_HOLD_DECAY_GWS)
+        expiry_share = CHIP_EXPIRY_THRESHOLD_SHARE.get(chip, DEFAULT_CHIP_EXPIRY_THRESHOLD_SHARE)
+        bar = thresholds[chip] * (expiry_share + (1.0 + CHIP_HOLD_VALUE - expiry_share) * horizon_share)
+        expiring = remaining <= CHIP_FORCED_USE_WINDOW_GWS
+        metric = float(metrics[chip])
+        report[chip] = {"signal": round(metric, 2), "threshold": round(bar, 2), "structural": bool(structural[chip])}
+        if metric >= bar and (structural[chip] or (expiring and metric > 0)):
+            candidates.append((chip, metric, bar))
+    if not candidates:
+        return None, report
+
+    def priority(item):
+        chip, metric, bar = item
+        return (1, metric) if chip != "Wildcard" else (0, metric / max(0.01, bar))
+
+    return max(candidates, key=priority)[0], report
 
 
 def persistent_team_transfers(
@@ -8763,6 +8830,7 @@ def current_recommendation(
     best: Candidate,
     robust_planning: bool,
     strategy: SimulationStrategy,
+    chip_policy: "ChipPolicy | None" = None,
 ) -> tuple[dict, list[dict], list[dict], list[dict], list[dict], dict]:
     bootstrap = get_json(CURRENT_BOOTSTRAP)
     fixtures = get_json(CURRENT_FIXTURES)
@@ -10358,6 +10426,122 @@ def current_recommendation(
     free_transfers_next = min(
         int(strategy.bank_limit), max(0, free_transfers_now - len(team_transfers)) + 1
     ) if team_state else 1
+    chip_played: str | None = None
+    chip_report: dict = {}
+    permanent_ids: list[int] | None = None
+    if team_state and chip_policy is not None:
+        by_index_value = pool["risk_adjusted_horizon"].astype(float)
+        weekly = pool["raw_projection"].astype(float)
+        fixtures_now = pool["team_id"].astype(int).map(
+            lambda team_id: len(fixtures_by_team.get(int(team_id), []))
+        )
+        is_available = pool.index.isin(available.index)
+        immediate_scale = float(available["raw_projection"].std()) / REFERENCE_IMMEDIATE_SPREAD
+        plan_scale = plan_spread / REFERENCE_PLAN_SPREAD
+
+        def best_lineup(indices: list[int], values: pd.Series) -> list[int]:
+            by_position = {
+                position: sorted(
+                    (index for index in indices if int(pool.loc[index, "position_id"]) == position),
+                    key=lambda index: -float(values[index]) if is_available[pool.index.get_loc(index)] else 1e9,
+                )
+                for position in SQUAD_QUOTAS
+            }
+            best, best_value = [], -math.inf
+            for defenders, midfielders, forwards in (
+                (3, 4, 3), (3, 5, 2), (4, 4, 2), (4, 3, 3), (4, 5, 1), (5, 4, 1), (5, 3, 2), (5, 2, 3),
+            ):
+                lineup = (
+                    by_position[1][:1] + by_position[2][:defenders]
+                    + by_position[3][:midfielders] + by_position[4][:forwards]
+                )
+                value = sum(float(values[index]) for index in lineup)
+                if len(lineup) == 11 and value > best_value:
+                    best, best_value = lineup, value
+            return best
+
+        def plan_utility(indices: list[int]) -> float:
+            values = by_index_value.where(is_available, 0.0)
+            lineup = best_lineup(indices, values)
+            bench = [index for index in indices if index not in lineup]
+            return (
+                sum(float(values[index]) for index in lineup)
+                + strategy.squad_captain_weight * max(float(values[index]) for index in lineup)
+                + strategy.squad_bench_weight * sum(float(values[index]) for index in bench)
+            )
+
+        def lineup_value(lineup: list[int]) -> float:
+            values = weekly.where(is_available, 0.0)
+            return sum(float(values[index]) for index in lineup) + max(float(values[index]) for index in lineup)
+
+        held_indices = list(chosen)
+        fresh_chosen, _ = pick_squad(pool)
+        free_hit_pool = pool.copy()
+        free_hit_pool["risk_adjusted_horizon"] = free_hit_pool["raw_projection"] * free_hit_pool[
+            "horizon_weighted_games_censored"
+        ].clip(lower=1)
+        free_hit_pool["model_score"] = free_hit_pool["raw_projection"] / 5
+        free_hit_budget = int(team_bank) + int(
+            sum(
+                selling_price(int(purchase_by_id[int(pool.loc[index, "id"])]), int(pool.loc[index, "price"]))
+                for index in held_indices
+            )
+        )
+        free_hit_chosen, free_hit_xi = pick_squad(free_hit_pool, budget_limit=free_hit_budget)
+        held_xi = best_lineup(held_indices, weekly)
+        held_bench = [index for index in held_indices if index not in xi]
+        captain_now = max(xi, key=lambda index: float(pool.loc[index, "captain_score"]))
+        blank_count = int(sum(fixtures_now[index] == 0 or not is_available[pool.index.get_loc(index)] for index in held_indices))
+        double_count = int(sum(fixtures_now[index] > 1 for index in free_hit_xi))
+        metrics = {
+            "Wildcard": plan_utility(list(fresh_chosen)) - plan_utility(held_indices),
+            "Free Hit": lineup_value(free_hit_xi) - lineup_value(held_xi)
+            + 0.22 * max(0, blank_count - 1) + 0.12 * double_count
+            - sum(move["gain"] for move in team_transfers),
+            "Bench Boost": float(sum(max(0.0, float(weekly[index])) for index in held_bench)),
+            "Triple Captain": float(weekly[captain_now]) * float(min(1, fixtures_now[captain_now])),
+        }
+        structural = {
+            "Wildcard": True,
+            "Free Hit": blank_count >= 3 or double_count >= 5,
+            "Bench Boost": any(fixtures_now[index] > 1 for index in held_bench),
+            "Triple Captain": fixtures_now[captain_now] > 1,
+        }
+        thresholds = {
+            "Wildcard": chip_policy.wildcard_gap * plan_scale,
+            "Free Hit": chip_policy.free_hit_gap * immediate_scale,
+            "Bench Boost": chip_policy.bench_score * immediate_scale,
+            "Triple Captain": chip_policy.triple_score * immediate_scale,
+        }
+        chip_played, chip_report = live_chip_decision(
+            gw_number,
+            live_chip_windows(chip_policy, team_state.get("chips_used", [])),
+            metrics,
+            structural,
+            thresholds,
+        )
+        if chip_played == "Wildcard":
+            # The Wildcard replaces this week's transfers; banked free transfers
+            # are kept, as the replay keeps them under the 2024/25+ rules.
+            rebuild_budget = free_hit_budget
+            chosen, xi = pick_squad(pool, budget_limit=rebuild_budget)
+            purchase_by_id = {
+                int(pool.loc[index, "id"]): int(pool.loc[index, "price"]) for index in chosen
+            }
+            team_bank = rebuild_budget - int(sum(purchase_by_id.values()))
+            team_transfers = []
+            free_transfers_next = min(int(strategy.bank_limit), free_transfers_now + 1)
+        elif chip_played == "Free Hit":
+            # This week only; the permanent squad is the one held before any
+            # transfer, and banked free transfers carry.
+            permanent_ids = [int(player["id"]) for player in team_state["players"]]
+            permanent_purchases = {
+                int(player["id"]): int(player["purchase"]) for player in team_state["players"]
+            }
+            chosen, xi = list(free_hit_chosen), list(free_hit_xi)
+            team_bank = int(team_state["bank"])
+            team_transfers = []
+            free_transfers_next = min(int(strategy.bank_limit), free_transfers_now + 1)
     strategy_profiles: list[dict] = []
     for profile_name, utility_column in [
         ("Protect", "protect_utility"),
@@ -10855,6 +11039,16 @@ def current_recommendation(
         "freeTransfers": int(free_transfers_now),
         "freeTransfersNext": int(free_transfers_next),
         "transferHurdle": round(float(live_hurdle), 2),
+        "chip": chip_played,
+        "chipSignals": chip_report,
+        "permanentSquad": (
+            [
+                {"id": element, "purchasePrice": permanent_purchases[element]}
+                for element in permanent_ids
+            ]
+            if permanent_ids is not None
+            else None
+        ),
         "transfers": [
             {
                 "out": str(current.loc[current["id"].astype(int) == move["out"], "web_name"].iloc[0]),
@@ -11608,7 +11802,7 @@ def main() -> None:
     )
     decision_promoted = bool(frozen_hits >= 6 and frozen_margin >= 0)
     headline, squad, watchlist, matchups, all_players, current_meta = current_recommendation(
-        data, best, robust_planning_enabled, active_strategy
+        data, best, robust_planning_enabled, active_strategy, best_chip_policy
     )
     result = {
         "product": "FPL Lens",
@@ -11931,12 +12125,27 @@ def refresh_current_artifact() -> None:
         if stored_strategy == JOINT_OPTION_STRATEGY.name
         else WEEKLY_CHASE_STRATEGY
     )
+    stored_chips = (result.get("chipStrategy") or {}).get("policy") or {}
+    shipped_chip_policy = (
+        ChipPolicy(
+            wildcard_gap=float(stored_chips["wildcardGap"]),
+            free_hit_gap=float(stored_chips["freeHitGap"]),
+            bench_score=float(stored_chips["benchScore"]),
+            triple_score=float(stored_chips["tripleScore"]),
+            afcon_bonus=float(stored_chips.get("afconBonus", 0.0)),
+            first_wildcard_min_gw=int(stored_chips.get("firstWildcardMinGw", 5)),
+            second_wildcard_min_gw=int(stored_chips.get("secondWildcardMinGw", 24)),
+        )
+        if stored_chips
+        else None
+    )
     headline, squad, watchlist, matchups, all_players, current_meta = (
         current_recommendation(
             historical,
             best,
             bool(result["model"].get("robustPlanningEnabled", False)),
             active_strategy,
+            shipped_chip_policy,
         )
     )
     result.update(

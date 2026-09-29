@@ -347,12 +347,12 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-09-28T19:00:06+00:00",
+      "recordedAt": "2026-09-29T14:14:53+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
       "vice": "B.Fernandes",
-      "projectedPoints": 60.7,
+      "projectedPoints": 60.4,
       "teamMode": "initial",
       "transfers": [],
       "players": [
@@ -390,15 +390,15 @@
           "purchasePrice": 65
         },
         {
-          "id": 391,
-          "name": "Gvardiol",
+          "id": 115,
+          "name": "De Cuyper",
           "position": "DEF",
-          "price": 5.7,
+          "price": 5.0,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.0,
-          "purchasePrice": 57
+          "projected": 4.1,
+          "purchasePrice": 50
         },
         {
           "id": 426,
@@ -419,7 +419,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.8,
+          "projected": 5.7,
           "purchasePrice": 58
         },
         {
@@ -452,7 +452,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.1,
+          "projected": 5.0,
           "purchasePrice": 62
         },
         {
@@ -474,7 +474,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.0,
+          "projected": 3.8,
           "purchasePrice": 60
         },
         {
@@ -485,7 +485,7 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.0,
+          "projected": 3.3,
           "purchasePrice": 45
         },
         {
@@ -511,19 +511,19 @@
           "purchasePrice": 40
         },
         {
-          "id": 194,
-          "name": "Thomas-Asante",
+          "id": 316,
+          "name": "Emersonn",
           "position": "FWD",
-          "price": 5.0,
+          "price": 5.5,
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 2.2,
-          "purchasePrice": 50
+          "projected": 3.6,
+          "purchasePrice": 55
         }
       ],
       "scored": false,
-      "bank": 2,
+      "bank": 4,
       "freeTransfersNext": 1
     }
   ]

@@ -1044,6 +1044,42 @@ class ModelEngineTests(unittest.TestCase):
         _, _, cautious = lens.persistent_team_transfers(held, 5, 2, pool, hurdle=10.0)
         self.assertEqual(len(cautious), 1)
 
+    def test_live_chip_decision_follows_the_replay_rule(self) -> None:
+        policy = lens.ChipPolicy(
+            wildcard_gap=50.0, free_hit_gap=30.0, bench_score=20.0, triple_score=10.0,
+            afcon_bonus=0.0, first_wildcard_min_gw=4, second_wildcard_min_gw=24,
+        )
+        thresholds = {"Wildcard": 50.0, "Free Hit": 30.0, "Bench Boost": 20.0, "Triple Captain": 10.0}
+        quiet = {"Wildcard": 0.0, "Free Hit": 0.0, "Bench Boost": 0.0, "Triple Captain": 0.0}
+        no_signal = {"Wildcard": True, "Free Hit": False, "Bench Boost": False, "Triple Captain": False}
+        windows = lens.live_chip_windows(policy, [])
+        # Early in a window the bar sits above the threshold (option value).
+        chip, report = lens.live_chip_decision(6, windows, {**quiet, "Triple Captain": 11.0}, {**no_signal, "Triple Captain": True}, thresholds)
+        self.assertIsNone(chip)
+        self.assertGreater(report["Triple Captain"]["threshold"], 10.0)
+        # A big enough signal with its structural trigger fires.
+        chip, _ = lens.live_chip_decision(6, windows, {**quiet, "Triple Captain": 20.0}, {**no_signal, "Triple Captain": True}, thresholds)
+        self.assertEqual(chip, "Triple Captain")
+        # Without the structural trigger it does not, except in the last week.
+        chip, _ = lens.live_chip_decision(6, windows, {**quiet, "Triple Captain": 20.0}, no_signal, thresholds)
+        self.assertIsNone(chip)
+        chip, _ = lens.live_chip_decision(19, windows, {**quiet, "Triple Captain": 4.0}, no_signal, thresholds)
+        self.assertEqual(chip, "Triple Captain")
+        # A chip already used in this half is not available again until GW20.
+        used = lens.live_chip_windows(policy, [("Triple Captain", 8)])
+        chip, _ = lens.live_chip_decision(19, used, {**quiet, "Triple Captain": 40.0}, {**no_signal, "Triple Captain": True}, thresholds)
+        self.assertIsNone(chip)
+        chip, _ = lens.live_chip_decision(20, used, {**quiet, "Triple Captain": 40.0}, {**no_signal, "Triple Captain": True}, thresholds)
+        self.assertEqual(chip, "Triple Captain")
+        # Same-week points chips compete on points, and beat a Wildcard.
+        chip, _ = lens.live_chip_decision(
+            18, windows,
+            {"Wildcard": 200.0, "Free Hit": 0.0, "Bench Boost": 30.0, "Triple Captain": 25.0},
+            {"Wildcard": True, "Free Hit": False, "Bench Boost": True, "Triple Captain": True},
+            thresholds,
+        )
+        self.assertEqual(chip, "Bench Boost")
+
     def test_live_team_state_reads_only_passed_ledger_entries(self) -> None:
         import json
         import tempfile
