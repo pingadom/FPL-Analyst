@@ -1395,3 +1395,31 @@ corrects is plainly wrong and the net across both stages is positive.
   it scores −28.8 a season against the shipped 0.70. The other chips' floors (0.0-0.45) move
   the score by at most 1 point. The Wildcard is the single largest source of path variance:
   every floor change swings some season by 100+ points.
+
+## 13. An ensemble screen, and what it says about the decision layer
+
+A pinned replay is one chaotic path per season, so single-candidate screens could not see
+anything smaller than about 60 points (the harness had already recorded that training and
+evaluation deltas correlated −0.18 across 20 experiments). `harness.py --ensemble K` now
+replays the baseline and each challenger under the shipped candidate plus K−1 Dirichlet
+neighbours, averages the paired deltas within each season and uses seasons as the unit.
+The standard error on a forecast change fell from 33 to 3-13 points a season.
+
+Per season against the shipped setting (evaluation = the eight scored seasons):
+
+| change | K | overall | se | candidates up |
+|---|---|---|---|---|
+| walk-forward price-shape calibration | 8 | −9.6 | 12.9 | 1/8 |
+| walk-forward DGW damping | 8 | −2.9 | 3.2 | 2/8 |
+| transfer hurdle 3.5 / 6.5 (shipped 5.0) | 8 | −7.8 / −12.2 | 12.7 / 18.9 | 2/8, 2/8 |
+| Free Hit gap 15 (shipped 20.9) | 8 | −13.1 | 5.9 | 0/8 |
+| Free Hit gap 27 / 33 | 16 | +1.3 / −1.0 | 5.9 / 6.1 | 10/16, 7/16 |
+| Wildcard gap 25 / 30 / 45 (shipped 35.0) | 16/16/8 | +4.0 / −29.9 / −18.5 | 17.0 / 22.9 / 17.0 | 10/16, 0/16, 1/8 |
+| one paid hit, immediate hurdle 4 / 6 | 16 | +6.8 / −1.1 | 19.3 / 9.5 | 11/16, 9/16 |
+
+Nothing clears its noise. The leaners at K=8 shrank toward zero at K=16, as noise does; the
+hit result is one season (2021/22, +153) and the Wildcard surface is not monotone (25 up, 30
+down). The decision layer is at a local optimum for this forecast, and the forecast's known
+biases (premium over-rating, DGW over-projection) are already absorbed by the weight search.
+The remaining gap has to come from information the forecast does not have, not from
+re-tuning how it is used.
