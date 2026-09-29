@@ -1384,8 +1384,14 @@ corrects is plainly wrong and the net across both stages is positive.
 - **Autosubs.** About 22 XI players a season record no minutes, but the replay already
   applies autosubs.
 
-### Still open
-
-News coverage varies by season: the severe-availability warning fires in 35 Gameweeks of
-2020/21 but in only 3-7 of each season from 2016/17 to 2019/20. How much the minutes model
-trusts news may therefore be fitted on uneven evidence.
+- **News warnings by season.** The severe-availability warning fires thousands of times a
+  season from 2020/21 but only 5-8 times a season before, which looked like uneven evidence.
+  It is not a defect: the warning is accurate wherever it fires (flagged players start 0-3%
+  of the time), and the official projection feed behind most of it only begins in 2020/21.
+  Earlier seasons simply have less news; the live model has the feed.
+- **Chip expiry floors, walk-forward.** With the shipped model and chip policy, a lower
+  Wildcard floor (0.40 or 0.55) gains up to +60 on the two training seasons but loses 26-30
+  on evaluation; 0.85 and 1.00 also lose. Picking each season's floor from the seasons before
+  it scores −28.8 a season against the shipped 0.70. The other chips' floors (0.0-0.45) move
+  the score by at most 1 point. The Wildcard is the single largest source of path variance:
+  every floor change swings some season by 100+ points.
