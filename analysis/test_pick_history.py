@@ -108,6 +108,32 @@ class PickHistoryScoringTests(unittest.TestCase):
         self.assertEqual(realised["benchPoints"], 9)
         self.assertIn("autosub", realised["note"])
 
+    def _score_with_chip(self, chip, players, points):
+        history = {"schemaVersion": 1, "entries": [dict(entry(players, 5), chip=chip)]}
+        with mock.patch.object(pick_history, "load_history", return_value=history), \
+             mock.patch.object(pick_history, "save_history", lambda payload: None), \
+             mock.patch.object(
+                 pick_history,
+                 "_get",
+                 side_effect=lambda url: (
+                     {"events": [{"id": 5, "finished": True}]}
+                     if "bootstrap" in url
+                     else live_payload(points)
+                 ),
+             ):
+            pick_history.score()
+        return history["entries"][0]["realised"]
+
+    def test_bench_boost_counts_the_bench(self):
+        players = [player(1, True, captain=True), player(2, False)]
+        realised = self._score_with_chip("Bench Boost", players, {1: (5, 90), 2: (7, 90)})
+        self.assertEqual(realised["total"], 5 + 5 + 7)
+
+    def test_triple_captain_counts_the_captain_three_times(self):
+        players = [player(1, True, captain=True), player(2, True)]
+        realised = self._score_with_chip("Triple Captain", players, {1: (8, 90), 2: (2, 90)})
+        self.assertEqual(realised["total"], 8 * 3 + 2)
+
     def test_an_unfinished_gameweek_is_left_alone(self):
         players = [player(1, True, captain=True)]
         history = {"schemaVersion": 1, "entries": [entry(players, 9)]}
