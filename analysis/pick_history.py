@@ -116,6 +116,14 @@ def record(now: datetime | None = None) -> dict:
     if headline.get("bank") is not None:
         entry["bank"] = int(headline["bank"])
         entry["freeTransfersNext"] = int(headline.get("freeTransfersNext", 1))
+    if headline.get("chip"):
+        entry["chip"] = str(headline["chip"])
+    if headline.get("permanentSquad"):
+        # A Free Hit squad reverts after its week; this is the team that carries on.
+        entry["permanentPlayers"] = [
+            {"id": int(player["id"]), "purchasePrice": int(player["purchasePrice"])}
+            for player in headline["permanentSquad"]
+        ]
 
     history = load_history()
     kept = [
@@ -259,11 +267,17 @@ def score() -> None:
                 )
                 if vice is not None and minutes_for(vice) > 0:
                     captain_bonus = points_for(vice)
+        chip = entry.get("chip")
+        bench_points = sum(points_for(p) for p in bench)
+        if chip == "Triple Captain":
+            captain_bonus *= 2
+        total = xi_points + captain_bonus + (bench_points if chip == "Bench Boost" else 0)
         entry["realised"] = {
             "xiPoints": xi_points,
             "captainBonus": captain_bonus,
-            "total": xi_points + captain_bonus,
-            "benchPoints": sum(points_for(p) for p in bench),
+            "total": total,
+            "benchPoints": bench_points,
+            "chip": chip,
             "startersWhoDidNotPlay": sum(1 for p in starters if minutes_for(p) == 0),
             "note": "autosubs not simulated; bench order is not recorded",
         }
