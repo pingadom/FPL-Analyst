@@ -347,12 +347,12 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-09-29T15:30:32+00:00",
+      "recordedAt": "2026-10-02T13:11:49+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
-      "vice": "B.Fernandes",
-      "projectedPoints": 60.5,
+      "vice": "Groß",
+      "projectedPoints": 59.2,
       "teamMode": "initial",
       "transfers": [],
       "players": [
@@ -371,12 +371,12 @@
           "id": 229,
           "name": "Tarkowski",
           "position": "DEF",
-          "price": 6.1,
+          "price": 6.2,
           "starter": true,
           "captain": false,
           "vice": false,
           "projected": 4.8,
-          "purchasePrice": 61
+          "purchasePrice": 62
         },
         {
           "id": 356,
@@ -401,37 +401,26 @@
           "purchasePrice": 50
         },
         {
-          "id": 426,
-          "name": "B.Fernandes",
-          "position": "MID",
-          "price": 11.9,
-          "starter": true,
-          "captain": false,
-          "vice": true,
-          "projected": 6.3,
-          "purchasePrice": 119
-        },
-        {
           "id": 124,
           "name": "Groß",
           "position": "MID",
           "price": 5.8,
           "starter": true,
           "captain": false,
-          "vice": false,
+          "vice": true,
           "projected": 5.7,
           "purchasePrice": 58
         },
         {
-          "id": 68,
-          "name": "Tavernier",
+          "id": 426,
+          "name": "B.Fernandes",
           "position": "MID",
-          "price": 6.1,
+          "price": 11.9,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.2,
-          "purchasePrice": 61
+          "projected": 5.3,
+          "purchasePrice": 119
         },
         {
           "id": 427,
@@ -441,8 +430,19 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.1,
+          "projected": 4.7,
           "purchasePrice": 79
+        },
+        {
+          "id": 286,
+          "name": "Belloumi",
+          "position": "MID",
+          "price": 5.1,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.2,
+          "purchasePrice": 51
         },
         {
           "id": 94,
@@ -511,19 +511,19 @@
           "purchasePrice": 40
         },
         {
-          "id": 664,
-          "name": "Salia",
+          "id": 316,
+          "name": "Emersonn",
           "position": "FWD",
-          "price": 4.5,
+          "price": 5.5,
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 1.2,
-          "purchasePrice": 45
+          "projected": 3.8,
+          "purchasePrice": 55
         }
       ],
       "scored": false,
-      "bank": 4,
+      "bank": 3,
       "freeTransfersNext": 1
     }
   ]
