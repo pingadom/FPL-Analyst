@@ -1423,3 +1423,27 @@ down). The decision layer is at a local optimum for this forecast, and the forec
 biases (premium over-rating, DGW over-projection) are already absorbed by the weight search.
 The remaining gap has to come from information the forecast does not have, not from
 re-tuning how it is used.
+
+### Captaincy rules, on fixed lineups
+
+Captaincy was the largest single item in the elite comparison (REAL_MANAGER_EDGE.md), and it
+is the one decision that can be tested without path effects: the armband changes no squad,
+transfer or chip. Holding the model's own XIs fixed across eight ensemble candidates and
+re-picking the captain (armband passing down the order to the first player with minutes),
+per season against the shipped rule (highest projection this week, 275.8 captain points):
+
+| rule | overall | se | seasons up |
+|---|---|---|---|
+| attacking tail (projection + haul/return/goal terms) | +0.1 | 1.7 | 4/10 |
+| ceiling, projection + 0.5 sd | −1.8 | 2.1 | 4/10 |
+| projection x (1 + 2 x haul probability) | −2.0 | 1.2 | 2/10 |
+| ceiling, projection + 1.0 sd | −7.1 | 3.0 | 2/10 |
+| priciest XI player | −16.2 | 9.4 | 5/10 |
+| haul probability alone | −30.8 | 6.0 | 0/10 |
+| most owned (template) | −42.2 | 9.1 | 1/10 |
+| recent form | −48.7 | 9.5 | 0/10 |
+
+The shipped rule is the best of the nine. The elite's captaincy edge is not a rule the model
+could copy: following ownership or form costs 40-50 points a season. It is late information
+(Haaland's start to 2025/26 was visible to managers watching the matches before the model's
+history caught up), which is what the scorer-market data in `betfair_scorers.py` is for.
