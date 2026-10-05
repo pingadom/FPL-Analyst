@@ -347,12 +347,12 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-10-02T13:11:49+00:00",
+      "recordedAt": "2026-10-05T14:37:14+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
       "vice": "Groß",
-      "projectedPoints": 59.2,
+      "projectedPoints": 61.3,
       "teamMode": "initial",
       "transfers": [],
       "players": [
@@ -364,7 +364,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.3,
+          "projected": 4.2,
           "purchasePrice": 55
         },
         {
@@ -375,7 +375,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.8,
+          "projected": 5.0,
           "purchasePrice": 62
         },
         {
@@ -386,7 +386,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.3,
+          "projected": 4.4,
           "purchasePrice": 65
         },
         {
@@ -397,19 +397,19 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.0,
+          "projected": 4.4,
           "purchasePrice": 50
         },
         {
           "id": 124,
           "name": "Groß",
           "position": "MID",
-          "price": 5.8,
+          "price": 5.9,
           "starter": true,
           "captain": false,
           "vice": true,
-          "projected": 5.7,
-          "purchasePrice": 58
+          "projected": 6.5,
+          "purchasePrice": 59
         },
         {
           "id": 426,
@@ -419,19 +419,8 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.3,
+          "projected": 5.4,
           "purchasePrice": 119
-        },
-        {
-          "id": 427,
-          "name": "Mbeumo",
-          "position": "MID",
-          "price": 7.9,
-          "starter": true,
-          "captain": false,
-          "vice": false,
-          "projected": 4.7,
-          "purchasePrice": 79
         },
         {
           "id": 286,
@@ -441,8 +430,19 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.2,
+          "projected": 4.1,
           "purchasePrice": 51
+        },
+        {
+          "id": 427,
+          "name": "Mbeumo",
+          "position": "MID",
+          "price": 7.9,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.8,
+          "purchasePrice": 79
         },
         {
           "id": 94,
@@ -452,7 +452,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.0,
+          "projected": 5.6,
           "purchasePrice": 62
         },
         {
@@ -474,7 +474,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 3.8,
+          "projected": 4.0,
           "purchasePrice": 60
         },
         {
@@ -485,7 +485,7 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.3,
+          "projected": 3.6,
           "purchasePrice": 45
         },
         {
@@ -496,7 +496,7 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.2,
+          "projected": 3.5,
           "purchasePrice": 40
         },
         {
@@ -507,7 +507,7 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.2,
+          "projected": 3.6,
           "purchasePrice": 40
         },
         {
@@ -518,12 +518,12 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.8,
+          "projected": 4.1,
           "purchasePrice": 55
         }
       ],
       "scored": false,
-      "bank": 3,
+      "bank": 2,
       "freeTransfersNext": 1
     }
   ]
