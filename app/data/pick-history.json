@@ -347,12 +347,12 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-10-05T14:37:14+00:00",
+      "recordedAt": "2026-10-06T09:38:20+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
       "vice": "Groß",
-      "projectedPoints": 61.3,
+      "projectedPoints": 61.6,
       "teamMode": "initial",
       "transfers": [],
       "players": [
@@ -375,7 +375,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.0,
+          "projected": 4.9,
           "purchasePrice": 62
         },
         {
@@ -397,7 +397,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.4,
+          "projected": 4.5,
           "purchasePrice": 50
         },
         {
@@ -430,7 +430,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.1,
+          "projected": 4.3,
           "purchasePrice": 51
         },
         {
@@ -485,7 +485,7 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.6,
+          "projected": 3.7,
           "purchasePrice": 45
         },
         {
