@@ -347,7 +347,7 @@
     {
       "season": "2026/27",
       "gameweek": 6,
-      "recordedAt": "2026-10-08T14:03:17+00:00",
+      "recordedAt": "2026-10-09T11:45:28+00:00",
       "deadline": "2026-10-10T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
@@ -397,7 +397,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.5,
+          "projected": 4.6,
           "purchasePrice": 50
         },
         {
@@ -452,7 +452,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 5.6,
+          "projected": 5.5,
           "purchasePrice": 62
         },
         {
@@ -485,7 +485,7 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 3.7,
+          "projected": 3.8,
           "purchasePrice": 45
         },
         {
