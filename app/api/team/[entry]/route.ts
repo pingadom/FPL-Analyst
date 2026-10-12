@@ -223,11 +223,6 @@ export async function GET(
     const currentRank = manager.summary_overall_rank || history.current.at(-1)?.overall_rank || 0;
     const totalManagers = bootstrap.total_players || results.currentMeta.managerPopulation || 1;
     const currentPercentile = currentRank > 0 ? (100 * currentRank) / totalManagers : 100;
-    // Without a projected field-score distribution, converting a single team
-    // projection into an exact future rank is false precision. Keep the exact
-    // current rank as the anchor and expose an uncertainty band only.
-    const projectedMedianRank = currentRank;
-    const spread = Math.max(0.12, (results.headline.scenario.p90 - results.headline.scenario.p10) / 100);
 
     return Response.json(
       {
@@ -244,6 +239,25 @@ export async function GET(
         },
         picksEvent,
         owned,
+        // Held players with no projection: injured, suspended or gone. They are
+        // the first players to look at, so they are returned rather than dropped.
+        unavailable: unavailable.map((item) => ({
+          element: item.element,
+          selling_price: item.selling_price,
+          multiplier: item.multiplier,
+          name: item.player.name,
+          team: item.player.team,
+          position: item.player.position,
+          price: item.player.price,
+        })),
+        history: history.current.map((row) => ({
+          event: row.event,
+          points: row.points,
+          totalPoints: row.total_points,
+          overallRank: row.overall_rank,
+          transfers: row.event_transfers ?? 0,
+        })),
+        chipsUsed: (history.chips ?? []).map((chip) => ({ name: chip.name, event: chip.event })),
         suggestions,
         transferPolicy: {
           hurdle,
@@ -254,14 +268,6 @@ export async function GET(
           teamProjection: Number(teamProjection.toFixed(1)),
           modelProjection,
           edge: Number(edge.toFixed(1)),
-          medianRank: projectedMedianRank,
-          optimisticRank: projectedMedianRank
-            ? Math.max(1, Math.round(projectedMedianRank * (1 - spread)))
-            : 0,
-          cautiousRank: projectedMedianRank
-            ? Math.min(totalManagers, Math.round(projectedMedianRank * (1 + spread)))
-            : 0,
-          method: "The exact current rank is the anchor. The band reflects squad-score uncertainty only; a future-rank forecast is withheld until a calibrated field-score model is available.",
           lineup: bestLineup?.lineup.map((item) => item.element) ?? [],
           captain: bestLineup?.captain?.element ?? null,
         },

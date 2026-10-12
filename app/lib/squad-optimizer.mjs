@@ -149,10 +149,10 @@ function clubCounts(players) {
   return counts;
 }
 
-function isLegalSquad(squad) {
+function isLegalSquad(squad, budget = 100) {
   if (squad.length !== 15 || new Set(squad.map((player) => player.id)).size !== 15)
     return false;
-  if (squad.reduce((sum, player) => sum + Number(player.price), 0) > 100.0001)
+  if (squad.reduce((sum, player) => sum + Number(player.price), 0) > budget + 0.0001)
     return false;
   if ([...clubCounts(squad).values()].some((count) => count > 3)) return false;
   return Object.entries(POSITION_QUOTA).every(
@@ -278,17 +278,36 @@ export function evaluateSquad(squad, playerPool, options = {}) {
   };
 }
 
+/**
+ * Exact 15-player squad, XI and captain.
+ *
+ * Options used by the planner: `budget` (default 100), `lockedIds` (players that
+ * must be in the squad), `excludedIds` (players that must not be), and
+ * `allowStrategicBank` (no minimum spend). Locked players always reach the
+ * solver, even when the presolve frontier would have dropped them.
+ */
 export function buildOptimizedSquad(players, options = {}) {
+  const excluded = new Set((options.excludedIds ?? []).map(Number));
+  const locked = new Set((options.lockedIds ?? []).map(Number));
+  players = players.filter((player) => !excluded.has(Number(player.id)));
   if (!players.length) return null;
   const referencePlayers = players;
   const floors = positionalFloors(referencePlayers);
-  players = presolvePlayers(referencePlayers);
+  const presolved = presolvePlayers(referencePlayers);
+  const presolvedIds = new Set(presolved.map((player) => player.id));
+  players = [
+    ...presolved,
+    ...referencePlayers.filter(
+      (player) => locked.has(Number(player.id)) && !presolvedIds.has(player.id),
+    ),
+  ];
+  const budgetLimit = Number(options.budget ?? 100);
   const premiumLimit = Number(options.benchPremiumLimit ?? BENCH_PREMIUM_LIMIT);
   const minimumSpend = options.allowStrategicBank
     ? Number(options.minimumSpend ?? 0)
-    : Number(options.minimumSpend ?? 99.5);
+    : Number(options.minimumSpend ?? budgetLimit - 0.5);
   const constraints = {
-    budget: { min: minimumSpend, max: 100 },
+    budget: { min: minimumSpend, max: budgetLimit },
     squad_total: { equal: 15 },
     xi_total: { equal: 11 },
     captain_total: { equal: 1 },
@@ -304,6 +323,7 @@ export function buildOptimizedSquad(players, options = {}) {
     xi_FWD: { min: 1, max: 3 },
   };
   for (const player of players) {
+    if (locked.has(Number(player.id))) constraints[`lock_${player.id}`] = { min: 1 };
     constraints[`club_${player.team}`] ??= { max: 3 };
     constraints[`xi_link_${player.id}`] = { max: 0 };
     constraints[`captain_link_${player.id}`] = { max: 0 };
@@ -323,6 +343,7 @@ export function buildOptimizedSquad(players, options = {}) {
       [`club_${player.team}`]: 1,
       bench_premium: premium,
       [`xi_link_${id}`]: -1,
+      ...(locked.has(Number(player.id)) ? { [`lock_${id}`]: 1 } : {}),
     };
     variables[`x_${id}`] = {
       objective: immediateUtility(player) - bench + BENCH_PREMIUM_PENALTY * premium,
@@ -379,7 +400,7 @@ export function buildOptimizedSquad(players, options = {}) {
     xi.length !== 11 ||
     !captain ||
     !xiIds.has(captain.id) ||
-    !isLegalSquad(squad) ||
+    !isLegalSquad(squad, budgetLimit) ||
     (!options.allowStrategicBank && spend < minimumSpend - 1e-6) ||
     (!options.benchBoost && premium > premiumLimit + 1e-6) ||
     xi.filter((player) => requiresException(player, referencePlayers)).length > 1 ||
