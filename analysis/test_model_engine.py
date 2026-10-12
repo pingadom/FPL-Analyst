@@ -1200,6 +1200,31 @@ class OperationalContractTests(unittest.TestCase):
         self.assertEqual((played["chip"], played["gameweek"]), ("Bench Boost", 8))
         self.assertIn("15.0", played["reason"])
 
+    def test_outcome_quantiles_follow_the_skewed_points_distribution(self):
+        p10, p50, p90 = lens.outcome_quantiles(
+            np.array([0.44, 0.95]),  # blank: premium forward, bench fodder
+            np.array([0.45, 0.01]),  # 5+
+            np.array([0.24, 0.00]),  # 8+
+            np.array([1.0, 1.0]),
+            np.array([0.96, 0.10]),  # plays
+            np.array([0.89, 0.05]),  # 60+
+        )
+        # A premium with a 24% haul chance has a good week well above 8, and a
+        # median below his mean: the old symmetric band put P90 at 7.9.
+        self.assertGreater(p90[0], 12.0)
+        self.assertLess(p50[0], 4.0)
+        self.assertAlmostEqual(p10[0], 1.0, delta=0.2)
+        self.assertLess(p90[1], 2.5)
+        self.assertTrue(np.all((p10 <= p50) & (p50 <= p90)))
+
+    def test_outcome_quantiles_survive_inconsistent_probabilities(self):
+        # Separately calibrated probabilities can fail to nest (blank > 1 - return5).
+        p10, p50, p90 = lens.outcome_quantiles(
+            np.array([0.70]), np.array([0.40]), np.array([0.10]),
+            np.array([2.0]), np.array([0.9]), np.array([0.8]),
+        )
+        self.assertTrue(p10[0] <= p50[0] <= p90[0] <= 40.0)
+
     def test_the_prepared_frame_fingerprint_covers_every_feature_module(self):
         imported = {
             "deadline_news", "european_fixtures", "historical_odds",

@@ -41,7 +41,7 @@ misleading output, or wasted resources; **low** means hygiene.
 | 8 | medium | Every page load pulled 2.3 MB of player data, 38% of it research feature vectors the site never reads. | **Fixed**: `view=app` drops them (1.3 MB); the public API default is unchanged. |
 | 9 | medium | The daily job runs as an agent session. Today's run has been waiting since 13:42 on a Bash permission prompt nobody can answer, so on such days the pick is not recorded or scored. | **Open**: needs a permission allow-rule for that task's commands (your decision, not changed here). |
 | 10 | medium | 37 prepared-history caches (0.5 GB each, 18 GB in total) sit in `work/fpl-data`, and only one is current. The folder is inside OneDrive, so all of it syncs. | **Open**: safe to delete all but the current cache; better, move `work/` out of OneDrive. Not deleted without your say-so. |
-| 11 | medium | The per-player P10/P90 is `xPts ± a symmetric residual half-width`, not a quantile. For skewed FPL outcomes it is wrong exactly for premiums (Haaland 4.1–7.9 with a 44% blank chance). | **Open**: the site no longer shows it; derive it from the outcome probabilities or stop publishing it. |
+| 11 | medium | The per-player P10/P90 was `xPts ± a symmetric residual half-width`, not a quantile. For skewed FPL outcomes it was wrong exactly for premiums (Haaland 4.1–7.9 with a 44% blank chance); 45 players had an 8+ chance above 10% but a P90 below 8. | **Fixed**: `outcome_quantiles` builds P10/median/P90 from the probabilities the model already estimates (not playing, under 60 minutes, ≤2, 5+, 8+). Haaland now 0.9 / 3.1 / 14.5; inconsistent players 0. Coverage of the 80% interval on history is 87% (integer points make it slightly wide), against 79% for the old band. |
 | 12 | low | No `requirements.txt`. The pipeline needs numpy 2.4, pandas 3.0, scipy 1.18 (milp) and pyarrow 25; nothing records that. | **Fixed**: `analysis/requirements.txt`. |
 | 13 | low | `/api/research` serves research files frozen on 29 August (Lens 7/8, shadow managers, chip scenarios). | **Open**: nothing on the site uses it; delete the route and files when convenient. |
 | 14 | low | `worker/`, `db/`, `drizzle/` and `app/chatgpt-auth.ts` are hosting-template scaffolding: the D1 binding is null, the schema is empty, nothing imports the auth helper. | **Open**: harmless; keep while the hosting template expects them. |
@@ -58,6 +58,6 @@ misleading output, or wasted resources; **low** means hygiene.
 
 ## Verification
 
-- Engine changes 1, 4, 5 and 6 alter no model number. The full audit and pipeline were re-run with a freshly rebuilt feature cache and must reproduce the published backtest (2,208.1) exactly; see the commit for the result.
+- Engine changes 1, 4, 5, 6 and 11 alter no backtest number. Two full audit + pipeline reruns (the first on a freshly rebuilt feature cache) reproduced the published backtest, 2,208.1, and the frozen audit, 2,141.8, season by season.
 - Python tests: pick log 13/13 (five new autosub and `data_checked` tests); engine contract tests for the chip call and fingerprint coverage.
 - JS: build, `tsc`, eslint and 8/8 node tests.

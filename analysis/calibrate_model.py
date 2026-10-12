@@ -1069,12 +1069,14 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
         data["fixture_count"].clip(lower=1).to_numpy(float)
     )
     data["prediction_half_width_80"] = np.clip(half_width, 0.4, 9.0 * fixture_scale)
-    data["prediction_p10"] = (
-        data["component_xpts"] - data["prediction_half_width_80"]
-    ).clip(lower=0)
-    data["prediction_p90"] = np.minimum(
-        data["component_xpts"] + data["prediction_half_width_80"],
-        25.0 * data["fixture_count"].clip(lower=1),
+    data["prediction_p10"], data["prediction_p90"] = outcome_quantiles(
+        data["blank_probability"].to_numpy(float),
+        data["return5_probability"].to_numpy(float),
+        data["haul8_probability"].to_numpy(float),
+        data["fixture_count"].to_numpy(float),
+        data["play_probability"].to_numpy(float),
+        data["sixty_probability"].to_numpy(float),
+        quantiles=(0.10, 0.90),
     )
     structural_blank = data["fixture_count"].eq(0)
     data.loc[structural_blank, "blank_probability"] = 1.0
@@ -1083,6 +1085,52 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
     data.loc[structural_blank, "prediction_p10"] = 0.0
     data.loc[structural_blank, "prediction_p90"] = 0.0
     return data
+
+
+def outcome_quantiles(
+    blank: np.ndarray,
+    return5: np.ndarray,
+    haul8: np.ndarray,
+    fixture_count: np.ndarray,
+    play: np.ndarray,
+    sixty: np.ndarray,
+    quantiles: tuple[float, ...] = (0.10, 0.50, 0.90),
+) -> list[np.ndarray]:
+    """Points quantiles from the calibrated outcome probabilities.
+
+    The published P10/P90 used to be `xPts ± a symmetric residual band`. FPL
+    points are heavily skewed, so that band missed most outcomes for exactly the
+    players it mattered for: a premium forward with a 44% blank chance was shown
+    as 4.1-7.9. These quantiles come from a piecewise-linear distribution through
+    probabilities the model already estimates: not playing (0 points), playing
+    under 60 minutes (at most 1), P(points <= 2), P(points >= 5) and
+    P(points >= 8), between a floor of -1 and a ceiling of 20 points per fixture.
+    """
+    blank = np.clip(np.asarray(blank, dtype=float), 0.0, 1.0)
+    below5 = np.clip(1.0 - np.asarray(return5, dtype=float), 0.0, 1.0)
+    below8 = np.clip(1.0 - np.asarray(haul8, dtype=float), 0.0, 1.0)
+    absent = np.clip(1.0 - np.asarray(play, dtype=float), 0.0, 1.0)
+    short = np.clip(1.0 - np.asarray(sixty, dtype=float), 0.0, 1.0)
+    ceiling = 20.0 * np.clip(np.asarray(fixture_count, dtype=float), 1.0, None)
+    # Independently estimated probabilities need not nest; force a valid CDF.
+    cdf = np.maximum.accumulate(
+        np.column_stack(
+            [np.zeros_like(blank), absent, short, blank, below5, below8, np.ones_like(blank)]
+        ),
+        axis=1,
+    )
+    anchors = (-1.0, 0.0, 1.0, 2.0, 4.0, 7.0)
+    points = np.column_stack([np.full_like(blank, value) for value in anchors] + [ceiling])
+    results = []
+    for q in quantiles:
+        # First segment whose upper CDF value reaches q, then interpolate in it.
+        upper = np.argmax(cdf >= q - 1e-12, axis=1).clip(1, cdf.shape[1] - 1)
+        rows = np.arange(len(blank))
+        f0, f1 = cdf[rows, upper - 1], cdf[rows, upper]
+        x0, x1 = points[rows, upper - 1], points[rows, upper]
+        share = np.where(f1 > f0, (q - f0) / np.where(f1 > f0, f1 - f0, 1.0), 0.0)
+        results.append(np.clip(x0 + share * (x1 - x0), 0.0, None))
+    return results
 
 
 def calibrate_live_distributions(
@@ -1126,14 +1174,17 @@ def calibrate_live_distributions(
         )
     # The ceiling is a per-match cap, so a Double Gameweek gets a proportionally
     # wider band instead of a truncated one.
-    fixture_ceiling = 25.0 * current["fixture_count"].clip(lower=1)
-    current["prediction_p10"] = (
-        current["raw_projection"] - current["prediction_half_width_80"]
-    ).clip(lower=0)
-    current["prediction_p50"] = current["raw_projection"]
-    current["prediction_p90"] = np.minimum(
-        current["raw_projection"] + current["prediction_half_width_80"],
-        fixture_ceiling,
+    (
+        current["prediction_p10"],
+        current["prediction_p50"],
+        current["prediction_p90"],
+    ) = outcome_quantiles(
+        current["blank_probability"].to_numpy(float),
+        current["return5_probability"].to_numpy(float),
+        current["haul8_probability"].to_numpy(float),
+        current["fixture_count"].to_numpy(float),
+        current["play_probability"].to_numpy(float),
+        current["sixty_probability"].to_numpy(float),
     )
     return current
 
