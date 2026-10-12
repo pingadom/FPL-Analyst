@@ -1,5 +1,6 @@
 import results from "../../data/model-results.json";
 import currentPlayers from "../../data/current-players.json";
+import { BOOTSTRAP_TTL_MS, BOOTSTRAP_URL, officialJson } from "../../lib/fpl-api";
 
 type BootstrapTeam = { id: number; name: string; short_name: string };
 type BootstrapEvent = { id: number; deadline_time: string; is_next: boolean; finished: boolean };
@@ -13,16 +14,6 @@ type OfficialFixture = {
 };
 
 const HORIZON = 6;
-
-async function officialJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
-    headers: { "User-Agent": "FPL-Lens/8.0" },
-    cache: "no-store",
-    signal: AbortSignal.timeout(8_000),
-  });
-  if (!response.ok) throw new Error(`Official FPL API returned ${response.status}`);
-  return response.json() as Promise<T>;
-}
 
 // The model's own view of each club, taken from any of its players: attack and
 // defence ranks are league-wide (1 = strongest).
@@ -42,10 +33,11 @@ function modelTeamRatings() {
 export async function GET() {
   try {
     const [bootstrap, fixtures] = await Promise.all([
-      officialJson<{ teams: BootstrapTeam[]; events: BootstrapEvent[] }>(
-        "https://fantasy.premierleague.com/api/bootstrap-static/",
+      officialJson<{ teams: BootstrapTeam[]; events: BootstrapEvent[] }>(BOOTSTRAP_URL, BOOTSTRAP_TTL_MS),
+      officialJson<OfficialFixture[]>(
+        "https://fantasy.premierleague.com/api/fixtures/?future=1",
+        5 * 60_000,
       ),
-      officialJson<OfficialFixture[]>("https://fantasy.premierleague.com/api/fixtures/?future=1"),
     ]);
     const next =
       bootstrap.events.find((event) => event.is_next)?.id ?? results.headline.gameweek;

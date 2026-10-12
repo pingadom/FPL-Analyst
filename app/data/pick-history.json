@@ -165,12 +165,23 @@
       "scored": true,
       "provenance": "backfilled from 5f8c5ef3, committed 2026-08-26T17:41+01:00",
       "realised": {
-        "xiPoints": 59,
+        "xiPoints": 74,
         "captainBonus": 23,
-        "total": 82,
-        "benchPoints": 15,
+        "total": 97,
+        "benchPoints": 0,
+        "chip": null,
         "startersWhoDidNotPlay": 3,
-        "note": "autosubs not simulated; bench order is not recorded"
+        "autosubs": [
+          {
+            "out": "Senesi",
+            "in": "Groß"
+          },
+          {
+            "out": "Hinshelwood",
+            "in": "Justin"
+          }
+        ],
+        "note": "FPL automatic substitutions applied with the bench in benchOrder"
       }
     },
     {
@@ -336,12 +347,19 @@
       ],
       "scored": true,
       "realised": {
-        "xiPoints": 35,
+        "xiPoints": 43,
         "captainBonus": 9,
-        "total": 44,
-        "benchPoints": 13,
+        "total": 52,
+        "benchPoints": 5,
+        "chip": null,
         "startersWhoDidNotPlay": 1,
-        "note": "autosubs not simulated; bench order is not recorded"
+        "autosubs": [
+          {
+            "out": "Watkins",
+            "in": "Mendy"
+          }
+        ],
+        "note": "FPL automatic substitutions applied with the bench in benchOrder"
       }
     },
     {

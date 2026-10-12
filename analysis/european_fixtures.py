@@ -34,6 +34,7 @@ have.
 from __future__ import annotations
 
 import re
+import sys
 import urllib.request
 from datetime import date, timedelta
 from pathlib import Path
@@ -216,7 +217,13 @@ def load_european_matches(
                 continue
             try:
                 payload = _download(season, competition)
-            except Exception:
+            except Exception as error:
+                # The data is cached after the first download, so this only fires
+                # on a fresh checkout; it changes the congestion features, so say so.
+                print(
+                    f"European fixtures unavailable for {season} {competition}: {error}",
+                    file=sys.stderr,
+                )
                 continue
             for match_date, key, _ in parse(payload, season):
                 records.append(

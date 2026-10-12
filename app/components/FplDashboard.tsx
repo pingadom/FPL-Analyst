@@ -53,7 +53,7 @@ export default function FplDashboard() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch("/api/projections?limit=1000", { signal: controller.signal })
+    fetch("/api/projections?limit=1000&view=app", { signal: controller.signal })
       .then((response) => {
         if (!response.ok) throw new Error(`Projection API returned ${response.status}`);
         return response.json() as Promise<{ players: Player[]; availabilitySource: string }>;
