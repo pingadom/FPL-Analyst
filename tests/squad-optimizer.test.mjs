@@ -66,10 +66,40 @@ test("joint optimiser spends the initial budget on the XI and captain", () => {
     haaland.projected >= Math.max(...scored.map((player) => player.projected)) - 0.2,
     "an available premium talisman should remain near the top of the immediate forecast",
   );
-  assert.deepEqual(
-    selection.squad.map((player) => player.id).toSorted((a, b) => a - b),
-    results.squad.map((player) => player.id).toSorted((a, b) => a - b),
-    "the untouched calibrated preset must reproduce the generated Python squad",
-  );
-  assert.equal(selection.captain.id, results.squad.find((player) => player.captain).id);
+  // A fresh build can only reproduce the published squad when that squad was
+  // itself built fresh. In persistent mode the published squad is the model's
+  // team carried over from last week plus its transfers, which no fresh optimum
+  // has to match.
+  if (results.headline.teamMode !== "persistent") {
+    assert.deepEqual(
+      selection.squad.map((player) => player.id).toSorted((a, b) => a - b),
+      results.squad.map((player) => player.id).toSorted((a, b) => a - b),
+      "the untouched calibrated preset must reproduce the generated Python squad",
+    );
+    assert.equal(selection.captain.id, results.squad.find((player) => player.captain).id);
+  }
+});
+
+test("planner options: locked players are kept, excluded ones are not, and the budget binds", () => {
+  const scored = players.map((player) => ({
+    ...player,
+    liveScore: player.strategyScores.balanced,
+    optimizerUtility: player.sixWeekProjected / 6,
+  }));
+  // A cheap squad player the frontier presolve would normally drop.
+  const cheap = scored
+    .filter((player) => player.position === "DEF")
+    .toSorted((a, b) => a.sixWeekProjected - b.sixWeekProjected)[0];
+  const best = buildOptimizedSquad(scored, { allowStrategicBank: true });
+  const banned = best.captain;
+  const selection = buildOptimizedSquad(scored, {
+    budget: 95,
+    lockedIds: [cheap.id],
+    excludedIds: [banned.id],
+    allowStrategicBank: true,
+  });
+  assert.ok(selection.squad.some((player) => player.id === cheap.id), "locked player missing");
+  assert.ok(!selection.squad.some((player) => player.id === banned.id), "excluded player selected");
+  assert.ok(selection.spend <= 95 + 1e-6, `spend ${selection.spend} exceeds the budget`);
+  assert.throws(() => buildOptimizedSquad(scored, { budget: 60, allowStrategicBank: true }));
 });

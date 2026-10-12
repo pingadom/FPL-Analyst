@@ -45,12 +45,12 @@ def player(element: int, starter: bool, **flags) -> dict:
     return {
         "id": element,
         "name": f"P{element}",
-        "position": "MID",
+        "position": flags.get("position", "MID"),
         "price": 5.0,
         "starter": starter,
         "captain": flags.get("captain", False),
         "vice": flags.get("vice", False),
-        "projected": 4.0,
+        "projected": flags.get("projected", 4.0),
     }
 
 
@@ -96,17 +96,67 @@ class PickHistoryScoringTests(unittest.TestCase):
         # A captain with no minutes scores nothing and the armband moves, which is
         # the actual FPL rule rather than a silent zero.
         self.assertEqual(realised["captainBonus"], 6)
-        self.assertEqual(realised["total"], 6 + 6)
+        # The absent captain is also autosubbed: the bench player's 2 counts.
+        self.assertEqual(realised["total"], 6 + 6 + 2)
 
-    def test_a_blanking_starter_is_counted_not_substituted(self):
+    def test_a_starter_who_did_not_play_is_replaced_from_the_bench(self):
         players = [player(1, True), player(2, True), player(3, False)]
         realised = self._score(players, {1: (0, 0), 2: (5, 90), 3: (9, 90)})
         self.assertEqual(realised["startersWhoDidNotPlay"], 1)
-        # Autosubs are not simulated, so the bench nine stays on the bench and the
-        # total is a floor. Silently promoting it would invent a result.
-        self.assertEqual(realised["total"], 5)
-        self.assertEqual(realised["benchPoints"], 9)
-        self.assertIn("autosub", realised["note"])
+        # FPL brings the first bench player who played on, as the real game does.
+        self.assertEqual(realised["total"], 5 + 9)
+        self.assertEqual(realised["benchPoints"], 0)
+        self.assertEqual(realised["autosubs"], [{"out": "P1", "in": "P3"}])
+
+    def test_bench_players_who_did_not_play_are_skipped_in_order(self):
+        players = [
+            player(1, True),
+            player(2, True),
+            player(3, False, projected=6.0),
+            player(4, False, projected=3.0),
+        ]
+        realised = self._score(players, {1: (0, 0), 2: (5, 90), 3: (0, 0), 4: (2, 30)})
+        self.assertEqual(realised["autosubs"], [{"out": "P1", "in": "P4"}])
+        self.assertEqual(realised["total"], 5 + 2)
+
+    def test_a_substitution_cannot_break_the_minimum_formation(self):
+        defenders = [player(10 + i, True, position="DEF") for i in range(3)]
+        players = [
+            player(1, True, position="GK"),
+            *defenders,
+            player(2, True),
+            player(3, True),
+            player(4, True, position="FWD"),
+            player(5, False, position="MID", projected=6.0),  # first on the bench
+            player(6, False, position="DEF", projected=2.0),
+        ]
+        points = {pid: (2, 90) for pid in (1, 2, 3, 4, 11, 12)}
+        points.update({10: (0, 0), 5: (8, 90), 6: (1, 90)})
+        realised = self._score(players, points)
+        # Only three defenders started, so the defender must come on, not the midfielder.
+        self.assertEqual(realised["autosubs"], [{"out": "P10", "in": "P6"}])
+
+    def test_a_goalkeeper_is_only_replaced_by_a_goalkeeper(self):
+        players = [
+            player(1, True, position="GK"),
+            player(2, True),
+            player(3, False, position="GK", projected=1.0),
+            player(4, False, projected=9.0),
+        ]
+        realised = self._score(players, {1: (0, 0), 2: (5, 90), 3: (3, 90), 4: (7, 90)})
+        self.assertEqual(realised["autosubs"], [{"out": "P1", "in": "P3"}])
+        self.assertEqual(realised["total"], 5 + 3)
+
+    def test_a_gameweek_is_not_scored_until_fpl_confirms_the_points(self):
+        players = [player(1, True, captain=True)]
+        history = {"schemaVersion": 1, "entries": [entry(players, 5)]}
+        with mock.patch.object(pick_history, "load_history", return_value=history),              mock.patch.object(pick_history, "save_history", lambda payload: None),              mock.patch.object(
+                 pick_history,
+                 "_get",
+                 return_value={"events": [{"id": 5, "finished": True, "data_checked": False}]},
+             ):
+            pick_history.score()
+        self.assertFalse(history["entries"][0]["scored"])
 
     def _score_with_chip(self, chip, players, points):
         history = {"schemaVersion": 1, "entries": [dict(entry(players, 5), chip=chip)]}

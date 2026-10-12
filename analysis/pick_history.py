@@ -59,6 +59,58 @@ def save_history(history: dict) -> None:
     )
 
 
+# FPL's minimum outfield shape after automatic substitutions.
+FORMATION_MINIMUM = {"GK": 1, "DEF": 3, "MID": 2, "FWD": 1}
+
+
+def bench_order(players: list[dict]) -> list[int]:
+    """Bench in autosub order: goalkeeper first, then outfield by projection.
+
+    The model does not choose a bench order of its own, so this is the order the
+    site shows and the one a manager following it would set.
+    """
+    bench = [p for p in players if not p.get("starter")]
+    keepers = [p for p in bench if p.get("position") == "GK"]
+    outfield = sorted(
+        (p for p in bench if p.get("position") != "GK"),
+        key=lambda p: -float(p.get("projected") or 0.0),
+    )
+    return [int(p["id"]) for p in keepers + outfield]
+
+
+def apply_autosubs(
+    starters: list[dict], bench: list[dict], minutes: dict[int, int]
+) -> tuple[list[dict], list[tuple[int, int]]]:
+    """FPL automatic substitutions: returns the scoring XI and (out, in) pairs.
+
+    A starter with no minutes is replaced by the first bench player, in order, who
+    played and keeps the formation legal; a goalkeeper only by the bench keeper.
+    """
+    xi = list(starters)
+    used: set[int] = set()
+    swaps: list[tuple[int, int]] = []
+    for absent in [p for p in starters if minutes.get(int(p["id"]), 0) == 0]:
+        for candidate in bench:
+            cid = int(candidate["id"])
+            if cid in used or minutes.get(cid, 0) == 0:
+                continue
+            if (absent["position"] == "GK") != (candidate["position"] == "GK"):
+                continue
+            # A like-for-like swap is always legal; otherwise the absent player's
+            # line must keep its minimum without him.
+            if candidate["position"] != absent["position"]:
+                remaining = sum(
+                    1 for p in xi if p is not absent and p["position"] == absent["position"]
+                )
+                if remaining < FORMATION_MINIMUM.get(absent["position"], 0):
+                    continue
+            xi = [p for p in xi if p is not absent] + [candidate]
+            used.add(cid)
+            swaps.append((int(absent["id"]), cid))
+            break
+    return xi, swaps
+
+
 def record(now: datetime | None = None) -> dict:
     """Append this deadline's squad. Re-running before the deadline refreshes it."""
     artifact = json.loads(ARTIFACT.read_text(encoding="utf-8-sig"))
@@ -113,6 +165,7 @@ def record(now: datetime | None = None) -> dict:
         ],
         "scored": False,
     }
+    entry["benchOrder"] = bench_order(entry["players"])
     if headline.get("bank") is not None:
         entry["bank"] = int(headline["bank"])
         entry["freeTransfersNext"] = int(headline.get("freeTransfersNext", 1))
@@ -214,22 +267,29 @@ def backfill(commit: str) -> None:
     print(f"  provenance: {entry_note}")
 
 
-def score() -> None:
-    """Score every recorded Gameweek that has since finished."""
+def score(rescore: bool = False) -> None:
+    """Score every recorded Gameweek whose points FPL has confirmed.
+
+    `rescore` recomputes already-scored weeks from FPL's data with the current
+    scoring rules; the recorded picks themselves are never changed.
+    """
     history = load_history()
     if not history["entries"]:
         print("Nothing recorded yet")
         return
     bootstrap = _get(BOOTSTRAP)
+    # `finished` turns true after the last match, before bonus points are
+    # confirmed; `data_checked` marks the final numbers. Scoring is one-way, so
+    # wait for the final ones.
     finished = {
         int(event["id"])
         for event in bootstrap["events"]
-        if bool(event.get("finished"))
+        if bool(event.get("data_checked", event.get("finished")))
     }
     live_cache: dict[int, dict[int, dict]] = {}
     updated = 0
     for entry in history["entries"]:
-        if entry.get("scored") or entry["gameweek"] not in finished:
+        if (entry.get("scored") and not rescore) or entry["gameweek"] not in finished:
             continue
         gameweek = int(entry["gameweek"])
         if gameweek not in live_cache:
@@ -240,7 +300,9 @@ def score() -> None:
         live = live_cache[gameweek]
 
         starters = [p for p in entry["players"] if p["starter"]]
-        bench = [p for p in entry["players"] if not p["starter"]]
+        by_id = {int(p["id"]): p for p in entry["players"]}
+        order = entry.get("benchOrder") or bench_order(entry["players"])
+        bench = [by_id[i] for i in order if i in by_id]
         captain_id = next(
             (int(p["id"]) for p in entry["players"] if p.get("captain")), None
         )
@@ -253,7 +315,13 @@ def score() -> None:
             row = live.get(int(player["id"]))
             return int(((row or {}).get("stats") or {}).get("minutes", 0))
 
-        xi_points = sum(points_for(p) for p in starters)
+        chip = entry.get("chip")
+        minutes = {int(p["id"]): minutes_for(p) for p in entry["players"]}
+        # Bench Boost scores all fifteen, so nobody is substituted.
+        scoring_xi, swaps = (
+            (starters, []) if chip == "Bench Boost" else apply_autosubs(starters, bench, minutes)
+        )
+        xi_points = sum(points_for(p) for p in scoring_xi)
         captain_bonus = 0
         if captain_id is not None:
             captain = next(
@@ -267,8 +335,9 @@ def score() -> None:
                 )
                 if vice is not None and minutes_for(vice) > 0:
                     captain_bonus = points_for(vice)
-        chip = entry.get("chip")
-        bench_points = sum(points_for(p) for p in bench)
+        # Points left on the bench: everyone not brought into the scoring XI.
+        scoring_ids = {int(p["id"]) for p in scoring_xi}
+        bench_points = sum(points_for(p) for p in bench if int(p["id"]) not in scoring_ids)
         if chip == "Triple Captain":
             captain_bonus *= 2
         total = xi_points + captain_bonus + (bench_points if chip == "Bench Boost" else 0)
@@ -279,7 +348,10 @@ def score() -> None:
             "benchPoints": bench_points,
             "chip": chip,
             "startersWhoDidNotPlay": sum(1 for p in starters if minutes_for(p) == 0),
-            "note": "autosubs not simulated; bench order is not recorded",
+            "autosubs": [
+                {"out": by_id[out]["name"], "in": by_id[sub]["name"]} for out, sub in swaps
+            ],
+            "note": "FPL automatic substitutions applied with the bench in benchOrder",
         }
         entry["scored"] = True
         updated += 1
@@ -343,6 +415,11 @@ def main() -> None:
     parser.add_argument("--score", action="store_true", help="Score finished Gameweeks.")
     parser.add_argument("--report", action="store_true", help="Print the running table.")
     parser.add_argument(
+        "--rescore",
+        action="store_true",
+        help="Recompute already-scored Gameweeks with the current scoring rules.",
+    )
+    parser.add_argument(
         "--backfill",
         metavar="COMMIT",
         help="Record a past artifact, if it was committed before its deadline.",
@@ -351,8 +428,8 @@ def main() -> None:
     if arguments.backfill:
         backfill(arguments.backfill)
         report()
-    elif arguments.score:
-        score()
+    elif arguments.score or arguments.rescore:
+        score(rescore=arguments.rescore)
         report()
     elif arguments.report:
         report()
