@@ -1,5 +1,6 @@
 import results from "../../../data/model-results.json";
 import currentPlayers from "../../../data/current-players.json";
+import { BOOTSTRAP_TTL_MS, BOOTSTRAP_URL, officialJson } from "../../../lib/fpl-api";
 
 type EntrySummary = {
   id: number;
@@ -50,16 +51,6 @@ function estimateFreeTransfers(
   return ordered.length ? free : 1;
 }
 
-async function officialJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
-    headers: { "User-Agent": "FPL-Lens/7.0" },
-    cache: "no-store",
-    signal: AbortSignal.timeout(8_000),
-  });
-  if (!response.ok) throw new Error(`Official FPL API returned ${response.status}`);
-  return response.json() as Promise<T>;
-}
-
 export async function GET(
   _request: Request,
   context: { params: Promise<{ entry: string }> },
@@ -79,9 +70,7 @@ export async function GET(
         total_players: number;
         elements: Array<{ id: number; web_name: string; team: number; element_type: number; now_cost: number }>;
         teams: Array<{ id: number; short_name: string }>;
-      }>(
-        "https://fantasy.premierleague.com/api/bootstrap-static/",
-      ),
+      }>(BOOTSTRAP_URL, BOOTSTRAP_TTL_MS),
     ]);
 
     const latestFinished = history.current.at(-1)?.event ?? 0;

@@ -1,5 +1,6 @@
 import results from "../../data/model-results.json";
 import currentPlayers from "../../data/current-players.json";
+import { BOOTSTRAP_TTL_MS, BOOTSTRAP_URL, officialJson } from "../../lib/fpl-api";
 
 type BootstrapElement = {
   id: number;
@@ -27,12 +28,10 @@ function resolvedOfficialChance(player: BootstrapElement) {
 async function deadlineAvailabilityOverlay() {
   const players = structuredClone(currentPlayers);
   try {
-    const response = await fetch("https://fantasy.premierleague.com/api/bootstrap-static/", {
-      cache: "no-store",
-      headers: { "User-Agent": "FPL-Lens/8.0" },
-    });
-    if (!response.ok) throw new Error(`Official FPL API returned ${response.status}`);
-    const bootstrap = (await response.json()) as { elements: BootstrapElement[] };
+    const bootstrap = await officialJson<{ elements: BootstrapElement[] }>(
+      BOOTSTRAP_URL,
+      BOOTSTRAP_TTL_MS,
+    );
     const official = new Map(bootstrap.elements.map((player) => [player.id, player]));
     for (const player of players) {
       const latest = official.get(player.id);
@@ -99,7 +98,8 @@ async function deadlineAvailabilityOverlay() {
         player.components[key] = Number((player.components[key] * projectionRatio).toFixed(2));
       }
       player.distribution.p10 = Number((player.distribution.p10 * projectionRatio).toFixed(1));
-      player.distribution.median = player.projected;
+      // The median is a quantile of the points distribution, not expected points.
+      player.distribution.median = Number((player.distribution.median * projectionRatio).toFixed(1));
       player.distribution.p90 = Number((player.distribution.p90 * projectionRatio).toFixed(1));
       player.distribution.standardDeviation = Number(
         (player.distribution.standardDeviation * projectionRatio).toFixed(2),
@@ -150,9 +150,19 @@ export async function GET(request: Request) {
   const limit = Number.isFinite(requestedLimit)
     ? Math.min(live.players.length, Math.max(1, Math.floor(requestedLimit)))
     : 100;
+  // `view=app` drops the research feature vectors the site never reads (about
+  // 40% of the payload); the default stays the full public record.
+  const compact = url.searchParams.get("view") === "app";
   const players = live.players
     .filter((player) => !position || player.position === position)
-    .slice(0, limit);
+    .slice(0, limit)
+    .map((player) => {
+      if (!compact) return player;
+      const rest: Partial<typeof player> = { ...player };
+      delete rest.researchFeatures;
+      delete rest.features;
+      return rest;
+    });
 
   return Response.json(
     {

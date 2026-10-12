@@ -804,7 +804,7 @@ AUDITED_POLICY_FRAME_COLUMNS = (
 AUDITED_POLICY_ENGINE_FILES = (
     "analysis/calibrate_model.py",
     "analysis/audited_policy_validation.py",
-    "analysis/domestic_cups.py",
+    "analysis/deadline_news.py",
     "analysis/european_fixtures.py",
     "analysis/historical_odds.py",
     "analysis/team_identity.py",
@@ -4335,17 +4335,86 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     return data
 
 
+# Every source file whose code can change a value in the prepared frame.
+PREPARED_HISTORY_SOURCE_FILES = (
+    "analysis/calibrate_model.py",
+    "analysis/deadline_news.py",
+    "analysis/european_fixtures.py",
+    "analysis/historical_odds.py",
+    "analysis/team_identity.py",
+    "analysis/understat_history.py",
+)
+
+
+def prepared_history_source_fingerprint() -> str:
+    """Hash of the code that builds the prepared frame.
+
+    The cache used to be trusted whenever its season list matched, so a change to
+    feature code that was not accompanied by a hand-renamed cache file silently
+    replayed the old features. Storing this hash with the frame makes any such
+    change rebuild it instead.
+    """
+    digest = hashlib.sha256()
+    for relative in PREPARED_HISTORY_SOURCE_FILES:
+        digest.update(relative.encode("utf-8"))
+        digest.update((ROOT / relative).read_bytes())
+    return digest.hexdigest()
+
+
+def current_chip_call(headline: dict) -> dict:
+    """This deadline's chip decision, from the live recommendation itself.
+
+    This block used to be a fixed "Hold" with fixed wording, written by the full
+    run and never touched by the daily refresh, so it could contradict the chip
+    the model was actually playing.
+    """
+    chip = headline.get("chip")
+    signals = headline.get("chipSignals") or {}
+    if chip:
+        detail = signals.get(chip) or {}
+        reason = (
+            f"Worth {detail['signal']:.1f} against a bar of {detail['threshold']:.1f}."
+            if "signal" in detail
+            else "Clears its bar this week."
+        )
+    elif signals:
+        closest = max(
+            signals.items(),
+            key=lambda item: item[1]["signal"] / max(item[1]["threshold"], 1e-9),
+        )
+        reason = (
+            f"No chip clears its bar; the closest is {closest[0]} at "
+            f"{closest[1]['signal']:.1f} against {closest[1]['threshold']:.1f}."
+        )
+    else:
+        reason = "No chip is available this week."
+    return {
+        "chip": chip or "Hold",
+        "gameweek": headline.get("gameweek"),
+        "reason": reason,
+        "nextReview": "Re-scored at every refresh before the deadline.",
+    }
+
+
 def load_or_build_prepared_history(
     force: bool = False,
 ) -> tuple[pd.DataFrame, list[dict]]:
     """Reuse the deterministic historical feature table across experiment runs."""
     CACHE.mkdir(parents=True, exist_ok=True)
+    source = prepared_history_source_fingerprint()
     if PREPARED_HISTORY_CACHE.exists() and not force:
         payload = pd.read_pickle(PREPARED_HISTORY_CACHE)
         data = payload["data"]
         summaries = payload["summaries"]
-        if list(dict.fromkeys(data["season"].tolist())) == SEASONS:
+        if (
+            list(dict.fromkeys(data["season"].tolist())) == SEASONS
+            and payload.get("source") == source
+        ):
             return data, summaries
+        print(
+            "Prepared-history cache was built by different feature code; rebuilding",
+            file=sys.stderr,
+        )
     ages = load_age_register()
     nationalities = load_nationality_register()
     frames: list[pd.DataFrame] = []
@@ -4357,7 +4426,7 @@ def load_or_build_prepared_history(
         print(f"Prepared {season}: {summary['eligibleRows']:,} eligible player-weeks")
     data = prepare_causal_history(frames)
     temporary = PREPARED_HISTORY_CACHE.with_suffix(".tmp")
-    pd.to_pickle({"data": data, "summaries": summaries}, temporary)
+    pd.to_pickle({"data": data, "summaries": summaries, "source": source}, temporary)
     temporary.replace(PREPARED_HISTORY_CACHE)
     return data, summaries
 
@@ -11936,12 +12005,7 @@ def main() -> None:
                 }
                 for stat in walk_forward
             ],
-            "current": {
-                "chip": "Hold",
-                "gameweek": headline["gameweek"],
-                "reason": "Single-Gameweek slate and a freshly optimised squad. Preserve the first-half chips for a larger fixture or availability edge.",
-                "nextReview": "Re-score after every deadline; blank clashes, double fixtures, injuries and rotation are explicit triggers.",
-            },
+            "current": current_chip_call(headline),
             "rules": "Two of each chip: one set through GW19 and one from GW20, with one chip permitted per Gameweek.",
         },
         "expertTests": expert_tests,
@@ -12182,6 +12246,8 @@ def refresh_current_artifact() -> None:
             "currentMeta": current_meta,
         }
     )
+    if isinstance(result.get("chipStrategy"), dict):
+        result["chipStrategy"]["current"] = current_chip_call(headline)
     PLAYERS_OUTPUT.write_text(
         json.dumps(all_players, ensure_ascii=False, separators=(",", ":")),
         encoding="utf-8",

@@ -1183,5 +1183,35 @@ class ModelEngineTests(unittest.TestCase):
         self.assertTrue(all(tier < 21 for tier in tiers))
 
 
+class OperationalContractTests(unittest.TestCase):
+    """Small guarantees the site and the daily job depend on."""
+
+    def test_the_chip_call_follows_the_live_decision(self):
+        signals = {
+            "Bench Boost": {"signal": 10.6, "threshold": 13.5, "structural": False},
+            "Free Hit": {"signal": -4.4, "threshold": 21.0, "structural": False},
+        }
+        held = lens.current_chip_call({"gameweek": 7, "chip": None, "chipSignals": signals})
+        self.assertEqual(held["chip"], "Hold")
+        self.assertIn("Bench Boost", held["reason"])
+        played = lens.current_chip_call(
+            {"gameweek": 8, "chip": "Bench Boost", "chipSignals": {"Bench Boost": {"signal": 15.0, "threshold": 12.0}}}
+        )
+        self.assertEqual((played["chip"], played["gameweek"]), ("Bench Boost", 8))
+        self.assertIn("15.0", played["reason"])
+
+    def test_the_prepared_frame_fingerprint_covers_every_feature_module(self):
+        imported = {
+            "deadline_news", "european_fixtures", "historical_odds",
+            "team_identity", "understat_history",
+        }
+        covered = {Path(name).stem for name in lens.PREPARED_HISTORY_SOURCE_FILES}
+        self.assertTrue(imported <= covered, imported - covered)
+        self.assertEqual(len(lens.prepared_history_source_fingerprint()), 64)
+        # Every engine file the frozen audit fingerprints must exist and be imported.
+        for relative in lens.AUDITED_POLICY_ENGINE_FILES:
+            self.assertTrue((lens.ROOT / relative).exists(), relative)
+
+
 if __name__ == "__main__":
     unittest.main()
