@@ -20,6 +20,11 @@ the unevenness matters:
 
 * Champions League: every season from 2016/17. Consistent.
 * Europa League: 2020/21 onward. Conference League: 2021/22 onward.
+* 2026/27, the live season, is not in openfootball at all. It comes from
+  fixturedownload.com's free JSON feeds instead (all three competitions), which
+  carry kickoff times but no country codes, so English clubs are picked out by
+  name. Knockout ties appear there once they are drawn, so this season's files
+  are refreshed daily rather than cached for good.
 
 So a Europa club in 2017/18 is invisible here and its congested weeks look free.
 That biases any *estimate* toward zero rather than inventing an effect, so a
@@ -33,9 +38,11 @@ have.
 
 from __future__ import annotations
 
+import json
 import re
+import sys
 import urllib.request
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import numpy as np
@@ -67,8 +74,28 @@ SEASON_COMPETITIONS: dict[str, tuple[str, ...]] = {
     "2023-24": ("cl", "el", "conf"),
     "2024-25": ("cl", "el", "conf"),
     "2025-26": ("cl",),
-    "2026-27": ("cl",),
+    "2026-27": ("cl", "el", "conf"),
 }
+
+# Seasons served by fixturedownload.com rather than openfootball.
+FIXTUREDOWNLOAD_FEEDS: dict[tuple[str, str], str] = {
+    ("2026-27", "cl"): "champions-league-2026",
+    ("2026-27", "el"): "europa-league-2026",
+    ("2026-27", "conf"): "conference-league-2026",
+}
+FIXTUREDOWNLOAD_BASE = "https://fixturedownload.com/feed/json"
+LIVE_FEED_MAX_AGE = timedelta(hours=24)
+
+# Without country codes, an English club is one of these keys. Every club in the
+# Premier League from 2016/17 on, after `club_key`.
+ENGLISH_CLUB_KEYS = frozenset({
+    "arsenal", "astonvilla", "bournemouth", "brentford", "brighton", "burnley",
+    "cardiff", "chelsea", "coventry", "crystalpalace", "everton", "fulham",
+    "huddersfield", "hull", "ipswich", "leeds", "leicester", "liverpool", "luton",
+    "mancity", "manutd", "middlesbrough", "newcastle", "norwich", "nottmforest",
+    "sheffieldunited", "southampton", "spurs", "stoke", "sunderland", "swansea",
+    "watford", "westbrom", "westham", "wolves",
+})
 
 # The source writes full club names; the model keys on FPL's short ones. Only the
 # clubs that differ after "FC"/"AFC" is stripped need an entry here.
@@ -128,6 +155,53 @@ def _download(season: str, competition: str) -> str:
         payload = response.read().decode("utf-8", errors="replace")
     target.write_text(payload, encoding="utf-8")
     return payload
+
+
+def _download_fixturedownload(season: str, competition: str) -> str:
+    """The season's feed, re-fetched once a day; the cached copy if that fails."""
+    EUROPEAN_CACHE.mkdir(parents=True, exist_ok=True)
+    target = EUROPEAN_CACHE / f"{season}-{competition}.json"
+    fresh = (
+        target.exists()
+        and target.stat().st_size > 0
+        and datetime.now().timestamp() - target.stat().st_mtime
+        < LIVE_FEED_MAX_AGE.total_seconds()
+    )
+    if fresh:
+        return target.read_text(encoding="utf-8")
+    request = urllib.request.Request(
+        f"{FIXTUREDOWNLOAD_BASE}/{FIXTUREDOWNLOAD_FEEDS[(season, competition)]}",
+        headers={"User-Agent": "FPL-Lens/1.0"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            payload = response.read().decode("utf-8")
+        json.loads(payload)  # never cache a truncated or error page
+    except Exception:
+        if target.exists() and target.stat().st_size > 0:
+            print(
+                f"European fixtures for {season} {competition}: refresh failed, using cached copy",
+                file=sys.stderr,
+            )
+            return target.read_text(encoding="utf-8")
+        raise
+    target.write_text(payload, encoding="utf-8")
+    return payload
+
+
+def parse_fixturedownload(payload: str) -> list[tuple[date, str]]:
+    """(date, club key) for every English club in a fixturedownload.com feed."""
+    rows: list[tuple[date, str]] = []
+    for match in json.loads(payload):
+        stamp = str(match.get("DateUtc") or "")[:10]
+        if not stamp:
+            continue
+        when = date.fromisoformat(stamp)
+        for side in ("HomeTeam", "AwayTeam"):
+            key = club_key(match.get(side) or "")
+            if key in ENGLISH_CLUB_KEYS:
+                rows.append((when, key))
+    return rows
 
 
 def _anchor_date(payload: str, start_year: int) -> date:
@@ -215,8 +289,27 @@ def load_european_matches(
             if competition not in available:
                 continue
             try:
+                if (season, competition) in FIXTUREDOWNLOAD_FEEDS:
+                    for match_date, key in parse_fixturedownload(
+                        _download_fixturedownload(season, competition)
+                    ):
+                        records.append(
+                            {
+                                "season": season,
+                                "club": key,
+                                "date": pd.Timestamp(match_date),
+                                "competition": competition,
+                            }
+                        )
+                    continue
                 payload = _download(season, competition)
-            except Exception:
+            except Exception as error:
+                # The data is cached after the first download, so this only fires
+                # on a fresh checkout; it changes the congestion features, so say so.
+                print(
+                    f"European fixtures unavailable for {season} {competition}: {error}",
+                    file=sys.stderr,
+                )
                 continue
             for match_date, key, _ in parse(payload, season):
                 records.append(

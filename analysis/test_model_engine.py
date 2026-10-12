@@ -1183,5 +1183,60 @@ class ModelEngineTests(unittest.TestCase):
         self.assertTrue(all(tier < 21 for tier in tiers))
 
 
+class OperationalContractTests(unittest.TestCase):
+    """Small guarantees the site and the daily job depend on."""
+
+    def test_the_chip_call_follows_the_live_decision(self):
+        signals = {
+            "Bench Boost": {"signal": 10.6, "threshold": 13.5, "structural": False},
+            "Free Hit": {"signal": -4.4, "threshold": 21.0, "structural": False},
+        }
+        held = lens.current_chip_call({"gameweek": 7, "chip": None, "chipSignals": signals})
+        self.assertEqual(held["chip"], "Hold")
+        self.assertIn("Bench Boost", held["reason"])
+        played = lens.current_chip_call(
+            {"gameweek": 8, "chip": "Bench Boost", "chipSignals": {"Bench Boost": {"signal": 15.0, "threshold": 12.0}}}
+        )
+        self.assertEqual((played["chip"], played["gameweek"]), ("Bench Boost", 8))
+        self.assertIn("15.0", played["reason"])
+
+    def test_outcome_quantiles_follow_the_skewed_points_distribution(self):
+        p10, p50, p90 = lens.outcome_quantiles(
+            np.array([0.44, 0.95]),  # blank: premium forward, bench fodder
+            np.array([0.45, 0.01]),  # 5+
+            np.array([0.24, 0.00]),  # 8+
+            np.array([1.0, 1.0]),
+            np.array([0.96, 0.10]),  # plays
+            np.array([0.89, 0.05]),  # 60+
+        )
+        # A premium with a 24% haul chance has a good week well above 8, and a
+        # median below his mean: the old symmetric band put P90 at 7.9.
+        self.assertGreater(p90[0], 12.0)
+        self.assertLess(p50[0], 4.0)
+        self.assertAlmostEqual(p10[0], 1.0, delta=0.2)
+        self.assertLess(p90[1], 2.5)
+        self.assertTrue(np.all((p10 <= p50) & (p50 <= p90)))
+
+    def test_outcome_quantiles_survive_inconsistent_probabilities(self):
+        # Separately calibrated probabilities can fail to nest (blank > 1 - return5).
+        p10, p50, p90 = lens.outcome_quantiles(
+            np.array([0.70]), np.array([0.40]), np.array([0.10]),
+            np.array([2.0]), np.array([0.9]), np.array([0.8]),
+        )
+        self.assertTrue(p10[0] <= p50[0] <= p90[0] <= 40.0)
+
+    def test_the_prepared_frame_fingerprint_covers_every_feature_module(self):
+        imported = {
+            "deadline_news", "european_fixtures", "historical_odds",
+            "team_identity", "understat_history",
+        }
+        covered = {Path(name).stem for name in lens.PREPARED_HISTORY_SOURCE_FILES}
+        self.assertTrue(imported <= covered, imported - covered)
+        self.assertEqual(len(lens.prepared_history_source_fingerprint()), 64)
+        # Every engine file the frozen audit fingerprints must exist and be imported.
+        for relative in lens.AUDITED_POLICY_ENGINE_FILES:
+            self.assertTrue((lens.ROOT / relative).exists(), relative)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -804,7 +804,7 @@ AUDITED_POLICY_FRAME_COLUMNS = (
 AUDITED_POLICY_ENGINE_FILES = (
     "analysis/calibrate_model.py",
     "analysis/audited_policy_validation.py",
-    "analysis/domestic_cups.py",
+    "analysis/deadline_news.py",
     "analysis/european_fixtures.py",
     "analysis/historical_odds.py",
     "analysis/team_identity.py",
@@ -1069,12 +1069,14 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
         data["fixture_count"].clip(lower=1).to_numpy(float)
     )
     data["prediction_half_width_80"] = np.clip(half_width, 0.4, 9.0 * fixture_scale)
-    data["prediction_p10"] = (
-        data["component_xpts"] - data["prediction_half_width_80"]
-    ).clip(lower=0)
-    data["prediction_p90"] = np.minimum(
-        data["component_xpts"] + data["prediction_half_width_80"],
-        25.0 * data["fixture_count"].clip(lower=1),
+    data["prediction_p10"], data["prediction_p90"] = outcome_quantiles(
+        data["blank_probability"].to_numpy(float),
+        data["return5_probability"].to_numpy(float),
+        data["haul8_probability"].to_numpy(float),
+        data["fixture_count"].to_numpy(float),
+        data["play_probability"].to_numpy(float),
+        data["sixty_probability"].to_numpy(float),
+        quantiles=(0.10, 0.90),
     )
     structural_blank = data["fixture_count"].eq(0)
     data.loc[structural_blank, "blank_probability"] = 1.0
@@ -1083,6 +1085,52 @@ def causal_calibrate_distributions(data: pd.DataFrame) -> pd.DataFrame:
     data.loc[structural_blank, "prediction_p10"] = 0.0
     data.loc[structural_blank, "prediction_p90"] = 0.0
     return data
+
+
+def outcome_quantiles(
+    blank: np.ndarray,
+    return5: np.ndarray,
+    haul8: np.ndarray,
+    fixture_count: np.ndarray,
+    play: np.ndarray,
+    sixty: np.ndarray,
+    quantiles: tuple[float, ...] = (0.10, 0.50, 0.90),
+) -> list[np.ndarray]:
+    """Points quantiles from the calibrated outcome probabilities.
+
+    The published P10/P90 used to be `xPts ± a symmetric residual band`. FPL
+    points are heavily skewed, so that band missed most outcomes for exactly the
+    players it mattered for: a premium forward with a 44% blank chance was shown
+    as 4.1-7.9. These quantiles come from a piecewise-linear distribution through
+    probabilities the model already estimates: not playing (0 points), playing
+    under 60 minutes (at most 1), P(points <= 2), P(points >= 5) and
+    P(points >= 8), between a floor of -1 and a ceiling of 20 points per fixture.
+    """
+    blank = np.clip(np.asarray(blank, dtype=float), 0.0, 1.0)
+    below5 = np.clip(1.0 - np.asarray(return5, dtype=float), 0.0, 1.0)
+    below8 = np.clip(1.0 - np.asarray(haul8, dtype=float), 0.0, 1.0)
+    absent = np.clip(1.0 - np.asarray(play, dtype=float), 0.0, 1.0)
+    short = np.clip(1.0 - np.asarray(sixty, dtype=float), 0.0, 1.0)
+    ceiling = 20.0 * np.clip(np.asarray(fixture_count, dtype=float), 1.0, None)
+    # Independently estimated probabilities need not nest; force a valid CDF.
+    cdf = np.maximum.accumulate(
+        np.column_stack(
+            [np.zeros_like(blank), absent, short, blank, below5, below8, np.ones_like(blank)]
+        ),
+        axis=1,
+    )
+    anchors = (-1.0, 0.0, 1.0, 2.0, 4.0, 7.0)
+    points = np.column_stack([np.full_like(blank, value) for value in anchors] + [ceiling])
+    results = []
+    for q in quantiles:
+        # First segment whose upper CDF value reaches q, then interpolate in it.
+        upper = np.argmax(cdf >= q - 1e-12, axis=1).clip(1, cdf.shape[1] - 1)
+        rows = np.arange(len(blank))
+        f0, f1 = cdf[rows, upper - 1], cdf[rows, upper]
+        x0, x1 = points[rows, upper - 1], points[rows, upper]
+        share = np.where(f1 > f0, (q - f0) / np.where(f1 > f0, f1 - f0, 1.0), 0.0)
+        results.append(np.clip(x0 + share * (x1 - x0), 0.0, None))
+    return results
 
 
 def calibrate_live_distributions(
@@ -1126,14 +1174,17 @@ def calibrate_live_distributions(
         )
     # The ceiling is a per-match cap, so a Double Gameweek gets a proportionally
     # wider band instead of a truncated one.
-    fixture_ceiling = 25.0 * current["fixture_count"].clip(lower=1)
-    current["prediction_p10"] = (
-        current["raw_projection"] - current["prediction_half_width_80"]
-    ).clip(lower=0)
-    current["prediction_p50"] = current["raw_projection"]
-    current["prediction_p90"] = np.minimum(
-        current["raw_projection"] + current["prediction_half_width_80"],
-        fixture_ceiling,
+    (
+        current["prediction_p10"],
+        current["prediction_p50"],
+        current["prediction_p90"],
+    ) = outcome_quantiles(
+        current["blank_probability"].to_numpy(float),
+        current["return5_probability"].to_numpy(float),
+        current["haul8_probability"].to_numpy(float),
+        current["fixture_count"].to_numpy(float),
+        current["play_probability"].to_numpy(float),
+        current["sixty_probability"].to_numpy(float),
     )
     return current
 
@@ -4335,17 +4386,86 @@ def prepare_causal_history(frames: list[pd.DataFrame]) -> pd.DataFrame:
     return data
 
 
+# Every source file whose code can change a value in the prepared frame.
+PREPARED_HISTORY_SOURCE_FILES = (
+    "analysis/calibrate_model.py",
+    "analysis/deadline_news.py",
+    "analysis/european_fixtures.py",
+    "analysis/historical_odds.py",
+    "analysis/team_identity.py",
+    "analysis/understat_history.py",
+)
+
+
+def prepared_history_source_fingerprint() -> str:
+    """Hash of the code that builds the prepared frame.
+
+    The cache used to be trusted whenever its season list matched, so a change to
+    feature code that was not accompanied by a hand-renamed cache file silently
+    replayed the old features. Storing this hash with the frame makes any such
+    change rebuild it instead.
+    """
+    digest = hashlib.sha256()
+    for relative in PREPARED_HISTORY_SOURCE_FILES:
+        digest.update(relative.encode("utf-8"))
+        digest.update((ROOT / relative).read_bytes())
+    return digest.hexdigest()
+
+
+def current_chip_call(headline: dict) -> dict:
+    """This deadline's chip decision, from the live recommendation itself.
+
+    This block used to be a fixed "Hold" with fixed wording, written by the full
+    run and never touched by the daily refresh, so it could contradict the chip
+    the model was actually playing.
+    """
+    chip = headline.get("chip")
+    signals = headline.get("chipSignals") or {}
+    if chip:
+        detail = signals.get(chip) or {}
+        reason = (
+            f"Worth {detail['signal']:.1f} against a bar of {detail['threshold']:.1f}."
+            if "signal" in detail
+            else "Clears its bar this week."
+        )
+    elif signals:
+        closest = max(
+            signals.items(),
+            key=lambda item: item[1]["signal"] / max(item[1]["threshold"], 1e-9),
+        )
+        reason = (
+            f"No chip clears its bar; the closest is {closest[0]} at "
+            f"{closest[1]['signal']:.1f} against {closest[1]['threshold']:.1f}."
+        )
+    else:
+        reason = "No chip is available this week."
+    return {
+        "chip": chip or "Hold",
+        "gameweek": headline.get("gameweek"),
+        "reason": reason,
+        "nextReview": "Re-scored at every refresh before the deadline.",
+    }
+
+
 def load_or_build_prepared_history(
     force: bool = False,
 ) -> tuple[pd.DataFrame, list[dict]]:
     """Reuse the deterministic historical feature table across experiment runs."""
     CACHE.mkdir(parents=True, exist_ok=True)
+    source = prepared_history_source_fingerprint()
     if PREPARED_HISTORY_CACHE.exists() and not force:
         payload = pd.read_pickle(PREPARED_HISTORY_CACHE)
         data = payload["data"]
         summaries = payload["summaries"]
-        if list(dict.fromkeys(data["season"].tolist())) == SEASONS:
+        if (
+            list(dict.fromkeys(data["season"].tolist())) == SEASONS
+            and payload.get("source") == source
+        ):
             return data, summaries
+        print(
+            "Prepared-history cache was built by different feature code; rebuilding",
+            file=sys.stderr,
+        )
     ages = load_age_register()
     nationalities = load_nationality_register()
     frames: list[pd.DataFrame] = []
@@ -4357,7 +4477,7 @@ def load_or_build_prepared_history(
         print(f"Prepared {season}: {summary['eligibleRows']:,} eligible player-weeks")
     data = prepare_causal_history(frames)
     temporary = PREPARED_HISTORY_CACHE.with_suffix(".tmp")
-    pd.to_pickle({"data": data, "summaries": summaries}, temporary)
+    pd.to_pickle({"data": data, "summaries": summaries, "source": source}, temporary)
     temporary.replace(PREPARED_HISTORY_CACHE)
     return data, summaries
 
@@ -11936,12 +12056,7 @@ def main() -> None:
                 }
                 for stat in walk_forward
             ],
-            "current": {
-                "chip": "Hold",
-                "gameweek": headline["gameweek"],
-                "reason": "Single-Gameweek slate and a freshly optimised squad. Preserve the first-half chips for a larger fixture or availability edge.",
-                "nextReview": "Re-score after every deadline; blank clashes, double fixtures, injuries and rotation are explicit triggers.",
-            },
+            "current": current_chip_call(headline),
             "rules": "Two of each chip: one set through GW19 and one from GW20, with one chip permitted per Gameweek.",
         },
         "expertTests": expert_tests,
@@ -12182,6 +12297,8 @@ def refresh_current_artifact() -> None:
             "currentMeta": current_meta,
         }
     )
+    if isinstance(result.get("chipStrategy"), dict):
+        result["chipStrategy"]["current"] = current_chip_call(headline)
     PLAYERS_OUTPUT.write_text(
         json.dumps(all_players, ensure_ascii=False, separators=(",", ":")),
         encoding="utf-8",
