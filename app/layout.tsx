@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export function generateMetadata(): Metadata {
-  const title = "FPL Lens — Lens 8 model audit";
+  const title = "FPL Lens";
   const description =
-    "An audited FPL decision model with exact squad optimisation, causal historical replays and transparent production, shadow and retired results.";
+    "Fantasy Premier League projections, transfer and captain picks, a fixture planner and a Wildcard builder.";
   return {
     title,
     description,
