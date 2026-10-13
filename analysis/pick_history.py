@@ -160,6 +160,10 @@ def record(now: datetime | None = None) -> dict:
                 "vice": bool(player.get("vice")),
                 "projected": player.get("projected"),
                 "purchasePrice": player.get("purchasePrice"),
+                # Kept so the scored week can be checked against what the model
+                # expected, not only against its point total.
+                "playProbability": ((player.get("minutesModel") or {}).get("playProbability")),
+                "startProbability": ((player.get("minutesModel") or {}).get("startProbability")),
             }
             for player in squad
         ],
@@ -351,6 +355,10 @@ def score(rescore: bool = False) -> None:
             "autosubs": [
                 {"out": by_id[out]["name"], "in": by_id[sub]["name"]} for out, sub in swaps
             ],
+            "players": [
+                {"id": int(p["id"]), "points": points_for(p), "minutes": minutes_for(p)}
+                for p in entry["players"]
+            ],
             "note": "FPL automatic substitutions applied with the bench in benchOrder",
         }
         entry["scored"] = True
@@ -410,10 +418,57 @@ def report() -> None:
             )
 
 
+def diagnose() -> None:
+    """Where the live projections were wrong, across every scored week.
+
+    Totals alone cannot say whether a miss came from minutes, the captain or a
+    position, and the backtest cannot see problems that only exist on live data.
+    """
+    history = load_history()
+    weeks = [e for e in history.get("entries") or [] if e.get("scored") and (e.get("realised") or {}).get("players")]
+    if not weeks:
+        print("No scored weeks with player-level results yet (run --rescore to backfill).")
+        return
+    by_position: dict[str, list[float]] = {}
+    absent = expected_absent = 0.0
+    tracked_absent = 0
+    captain_projected = captain_actual = 0.0
+    for entry in weeks:
+        actual = {int(p["id"]): p for p in entry["realised"]["players"]}
+        for player in entry["players"]:
+            if not player.get("starter"):
+                continue
+            row = actual.get(int(player["id"]), {"points": 0, "minutes": 0})
+            pair = by_position.setdefault(str(player.get("position")), [0.0, 0.0, 0])
+            pair[0] += float(player.get("projected") or 0.0)
+            pair[1] += float(row["points"])
+            pair[2] += 1
+            absent += 1 if row["minutes"] == 0 else 0
+            if player.get("playProbability") is not None:
+                expected_absent += 1 - float(player["playProbability"]) / 100
+                tracked_absent += 1
+            if player.get("captain"):
+                captain_projected += float(player.get("projected") or 0.0)
+        captain_actual += float(entry["realised"].get("captainBonus") or 0)
+    print(f"{len(weeks)} scored week(s)\n")
+    print(f"{'starters':<10}{'n':>4}{'projected':>11}{'actual':>8}{'diff':>8}")
+    for position in ("GK", "DEF", "MID", "FWD"):
+        if position in by_position:
+            projected, actual_points, count = by_position[position]
+            print(f"{position:<10}{count:>4}{projected:>11.1f}{actual_points:>8.0f}{actual_points - projected:>+8.1f}")
+    print(f"\ncaptain bonus: projected {captain_projected:.1f}, actual {captain_actual:.0f}")
+    print(f"starters who did not play: {absent:.0f}", end="")
+    if tracked_absent:
+        print(f" (model expected {expected_absent:.1f} over the {tracked_absent} starters it recorded a play chance for)")
+    else:
+        print(" (play chances are recorded from now on)")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--score", action="store_true", help="Score finished Gameweeks.")
     parser.add_argument("--report", action="store_true", help="Print the running table.")
+    parser.add_argument("--diagnose", action="store_true", help="Projected vs actual by position, captain and minutes.")
     parser.add_argument(
         "--rescore",
         action="store_true",
@@ -428,6 +483,8 @@ def main() -> None:
     if arguments.backfill:
         backfill(arguments.backfill)
         report()
+    elif arguments.diagnose:
+        diagnose()
     elif arguments.score or arguments.rescore:
         score(rescore=arguments.rescore)
         report()
