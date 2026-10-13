@@ -181,6 +181,83 @@
             "in": "Justin"
           }
         ],
+        "players": [
+          {
+            "id": 1,
+            "points": 6,
+            "minutes": 90
+          },
+          {
+            "id": 61,
+            "points": 4,
+            "minutes": 90
+          },
+          {
+            "id": 4,
+            "points": 8,
+            "minutes": 90
+          },
+          {
+            "id": 498,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 356,
+            "points": 1,
+            "minutes": 90
+          },
+          {
+            "id": 426,
+            "points": 23,
+            "minutes": 90
+          },
+          {
+            "id": 368,
+            "points": 4,
+            "minutes": 90
+          },
+          {
+            "id": 123,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 427,
+            "points": 11,
+            "minutes": 90
+          },
+          {
+            "id": 55,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 106,
+            "points": 2,
+            "minutes": 90
+          },
+          {
+            "id": 109,
+            "points": 0,
+            "minutes": 90
+          },
+          {
+            "id": 332,
+            "points": 2,
+            "minutes": 90
+          },
+          {
+            "id": 124,
+            "points": 13,
+            "minutes": 90
+          },
+          {
+            "id": 321,
+            "points": 0,
+            "minutes": 0
+          }
+        ],
         "note": "FPL automatic substitutions applied with the bench in benchOrder"
       }
     },
@@ -357,6 +434,83 @@
           {
             "out": "Watkins",
             "in": "Mendy"
+          }
+        ],
+        "players": [
+          {
+            "id": 1,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 388,
+            "points": 8,
+            "minutes": 90
+          },
+          {
+            "id": 327,
+            "points": 1,
+            "minutes": 29
+          },
+          {
+            "id": 88,
+            "points": 1,
+            "minutes": 45
+          },
+          {
+            "id": 368,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 399,
+            "points": 3,
+            "minutes": 65
+          },
+          {
+            "id": 480,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 236,
+            "points": 2,
+            "minutes": 90
+          },
+          {
+            "id": 12,
+            "points": 2,
+            "minutes": 89
+          },
+          {
+            "id": 411,
+            "points": 9,
+            "minutes": 90
+          },
+          {
+            "id": 55,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 171,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 586,
+            "points": 8,
+            "minutes": 70
+          },
+          {
+            "id": 279,
+            "points": 5,
+            "minutes": 90
+          },
+          {
+            "id": 321,
+            "points": 0,
+            "minutes": 0
           }
         ],
         "note": "FPL automatic substitutions applied with the bench in benchOrder"
