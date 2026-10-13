@@ -34,6 +34,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pick_history
+import scorer_odds
 
 ROOT = Path(__file__).resolve().parents[1]
 BRANCH = "codex/full-audit-repair"
@@ -121,6 +122,25 @@ def commit_data(message: str) -> bool:
     return True
 
 
+def capture_scorer_odds(deadline_pick: bool) -> None:
+    """Snapshot goalscorer prices: once early in the week and once at the deadline.
+
+    Two snapshots a gameweek keep the free API plan (500 credits a month) well
+    inside its limit. Odds are a side record; a failure here never stops a pick.
+    """
+    if scorer_odds.api_key() is None:
+        return
+    try:
+        coming = scorer_odds.coming_gameweek()
+        if coming is None:
+            return
+        season, gameweek, _, _ = coming
+        if deadline_pick or not scorer_odds.has_snapshot(season, gameweek):
+            scorer_odds.snapshot(*coming)
+    except Exception as error:
+        print(f"scorer odds: snapshot failed ({error}); the pick is unaffected")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true")
@@ -156,6 +176,7 @@ def main() -> int:
                 pick_history.record()
             except RuntimeError as error:
                 print(f"Not recorded: {error}")
+            capture_scorer_odds(deadline_pick="deadline pick" in plan.reason)
 
     parts = []
     if scored:
