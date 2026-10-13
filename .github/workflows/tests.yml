@@ -1,0 +1,44 @@
+name: tests
+
+# Runs on every pull request and push to main. The engine suite
+# (analysis/test_model_engine.py) and full calibration runs need the multi-GB
+# local caches under work/, so they stay a local check; everything here runs
+# from the repository alone.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r analysis/requirements.txt pytest
+      - name: Live job, pick log, harness and data loaders
+        run: >
+          python -m pytest -q
+          analysis/test_pick_history.py
+          analysis/test_live_job.py
+          analysis/test_harness.py
+          analysis/test_betfair_scorers.py
+          analysis/test_european_fixtures.py
+
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Type-check the app (worker/ and db/ need Cloudflare types; ignored)
+        run: |
+          npx tsc --noEmit -p tsconfig.json > tsc.log || true
+          if grep -v -E '^(worker|db)/' tsc.log | grep -q 'error TS'; then cat tsc.log; exit 1; fi
+      - run: npx eslint app
+      - run: npm test
