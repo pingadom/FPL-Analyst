@@ -1464,5 +1464,11 @@ it traded before the Gameweek deadline and no more than four days before it.
 The scorer signal is real, but whether it converts into points is open: an 8-candidate
 ensemble replay of the blend scored −2.6 ± 26.4 a season (+90/+107/+52 in 2020/21,
 2022/23 and 2023/24, −184 in 2018/19); a 16-candidate run was set before reading that
-result and decides it. Using it live would also need pre-deadline prices from the
-same source each week (Betfair's API with a delayed app key).
+result and decides it.
+
+**Decision: rejected.** With 16 candidates the blend scored −7.9 ± 25.5 a season, ahead
+in only 3 of 16 candidates, with the same season pattern (2018/19 −183, 2025/26 −68;
+2020/21 +89, 2022/23 +94). A sharper scorer forecast for six attackers a match does not
+convert into points through this decision layer, the same lesson as the earlier
+calibration work. No live Betfair feed is needed. Revisit only if a decision layer that
+uses haul probabilities directly is built.
