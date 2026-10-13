@@ -160,6 +160,8 @@ def parse_market(lines: Iterable[str], market_types: tuple[str, ...] = MARKET_TY
                 rows.append(
                     {
                         "market_id": str(change.get("id")),
+                        "market_type": str(definition.get("marketType", "")),
+                        "market_name": str(definition.get("name", "")),
                         "event_name": str(definition.get("eventName", "")),
                         "market_time": definition.get("marketTime"),
                         "runner_id": runner_id,
@@ -346,6 +348,76 @@ def deadline_prices(updates: pd.DataFrame, fixtures: pd.DataFrame) -> pd.DataFra
                 }
             )
     return pd.DataFrame.from_records(records)
+
+
+CLEAN_SHEET_CACHE = BETFAIR_ROOT / "clean-sheet-updates.pkl"
+
+
+def load_clean_sheet_updates(root: Path = BETFAIR_ROOT, refresh: bool = False) -> pd.DataFrame:
+    """Pre-off "Yes" prices from the CLEAN_SHEET markets, one row per change.
+
+    Each match has two such markets, named "<club> clean sheet"; the club in the
+    name is the one keeping the clean sheet.
+    """
+    if CLEAN_SHEET_CACHE.exists() and not refresh:
+        return pd.read_pickle(CLEAN_SHEET_CACHE)
+    rows: list[dict] = []
+    for _, lines in iter_stream_files(root):
+        rows.extend(
+            row for row in parse_market(lines, ("CLEAN_SHEET",)) if row["runner_name"] == "Yes"
+        )
+    frame = pd.DataFrame.from_records(rows)
+    if not frame.empty:
+        frame["published"] = pd.to_datetime(frame["published"], unit="ms", utc=True)
+        frame["market_time"] = pd.to_datetime(frame["market_time"], utc=True, errors="coerce")
+        teams = frame["event_name"].str.split(r"\s+v\s+", n=1, expand=True, regex=True)
+        frame["home_key"] = teams[0].map(team_key)
+        frame["away_key"] = teams[1].map(team_key) if 1 in teams else ""
+        frame["team_key"] = (
+            frame["market_name"].str.replace(r"\s*clean sheet\s*$", "", case=False, regex=True).map(team_key)
+        )
+        CLEAN_SHEET_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        frame.to_pickle(CLEAN_SHEET_CACHE)
+    return frame
+
+
+def clean_sheet_prices(updates: pd.DataFrame, fixtures: pd.DataFrame) -> pd.DataFrame:
+    """Last pre-deadline clean-sheet probability per club and fixture."""
+    columns = ["season", "GW", "fixture", "team_key", "market_clean_probability", "market_price_age_hours"]
+    if updates.empty or fixtures.empty:
+        return pd.DataFrame(columns=columns)
+    first = fixtures.groupby("fixture").first()
+    by_teams = {(row.home_key, row.away_key, row.kickoff.date()): (fixture, row) for fixture, row in first.iterrows()}
+    records = []
+    for (market_id, home, away), market in updates.groupby(["market_id", "home_key", "away_key"], sort=False):
+        kickoff = market["market_time"].iloc[0]
+        hit = None
+        for shift in (0, -1, 1):
+            if pd.isna(kickoff):
+                break
+            hit = by_teams.get((home, away, (kickoff + timedelta(days=shift)).date()))
+            if hit:
+                break
+        if not hit:
+            continue
+        fixture, row = hit
+        usable = market[(market["published"] <= row.deadline) & (market["published"] >= row.deadline - MAX_PRICE_AGE)]
+        if usable.empty:
+            continue
+        last = usable.sort_values("published").iloc[-1]
+        if last["ltp"] <= 1.0 or last["team_key"] not in (home, away):
+            continue
+        records.append(
+            {
+                "season": row.season,
+                "GW": int(row.GW),
+                "fixture": int(fixture),
+                "team_key": last["team_key"],
+                "market_clean_probability": 1.0 / last["ltp"],
+                "market_price_age_hours": (row.deadline - last["published"]).total_seconds() / 3600,
+            }
+        )
+    return pd.DataFrame.from_records(records, columns=columns)
 
 
 def build(seasons: list[str], refresh: bool = False) -> pd.DataFrame:
