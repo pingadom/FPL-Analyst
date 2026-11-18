@@ -181,6 +181,83 @@
             "in": "Justin"
           }
         ],
+        "players": [
+          {
+            "id": 1,
+            "points": 6,
+            "minutes": 90
+          },
+          {
+            "id": 61,
+            "points": 4,
+            "minutes": 90
+          },
+          {
+            "id": 4,
+            "points": 8,
+            "minutes": 90
+          },
+          {
+            "id": 498,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 356,
+            "points": 1,
+            "minutes": 90
+          },
+          {
+            "id": 426,
+            "points": 23,
+            "minutes": 90
+          },
+          {
+            "id": 368,
+            "points": 4,
+            "minutes": 90
+          },
+          {
+            "id": 123,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 427,
+            "points": 11,
+            "minutes": 90
+          },
+          {
+            "id": 55,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 106,
+            "points": 2,
+            "minutes": 90
+          },
+          {
+            "id": 109,
+            "points": 0,
+            "minutes": 90
+          },
+          {
+            "id": 332,
+            "points": 2,
+            "minutes": 90
+          },
+          {
+            "id": 124,
+            "points": 13,
+            "minutes": 90
+          },
+          {
+            "id": 321,
+            "points": 0,
+            "minutes": 0
+          }
+        ],
         "note": "FPL automatic substitutions applied with the bench in benchOrder"
       }
     },
@@ -357,6 +434,83 @@
           {
             "out": "Watkins",
             "in": "Mendy"
+          }
+        ],
+        "players": [
+          {
+            "id": 1,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 388,
+            "points": 8,
+            "minutes": 90
+          },
+          {
+            "id": 327,
+            "points": 1,
+            "minutes": 29
+          },
+          {
+            "id": 88,
+            "points": 1,
+            "minutes": 45
+          },
+          {
+            "id": 368,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 399,
+            "points": 3,
+            "minutes": 65
+          },
+          {
+            "id": 480,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 236,
+            "points": 2,
+            "minutes": 90
+          },
+          {
+            "id": 12,
+            "points": 2,
+            "minutes": 89
+          },
+          {
+            "id": 411,
+            "points": 9,
+            "minutes": 90
+          },
+          {
+            "id": 55,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 171,
+            "points": 0,
+            "minutes": 0
+          },
+          {
+            "id": 586,
+            "points": 8,
+            "minutes": 70
+          },
+          {
+            "id": 279,
+            "points": 5,
+            "minutes": 90
+          },
+          {
+            "id": 321,
+            "points": 0,
+            "minutes": 0
           }
         ],
         "note": "FPL automatic substitutions applied with the bench in benchOrder"
@@ -540,38 +694,125 @@
           "purchasePrice": 45
         }
       ],
-      "scored": false,
+      "scored": true,
       "bank": 1,
-      "freeTransfersNext": 1
+      "freeTransfersNext": 1,
+      "realised": {
+        "xiPoints": 46,
+        "captainBonus": 6,
+        "total": 52,
+        "benchPoints": 16,
+        "chip": null,
+        "startersWhoDidNotPlay": 0,
+        "autosubs": [],
+        "players": [
+          {
+            "id": 1,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 229,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 356,
+            "points": 0,
+            "minutes": 90
+          },
+          {
+            "id": 115,
+            "points": 15,
+            "minutes": 67
+          },
+          {
+            "id": 124,
+            "points": 6,
+            "minutes": 90
+          },
+          {
+            "id": 426,
+            "points": 1,
+            "minutes": 90
+          },
+          {
+            "id": 286,
+            "points": 6,
+            "minutes": 26
+          },
+          {
+            "id": 397,
+            "points": 3,
+            "minutes": 90
+          },
+          {
+            "id": 94,
+            "points": 1,
+            "minutes": 51
+          },
+          {
+            "id": 411,
+            "points": 6,
+            "minutes": 79
+          },
+          {
+            "id": 346,
+            "points": 2,
+            "minutes": 90
+          },
+          {
+            "id": 109,
+            "points": 9,
+            "minutes": 90
+          },
+          {
+            "id": 176,
+            "points": 5,
+            "minutes": 90
+          },
+          {
+            "id": 305,
+            "points": 1,
+            "minutes": 90
+          },
+          {
+            "id": 651,
+            "points": 1,
+            "minutes": 9
+          }
+        ],
+        "note": "FPL automatic substitutions applied with the bench in benchOrder"
+      }
     },
     {
       "season": "2026/27",
       "gameweek": 7,
-      "recordedAt": "2026-10-11T15:06:28+00:00",
+      "recordedAt": "2026-10-13T12:19:22+00:00",
       "deadline": "2026-10-17T10:00:00Z",
       "formation": "3-5-2",
       "captain": "Haaland",
       "vice": "Groß",
-      "projectedPoints": 56.9,
+      "projectedPoints": 56.7,
       "teamMode": "persistent",
       "transfers": [
         {
           "out": "Semenyo",
-          "in": "Cunha",
-          "gain": 5.61
+          "in": "Rogers",
+          "gain": 5.65
         }
       ],
       "players": [
         {
-          "id": 1,
-          "name": "Raya",
+          "id": 109,
+          "name": "Verbruggen",
           "position": "GK",
-          "price": 6.1,
+          "price": 4.5,
           "starter": true,
           "captain": false,
           "vice": false,
           "projected": 4.0,
-          "purchasePrice": 61
+          "purchasePrice": 45
         },
         {
           "id": 229,
@@ -581,8 +822,19 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.8,
+          "projected": 4.7,
           "purchasePrice": 62
+        },
+        {
+          "id": 115,
+          "name": "De Cuyper",
+          "position": "DEF",
+          "price": 5.1,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 5.4,
+          "purchasePrice": 50
         },
         {
           "id": 356,
@@ -592,30 +844,8 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 3.7,
+          "projected": 3.3,
           "purchasePrice": 65
-        },
-        {
-          "id": 115,
-          "name": "De Cuyper",
-          "position": "DEF",
-          "price": 5.0,
-          "starter": true,
-          "captain": false,
-          "vice": false,
-          "projected": 5.4,
-          "purchasePrice": 50
-        },
-        {
-          "id": 426,
-          "name": "B.Fernandes",
-          "position": "MID",
-          "price": 11.9,
-          "starter": true,
-          "captain": false,
-          "vice": false,
-          "projected": 4.4,
-          "purchasePrice": 119
         },
         {
           "id": 124,
@@ -629,26 +859,37 @@
           "purchasePrice": 59
         },
         {
-          "id": 286,
-          "name": "Belloumi",
-          "position": "MID",
-          "price": 5.1,
-          "starter": true,
-          "captain": false,
-          "vice": false,
-          "projected": 4.1,
-          "purchasePrice": 51
-        },
-        {
-          "id": 428,
-          "name": "Cunha",
+          "id": 40,
+          "name": "Rogers",
           "position": "MID",
           "price": 7.9,
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.4,
+          "projected": 4.7,
           "purchasePrice": 79
+        },
+        {
+          "id": 426,
+          "name": "B.Fernandes",
+          "position": "MID",
+          "price": 11.9,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 4.4,
+          "purchasePrice": 119
+        },
+        {
+          "id": 286,
+          "name": "Belloumi",
+          "position": "MID",
+          "price": 5.2,
+          "starter": true,
+          "captain": false,
+          "vice": false,
+          "projected": 3.6,
+          "purchasePrice": 51
         },
         {
           "id": 94,
@@ -658,7 +899,7 @@
           "starter": true,
           "captain": false,
           "vice": false,
-          "projected": 4.4,
+          "projected": 4.0,
           "purchasePrice": 62
         },
         {
@@ -669,7 +910,7 @@
           "starter": true,
           "captain": true,
           "vice": false,
-          "projected": 6.0,
+          "projected": 6.5,
           "purchasePrice": 156
         },
         {
@@ -684,26 +925,15 @@
           "purchasePrice": 60
         },
         {
-          "id": 109,
-          "name": "Verbruggen",
+          "id": 1,
+          "name": "Raya",
           "position": "GK",
-          "price": 4.5,
+          "price": 6.1,
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 4.1,
-          "purchasePrice": 45
-        },
-        {
-          "id": 305,
-          "name": "Davis",
-          "position": "DEF",
-          "price": 4.0,
-          "starter": false,
-          "captain": false,
-          "vice": false,
-          "projected": 3.0,
-          "purchasePrice": 40
+          "projected": 3.4,
+          "purchasePrice": 61
         },
         {
           "id": 176,
@@ -713,7 +943,18 @@
           "starter": false,
           "captain": false,
           "vice": false,
-          "projected": 2.9,
+          "projected": 3.2,
+          "purchasePrice": 40
+        },
+        {
+          "id": 305,
+          "name": "Davis",
+          "position": "DEF",
+          "price": 4.0,
+          "starter": false,
+          "captain": false,
+          "vice": false,
+          "projected": 2.1,
           "purchasePrice": 40
         },
         {
@@ -729,7 +970,13 @@
         }
       ],
       "scored": false,
-      "bank": 6,
+      "benchOrder": [
+        1,
+        176,
+        305,
+        651
+      ],
+      "bank": 5,
       "freeTransfersNext": 1
     }
   ]

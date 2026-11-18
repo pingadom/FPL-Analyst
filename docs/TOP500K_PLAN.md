@@ -1447,3 +1447,28 @@ The shipped rule is the best of the nine. The elite's captaincy edge is not a ru
 could copy: following ownership or form costs 40-50 points a season. It is late information
 (Haaland's start to 2025/26 was visible to managers watching the matches before the model's
 history caught up), which is what the scorer-market data in `betfair_scorers.py` is for.
+
+## 14. Betfair player and team markets (historical Basic data, July 2017 onwards)
+
+Downloaded free from Betfair's historic data site (Basic plan: last traded price per
+minute), GB soccer, and read with `analysis/betfair_scorers.py`. A price counts only if
+it traded before the Gameweek deadline and no more than four days before it.
+
+| market | markets | priced before the deadline | verdict |
+|---|---|---|---|
+| TO_SCORE (anytime scorer) | 5,835 | ~13,100 player-fixtures; 190-308 of 380 fixtures a season, ~6 players each (attackers) | informative: beats the model's scoring probability in 8/9 seasons; a walk-forward blend (≈0.25 model, 0.75-0.8 market) wins 7/8 out of sample |
+| CLEAN_SHEET | 6,398 | 4-24% of team-weeks to 2021/22, none after; first trade typically 1.5 h before kickoff | unusable: trades after the deadline, and the market all but vanishes from 2022/23 |
+| TO_SCORE_2_OR_MORE | 5,340 | 230-410 player-fixtures a season (2-3 premiums in under half the matches) | too thin to test on its own |
+| assists | — | the exchange has no assist markets | — |
+
+The scorer signal is real, but whether it converts into points is open: an 8-candidate
+ensemble replay of the blend scored −2.6 ± 26.4 a season (+90/+107/+52 in 2020/21,
+2022/23 and 2023/24, −184 in 2018/19); a 16-candidate run was set before reading that
+result and decides it.
+
+**Decision: rejected.** With 16 candidates the blend scored −7.9 ± 25.5 a season, ahead
+in only 3 of 16 candidates, with the same season pattern (2018/19 −183, 2025/26 −68;
+2020/21 +89, 2022/23 +94). A sharper scorer forecast for six attackers a match does not
+convert into points through this decision layer, the same lesson as the earlier
+calibration work. No live Betfair feed is needed. Revisit only if a decision layer that
+uses haul probabilities directly is built.
